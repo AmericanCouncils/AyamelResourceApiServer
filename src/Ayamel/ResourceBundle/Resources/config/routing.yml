@@ -1,0 +1,8 @@
+AyamelResourceBundle_homepage:
+    pattern:  /
+    defaults: { _controller: AyamelResourceBundle:Default:index }
+
+#This uses the FOSRestBundle to define the api routes
+AyamelResourceBundle_api:
+    type:  rest
+    resource: Ayamel\ResourceBundle\Controller\ResourceApiController

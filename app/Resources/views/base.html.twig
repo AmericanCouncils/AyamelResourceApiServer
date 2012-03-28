@@ -1,13 +1,97 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-    </body>
+<head>
+    <link href="css/bootstrap.css" rel="stylesheet">
+    {% block stylesheets %}{% endblock %}
+
+<!--[if lt IE 7]> <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;'> <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode"><img src="http://storage.ie6countdown.com/assets/100/images/banners/warning_bar_0000_us.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today." /></a></div> <![endif]-->
+	<style>
+		.content {
+			padding-top: 60px;
+		}
+		.main-container {
+			padding-bottom: 40px;
+			text-align: justify;			
+		}
+		.main-content {
+			min-height: 500px;
+		}
+		h1 code,
+		h2 code,
+		h3 code,
+		h4 code,
+		h5 code {
+			background-color: transparent;
+			font-size: 18px;
+			border: none;
+		}
+		footer {
+			color: #aaa;
+		}
+		.toc-top-link {
+			margin-left: 5px;
+			font-size: 10px;
+		}
+		code {
+			background-color: #f8f8f8;
+		}
+
+	</style>
+	{% block title %}<title>Ayamel Resource API!</title>{% endblock %}
+</head>
+
+<body>
+	
+	<% block header %>
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+			<a class = 'brand' href='{{ app.request.BaseUrl }}'>Ayamel API</a>
+		  	<ul>
+		  		<li><a href='{{ app.request.BaseUrl }}'>Home</a></li>
+		  	</ul>
+        </div>
+      </div>
+    </div>
+	<% endblock %>
+
+    <div class="container main-container">
+
+      <div class="content">
+		
+		<!-- optional breadcrumbs -->
+		{% block breadcrumbs %}{% endblock %}
+				
+		<!-- optional page title -->
+		{% block page_title %}
+        <div class="page-title">
+          <h1>Page title <small>and subtitle</small></h1>
+		  <hr />
+        </div>
+		{% endblock %}
+
+		<!-- main content: expands if right column is empty -->
+        <div class="row">
+	          <div class="main-content span16">
+				  {% block body %}{% endblock %}
+	          </div>
+        </div>
+      </div>
+
+	  	<!-- start footer block -->
+		{% block footer %}
+		    <div id="footer">
+				<center>
+			      <footer>
+			        <p>&copy; Copyright 2012 by <a href="http://americancouncils.org/">American Councils for International Education</a>.</p>
+			      </footer>
+			    </center>
+		    </div>
+		{% endblock %}
+	  	<!-- end footer block -->
+
+</div> <!-- /container -->
+
+	{% block javascripts %}{% endblock %}
+</body>
 </html>

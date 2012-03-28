@@ -14,6 +14,8 @@ if (!in_array(@$_SERVER['REMOTE_ADDR'], array(
     exit('You are not allowed to access this file. Check '.basename(__FILE__).' for more information.');
 }
 
+$__start = microtime(true);
+
 require_once __DIR__.'/../app/bootstrap.php.cache';
 require_once __DIR__.'/../app/AppKernel.php';
 
@@ -25,3 +27,5 @@ $request = Request::createFromGlobals();
 $response = $kernel->handle($request);
 $response->send();
 $kernel->terminate($request, $response);
+
+//die( ((microtime(true)-$__start) * 1000)."<br />".(memory_get_peak_usage() / 1024)."<br />".count(get_included_files()) );
