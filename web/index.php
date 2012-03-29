@@ -16,4 +16,4 @@ $response = $kernel->handle($request);
 $response->send();
 $kernel->terminate($request, $response);
 
-die( ((microtime(true)-$__start) * 1000)."<br />".(memory_get_peak_usage() / 1024)."<br />".count(get_included_files()) );
+//die( ((microtime(true)-$__start) * 1000)."<br />".(memory_get_peak_usage() / 1024)."<br />".count(get_included_files()) );

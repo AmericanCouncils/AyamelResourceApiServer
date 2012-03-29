@@ -1,5 +1,5 @@
 {
-    "name": "symfony/framework-standard-edition",
+    "name": "ayamel/resource-library-application",
     "autoload": {
         "psr-0": { "": "src/" }
     },

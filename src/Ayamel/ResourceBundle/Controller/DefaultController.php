@@ -10,11 +10,13 @@ class DefaultController extends Controller
     public function indexAction()
     {
 		$response = new \Symfony\Component\HttpFoundation\Response;
-		$response->setContent($this->render('AyamelResourceBundle:Default:index.html.twig'));
 
-		//set cache age and stuff
+		//cache page for 10 seconds
 		$response->setPublic();
 		$response->setMaxAge(10);
+		
+		//set themed content
+		$response->setContent($this->render('AyamelResourceBundle:Default:index.html.twig'));
 
         return $response;
     }
