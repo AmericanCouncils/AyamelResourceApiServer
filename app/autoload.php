@@ -29,6 +29,9 @@ if (!function_exists('intl_get_error_code')) {
 
 AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
 
+//to make document annotations work
+Doctrine\ODM\MongoDB\Mapping\Driver\AnnotationDriver::registerAnnotationClasses();
+
 // Swiftmailer needs a special autoloader to allow
 // the lazy loading of the init file (which is expensive)
 require_once __DIR__.'/../vendor/swiftmailer/swiftmailer/lib/classes/Swift.php';

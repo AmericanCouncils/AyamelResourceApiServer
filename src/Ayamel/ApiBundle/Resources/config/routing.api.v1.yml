@@ -1,0 +1,47 @@
+api_v1_get_resource:
+    pattern:  /resource/{id}
+    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\GetResource::executeAction }
+    requirements:
+        _method:  GET
+
+api_v1_modify_resource:
+    pattern:  /resource/{id}
+    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\ModifyResource::executeAction }
+    requirements:
+        _method:  PUT
+
+api_v1_create_resource:
+    pattern: /resource
+    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\CreateResource::executeAction }
+    requirements:
+        _method:  POST
+    
+api_v1_remove_resource:
+    pattern:  /resource/{id}
+    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\RemoveResource::executeAction }
+    requirements:
+        _method:  DELETE
+
+api_v1_request_content_upload:
+    pattern: /resource/{id}/request-upload-url
+    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\RequestContentUpload::executeAction }
+    requirements:
+        _method:  GET
+
+api_v1_upload_content:
+    pattern: /resource/{id}/content/{token}
+    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\UploadContent::executeAction }
+    requirements:
+        _method:  POST
+        
+api_v1_scan_resource_uri:
+    pattern: /resource/scan/{uri}
+    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\ScanResourceUri::executeAction }
+    requirements:
+        _method:  GET
+
+api_v1_search:
+    pattern: /resource/search
+    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\Search::executeAction }
+    requirements:
+        _method:  GET

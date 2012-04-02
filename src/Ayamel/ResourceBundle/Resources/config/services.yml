@@ -1,7 +1,0 @@
-parameters:
-#    ayamel_resource.example.class: Ayamel\ResourceBundle\Example
-
-services:
-#    ayamel_resource.example:
-#        class: %ayamel_resource.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]

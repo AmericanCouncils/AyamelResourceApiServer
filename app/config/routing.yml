@@ -1,5 +1,5 @@
-AyamelResourceBundle:
-    resource: "@AyamelResourceBundle/Resources/config/routing.yml"
+AyamelApiBundle:
+    resource: "@AyamelApiBundle/Resources/config/routing.yml"
 
 # Internal routing configuration to handle ESI
 #_internal:

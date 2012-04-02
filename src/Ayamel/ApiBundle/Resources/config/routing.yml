@@ -1,0 +1,3 @@
+AyamelApiBundle_api_v1:
+    resource: "@AyamelApiBundle/Resources/config/routing.api.v1.yml"
+    prefix:   /api/v1/rest

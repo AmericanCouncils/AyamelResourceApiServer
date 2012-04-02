@@ -25,6 +25,7 @@ class AppKernel extends Kernel
 	        new FOS\RestBundle\FOSRestBundle(),
 			new Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle(),
             new Ayamel\ResourceBundle\AyamelResourceBundle(),
+            new Ayamel\ApiBundle\AyamelApiBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

@@ -1,0 +1,100 @@
+<?php
+
+namespace Ayamel\ResourceBundle\Document;
+
+use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
+
+/**
+ * Base Resource persistence class
+ *
+ * @MongoDB\Document(db="ayamel", collection="resources")
+ * 
+ */
+class Resource {
+    
+    /**
+     * @MongoDB\Id
+     */
+    protected $id;
+    
+    /**
+     * @MongoDB\String
+     */
+    protected $title;
+    
+    /**
+     * @MongoDB\String
+     */
+    protected $description;
+    
+    /**
+     * @MongoDB\String
+     */
+    protected $keywords;
+    
+    /**
+     * @MongoDB\String
+     */
+    protected $categories;
+    
+    /**
+     * @MongoDB\String
+     */
+    protected $type;
+    
+    /**
+     * @MongoDB\String
+     */
+    protected $contributer;
+    
+    /**
+     * @MongoDB\String
+     */
+    protected $contributer_name;
+    
+    /**
+     * @MongoDB\Boolean
+     */
+    protected $public;
+        
+    /**
+     * @MongoDB\Hash
+     */
+    protected $l2_data;
+    
+    /**
+     * @MongoDB\Date
+     */
+    protected $date_added;
+    
+    /**
+     * @MongoDB\Date
+     */
+    protected $date_modified;
+    
+    /**
+     * @MongoDB\Date
+     */
+    protected $date_deleted;
+    
+    /**
+     * @MongoDB\String
+     */
+    protected $copyright;
+    
+    /**
+     * @MongoDB\String
+     */
+    protected $status;
+    
+    /**
+     * MongoDB\Id
+     */
+//    protected $content; //array of objects, variable type
+    
+    /**
+     * @MongoDB\EmbedMany(targetDocument="Ayamel\ResourceBundle\Document\Relation")
+     */
+    protected $relations = array();
+    
+}
