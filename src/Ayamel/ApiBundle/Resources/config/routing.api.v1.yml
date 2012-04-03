@@ -45,3 +45,15 @@ api_v1_search:
     defaults: { _controller: Ayamel\ApiBundle\Controller\V1\Search::executeAction }
     requirements:
         _method:  GET
+
+api_v1_player:
+    pattern: /player/{id}
+    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\EmbedPlayer::executeAction }
+    requirements:
+        _method:  GET
+
+api_v1_oembed:
+    pattern: /oembed/{uri}
+    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\OEmbedGenerator::executeAction }
+    requirements:
+        _method:  GET

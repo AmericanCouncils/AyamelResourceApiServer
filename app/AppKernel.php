@@ -13,7 +13,7 @@ class AppKernel extends Kernel
             new Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new Symfony\Bundle\TwigBundle\TwigBundle(),
             new Symfony\Bundle\MonologBundle\MonologBundle(),
-            new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
+//            new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
 //            new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
 //            new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
@@ -22,7 +22,7 @@ class AppKernel extends Kernel
 			
 			//added by Evan
 			new JMS\SerializerBundle\JMSSerializerBundle($this),
-	        new FOS\RestBundle\FOSRestBundle(),
+//	        new FOS\RestBundle\FOSRestBundle(),
 			new Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle(),
             new Ayamel\ResourceBundle\AyamelResourceBundle(),
             new Ayamel\ApiBundle\AyamelApiBundle(),

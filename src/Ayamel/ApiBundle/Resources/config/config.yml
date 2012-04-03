@@ -1,0 +1,6 @@
+services:
+    api_bootstrap_listener:
+        class:        Ayamel\ApiBundle\EventListener\ApiBootstrapListener
+        arguments:    [@service_container]
+        tags:
+            -  { name: kernel.event_listener, event: kernel.request }

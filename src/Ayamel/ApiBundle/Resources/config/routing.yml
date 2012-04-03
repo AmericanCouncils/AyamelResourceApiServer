@@ -1,3 +1,13 @@
+#AyamelApiBundle_api_docs:
+#    pattern: /api-docs/{version}
+
+#AyamelApiBundle_api_clients:
+#    pattern: /api-clients/{version}
+
+AyamelApiBundle_home:
+    pattern:   /
+    defaults:  { _controller: Ayamel\ApiBundle\Controller\Homepage::indexAction }
+    
 AyamelApiBundle_api_v1:
     resource: "@AyamelApiBundle/Resources/config/routing.api.v1.yml"
     prefix:   /api/v1/rest
