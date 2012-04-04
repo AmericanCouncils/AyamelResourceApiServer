@@ -7,7 +7,7 @@ use Ayamel\ApiBundle\Controller\ApiController;
 class Search extends ApiController {
 	
 	public function executeAction() {
-		throw new \RuntimeException(__METHOD__." not yet implemented.");
+		throw $this->createHttpException(501);
 	}
 	
 }

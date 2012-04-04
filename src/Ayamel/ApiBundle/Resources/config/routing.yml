@@ -1,8 +1,8 @@
 #AyamelApiBundle_api_docs:
-#    pattern: /api-docs/{version}
+#    pattern: /{version}/docs
 
 #AyamelApiBundle_api_clients:
-#    pattern: /api-clients/{version}
+#    pattern: /{version}/clients
 
 AyamelApiBundle_home:
     pattern:   /

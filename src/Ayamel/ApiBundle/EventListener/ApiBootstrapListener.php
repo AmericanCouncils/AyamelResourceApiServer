@@ -8,7 +8,9 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Ayamel\ApiBundle\EventListener\ApiWorkflowSubscriber;
 
 /**
- * A listener that monitors incoming requests under `/api/`.  When detected, registers the ApiWorkflowSubscriber to handle Api events.
+ * A listener that monitors incoming requests under `/rest/`.  When detected, registers the ApiWorkflowSubscriber to handle Api events.
+ * 
+ * Note: If we ever decide to support SOAP, it can register listeners for that here as well, but it may not be necessary.
  */
 class ApiBootstrapListener {
 
@@ -22,29 +24,32 @@ class ApiBootstrapListener {
 	}
 
 	/**
-	 * Listens for request uris beginning with `/api/`, and registers other listeners accordingly.
+	 * Listens for request uris beginning with `/rest/`, and registers other listeners accordingly.
 	 * Also scans the incoming request accept headers - if JSON is not an acceptible format, throws exception.
 	 *
 	 * @param GetResponseEvent $e 
 	 */
 	public function onKernelRequest(GetResponseEvent $e) {
 		$request = $e->getRequest();
-		
+
 		//only handle master requests
 		if(HttpKernelInterface::MASTER_REQUEST !== $e->getRequestType()) {
 			return;
 		}
 		
-		//if requested path doesn't begin with `/api/`, return early
-		if(0 !== strpos($request->getPathInfo(), "/api/")) {
-			return;
-		}
+		//if requested path contains `/rest/`, register the RestWorkflowListener
+		if(false !== strpos($request->getPathInfo(), "/rest/")) {
+			//build rest subscriber
+			$subscriber = new RestWorkflowSubscriber($this->container);
 
-		//build and manually call subscriber's `onKernelRequest`
-		$subscriber = new ApiWorkflowSubscriber($this->container);
-		$subscriber->onKernelRequest($e);
+			//register subscriber with dispatcher
+			$this->container->get('event_dispatcher')->addSubscriber($subscriber);
+
+			//manually call subscriber's `onKernelRequest`
+			$subscriber->onApiRequest($e);
+		}
 		
-		//register subscriber with dispatcher
-		$this->container->get('event_dispatcher')->addSubscriber($subscriber);
+		//eventually, if decided, listen for SOAP requests ... maybe?
+
 	}
 }

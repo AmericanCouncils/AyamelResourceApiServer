@@ -7,35 +7,37 @@ use Symfony\Component\HttpFoundation\Response;
 use Ayamel\ResourceBundle\Document\Resource;
 use Ayamel\ResourceBundle\Document\Relation;
 
+/**
+ * Accepts data from a request object, attempting to build and save a new resource object.
+ *
+ * @author Evan Villemez
+ */
 class CreateResource extends ApiController {
+    
+    /**
+     * The fields listed in this query cannot be set by a client, they must be set the server.
+     *
+     * @var array
+     */
+    protected $properyBlacklist = array(
+        'id',
+        'date_added',
+        'contributer',
+        'contributer_name'
+    );
 	
 	public function executeAction(Request $request) {
 		
-		//if we can't decode, malformed request
-		if(!$data = json_decode($request->getContent())) {
-			throw $this->createHttpException(400, "Data structure could not be parsed.");
-		}
+		//if we can't decode, or interpret as a query string, then it's a malformed request
+        $data = $this->decodeIncomingData($request->getContent());
 		
-		//make sure 'id' property is not set
-		if(isset($data['id'])) {
-			throw $this->createHttpException(400, "Cannot set the id property for a new resource.");
-		}
-		
-		//build a new resource
-		$resource = new Resource;
-		
-		//assign received data
-        //TODO: will need to flesh this out considerably, this is a quick hack
-		foreach($data as $key => $val) {
-			//derive method name
-			$n = explode("_", $key);
-			array_walk($n, 'ucfirst');
-			$method = 'set'.implode("", $n);
-			
-			$resource->$method($val);
-		}
-		
-        //attempt to create/save
+		//make sure any blacklisted properties are not set
+        $this->validateBlackListedProperties($data);
+        
+		//build a new resource instance
+		$resource = $this->createNewResourceFromArray($data);
+				
+        //attempt to save
         $dm = $this->get('doctrine.odm.mongodb.document_manager');
         $dm->persist($resource);
         $dm->flush();
@@ -50,11 +52,55 @@ class CreateResource extends ApiController {
         );
         
         //convert to json
-        $content = $this->container->get('serialize')->serialize($content, 'json');
+        $content = $this->container->get('serializer')->serialize($content, 'json');
         
         //build & return response
-        $response = new Response($content, 201, array('content-type' => 'application/json'));
-
-        return $response;
+        return new Response($content, 201, array('content-type' => 'application/json'));
 	}
+
+    protected function validateBlackListedProperties(array $data) {
+        $badFields = array();
+        foreach($this->blacklistProperties as $prop) {
+            if(isset($data[$prop])) $badFields[] = $prop;
+        }
+        
+        if(!empty($badFields)) {
+			throw $this->createHttpException(400, sprintf("The following fields cannot be set by the client: %s", implode(", ", $badFields)));
+        }
+    }
+
+    protected function decodeIncomingData($string) {
+		if(!$data = @json_decode($string, true)) {
+            parse_str($string, $data);
+
+            if(empty($data)) {
+    			throw $this->createHttpException(400, "Data structure could not be parsed.  Make sure you are sending valid json or a properly formatted query string.");
+            }
+		}
+        
+        return $data;
+    }
+    
+    protected function createNewResourceFromArray(array $data) {
+        //TODO: will need to flesh this out considerably, this is a quick hack
+
+        $resource = new Resource;
+        
+		//assign received data
+		foreach($data as $key => $val) {
+			//derive method name
+			$n = explode("_", $key);
+//			array_walk($n, 'ucfirst');
+
+			array_walk($n, function($item){
+                return ucfirst(strtolower($item));
+            });
+            
+			$method = 'set'.implode("", $n);
+			
+			$resource->$method($val);
+		}
+        
+        return $resource;
+    }
 }
