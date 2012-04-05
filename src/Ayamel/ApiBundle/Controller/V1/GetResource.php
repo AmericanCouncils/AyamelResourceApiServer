@@ -22,7 +22,6 @@ class GetResource extends ApiController {
 		$content = array(
 			'meta' => array(
 				'code' => $httpStatusCode,
-				'time' => time(),
 			),
 			'resource' => $resource,
 		);

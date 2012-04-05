@@ -141,6 +141,8 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
 		//serialize error content into requested format
 		$content = $this->container->get('serializer')->serialize($errorData, $this->format);
 		
+		//TODO: it seems in some cases the error message is not properly being set to default "internal server error"
+						
 		//build response
 		$response = new Response($content, $outgoingHttpStatusCode, array('content-type' => $this->formatHeaders[$this->format]));
 		

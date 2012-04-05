@@ -15,7 +15,7 @@ use Ayamel\ResourceBundle\Document\Relation;
 class CreateResource extends ApiController {
     
     /**
-     * The fields listed in this query cannot be set by a client, they must be set the server.
+     * The fields listed in this array cannot be set by a client, they may only be set the server.
      *
      * @var array
      */
@@ -36,7 +36,10 @@ class CreateResource extends ApiController {
         
 		//build a new resource instance
 		$resource = $this->createNewResourceFromArray($data);
-				
+		
+		//set the properties controlled by the resource library
+		$resource->setDateAdded(time());
+		
         //attempt to save
         $dm = $this->get('doctrine.odm.mongodb.document_manager');
         $dm->persist($resource);
@@ -60,7 +63,7 @@ class CreateResource extends ApiController {
 
     protected function validateBlackListedProperties(array $data) {
         $badFields = array();
-        foreach($this->blacklistProperties as $prop) {
+        foreach($this->properyBlacklist as $prop) {
             if(isset($data[$prop])) $badFields[] = $prop;
         }
         
@@ -73,7 +76,7 @@ class CreateResource extends ApiController {
 		if(!$data = @json_decode($string, true)) {
             parse_str($string, $data);
 
-            if(empty($data)) {
+            if(empty($data) || !is_array($data)) {
     			throw $this->createHttpException(400, "Data structure could not be parsed.  Make sure you are sending valid json or a properly formatted query string.");
             }
 		}
@@ -90,15 +93,17 @@ class CreateResource extends ApiController {
 		foreach($data as $key => $val) {
 			//derive method name
 			$n = explode("_", $key);
-//			array_walk($n, 'ucfirst');
 
 			array_walk($n, function($item){
                 return ucfirst(strtolower($item));
             });
             
 			$method = 'set'.implode("", $n);
-			
-			$resource->$method($val);
+			if(method_exists($resource, $method)) {
+				$resource->$method($val);
+			} else {
+				throw $this->createHttpException(400, "Tried setting a non-existing field ($key)");
+			}
 		}
         
         return $resource;
