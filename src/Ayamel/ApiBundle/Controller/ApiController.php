@@ -69,4 +69,13 @@ abstract class ApiController extends Controller
 		
 		return $resource;
 	}
+	
+	protected function returnDeletedResource(Resource $resource) {
+		return array(
+			'response' => array(
+				'code' => 410,
+			),
+			'resource' => $resource,
+		);
+	}
 }

@@ -5,8 +5,8 @@ ini_set("display_errors", "on");
 require __DIR__."/../app/autoload.php";
 
 //build tester
-//$api = new Ayamel\ApiBundle\ApiTester("http://localhost/AyamelAPI/web/index.php/api/v1/rest");
-$api = new Ayamel\ApiBundle\ApiTester("http://localhost/AyamelAPI/web/index_dev.php/api/v1/rest");
+$api = new Ayamel\ApiBundle\ApiTester("http://localhost/AyamelAPI/web/index.php/api/v1/rest");
+//$api = new Ayamel\ApiBundle\ApiTester("http://localhost/AyamelAPI/web/index_dev.php/api/v1/rest");
 
 //check for path
 if(!isset($_GET['path'])) {

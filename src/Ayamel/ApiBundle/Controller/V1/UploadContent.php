@@ -8,6 +8,8 @@ class UploadContent extends ApiController {
 	
 	public function executeAction($id, $token) {
 		throw $this->createHttpException(501);
+		
+		//use code 202
 	}
 
 }

@@ -45,20 +45,19 @@ class CreateResource extends ApiController {
         $dm->persist($resource);
         $dm->flush();
 		
+		//TODO: properly generate an upload token
+		$uploadToken = '97asdf_place_holder_upload_token_jlkj3433';
+		
         //define returned content structure
         $content = array(
-            'meta' => array(
-                'code' => '201',
-                'time' => time(),
+            'response' => array(
+                'code' => 201,
             ),
+			'content_upload_url' => $this->container->get('router')->generate('AyamelApiBundle_v1_upload_content', array('id' => $resource->getId(), 'token' => $uploadToken), true),
             'resource' => $resource
         );
         
-        //convert to json
-        $content = $this->container->get('serializer')->serialize($content, 'json');
-        
-        //build & return response
-        return new Response($content, 201, array('content-type' => 'application/json'));
+		return $content;
 	}
 
     protected function validateBlackListedProperties(array $data) {
@@ -77,7 +76,7 @@ class CreateResource extends ApiController {
             parse_str($string, $data);
 
             if(empty($data) || !is_array($data)) {
-    			throw $this->createHttpException(400, "Data structure could not be parsed.  Make sure you are sending valid json or a properly formatted query string.");
+    			throw $this->createHttpException(400, "Data structure could not be parsed.  Make sure you are sending valid JSON or a properly formatted query string.");
             }
 		}
         
@@ -86,6 +85,15 @@ class CreateResource extends ApiController {
     
     protected function createNewResourceFromArray(array $data) {
         //TODO: will need to flesh this out considerably, this is a quick hack
+		// - special validation for certain fields is required... build a ResourceValidator class for this
+		// - eventually do this:
+		/*
+			try {
+				$this->container->get('ayamel.resource.data_validator')->validateClientData($data);
+			} catch (\Exception $e) {
+				throw $this->createHttpException(400, $e->getMessage());
+			}
+		*/
 
         $resource = new Resource;
         

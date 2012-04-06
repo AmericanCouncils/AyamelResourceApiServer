@@ -122,7 +122,7 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
 		$errorMessage = ($exception instanceof HttpException) ? (null != $exception->getMessage() ? $exception->getMessage() : Response::$statusTexts[$realHttpErrorCode]) : "Internal Server Error";
 		
 		$errorData = array(
-			'meta' => array(
+			'response' => array(
 				'code' => $realHttpErrorCode,
 				'message' => $errorMessage,
 			)
@@ -140,9 +140,7 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
 		
 		//serialize error content into requested format
 		$content = $this->container->get('serializer')->serialize($errorData, $this->format);
-		
-		//TODO: it seems in some cases the error message is not properly being set to default "internal server error"
-						
+								
 		//build response
 		$response = new Response($content, $outgoingHttpStatusCode, array('content-type' => $this->formatHeaders[$this->format]));
 		
@@ -171,9 +169,9 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
 		$data = $e->getControllerResult();
 		
 		//figure out meta status and code, and actual outgoing http response code
-		$httpStatusCode = isset($data['meta']['code']) ? $data['meta']['code'] : 200;
-		$data['meta']['message'] = isset($data['meta']['message']) ? $data['meta']['message'] : Response::$statusTexts[$httpStatusCode];
-		$outgoingStatusCode = $this->suppress_response_codes ? $httpStatusCode : 200;
+		$httpStatusCode = isset($data['response']['code']) ? $data['response']['code'] : 200;
+		$data['response']['message'] = isset($data['response']['message']) ? $data['response']['message'] : Response::$statusTexts[$httpStatusCode];
+		$outgoingStatusCode = $this->suppress_response_codes ? 200 : $httpStatusCode;
 		
 		//load serializer, encode response structure into requested format
 		$content = $this->container->get('serializer')->serialize($data, $this->format);
