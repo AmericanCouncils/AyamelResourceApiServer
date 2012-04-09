@@ -1,0 +1,66 @@
+
+## TODO: Add routes for batch processes: GET /resoures/batch, PUT /resources/batch, POST /resources/batch, DELETE /resources/batch
+
+#get a specific resource by id
+AyamelResourceApiBundle_v1_get_resource:
+    pattern:  /resources/{id}
+    defaults: { _controller: Ayamel\ResourceApiBundle\Controller\V1\GetResource::executeAction }
+    requirements:
+        _method:  GET
+
+#modify a resource by id
+AyamelResourceApiBundle_v1_modify_resource:
+    pattern:  /resources/{id}
+    defaults: { _controller: Ayamel\ResourceApiBundle\Controller\V1\ModifyResource::executeAction }
+    requirements:
+        _method:  PUT
+
+#creates a new resource
+AyamelResourceApiBundle_v1_create_resource:
+    pattern: /resources
+    defaults: { _controller: Ayamel\ResourceApiBundle\Controller\V1\CreateResource::executeAction }
+    requirements:
+        _method:  POST
+    
+#remove a resource by id
+AyamelResourceApiBundle_v1_remove_resource:
+    pattern:  /resources/{id}
+    defaults: { _controller: Ayamel\ResourceApiBundle\Controller\V1\RemoveResource::executeAction }
+    requirements:
+        _method:  DELETE
+
+#remove a resource by id
+AyamelResourceApiBundle_v1_request_content_upload:
+    pattern: /resources/{id}/request-upload-url
+    defaults: { _controller: Ayamel\ResourceApiBundle\Controller\V1\RequestContentUpload::executeAction }
+    requirements:
+        _method:  GET
+
+#upload content for a resource (could be a file, could be a string uri)
+AyamelResourceApiBundle_v1_upload_content:
+    pattern: /resources/{id}/content/{token}
+    defaults: { _controller: Ayamel\ResourceApiBundle\Controller\V1\UploadContent::executeAction }
+    requirements:
+        _method:  POST
+        
+#create a resource object (no id), from a given uri (if it's something special like youtube, we'll connect to the api to fill in the fields for you)
+AyamelResourceApiBundle_v1_scan_resource_uri:
+    pattern: /resources/scan/{uri}
+    defaults: { _controller: Ayamel\ResourceApiBundle\Controller\V1\ScanResourceUri::executeAction }
+    requirements:
+        _method:  GET
+
+#browse the search index for resources, note this doesn't returns summary resources, not full resource structures
+AyamelResourceApiBundle_v1_search:
+    pattern: /resources/search
+    defaults: { _controller: Ayamel\ResourceApiBundle\Controller\V1\Search::executeAction }
+    requirements:
+        _method:  GET
+
+#build an embeddable player for a given resource
+AyamelResourceApiBundle_v1_player:
+    pattern: /resources/{id}/embed
+    defaults: { _controller: Ayamel\ResourceApiBundle\Controller\V1\EmbedPlayer::executeAction }
+    requirements:
+        _method:  GET
+

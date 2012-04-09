@@ -21,15 +21,14 @@ class AppKernel extends Kernel
 //            new JMS\AopBundle\JMSAopBundle(),
 			
 			//added by Evan
-			new JMS\SerializerBundle\JMSSerializerBundle($this),
-//	        new FOS\RestBundle\FOSRestBundle(),
 			new Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle(),
+			new JMS\SerializerBundle\JMSSerializerBundle($this),
+            new AC\WebServicesBundle\ACWebServicesBundle(),
             new Ayamel\ResourceBundle\AyamelResourceBundle(),
-            new Ayamel\ApiBundle\AyamelApiBundle(),
+            new Ayamel\ResourceApiBundle\AyamelResourceApiBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
-//            $bundles[] = new Acme\DemoBundle\AcmeDemoBundle();
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
             $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
             $bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();

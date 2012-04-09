@@ -1,0 +1,21 @@
+{
+    "name": "americancouncils/web-services-bundle",
+	"type": "symfony-bundle",
+    "description": "This Bundle provides tools and error handling for more easily developing web service APIs.",
+    "keywords": ["api", "rest"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Evan Villemez",
+            "email": "evan.villemez@americancouncils.org"
+        }
+    ],
+    "autoload": {
+        "psr-0": { "AC\\WebServicesBundle": "" }
+    },
+    "target-dir": "AC/WebServicesBundle",
+    "require": {
+        "php": ">=5.3.2",
+		"jms/serializer-bundle": "dev-master"
+    }
+}

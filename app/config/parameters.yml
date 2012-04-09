@@ -2,7 +2,7 @@ parameters:
     database_driver: pdo_sqlite
     database_host: localhost
     database_port: '9999'
-    database_name: symfony
+    database_name: ayamel
     database_user: root
     database_password: null
     mailer_transport: smtp
