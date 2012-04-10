@@ -1,6 +1,6 @@
 # validator service
 services:
-    ayamel.api.resource_validator:
-        class: Ayamel\ResourceApiBundle\Validation\ResourceDataValidator
-	ayamel.api.api_listener:
-		#todo
+    ayamel.api.client_data_validator:
+        class: Ayamel\ResourceApiBundle\Validation\ClientResourceDataValidator
+#    ayamel.api.api_listener:
+        #todo

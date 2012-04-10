@@ -17,7 +17,7 @@ class CreateResource extends ApiController {
 	public function executeAction(Request $request) {
 		
 		//get validator
-		$validator = $this->container->get('ayamel.api.resource_validator');
+		$validator = $this->container->get('ayamel.api.client_data_validator');
 		
 		//decode incoming data
 		$data = $validator->decodeIncomingResourceDataByRequest($request);
@@ -26,9 +26,11 @@ class CreateResource extends ApiController {
 		$resource = $validator->createAndValidateNewResource($data);
 		
 		//set the properties controlled by the resource library
-		$resource->setDateAdded(time());
+		$time = time();
+		$resource->setDateAdded($time);
+		$resource->setDateModified($time);
 		
-        //attempt to save to Mongo
+        //attempt to persist object to Mongo
         $dm = $this->get('doctrine.odm.mongodb.document_manager');
         $dm->persist($resource);
         $dm->flush();
@@ -42,7 +44,7 @@ class CreateResource extends ApiController {
             'response' => array(
                 'code' => 201,
             ),
-			'content_upload_url' => $this->container->get('router')->generate('AyamelApiBundle_v1_upload_content', array('id' => $resource->getId(), 'token' => $uploadToken), true),
+			'content_upload_url' => $this->container->get('router')->generate('AyamelResourceApiBundle_v1_upload_content', array('id' => $resource->getId(), 'token' => $uploadToken), true),
             'resource' => $resource
         );
         

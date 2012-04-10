@@ -43,7 +43,7 @@ AyamelResourceApiBundle_v1_upload_content:
     requirements:
         _method:  POST
         
-#create a resource object (no id), from a given uri (if it's something special like youtube, we'll connect to the api to fill in the fields for you)
+#create a resource object (no id), from a given uri (if it's something special like youtube, we'll connect to the api to fill in the relevant fields for you)
 AyamelResourceApiBundle_v1_scan_resource_uri:
     pattern: /resources/scan/{uri}
     defaults: { _controller: Ayamel\ResourceApiBundle\Controller\V1\ScanResourceUri::executeAction }

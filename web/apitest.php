@@ -5,8 +5,8 @@ ini_set("display_errors", "on");
 require __DIR__."/../app/autoload.php";
 
 //build tester
-$api = new Ayamel\ApiBundle\ApiTester("http://localhost/AyamelAPI/web/index.php/api/v1/rest");
-//$api = new Ayamel\ApiBundle\ApiTester("http://localhost/AyamelAPI/web/index_dev.php/api/v1/rest");
+//$api = new Ayamel\ResourceApiBundle\ApiTester("http://localhost/AyamelAPI/web/index.php/api/v1/rest");
+$api = new Ayamel\ResourceApiBundle\ApiTester("http://localhost/AyamelAPI/web/index_dev.php/api/v1/rest");
 
 //check for path
 if(!isset($_GET['path'])) {
@@ -19,7 +19,7 @@ $data = ($posted) ? json_decode($posted) : null;
 
 //check for method
 $method = isset($_GET['method']) ? strtolower($_GET['method']) : 'get';
-if($posted) $method = 'post';
+if($posted) $method = isset($_POST['method']) ? $_POST['method'] : $method;
 
 //call api with received path and method
 $result = $api->$method($_GET['path'], $data);

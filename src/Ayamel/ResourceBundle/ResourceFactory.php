@@ -2,21 +2,28 @@
 
 namespace Ayamel\ResourceBundle;
 
+use Ayamel\ResourceBundle\Document\Resource;
+use Ayamel\ResourceBundle\Document\Relation;
+
 class ResourceFactory {
 
 	static public function createResourceFromArray(array $data) {
-		
+		$resource = new Resource;
+
+		self::callSetters($resource, $data);
+
+		return $resource;
 	}
 	
 	static public function createRelationFromArray(array $data) {
-	
+		
 	}
 	
 	static public function createFileReferenceFromArray(array $data) {
-	
+		
 	}
 	
-	static protected function callSetters($object, $array) {
+	static public function callSetters($object, $data) {
 		//assign received data
 		foreach($data as $key => $val) {
 			//derive method name
@@ -30,7 +37,7 @@ class ResourceFactory {
 			if(method_exists($object, $method)) {
 				$object->$method($val);
 			} else {
-				throw \RuntimeException("Tried setting a non-existing field ($key)");
+				throw new \RuntimeException("Tried setting a non-existing field ($key)");
 			}
 		}
 		

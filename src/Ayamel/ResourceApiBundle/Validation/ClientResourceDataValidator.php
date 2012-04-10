@@ -12,7 +12,7 @@ use Ayamel\ResourceBundle\ResourceFactory;
  *
  * @author Evan Villemez
  */
-class ResourceDataValidator {
+class ClientResourceDataValidator {
 	
 	/**
 	 * Fields allowed to be set by the client during creation.
@@ -22,16 +22,36 @@ class ResourceDataValidator {
 	protected $creationFieldWhitelist = array(
 		'title',
 		'description',
-		
+		'public',
+		'relations',
 	);
 	
-	
+	/**
+	 * Fields allowed to be set by the client during update operations.
+	 *
+	 * @var array
+	 */
 	protected $updateFieldWhitelist = array(
-		
+		'title',
+		'description',
+		'public',
+		'relations',
 	);
 	
-	public function __construct($creationFieldWhitelist = array(), $updateFieldWhitelist = array()) {
+	/**
+	 * Construct allows modifying default field whitelists used during create and update.
+	 *
+	 * @param array $creationFieldWhitelist 
+	 * @param array $updateFieldWhitelist 
+	 */
+	public function __construct(array $creationFieldWhitelist = null, array $updateFieldWhitelist = null) {
+		if($creationFieldWhitelist) {
+			$this->creationFieldWhitelist = $creationFieldWhitelist;
+		}
 		
+		if($updateFieldWhitelist) {
+			$this->updateFieldWhitelist = $updateFieldWhitelist;
+		}
 	}
 	
 	/**
@@ -58,8 +78,14 @@ class ResourceDataValidator {
         return $data;
 	}
 	
+	/**
+	 * Validate and create new resource from user provided data structure.
+	 *
+	 * @param array $data 
+	 * @return Ayamel\ResourceBundle\Document\Resource
+	 */
 	public function createAndValidateNewResource($data = array()) {
-		$this->scanFields(array_flip($this->creationFieldsWhitelist), $data);
+		$this->scanWhitelistField(array_flip($this->creationFieldWhitelist), $data);
 		
 		//try using the factory to create the resource with the given data
 		try {
@@ -69,10 +95,17 @@ class ResourceDataValidator {
 		}
 	}
 
-	protected function scanWhitelistFields(array $whiteList, array $data) {
+	/**
+	 * Make sure data is in array of fields allowed to be set.
+	 *
+	 * @param array $whiteList 
+	 * @param array $data 
+	 * @throws HttpException(400) when disallowed fields are encountered
+	 */
+	protected function scanWhitelistField(array $whiteList, array $data) {
         $badFields = array();
-        foreach($data as $prop) {
-            if(!isset($whitelist[$prop])) $badFields[] = $prop;
+        foreach($data as $key => $val) {
+            if(!isset($whiteList[$key])) $badFields[] = $key;
         }
         
         if(!empty($badFields)) {
@@ -81,9 +114,22 @@ class ResourceDataValidator {
 	
 	}
 	
-	
+	/**
+	 * Validate and modify resource from user provided data structure.
+	 *
+	 * @param Ayamel\ResourceBundle\Document\Resource $resource 
+	 * @param array $data 
+	 * @return Ayamel\ResourceBundle\Document\Resource
+	 */
 	public function modifyAndValidateExistingResource(Resource $resource, $data = array()) {
+		$this->scanWhitelistField(array_flip($this->updateFieldWhitelist), $data);
 		
+		try {
+			ResourceFactory::callSetters($resource, $data);
+			return $resource;
+		} catch (\Exception $e) {
+			throw new HttpException(400, $e->getMessage());
+		}
 	}
 	
 }

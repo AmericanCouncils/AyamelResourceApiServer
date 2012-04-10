@@ -3,10 +3,11 @@
 namespace Ayamel\ResourceApiBundle;
 
 /**
- * Simple class to wrap curl for testing api routes.  If JSON is returned by the api, the structure will be automatically decoded, returning a standard PHP object.
+ * Simple class to wrap curl for testing resource api routes.  If JSON is returned by the api, the structure will be automatically decoded, returning a standard PHP object.
  *
  * Example Usage:
  * 	//get a resource
+ * 	$api = new ApiTester('http://localhost/api/v1/rest');
  * 	$result = $api->get('/resources/23456asdf2sf3');
  * 	$code = $result->response->code;
  * 	$resource = $result->resource;
@@ -28,11 +29,13 @@ class ApiTester {
 	protected $last_type = false;
 	protected $last_result = false;
 	protected $query_time = false;
+	protected $queryParams = false;
 	
-	public function __construct($base_url = null) {
+	public function __construct($base_url = null, $queryParams = array()) {
 		if($base_url) {
 			$this->base_url = $base_url;
 		}
+		$this->queryParams = $queryParams;
 	}
 	
 	public function setBaseUrl($string) {
@@ -51,20 +54,20 @@ class ApiTester {
 		return $this->query_time;
 	}
 	
-	public function get($uri, $data = null) {
-		return $this->call('GET', $uri, $data);
+	public function get($uri, $data = null, $params = array()) {
+		return $this->call('GET', $uri, $data, $params);
 	}
 	
-	public function put($uri, $data = null) {
-		return $this->call('PUT', $uri, $data);
+	public function put($uri, $data = null, $params = array()) {
+		return $this->call('PUT', $uri, $data, $params);
 	}
 	
-	public function post($uri, $data = null) {
-		return $this->call('POST', $uri, $data);
+	public function post($uri, $data = null, $params = array()) {
+		return $this->call('POST', $uri, $data, $params);
 	}
 	
-	public function delete($uri, $data = null) {
-		return $this->call('DELETE', $uri, $data);
+	public function delete($uri, $data = null, $params = array()) {
+		return $this->call('DELETE', $uri, $data, $params);
 	}
 	
 	public function debugLastQuery() {
@@ -80,7 +83,7 @@ class ApiTester {
 </pre>";
 	}
 	
-	protected function call($method, $uri, $data = null) {
+	protected function call($method, $uri, $data = null, $params = array()) {
 		//if not fully qualified, prepend base_url, strip slashes
 		if(0 !== strpos(strtolower($uri), 'http') && $this->base_url) {
 			$uri = rtrim($this->base_url."/".ltrim($uri, "/"), "/");
@@ -92,6 +95,12 @@ class ApiTester {
 				$data = http_build_query($data);
 			}
 		}
+
+		//build query string parameters if specified
+		$queryParams = array_merge($this->queryParams, $params);
+		$q = (!empty($queryParams)) ? http_build_query($queryParams) : null;
+		
+		$uri .= $q;
 
 		//build curl object
         $ch = curl_init($uri);

@@ -12,12 +12,12 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 class Relation {
 	
     /**
-     * @MongoDB\Id
+     * @MongoDB\String
      */
 	protected $subject_id;
 	
     /**
-     * @MongoDB\Id
+     * @MongoDB\String
      */
 	protected $object_id;
 	

@@ -27,6 +27,13 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
 	protected $container;
 	
 	/**
+	 * The event dispathcher used specifically for API events.
+	 * 
+	 * @var Symfony\Component\EventDispatcher\EventDispatcherInterface
+	 */
+	protected $dispatcher;
+	
+	/**
 	 * String format to use during view events, passed to the JMS Serializer.  Default is JSON unless specified otherwise in configuration.
 	 *
 	 * @var string
@@ -53,6 +60,8 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
 
 	public function __construct(ContainerInterface $container) {
 		$this->container = $container;
+//		$this->dispatcher = $this->container->get('web_services.dispatcher');
+		//$this->exceptionCodes = $this->container->getParameter('web_services.exception_codes');
 	}
 	
 	/**
@@ -81,6 +90,7 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
 		
 		//now check for client-specified format overrides
 		$this->format = $request->query->get('_format', $this->format);
+		//TODO: check headers for specified format
 		
 		//check if we should suppress http response codes, and always default to 200
 		$this->suppress_response_codes = $request->query->get('_suppress_codes', false);
@@ -90,12 +100,9 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
 			$this->format = 'json';
 			throw new HttpException(415);
 		}
+				
+		//TODO (MAYBE): get api client instance, set in container... ?, if no client, throw 401 - or use plug into the Security component for this... depends
 		
-		//TODO: load codes / messages from config for special ApiExceptions?
-		
-		//TODO: get api client instance, set in container... ?, if no client, throw 401
-		
-		//check if request specifies a format in any way, record it here
 	}
 
 	/**
@@ -104,7 +111,7 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
 	public function onApiController(FilterControllerEvent $e) {
 		//any auth logic if not integrated into security component, possibly profiling logic as well
 		
-		//check for format in the url
+		//TODO: check for format in the url
 	}
 
 	/**

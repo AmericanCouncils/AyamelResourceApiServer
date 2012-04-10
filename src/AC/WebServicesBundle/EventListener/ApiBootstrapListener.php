@@ -32,11 +32,6 @@ class ApiBootstrapListener {
 	public function onKernelRequest(GetResponseEvent $e) {
 		$request = $e->getRequest();
 
-		//only handle master requests
-		if(HttpKernelInterface::MASTER_REQUEST !== $e->getRequestType()) {
-			return;
-		}
-		
 		//if requested path contains `/rest/`, register the RestWorkflowListener
 		if(false !== strpos($request->getPathInfo(), "/rest/")) {
 			//build rest subscriber
