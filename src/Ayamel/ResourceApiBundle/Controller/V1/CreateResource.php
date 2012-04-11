@@ -26,9 +26,10 @@ class CreateResource extends ApiController {
 		$resource = $validator->createAndValidateNewResource($data);
 		
 		//set the properties controlled by the resource library
-		$time = time();
-		$resource->setDateAdded($time);
-		$resource->setDateModified($time);
+		$date = new \DateTime();
+		$resource->setDateAdded($date);
+		$resource->setDateModified($date);
+		$resource->setStatus(Resource::STATUS_AWAITING_CONTENT);
 		
         //attempt to persist object to Mongo
         $dm = $this->get('doctrine.odm.mongodb.document_manager');

@@ -5,7 +5,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Ayamel\ResourceBundle\Document\Resource;
 use Ayamel\ResourceBundle\Document\Relation;
-use Ayamel\ResourceBundle\ResourceFactory;
+use Ayamel\ResourceBundle\ResourceDocumentsFactory;
 
 /**
  * A class with convenience methods for decoding and validating incoming API data for create and update actions.
@@ -24,6 +24,10 @@ class ClientResourceDataValidator {
 		'description',
 		'public',
 		'relations',
+		'l2Data',
+		'copyright',
+		'keywords',
+		'categories',
 	);
 	
 	/**
@@ -36,6 +40,10 @@ class ClientResourceDataValidator {
 		'description',
 		'public',
 		'relations',
+		'l2Data',
+		'copyright',
+		'keywords',
+		'categories',
 	);
 	
 	/**
@@ -89,7 +97,7 @@ class ClientResourceDataValidator {
 		
 		//try using the factory to create the resource with the given data
 		try {
-			return ResourceFactory::createResourceFromArray($data);
+			return ResourceDocumentsFactory::createResourceFromArray($data);
 		} catch (\Exception $e) {
 			throw new HttpException(400, $e->getMessage());
 		}
@@ -125,7 +133,7 @@ class ClientResourceDataValidator {
 		$this->scanWhitelistField(array_flip($this->updateFieldWhitelist), $data);
 		
 		try {
-			ResourceFactory::callSetters($resource, $data);
+			ResourceDocumentsFactory::callSetters($resource, $data);
 			return $resource;
 		} catch (\Exception $e) {
 			throw new HttpException(400, $e->getMessage());

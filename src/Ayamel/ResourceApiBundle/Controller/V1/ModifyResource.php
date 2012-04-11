@@ -26,7 +26,7 @@ class ModifyResource extends ApiController {
 		$resource = $validator->modifyAndValidateExistingResource($resource, $data);
 		
 		//modify fields controlled by the resource library
-		$resource->setDateModified(time());
+		$resource->setDateModified(new \DateTime());
 				
 		//save it
         $dm = $this->container->get('doctrine.odm.mongodb.document_manager');

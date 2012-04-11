@@ -36,6 +36,7 @@ class RemoveResource extends ApiController {
 		
 		//set date deleted
 		$resource->setDateDeleted(time());
+		$resource->setStatus(Resource::STATUS_DELETED);
 
 		//save deleted resource
         $dm = $this->get('doctrine.odm.mongodb.document_manager');

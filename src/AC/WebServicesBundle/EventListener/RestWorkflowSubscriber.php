@@ -15,6 +15,11 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
+ * TODO: needs to be properly abstracted, some functionality needs to move out of here and into Ayamel\ResourceApiBundle... could do this via special event dispatchers
+ */
+
+
+/**
  * A listener that monitors input/output for all requests under `/rest/`.  Enforces accept header, logs requests and handles exceptions thrown by Controllers.
  *
  * @author Evan Villemez
@@ -141,6 +146,8 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
 				'class' => get_class($exception),
 				'message' => $exception->getMessage(),
 				'code' => $exception->getCode(),
+				'file' => $exception->getFile(),
+				'line' => $exception->getLine(),
 				'trace' => explode("#", $exception->getTraceAsString())
 			);
 		}

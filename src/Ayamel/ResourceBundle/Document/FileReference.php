@@ -1,98 +1,54 @@
 <?php
+
 namespace Ayamel\ResourceBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use JMS\SerializerBundle\Annotation as JMS;
 
 /**
- * Relation object
+ * File reference object
  *
  * @MongoDB\EmbeddedDocument
+ * @JMS\ExclusionPolicy("none")
  * 
  */
-class Relation {
+class FileReference {
+
+    /**
+     * @MongoDB\String
+	 * @JMS\SerializedName("publicUri")
+     */
+	protected $publicUri;
 	
     /**
      * @MongoDB\String
-	 * @JMS\SerializedName("subjectId")
+	 * @JMS\SerializedName("streamUri")
      */
-	protected $subjectId;
+	protected $streamUri;
 	
     /**
      * @MongoDB\String
-	 * @JMS\SerializedName("objectId")
+	 * @JMS\Exclude
+	 * @JMS\SerializedName("internalUri")
      */
-	protected $objectId;
-	
-    /**
-     * @MongoDB\String
-     */
-	protected $type;
-	
+	protected $internalUri;
+
     /**
      * @MongoDB\Hash
      */
-	protected $attributes = array();
+	protected $attributes;
 
-    /**
-     * Get subjectId
-     *
-     * @return id $subjectId
-     */
-    public function getSubjectId()
-    {
-        return $this->subjectId;
-    }
-
-    /**
-     * Set subjectId
-     *
-     * @return void
-     */
-    public function setSubjectId($id)
-    {
-        $this->subjectId = $id;
-    }
-
-    /**
-     * Get objectId
-     *
-     * @return id $objectId
-     */
-    public function getObjectId()
-    {
-        return $this->objectId;
-    }
-
-    /**
-     * Set objectId
-     *
-     * @return void
-     */
-    public function setObjectId($id)
-    {
-        $this->objectId = $id;
-    }
-
-    /**
-     * Set type
-     *
-     * @param string $type
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
-
-    /**
-     * Get type
-     *
-     * @return string $type
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
+	/**
+	 * Create a reference from an internal file path
+	 *
+	 * @param string $internalUri 
+	 * @return FileReference
+	 */
+	static public function createFromPath($internalUri) {
+		$ref = new static();
+		$ref->setInternalUri($internalUri);
+		return $ref;
+	}
 
     /**
      * Set all attributes
@@ -160,4 +116,64 @@ class Relation {
 	public function hasAttribute($key) {
 		return isset($this->attributes[$key]);
 	}
+
+    /**
+     * Set publicUri
+     *
+     * @param string $publicUri
+     */
+    public function setPublicUri($publicUri)
+    {
+        $this->publicUri = $publicUri;
+    }
+
+    /**
+     * Get publicUri
+     *
+     * @return string $publicUri
+     */
+    public function getPublicUri()
+    {
+        return $this->publicUri;
+    }
+
+    /**
+     * Set streamUri
+     *
+     * @param string $streamUri
+     */
+    public function setStreamUri($streamUri)
+    {
+        $this->streamUri = $streamUri;
+    }
+
+    /**
+     * Get streamUri
+     *
+     * @return string $streamUri
+     */
+    public function getStreamUri()
+    {
+        return $this->streamUri;
+    }
+
+    /**
+     * Set internalUri
+     *
+     * @param string $internalUri
+     */
+    public function setInternalUri($internalUri)
+    {
+        $this->internalUri = $internalUri;
+    }
+
+    /**
+     * Get internalUri
+     *
+     * @return string $internalUri
+     */
+    public function getInternalUri()
+    {
+        return $this->internalUri;
+    }
 }

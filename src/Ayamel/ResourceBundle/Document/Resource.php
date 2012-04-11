@@ -3,15 +3,40 @@
 namespace Ayamel\ResourceBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
+use JMS\SerializerBundle\Annotation as JMS;
 
 /**
  * Base Resource persistence class
  *
  * @MongoDB\Document(db="ayamel", collection="resources")
- * 
  */
 class Resource {
     
+	/**
+	 * Status when object has no content
+	 */
+	const STATUS_AWATING_CONTENT = 'awaiting_content';
+
+	/**
+	 * Status when content is in queue to be processed
+	 */
+	const STATUS_AWATING_PROCESSING = 'awaiting_processing';
+
+	/**
+	 * Status when content is currently being processed
+	 */
+	const STATUS_PROCESSING = 'processing';
+	
+	/**
+	 * Status when content is processed and ok
+	 */
+	const STATUS_OK = 'ok';
+
+	/**
+	 * Status when object is deleted
+	 */
+	const STATUS_DELETED = 'deleted';
+	
     /**
      * @MongoDB\Id
      */
@@ -49,8 +74,9 @@ class Resource {
     
     /**
      * @MongoDB\String
+	 * @JMS\SerializedName("contributerName")
      */
-    protected $contributer_name;
+    protected $contributerName;
     
     /**
      * @MongoDB\Boolean
@@ -59,23 +85,27 @@ class Resource {
         
     /**
      * @MongoDB\Hash
+	 * @JMS\SerializedName("l2Data")
      */
-    protected $l2_data;
+    protected $l2Data;
     
     /**
      * @MongoDB\Date
+	 * @JMS\SerializedName("dateAdded")
      */
-    protected $date_added;
+    protected $dateAdded;
     
     /**
      * @MongoDB\Date
+	 * @JMS\SerializedName("dateModified")
      */
-    protected $date_modified;
+    protected $dateModified;
     
     /**
      * @MongoDB\Date
+	 * @JMS\SerializedName("dateDeleted")
      */
-    protected $date_deleted;
+    protected $dateDeleted;
     
     /**
      * @MongoDB\String
@@ -88,15 +118,15 @@ class Resource {
     protected $status;
     
     /**
-     * MongoDB\Id
+     * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\ContentCollection")
      */
-//    protected $content; //array of objects, variable type
+    public $content; //array of objects, variable type
     
     /**
      * @MongoDB\EmbedMany(targetDocument="Ayamel\ResourceBundle\Document\Relation")
      */
-    protected $relations = array();
-    
+    protected $relations;
+	    
     public function __construct()
     {
         $this->relations = new \Doctrine\Common\Collections\ArrayCollection();
@@ -233,23 +263,23 @@ class Resource {
     }
 
     /**
-     * Set contributer_name
+     * Set contributerName
      *
      * @param string $contributerName
      */
     public function setContributerName($contributerName)
     {
-        $this->contributer_name = $contributerName;
+        $this->contributerName = $contributerName;
     }
 
     /**
-     * Get contributer_name
+     * Get contributerName
      *
      * @return string $contributerName
      */
     public function getContributerName()
     {
-        return $this->contributer_name;
+        return $this->contributerName;
     }
 
     /**
@@ -273,83 +303,131 @@ class Resource {
     }
 
     /**
-     * Set l2_data
+     * Set l2Data
      *
      * @param hash $l2Data
      */
-    public function setL2Data($l2Data)
+    public function setL2Data(array $l2Data = null)
     {
-        $this->l2_data = $l2Data;
+        $this->l2Data = $l2Data;
     }
 
     /**
-     * Get l2_data
+     * Get l2Data
      *
      * @return hash $l2Data
      */
     public function getL2Data()
     {
-        return $this->l2_data;
+        return $this->l2Data;
     }
+	
+	/**
+	 * Returns a specific l2Data field by key, or a default value if it doesn't exist
+	 *
+	 * @param string $key 
+	 * @param mixed $default 
+	 * @return mixed
+	 */
+	public function getL2Datum($key, $default = null) {
+		return isset($this->l2Data[$key]) ? $this->l2Data[$key] : $default;
+	}
+	
+	/*
+	 * Add an individual l2Data property
+	 *
+	 * @param string $key 
+	 * @param mixed $val 
+	 * @return self
+	 */
+	public function addL2Datum($key, $val) {
+		$this->l2Data[$key] = $val;
+		return $this;
+	}
+
+	/**
+	 * Return true/false if specific l2Data property exists
+	 *
+	 * @param string $key 
+	 * @return boolean
+	 */
+	public function hasL2Datum($key) {
+		return isset($this->l2Data[$key]);
+	}
+	
+	/**
+	 * remove specific l2Data property
+	 *
+	 * @param string $key 
+	 * @return void
+	 * @author Evan Villemez
+	 */
+	public function removeL2Datum($key) {
+		if(isset($this->l2Data[$key])) {
+			unset($$this->l2Data[$key]);
+		}
+		
+		return $this;
+	}
 
     /**
-     * Set date_added
+     * Set dateAdded
      *
      * @param date $dateAdded
      */
     public function setDateAdded($dateAdded)
     {
-        $this->date_added = $dateAdded;
+        $this->dateAdded = $dateAdded;
     }
 
     /**
-     * Get date_added
+     * Get dateAdded
      *
      * @return date $dateAdded
      */
     public function getDateAdded()
     {
-        return $this->date_added;
+        return $this->dateAdded;
     }
 
     /**
-     * Set date_modified
+     * Set dateModified
      *
      * @param date $dateModified
      */
     public function setDateModified($dateModified)
     {
-        $this->date_modified = $dateModified;
+        $this->dateModified = $dateModified;
     }
 
     /**
-     * Get date_modified
+     * Get dateModified
      *
      * @return date $dateModified
      */
     public function getDateModified()
     {
-        return $this->date_modified;
+        return $this->dateModified;
     }
 
     /**
-     * Set date_deleted
+     * Set dateDeleted
      *
      * @param date $dateDeleted
      */
     public function setDateDeleted($dateDeleted)
     {
-        $this->date_deleted = $dateDeleted;
+        $this->dateDeleted = $dateDeleted;
     }
 
     /**
-     * Get date_deleted
+     * Get dateDeleted
      *
      * @return date $dateDeleted
      */
     public function getDateDeleted()
     {
-        return $this->date_deleted;
+        return $this->dateDeleted;
     }
 
     /**
@@ -393,14 +471,55 @@ class Resource {
     }
 
     /**
-     * Add relations
+     * Set relations
      *
-     * @param Ayamel\ResourceBundle\Document\Relation $relations
+     * @param array Ayamel\ResourceBundle\Document\Relation $relations
+     * @return self
      */
-    public function addRelations(\Ayamel\ResourceBundle\Document\Relation $relations)
+    public function setRelations(array $relations = null)
     {
-        $this->relations[] = $relations;
+		if($relations) {
+	        foreach($relations as $relation) {
+				$this->addRelation($relation);
+			}
+		} else {
+			$this->relations = new \Doctrine\Common\Collections\ArrayCollection();
+		}
+		
+		return $this;
     }
+
+    /**
+     * Add a relation
+     *
+     * @param Ayamel\ResourceBundle\Document\Relation $relation
+     * @return self
+     */
+    public function addRelation(\Ayamel\ResourceBundle\Document\Relation $relation)
+    {
+        $this->relations[] = $relation;
+		return $this;
+    }
+	
+	/**
+	 * Remove an instance of a relation
+	 *
+	 * @param Relation $relation 
+	 * @return self
+	 */
+	public function removeRelation(\Ayamel\ResourceBundle\Document\Relation $relation) {
+		$new = array();
+		
+		//TODO: this... not so efficient, can be refactored later
+		foreach($this->relations as $instance) {
+			if($instance !== $relation) {
+				$new[] = $instance;
+			}
+		}
+
+		$this->setRelations($new);
+		return $this;
+	}
 
     /**
      * Get relations
@@ -411,4 +530,25 @@ class Resource {
     {
         return $this->relations;
     }
+
+    /**
+     * Set content collection
+     *
+     * @param Ayamel\ResourceBundle\Document\ContentCollection $content
+     */
+    public function setContent(\Ayamel\ResourceBundle\Document\ContentCollection $content = null)
+    {
+        $this->content = $content;
+    }
+
+    /**
+     * Get content collection
+     *
+     * @return Ayamel\ResourceBundle\Document\ContentCollection $content
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+
 }
