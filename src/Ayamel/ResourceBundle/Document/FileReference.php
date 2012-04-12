@@ -49,6 +49,18 @@ class FileReference {
 		$ref->setInternalUri($internalUri);
 		return $ref;
 	}
+	
+	/**
+	 * Create a reference to a public uri
+	 *
+	 * @param string $publicUri 
+	 * @return FileReference
+	 */
+	static public function createFromPublicUri($publicUri) {
+		$ref = new static();
+		$ref->setPublicUri($publicUri);
+		return $ref;
+	}
 
     /**
      * Set all attributes
@@ -176,4 +188,26 @@ class FileReference {
     {
         return $this->internalUri;
     }
+	
+	/**
+	 * Test if a given file reference instance is pointing to the same file as this file reference instance.
+	 *
+	 * @param FileReference $file 
+	 * @return boolean
+	 */
+	public function equals(FileReference $file) {
+		if($file->getInternalUri() && $this->getInternalUri()) {
+			if($file->getInternalUri() == $this->getInternalUri()) {
+				return true;
+			}
+		}
+		
+		if($file->getPublicUri() && $this->getPublicUri()) {
+			if($file->getPublicUri() == $this->getPublicUri()) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 }

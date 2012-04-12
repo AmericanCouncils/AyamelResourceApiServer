@@ -7,6 +7,10 @@ use Ayamel\ResourceBundle\Document\Resource;
 use Ayamel\ResourceBundle\Document\Relation;
 use Ayamel\ResourceBundle\ResourceDocumentsFactory;
 
+/*
+TODO: allowed categories should be specified in config and checked here
+*/
+
 /**
  * A class with convenience methods for decoding and validating incoming API data for create and update actions.
  *
@@ -133,7 +137,7 @@ class ClientResourceDataValidator {
 		$this->scanWhitelistField(array_flip($this->updateFieldWhitelist), $data);
 		
 		try {
-			ResourceDocumentsFactory::callSetters($resource, $data);
+			ResourceDocumentsFactory::modifyResourceWithArray($resource, $data);
 			return $resource;
 		} catch (\Exception $e) {
 			throw new HttpException(400, $e->getMessage());

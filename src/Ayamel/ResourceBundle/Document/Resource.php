@@ -4,7 +4,7 @@ namespace Ayamel\ResourceBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use JMS\SerializerBundle\Annotation as JMS;
-
+use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Base Resource persistence class
  *
@@ -15,12 +15,12 @@ class Resource {
 	/**
 	 * Status when object has no content
 	 */
-	const STATUS_AWATING_CONTENT = 'awaiting_content';
+	const STATUS_AWAITING_CONTENT = 'awaiting_content';
 
 	/**
 	 * Status when content is in queue to be processed
 	 */
-	const STATUS_AWATING_PROCESSING = 'awaiting_processing';
+	const STATUS_AWAITING_PROCESSING = 'awaiting_processing';
 
 	/**
 	 * Status when content is currently being processed
@@ -58,7 +58,7 @@ class Resource {
     protected $keywords;
     
     /**
-     * @MongoDB\String
+     * @MongoDB\Hash
      */
     protected $categories;
     
@@ -129,7 +129,7 @@ class Resource {
 	    
     public function __construct()
     {
-        $this->relations = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->relations = new ArrayCollection();
     }
     
     /**
@@ -479,23 +479,24 @@ class Resource {
     public function setRelations(array $relations = null)
     {
 		if($relations) {
+			$this->relations = new ArrayCollection();
 	        foreach($relations as $relation) {
 				$this->addRelation($relation);
 			}
 		} else {
-			$this->relations = new \Doctrine\Common\Collections\ArrayCollection();
+			$this->relations = new ArrayCollection();
 		}
 		
 		return $this;
     }
-
+	
     /**
      * Add a relation
      *
      * @param Ayamel\ResourceBundle\Document\Relation $relation
      * @return self
      */
-    public function addRelation(\Ayamel\ResourceBundle\Document\Relation $relation)
+    public function addRelation(Relation $relation)
     {
         $this->relations[] = $relation;
 		return $this;
@@ -507,12 +508,11 @@ class Resource {
 	 * @param Relation $relation 
 	 * @return self
 	 */
-	public function removeRelation(\Ayamel\ResourceBundle\Document\Relation $relation) {
+	public function removeRelation(Relation $relation) {
 		$new = array();
 		
-		//TODO: this... not so efficient, can be refactored later
 		foreach($this->relations as $instance) {
-			if($instance !== $relation) {
+			if(!$instance->equals($relation)) {
 				$new[] = $instance;
 			}
 		}
@@ -536,7 +536,7 @@ class Resource {
      *
      * @param Ayamel\ResourceBundle\Document\ContentCollection $content
      */
-    public function setContent(\Ayamel\ResourceBundle\Document\ContentCollection $content = null)
+    public function setContent(ContentCollection $content = null)
     {
         $this->content = $content;
     }

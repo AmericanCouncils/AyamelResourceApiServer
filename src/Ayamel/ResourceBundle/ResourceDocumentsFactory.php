@@ -8,7 +8,7 @@ use Ayamel\ResourceBundle\Document\ContentCollection;
 use Ayamel\ResourceBundle\Document\FileReference;
 
 /**
- * This static class contains convenience methods for creating Resource objects from PHP arrays.
+ * This static class contains convenience methods for creating and modifying Resource objects from PHP arrays.
  *
  * @author Evan Villemez
  */
@@ -20,8 +20,8 @@ class ResourceDocumentsFactory {
 	 * @param array $data 
 	 * @return Ayamel\ResourceBundle\Document\Resource;
 	 */
-	static public function createResourceFromArray(array $data) {
-		$resource = new Resource;
+	static public function createResourceFromArray(array $data, Resource $preExistingResource = null) {
+		$resource = ($preExistingResource) ? $preExistingResource : new Resource;
 		
 		//check for content field
 		if(isset($data['content'])) {
@@ -43,6 +43,17 @@ class ResourceDocumentsFactory {
 		self::callSetters($resource, $data);
 
 		return $resource;
+	}
+	
+	/**
+	 * Modifies an existing resource object with a given data structure
+	 *
+	 * @param Resource $resource 
+	 * @param array $data 
+	 * @return Resource
+	 */
+	static public function modifyResourceWithArray(Resource $resource, array $data) {
+		return self::createResourceFromArray($data, $resource);
 	}
 	
 	/**

@@ -22,7 +22,7 @@ class ModifyResource extends ApiController {
 		//decode incoming data
 		$data = $validator->decodeIncomingResourceDataByRequest($this->getRequest());
 		
-		//validate incoming fields
+		//validate incoming fields and modify resource
 		$resource = $validator->modifyAndValidateExistingResource($resource, $data);
 		
 		//modify fields controlled by the resource library

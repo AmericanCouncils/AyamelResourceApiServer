@@ -160,4 +160,20 @@ class Relation {
 	public function hasAttribute($key) {
 		return isset($this->attributes[$key]);
 	}
+	
+	/**
+	 * Return true if a given relation instance is the same as this relation instance
+	 *
+	 * @param Relation $relation 
+	 * @return void
+	 * @author Evan Villemez
+	 */
+	public function equals(Relation $relation) {
+		return (
+			($this->subjectId === $relation->getSubjectId()) &&
+			($this->objectId === $relation->getObjectId()) &&
+			($this->type === $relation->getType()) &&
+			($this->attributes == $relation->getAttributes())
+		);
+	}
 }

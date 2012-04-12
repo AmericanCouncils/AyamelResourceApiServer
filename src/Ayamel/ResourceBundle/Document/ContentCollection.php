@@ -4,6 +4,9 @@ namespace Ayamel\ResourceBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use JMS\SerializerBundle\Annotation as JMS;
+use Doctrine\Common\Collections\ArrayCollection;
+
+use Ayamel\ResourceBundle\Document\FileReference;
 
 /**
  * Content container object, contains several types of fields for referencing the content of a resource object
@@ -22,7 +25,7 @@ class ContentCollection {
     /**
      * @MongoDB\Hash
      */
-	protected $oembed;	
+	protected $oembed;
 	
     /**
      * @MongoDB\EmbedMany(targetDocument="Ayamel\ResourceBundle\Document\FileReference")
@@ -31,7 +34,7 @@ class ContentCollection {
 
     public function __construct()
     {
-        $this->files = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->files = new ArrayCollection();
     }
 
     /**
@@ -127,10 +130,15 @@ class ContentCollection {
      * @param array Ayamel\ResourceBundle\Document\FileReference $files
      * @return self
      */
-    public function setFiles(array $files)
+    public function setFiles(array $files = null)
     {
-        foreach($files as $file) {
-			$this->addFile($file);
+		if($files !== null) {
+			$this->files = new ArrayCollection();
+	        foreach($files as $file) {
+				$this->addFile($file);
+			}
+		} else {
+			$this->files = new ArrayCollection();
 		}
 		
 		return $this;
@@ -142,7 +150,7 @@ class ContentCollection {
      * @param Ayamel\ResourceBundle\Document\Relation $file
      * @return self
      */
-    public function addFile(\Ayamel\ResourceBundle\Document\FileReference $file)
+    public function addFile(FileReference $file)
     {
         $this->files[] = $file;
 		return $this;
@@ -154,7 +162,7 @@ class ContentCollection {
 	 * @param FileReference $file 
 	 * @return self
 	 */
-	public function removeFile(\Ayamel\ResourceBundle\Document\FileReference $file) {
+	public function removeFile(FileReference $file) {
 		$new = array();
 		
 		//TODO: this... not so efficient, can be refactored later
