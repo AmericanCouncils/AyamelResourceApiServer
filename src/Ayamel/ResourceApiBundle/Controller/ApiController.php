@@ -15,7 +15,7 @@ abstract class ApiController extends Controller
 	/**
 	 * Get the client system for the current api request.
 	 *
-	 * @return TBD
+	 * @return TBD //TODO
 	 */
 	protected function getApiClient() {
 		throw new \Exception(__METHOD__." not yet implemented.");
@@ -37,7 +37,7 @@ abstract class ApiController extends Controller
 	 *
 	 * @return Symfony\Component\HttpKernel\Exception\HttpException
 	 */
-	protected function createHttpException($code = 500, $message = null) {
+	protected function createHttpException($code = 500, $message = "Internal Server Error") {
 		return new \Symfony\Component\HttpKernel\Exception\HttpException($code, $message);
 	}
 	
@@ -68,6 +68,11 @@ abstract class ApiController extends Controller
 		}
 		
 		return $resource;
+	}
+	
+	
+	protected function createServiceResponse($data, $code = 200, $headers = array()) {
+		return new \AC\WebServicesBundle\Response\ServiceResponse($data, $code, $headers);
 	}
 	
 	protected function returnDeletedResource(Resource $resource) {

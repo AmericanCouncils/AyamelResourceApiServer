@@ -5,13 +5,15 @@ namespace Ayamel\ResourceBundle\Document;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use JMS\SerializerBundle\Annotation as JMS;
 use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Base Resource persistence class
  *
  * @MongoDB\Document(db="ayamel", collection="resources")
+ * @JMS\ExclusionPolicy("none")
  */
 class Resource {
-    
+	    
 	/**
 	 * Status when object has no content
 	 */
@@ -36,6 +38,26 @@ class Resource {
 	 * Status when object is deleted
 	 */
 	const STATUS_DELETED = 'deleted';
+
+	/**
+	 * Array of scalar property type validators, because PHP sucks and doesn't do scalar type hinting.  This is used in the `validate()` method.
+	 *
+	 * @JMS\Exclude
+	 * 
+	 * @var array
+	 */
+	protected $_validators = array(
+		'title' => 'string',
+		'description' => 'string',
+		'keywords' => 'string',
+		'type' => 'string',
+		'contributer' => 'string',
+		'contributerName' => 'string',
+		'public' => 'bool',
+		'copyright' => 'string',
+		'license' => 'string',
+		'status' => 'string',
+	);
 	
     /**
      * @MongoDB\Id
@@ -111,6 +133,11 @@ class Resource {
      * @MongoDB\String
      */
     protected $copyright;
+	
+    /**
+     * @MongoDB\String
+     */
+	protected $license = "Creative Commons";
     
     /**
      * @MongoDB\String
@@ -205,9 +232,9 @@ class Resource {
     /**
      * Set categories
      *
-     * @param string $categories
+     * @param array $categories
      */
-    public function setCategories($categories)
+    public function setCategories(array $categories)
     {
         $this->categories = $categories;
     }
@@ -375,7 +402,7 @@ class Resource {
      *
      * @param date $dateAdded
      */
-    public function setDateAdded($dateAdded)
+    public function setDateAdded(\DateTime $dateAdded = null)
     {
         $this->dateAdded = $dateAdded;
     }
@@ -395,7 +422,7 @@ class Resource {
      *
      * @param date $dateModified
      */
-    public function setDateModified($dateModified)
+    public function setDateModified(\DateTime $dateModified = null)
     {
         $this->dateModified = $dateModified;
     }
@@ -415,7 +442,7 @@ class Resource {
      *
      * @param date $dateDeleted
      */
-    public function setDateDeleted($dateDeleted)
+    public function setDateDeleted(\DateTime $dateDeleted = null)
     {
         $this->dateDeleted = $dateDeleted;
     }
@@ -449,6 +476,24 @@ class Resource {
     {
         return $this->copyright;
     }
+	
+	/**
+	 * Set license field
+	 *
+	 * @param string $license 
+	 */
+	public function setLicense($license) {
+		return $this->license;
+	}
+	
+	/**
+	 * Get license
+	 *
+	 * @return string
+	 */
+	public function getLicense() {
+		return $this->license;
+	}
 
     /**
      * Set status
@@ -550,5 +595,43 @@ class Resource {
     {
         return $this->content;
     }
+
+	/**
+	 * Validation method, because PHP sucks and can't do scalar type hinting.  Called automatically by Mongodb ODM before create/update operations.
+	 * 
+	 * Note that this validation is only for checking that values are of a certain type for a given field.  This validation has nothing to do with whether or not
+	 * a client has sent acceptable input via an api.
+	 *
+	 * @MongoDB\PrePersist
+	 * @MongoDB\PreUpdate
+	 * 
+	 * @param $return - whether or not to return errors, or throw exception
+	 * @throws InvalidArgumentException if $return is false
+	 * @return true on success or array if validation fails
+	 */
+	public function validate($return = false) {
+		$errors = array();
+		
+		//check scalar fields
+		foreach($this->_validators as $field => $type) {
+			if($this->$field !== null) {
+				if(function_exists($func = "is_".$type)) {
+					if(!$func($this->$field)) {
+						$errors[] = sprintf("Field '%s' must be of type '%s'", $field, $type);
+					}
+				}
+			}
+		}
+		
+		if(empty($errors)) {
+			return true;
+		}
+		
+		if($return) {
+			return $errors;
+		}
+		
+		throw new \InvalidArgumentException(implode(". ", $errors));
+	}
 
 }

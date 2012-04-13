@@ -32,6 +32,11 @@ class FileReference {
 	 * @JMS\SerializedName("internalUri")
      */
 	protected $internalUri;
+	
+    /**
+     * @MongoDB\String
+     */
+	protected $type;
 
     /**
      * @MongoDB\Hash
@@ -60,6 +65,24 @@ class FileReference {
 		$ref = new static();
 		$ref->setPublicUri($publicUri);
 		return $ref;
+	}
+	
+	/**
+	 * TODO: docs
+	 *
+	 * @return string
+	 */
+	public function getType() {
+		return $this->type;
+	}
+	
+	/**
+	 * TODO: docs
+	 *
+	 * @param string $type 
+	 */
+	public function setType($type) {
+		$this->type = $type;
 	}
 
     /**

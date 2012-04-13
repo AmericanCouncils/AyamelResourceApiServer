@@ -30,10 +30,15 @@ class ModifyResource extends ApiController {
 				
 		//save it
         $dm = $this->container->get('doctrine.odm.mongodb.document_manager');
-        $dm->persist($resource);
-        $dm->flush();
+		try {
+	        $dm->persist($resource);
+	        $dm->flush();
+		} catch (\Exception $e) {
+			throw $this->createHttpException(400, $e->getMessage());
+		}
 		
 		//return it
+		//TODO: return $this->createServiceResponse($data, 200);
 		$content = array(
 			'response' => array(
 				'code' => 200,

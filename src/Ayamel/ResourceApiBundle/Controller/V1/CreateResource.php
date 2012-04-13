@@ -16,6 +16,8 @@ class CreateResource extends ApiController {
     	
 	public function executeAction(Request $request) {
 		
+		//TODO: check authorization depending on how it's implemented
+		
 		//get validator
 		$validator = $this->container->get('ayamel.api.client_data_validator');
 		
@@ -33,8 +35,12 @@ class CreateResource extends ApiController {
 		
         //attempt to persist object to Mongo
         $dm = $this->get('doctrine.odm.mongodb.document_manager');
-        $dm->persist($resource);
-        $dm->flush();
+		try {
+	        $dm->persist($resource);
+	        $dm->flush();
+		} catch(\Exception $e) {
+			throw $this->createHttpException(400, $e->getMessage());
+		}
 		
 		//TODO: properly generate and store an upload token
 		$newID = $resource->getId();

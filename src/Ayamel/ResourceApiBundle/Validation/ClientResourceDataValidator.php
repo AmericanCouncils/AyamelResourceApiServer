@@ -101,7 +101,12 @@ class ClientResourceDataValidator {
 		
 		//try using the factory to create the resource with the given data
 		try {
-			return ResourceDocumentsFactory::createResourceFromArray($data);
+			$resource = ResourceDocumentsFactory::createResourceFromArray($data);
+
+			//manually validate so we can catch exceptions for improper field types
+			$resource->validate();
+			
+			return $resource;
 		} catch (\Exception $e) {
 			throw new HttpException(400, $e->getMessage());
 		}
@@ -138,6 +143,7 @@ class ClientResourceDataValidator {
 		
 		try {
 			ResourceDocumentsFactory::modifyResourceWithArray($resource, $data);
+			$resource->validate();
 			return $resource;
 		} catch (\Exception $e) {
 			throw new HttpException(400, $e->getMessage());
