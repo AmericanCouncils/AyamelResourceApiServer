@@ -37,7 +37,7 @@ abstract class ApiController extends Controller
 	 *
 	 * @return Symfony\Component\HttpKernel\Exception\HttpException
 	 */
-	protected function createHttpException($code = 500) {
+	protected function createHttpException($code = 500, $message = null) {
 		return new \Symfony\Component\HttpKernel\Exception\HttpException($code, $message);
 	}
 	
