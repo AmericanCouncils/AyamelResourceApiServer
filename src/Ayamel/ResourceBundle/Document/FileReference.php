@@ -219,16 +219,12 @@ class FileReference {
 	 * @return boolean
 	 */
 	public function equals(FileReference $file) {
-		if($file->getInternalUri() && $this->getInternalUri()) {
-			if($file->getInternalUri() == $this->getInternalUri()) {
-				return true;
-			}
+		if(($file->getInternalUri() && $this->getInternalUri()) && ($file->getInternalUri() == $this->getInternalUri())) {
+			return true;
 		}
 		
-		if($file->getPublicUri() && $this->getPublicUri()) {
-			if($file->getPublicUri() == $this->getPublicUri()) {
-				return true;
-			}
+		if(($file->getPublicUri() && $this->getPublicUri()) && ($file->getPublicUri() == $this->getPublicUri())) {
+			return true;
 		}
 		
 		return false;

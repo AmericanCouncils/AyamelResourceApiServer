@@ -31,4 +31,6 @@ In the future, this bundle should be split into two bundles.  The generic api wo
 
 ## Todo list ##
 
-* implement controllers
+* Implement proper tester route
+* Implement ServiceResponse and api-specific listeners
+* Implement remaining controllers

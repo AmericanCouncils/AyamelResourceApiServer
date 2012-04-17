@@ -34,6 +34,7 @@ Eventually there will be real documentation [here](Resources/docs/index.md).
 	
 ## Todo list ##
 
+* Implement ServiceResponse class
 * provide documentation generation commands based on definition files
 * provide code client generation commands based on defintion files
 * provide abstractable authentication solution ... maybe, there's lots of questions about this.
