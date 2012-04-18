@@ -1,7 +1,32 @@
 {% extends "::base.html.twig" %}
 
+{% block page_title %}
+<div class="page-title">
+  <h1>API Tester <small>... you know, for resources.</small></h1>
+  <hr />
+</div>
+{% endblock %}
+
+
 {% block body %}
-<h3>Welcome.</h3>
-<p>Eventually, there will be real content here.</p>
-<a href='{{ app.request.BaseUrl}}/api/v1/rest/resources/4f7a1db84c76553b66000001'>Resource 4f7a1db84c76553b66000001</a>
+<p>You can test calls against the resource API from here.  See the list of available routes below (note, not all of them are implemented):</p>
+<ul>
+	<li><code>POST: /resources</code></li>
+	<li><code>GET: /resources/{id}</code></li>
+	<li><code>PUT: /resources/{id}</code></li>
+	<li><code>DELETE: /resources/{id}</code></li>
+	<li><code>GET: /resources/{id}/request-upload-url</code></li>
+	<li><code>POST: /resources/{id}/content/{token}</code></li>
+	<li><code>GET: /resources/scan/{uri}</code> - will eventually return a full resource structure, given a uri.  This would be used for deriving resources from special uris, like youtube videos, in order to pre-fill forms for users who want to add something from there.</li>
+	<li><code>GET: /resources/search</code></li>
+	<li><code>GET: /resources/{id}/embed</code></li>
+	<li><code>GET: /resources/multi</code></li>
+	<li><code>POST: /resources/multi</code></li>
+	<li><code>PUT: /resources/multi</code></li>
+	<li><code>DELETE: /resources/multi</code></li>
+	
+</ul>
+<p>Quickly get an example resource: <a href='{{ app.request.BaseUrl}}/api/v1/rest/resources/4f7a1db84c76553b66000001?_format=yml'>GET: /resources/4f7a1db84c76553b66000001?_format=yml</a></p>
+<p><form method='post'>form</form></p>
+
 {% endblock %}

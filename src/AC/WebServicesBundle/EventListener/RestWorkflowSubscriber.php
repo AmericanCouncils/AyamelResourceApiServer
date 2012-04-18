@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * TODO: needs to be properly abstracted, some functionality needs to move out of here and into Ayamel\ResourceApiBundle... could do this via special event dispatchers
+ * TODO: Need to implement ServiceResponse where possible
  */
 
 

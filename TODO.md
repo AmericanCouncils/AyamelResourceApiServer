@@ -3,7 +3,7 @@
 These are the general steps, notes on actual implementation follow.
 
 1. basic resource API CRUD routes (no file upload) - in process
-2. file upload
+2. file/uri upload
 3. backend transcoding
 4. search index + api search routes
 5. api security and client management
@@ -35,11 +35,11 @@ Deal properly with content uploaded by the client, which includes physical files
 
 * Modify `AyamelResourceBundle`
 	* add ability to handle raw file uploads and manage the filesystem
-	* add ability to derive resource structures from special URI schemes
+	* add ability to derive resource structures from special URI schemes (most likely by connecting to specific APIs and querying an object by ID)
 		* youtube://_q23asdfADF33~
 * Add other Bundles if necessary to integrate the APIs we care about supporting
 	* `AyamelYoutubeResourceBundle`
-	* Vimeo
+	* `AyamelVimeoResourceBundle`
 	* ... others?
 
 ### Step 3 ###
@@ -66,9 +66,12 @@ Integrate either Apache Solr or ElasticSearch... we're leaning heavily towards E
 
 Integrate proper API security around the exposed API routes and provide interfaces for managing API clients.
 
+The big question I have regarding this step is: How important is security?  If we need SSL, we may as well just do OAuth, or at least part of it.  If not, simple API Key checking would probably be fine.
+
 * If a decent abstractable system can be realistically implemented, provide the structure for doing so in `ACWebServicesBundle`
+	* This would most likely be for simple API key authentication, if we go that route
 * Plug in another bundle (hopefully) or write our own API security system (hopefully not)
-	* `FOSOAuthServerBundle`
+	* `FOSOAuthServerBundle` - ability to do just 2-legged OAuth?
 * modify `AyamelResourceApiBundle` to integrate properly with security system as necessary
 
 ### Step 6 ###
