@@ -26,7 +26,15 @@
 	<li><code>DELETE: /resources/multi</code></li>
 	
 </ul>
-<p>Quickly get an example resource: <a href='{{ app.request.BaseUrl}}/api/v1/rest/resources/4f7a1db84c76553b66000001?_format=yml'>GET: /resources/4f7a1db84c76553b66000001?_format=yml</a></p>
-<p><form method='post'>form</form></p>
+<hr />
+<p>
+	<form method='post'>
+		{{ form_widget(form) }}
+		<input type='submit' value='Try Request' />
+	</form>
+</p>
+<hr />
+<p>Response Meta:</p>
+{{ response_debug | raw }}
 
 {% endblock %}

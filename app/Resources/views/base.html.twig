@@ -35,6 +35,14 @@
 		code {
 			background-color: #f8f8f8;
 		}
+		
+		form div {
+			margin-bottom: 5px;
+		}
+		
+		form label {
+			margin-right: 5px;
+		}
 
 	</style>
 	{% block title %}<title>Ayamel Resource API!</title>{% endblock %}
@@ -48,8 +56,10 @@
         <div class="container">
 			<a class = 'brand' href='{{ app.request.BaseUrl }}'>Ayamel API</a>
 		  	<ul>
+		  		<li><a href='{{ app.request.BaseUrl }}/about'>About</a></li>
 		  		<li><a href='{{ app.request.BaseUrl }}/api/docs'>Docs</a></li>
 		  		<li><a href='{{ app.request.BaseUrl }}/api/sdks'>SDKs</a></li>
+		  		<li><a href='{{ app.request.BaseUrl }}/showcase'>Showcase</a></li>
 		  		<li><a href='{{ app.request.BaseUrl }}/api/clients'>Clients</a></li>
 		  	</ul>
         </div>
