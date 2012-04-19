@@ -5,9 +5,9 @@ namespace Ayamel\ResourceApiBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-use Ayamel\ResourceApiBundle\ApiTester;
+use Ayamel\ResourceApiBundle\ApiTester as Tester;
 
-class Homepage extends Controller
+class ApiTester extends Controller
 {
 	public function indexAction(Request $request) {
 		$form = $this->buildForm($request);
@@ -21,7 +21,7 @@ class Homepage extends Controller
 				$data = (null !== $form['client_data']->getData()) ? json_decode($form['client_data']->getData()) : null;
 				
 				//call api
-				$api = new ApiTester($base_url);
+				$api = new Tester($base_url);
 				$result = $api->$method($route, $data);
 				
 				//set result
@@ -32,7 +32,7 @@ class Homepage extends Controller
 		}
 		
 		//return page template
-		return $this->render("AyamelResourceApiBundle:Default:home.html.twig", array(
+		return $this->render("AyamelResourceApiBundle:Default:tester.html.twig", array(
 			'form' => $form->createView(),
 			'response_debug' => $responseDebug,
 		));

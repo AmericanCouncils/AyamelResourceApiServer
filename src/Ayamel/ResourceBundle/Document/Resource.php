@@ -234,7 +234,7 @@ class Resource {
      *
      * @param array $categories
      */
-    public function setCategories(array $categories)
+    public function setCategories(array $categories = null)
     {
         $this->categories = $categories;
     }
