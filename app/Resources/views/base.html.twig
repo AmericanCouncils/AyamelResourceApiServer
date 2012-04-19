@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="{{app.request.basepath}}/css/bootstrap.css" rel="stylesheet">
     {% block stylesheets %}{% endblock %}
 
 <!--[if lt IE 7]> <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;'> <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode"><img src="http://storage.ie6countdown.com/assets/100/images/banners/warning_bar_0000_us.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today." /></a></div> <![endif]-->
@@ -56,11 +56,7 @@
         <div class="container">
 			<a class = 'brand' href='{{ app.request.BaseUrl }}'>Ayamel API</a>
 		  	<ul>
-		  		<li><a href='{{ app.request.BaseUrl }}/about'>About</a></li>
-		  		<li><a href='{{ app.request.BaseUrl }}/api/docs'>Docs</a></li>
-		  		<li><a href='{{ app.request.BaseUrl }}/api/sdks'>SDKs</a></li>
-		  		<li><a href='{{ app.request.BaseUrl }}/showcase'>Showcase</a></li>
-		  		<li><a href='{{ app.request.BaseUrl }}/api/clients'>Clients</a></li>
+		  		<li><a href='{{ app.request.BaseUrl }}/api/v1/docs'>Docs</a></li>
 		  	</ul>
         </div>
       </div>

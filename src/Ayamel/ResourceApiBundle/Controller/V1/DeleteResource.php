@@ -35,7 +35,7 @@ class DeleteResource extends ApiController {
 		}
 		
 		//set date deleted
-		$resource->setDateDeleted(time());
+		$resource->setDateDeleted(new \DateTime());
 		$resource->setStatus(Resource::STATUS_DELETED);
 
 		//save deleted resource
