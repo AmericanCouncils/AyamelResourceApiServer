@@ -13,9 +13,9 @@ use Ayamel\ResourceBundle\Document\Relation;
  * @author Evan Villemez
  */
 class GetResources extends ApiController {
-    	
-	public function executeAction(Request $request) {
-		throw $this->createHttpException(501);
-	}
+        
+    public function executeAction(Request $request) {
+        throw $this->createHttpException(501);
+    }
 
 }

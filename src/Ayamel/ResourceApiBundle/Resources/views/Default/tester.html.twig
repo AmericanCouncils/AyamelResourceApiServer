@@ -11,21 +11,21 @@
 {% block body %}
 <style>
 textarea {
-	width: 600px;
-	height: 200px;
+    width: 600px;
+    height: 200px;
 }
 
 input {
-	width: 600px;
+    width: 600px;
 }
 </style>
 <p>View the <a href='{{app.request.BaseUrl}}/api/v1/docs'>API docs</a> for a list of available routes and brief explanations.</p>
 <p>If you get unexpected errors (particularly <code>503</code> responses), try changing endpoints to <code>/index_dev.php/api/v1/rest</code> for additional exception output.</p>
 <p>
-	<form method='post'>
-		{{ form_widget(form) }}
-		<input type='submit' value='Try Request' />
-	</form>
+    <form method='post'>
+        {{ form_widget(form) }}
+        <input type='submit' value='Try Request' />
+    </form>
 </p>
 <hr />
 {{ response_debug | raw }}

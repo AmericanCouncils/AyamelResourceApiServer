@@ -42,9 +42,8 @@ class CreateResource extends ApiController {
 			throw $this->createHttpException(400, $e->getMessage());
 		}
 		
-		//TODO: properly generate and store an upload token
 		$newID = $resource->getId();
-		$uploadToken = '97asdf_place_holder_upload_token_jlkj3433';
+		$uploadToken = $this->container->get('ayamel.api.upload_token_manager')->createTokenForId($newID);
 		
         //define returned content structure
         $content = array(
