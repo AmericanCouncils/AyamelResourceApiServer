@@ -15,22 +15,22 @@ use Ayamel\ResourceBundle\Document\FileReference;
  * 
  */
 class ContentCollection {
-	
+    
     /**
      * @MongoDB\String
-	 * @JMS\SerializedName("canonicalUri")
+     * @JMS\SerializedName("canonicalUri")
      */
-	protected $canonicalUri;
+    protected $canonicalUri;
 
     /**
      * @MongoDB\Hash
      */
-	protected $oembed;
-	
+    protected $oembed;
+    
     /**
      * @MongoDB\EmbedMany(targetDocument="Ayamel\ResourceBundle\Document\FileReference")
      */
-	protected $files;
+    protected $files;
 
     public function __construct()
     {
@@ -76,54 +76,54 @@ class ContentCollection {
     {
         return $this->oembed;
     }
-	
-	/**
-	 * Set specific oembed field
-	 *
-	 * @param string $key 
-	 * @param mixed $val 
-	 * @return self
-	 */
-	public function setOembedKey($key, $val) {
-		$this->oembed[$key] = $val;
-		return $this;
-	}
-	
-	/**
-	 * Get value for specific Oembed field, returning default if it doesn't exist
-	 *
-	 * @param string $key 
-	 * @param mixed $default 
-	 * @return mixed
-	 */
-	public function getOembedKey($key, $default = null) {
-		return isset($this->oembed[$key]) ? $this->oembed[$key] : $default;
-	}
-	
-	/**
-	 * Remove a specific Oembed field if it's set
-	 *
-	 * @param string $key 
-	 * @return self
-	 */
-	public function removeOembedKey($key) {
-		if(isset($this->oembed[$key])) {
-			unset($this->oembed[$key]);
-		}
-		
-		return $this;
-	}
-	
-	/**
-	 * Return true/false if specific oembed field exists
-	 *
-	 * @param string $key 
-	 * @return boolean
-	 */
-	public function hasOembedKey($key) {
-		return isset($this->oembed[$key]);
-	}
-	
+    
+    /**
+     * Set specific oembed field
+     *
+     * @param string $key 
+     * @param mixed $val 
+     * @return self
+     */
+    public function setOembedKey($key, $val) {
+        $this->oembed[$key] = $val;
+        return $this;
+    }
+    
+    /**
+     * Get value for specific Oembed field, returning default if it doesn't exist
+     *
+     * @param string $key 
+     * @param mixed $default 
+     * @return mixed
+     */
+    public function getOembedKey($key, $default = null) {
+        return isset($this->oembed[$key]) ? $this->oembed[$key] : $default;
+    }
+    
+    /**
+     * Remove a specific Oembed field if it's set
+     *
+     * @param string $key 
+     * @return self
+     */
+    public function removeOembedKey($key) {
+        if(isset($this->oembed[$key])) {
+            unset($this->oembed[$key]);
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * Return true/false if specific oembed field exists
+     *
+     * @param string $key 
+     * @return boolean
+     */
+    public function hasOembedKey($key) {
+        return isset($this->oembed[$key]);
+    }
+    
     /**
      * Set files
      *
@@ -132,16 +132,16 @@ class ContentCollection {
      */
     public function setFiles(array $files = null)
     {
-		if($files !== null) {
-			$this->files = new ArrayCollection();
-	        foreach($files as $file) {
-				$this->addFile($file);
-			}
-		} else {
-			$this->files = new ArrayCollection();
-		}
-		
-		return $this;
+        if($files !== null) {
+            $this->files = new ArrayCollection();
+            foreach($files as $file) {
+                $this->addFile($file);
+            }
+        } else {
+            $this->files = new ArrayCollection();
+        }
+        
+        return $this;
     }
 
     /**
@@ -153,28 +153,28 @@ class ContentCollection {
     public function addFile(FileReference $file)
     {
         $this->files[] = $file;
-		return $this;
+        return $this;
     }
-	
-	/**
-	 * Remove an instance of a relation
-	 *
-	 * @param FileReference $file 
-	 * @return self
-	 */
-	public function removeFile(FileReference $file) {
-		$new = array();
-		
-		//TODO: this... not so efficient, can be refactored later
-		foreach($this->files as $instance) {
-			if($instance !== $file) {
-				$new[] = $instance;
-			}
-		}
+    
+    /**
+     * Remove an instance of a relation
+     *
+     * @param FileReference $file 
+     * @return self
+     */
+    public function removeFile(FileReference $file) {
+        $new = array();
+        
+        //TODO: this... not so efficient, can be refactored later
+        foreach($this->files as $instance) {
+            if($instance !== $file) {
+                $new[] = $instance;
+            }
+        }
 
-		$this->setFiles($new);
-		return $this;
-	}
+        $this->setFiles($new);
+        return $this;
+    }
 
     /**
      * Get files
@@ -185,6 +185,6 @@ class ContentCollection {
     {
         return $this->files;
     }
-	
-	
+    
+    
 }

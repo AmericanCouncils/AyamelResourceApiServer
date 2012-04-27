@@ -8,14 +8,14 @@ namespace AC\WebServicesBundle\Exception;
  * @author Evan Villemez
  */
 class ServiceException extends \Exception {
-	protected $key;
-	
-	public function __construct($key) {
-		$this->key = $key;
-		parent::__construct();
-	}
-	
-	public function getKey() {
-		return $this->key;
-	}
+    protected $key;
+    
+    public function __construct($key) {
+        $this->key = $key;
+        parent::__construct();
+    }
+    
+    public function getKey() {
+        return $this->key;
+    }
 }

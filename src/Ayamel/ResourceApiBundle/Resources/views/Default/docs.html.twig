@@ -11,74 +11,74 @@
 {% block body %}
 <style>
 textarea {
-	width: 600px;
-	height: 200px;
+    width: 600px;
+    height: 200px;
 }
 
 input {
-	width: 600px;
+    width: 600px;
 }
 
 li code {
-	font-size: 12px;
+    font-size: 12px;
 }
 </style>
 <h2>Version 1 API Routes <small>(work-in-progress)</small><h2>
 <p>The api endpoint is <code>{{app.request.BaseUrl}}/api/v1/rest</code>.</p>
 <p>Test the api via your browser <a href='{{app.request.BaseUrl}}'>here</a>.</p>
 <ul>
-	<li>
-		<code>POST: /resources</code>
-		<p>Create a resource object by sending JSON data.</p>
-	</li>
-	<li>
-		<code>GET: /resources/{id}</code>
-		<p>Retrieve a resource object by its ID.</p>
-	</li>
-	<li>
-		<code>PUT: /resources/{id}</code>
-		<p>Modify values on a resource object by its ID.</p>
-	</li>
-	<li>
-		<code>DELETE: /resources/{id}</code>
-		<p>Remove a resource object by its ID.</p>
-	</li>
-	<li>
-		<code>GET: /resources/{id}/request-upload-url</code>
-		<p>Request a valid content upload URL for a resource.</p>
-	</li>
-	<li>
-		<code>POST: /resources/{id}/content/{token}</code>
-		<p>Receives and processes content for a resource.  Content can either be a file upload, or a string URI, which will be parsed.</p>
-	</li>
-	<li>
-		<code>GET: /resources/scan/{uri}</code>
-		<p>This will eventually return a full resource structure, given a uri.  This would be used for deriving resources from special uris, like youtube videos, in order to pre-fill forms for users who want to add something from there.</p>
-	</li>
-	<li>
-		<code>GET: /resources/search</code>
-		<p>Returns array of resources references based on search parameters.</p>
-	</li>
-	<li>
-		<code>GET: /resources/{id}/embed</code>
-		<p>Returns an embeddable player for a resource.  Intended to be used similar the way that YouTube's HTML5 iframe player works.</p>
-	</li>
-	<li>
-		<code>GET: /resources/multi</code>
-		<p>Retrieve multiple resources by ID, or a subset of certain fields.  This is for bulk retrieval of entire objects, not search.</p>
-	</li>
-	<li>
-		<code>POST: /resources/multi</code>
-		<p>Create multiple resources in one operation.</p>
-	</li>
-	<li>
-		<code>PUT: /resources/multi</code>
-		<p>Modify multiple resources in one operation.</p>
-	</li>
-	<li>
-		<code>DELETE: /resources/multi</code>
-		<p>Delete multiple resources in one operation.</p>
-	</li>
-	
+    <li>
+        <code>POST: /resources</code>
+        <p>Create a resource object by sending JSON data.</p>
+    </li>
+    <li>
+        <code>GET: /resources/{id}</code>
+        <p>Retrieve a resource object by its ID.</p>
+    </li>
+    <li>
+        <code>PUT: /resources/{id}</code>
+        <p>Modify values on a resource object by its ID.</p>
+    </li>
+    <li>
+        <code>DELETE: /resources/{id}</code>
+        <p>Remove a resource object by its ID.</p>
+    </li>
+    <li>
+        <code>GET: /resources/{id}/request-upload-url</code>
+        <p>Request a valid content upload URL for a resource.</p>
+    </li>
+    <li>
+        <code>POST: /resources/{id}/content/{token}</code>
+        <p>Receives and processes content for a resource.  Content can either be a file upload, or a string URI, which will be parsed.</p>
+    </li>
+    <li>
+        <code>GET: /resources/scan/{uri}</code>
+        <p>This will eventually return a full resource structure, given a uri.  This would be used for deriving resources from special uris, like youtube videos, in order to pre-fill forms for users who want to add something from there.</p>
+    </li>
+    <li>
+        <code>GET: /resources/search</code>
+        <p>Returns array of resources references based on search parameters.</p>
+    </li>
+    <li>
+        <code>GET: /resources/{id}/embed</code>
+        <p>Returns an embeddable player for a resource.  Intended to be used similar the way that YouTube's HTML5 iframe player works.</p>
+    </li>
+    <li>
+        <code>GET: /resources/multi</code>
+        <p>Retrieve multiple resources by ID, or a subset of certain fields.  This is for bulk retrieval of entire objects, not search.</p>
+    </li>
+    <li>
+        <code>POST: /resources/multi</code>
+        <p>Create multiple resources in one operation.</p>
+    </li>
+    <li>
+        <code>PUT: /resources/multi</code>
+        <p>Modify multiple resources in one operation.</p>
+    </li>
+    <li>
+        <code>DELETE: /resources/multi</code>
+        <p>Delete multiple resources in one operation.</p>
+    </li>
+    
 </ul>
 {% endblock %}
