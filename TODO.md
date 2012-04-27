@@ -14,7 +14,7 @@ These are the general steps, notes on actual implementation follow.
 
 Per each step, here's a general outline of how we'd like to go about implementing.
 
-### Step 1 (in progress) ###
+### Step 1 (done) ###
 
 Get the basics of exchanging the resource JSON structure down.
 
@@ -27,20 +27,21 @@ Get the basics of exchanging the resource JSON structure down.
 	* provides api workflow abstraction, format/error handling
 	* consider using FOSRestBundle instead, depending on what they do
 * `AyamelResourceApiBundle`
-	* integreate with `ACWebServicesBundle to expose public api routes for manipulating 
+	* integrate with `ACWebServicesBundle to expose basic CRUD api routes for manipulating resources
 
-### Step 2 ###
+### Step 2 (in progress) ###
 
 Deal properly with content uploaded by the client, which includes physical files, but also URIs to other resource that we may treat in a special manner, such as YouTube links.
 
 * Modify `AyamelResourceBundle`
-	* add ability to handle raw file uploads and manage the filesystem
+	* add ability to manage the filesystem
 	* add ability to derive resource structures from special URI schemes (most likely by connecting to specific APIs and querying an object by ID)
 		* youtube://_q23asdfADF33~
-* Add other Bundles if necessary to integrate the APIs we care about supporting
+* Create other Bundles as necessary to integrate the APIs we care about supporting
 	* `AyamelYoutubeResourceBundle`
 	* `AyamelVimeoResourceBundle`
 	* ... others?
+* Implement routes in `AyamelResourceApiBundle` to handle raw file uploads from clients
 
 ### Step 3 ###
 

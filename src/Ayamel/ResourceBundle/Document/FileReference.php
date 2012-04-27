@@ -16,74 +16,74 @@ class FileReference {
 
     /**
      * @MongoDB\String
-	 * @JMS\SerializedName("publicUri")
+     * @JMS\SerializedName("publicUri")
      */
-	protected $publicUri;
-	
+    protected $publicUri;
+    
     /**
      * @MongoDB\String
-	 * @JMS\SerializedName("streamUri")
+     * @JMS\SerializedName("streamUri")
      */
-	protected $streamUri;
-	
+    protected $streamUri;
+    
     /**
      * @MongoDB\String
-	 * @JMS\Exclude
-	 * @JMS\SerializedName("internalUri")
+     * @JMS\Exclude
+     * @JMS\SerializedName("internalUri")
      */
-	protected $internalUri;
-	
+    protected $internalUri;
+    
     /**
      * @MongoDB\String
      */
-	protected $type;
+    protected $type;
 
     /**
      * @MongoDB\Hash
      */
-	protected $attributes;
+    protected $attributes;
 
-	/**
-	 * Create a reference from an internal file path
-	 *
-	 * @param string $internalUri 
-	 * @return FileReference
-	 */
-	static public function createFromPath($internalUri) {
-		$ref = new static();
-		$ref->setInternalUri($internalUri);
-		return $ref;
-	}
-	
-	/**
-	 * Create a reference to a public uri
-	 *
-	 * @param string $publicUri 
-	 * @return FileReference
-	 */
-	static public function createFromPublicUri($publicUri) {
-		$ref = new static();
-		$ref->setPublicUri($publicUri);
-		return $ref;
-	}
-	
-	/**
-	 * TODO: docs
-	 *
-	 * @return string
-	 */
-	public function getType() {
-		return $this->type;
-	}
-	
-	/**
-	 * TODO: docs
-	 *
-	 * @param string $type 
-	 */
-	public function setType($type) {
-		$this->type = $type;
-	}
+    /**
+     * Create a reference from an internal file path
+     *
+     * @param string $internalUri 
+     * @return FileReference
+     */
+    static public function createFromPath($internalUri) {
+        $ref = new static();
+        $ref->setInternalUri($internalUri);
+        return $ref;
+    }
+    
+    /**
+     * Create a reference to a public uri
+     *
+     * @param string $publicUri 
+     * @return FileReference
+     */
+    static public function createFromPublicUri($publicUri) {
+        $ref = new static();
+        $ref->setPublicUri($publicUri);
+        return $ref;
+    }
+    
+    /**
+     * TODO: docs
+     *
+     * @return string
+     */
+    public function getType() {
+        return $this->type;
+    }
+    
+    /**
+     * TODO: docs
+     *
+     * @param string $type 
+     */
+    public function setType($type) {
+        $this->type = $type;
+    }
 
     /**
      * Set all attributes
@@ -104,53 +104,53 @@ class FileReference {
     {
         return $this->attributes;
     }
-	
-	/**
-	 * Set an individual attribute by key for the attributes propery.
-	 *
-	 * @param string $key 
-	 * @param mixed $val 
-	 * @return self
-	 */
-	public function setAttribute($key, $val) {
-		$this->attributes[$key] = $val;
-		return $this;
-	}
-	
-	/**
-	 * Get an individual attribute by key, returns default value if not found
-	 *
-	 * @param string $key
-	 * @param mixed $default
-	 * @return mixed
-	 */
-	public function getAttribute($key, $default = null) {
-		return isset($this->attributes[$key]) ? $this->attributes[$key] : $default;
-	}
-	
-	/**
-	 * Remove an attribute by key if it exists.
-	 *
-	 * @param string $key 
-	 * @return self
-	 */
-	public function removeAttribute($key) {
-		if(isset($this->attributes[$key])) {
-			unset($this->attributes[$key]);
-		}
-		
-		return $this;
-	}
-	
-	/**
-	 * Return boolean if attribute exists
-	 *
-	 * @param string $key 
-	 * @return boolean
-	 */
-	public function hasAttribute($key) {
-		return isset($this->attributes[$key]);
-	}
+    
+    /**
+     * Set an individual attribute by key for the attributes propery.
+     *
+     * @param string $key 
+     * @param mixed $val 
+     * @return self
+     */
+    public function setAttribute($key, $val) {
+        $this->attributes[$key] = $val;
+        return $this;
+    }
+    
+    /**
+     * Get an individual attribute by key, returns default value if not found
+     *
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public function getAttribute($key, $default = null) {
+        return isset($this->attributes[$key]) ? $this->attributes[$key] : $default;
+    }
+    
+    /**
+     * Remove an attribute by key if it exists.
+     *
+     * @param string $key 
+     * @return self
+     */
+    public function removeAttribute($key) {
+        if(isset($this->attributes[$key])) {
+            unset($this->attributes[$key]);
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * Return boolean if attribute exists
+     *
+     * @param string $key 
+     * @return boolean
+     */
+    public function hasAttribute($key) {
+        return isset($this->attributes[$key]);
+    }
 
     /**
      * Set publicUri
@@ -211,22 +211,22 @@ class FileReference {
     {
         return $this->internalUri;
     }
-	
-	/**
-	 * Test if a given file reference instance is pointing to the same file as this file reference instance.
-	 *
-	 * @param FileReference $file 
-	 * @return boolean
-	 */
-	public function equals(FileReference $file) {
-		if(($file->getInternalUri() && $this->getInternalUri()) && ($file->getInternalUri() == $this->getInternalUri())) {
-			return true;
-		}
-		
-		if(($file->getPublicUri() && $this->getPublicUri()) && ($file->getPublicUri() == $this->getPublicUri())) {
-			return true;
-		}
-		
-		return false;
-	}
+    
+    /**
+     * Test if a given file reference instance is pointing to the same file as this file reference instance.
+     *
+     * @param FileReference $file 
+     * @return boolean
+     */
+    public function equals(FileReference $file) {
+        if(($file->getInternalUri() && $this->getInternalUri()) && ($file->getInternalUri() == $this->getInternalUri())) {
+            return true;
+        }
+        
+        if(($file->getPublicUri() && $this->getPublicUri()) && ($file->getPublicUri() == $this->getPublicUri())) {
+            return true;
+        }
+        
+        return false;
+    }
 }

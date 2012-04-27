@@ -13,52 +13,52 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @JMS\ExclusionPolicy("none")
  */
 class Resource {
-	    
-	/**
-	 * Status when object has no content
-	 */
-	const STATUS_AWAITING_CONTENT = 'awaiting_content';
+        
+    /**
+     * Status when object has no content
+     */
+    const STATUS_AWAITING_CONTENT = 'awaiting_content';
 
-	/**
-	 * Status when content is in queue to be processed
-	 */
-	const STATUS_AWAITING_PROCESSING = 'awaiting_processing';
+    /**
+     * Status when content is in queue to be processed
+     */
+    const STATUS_AWAITING_PROCESSING = 'awaiting_processing';
 
-	/**
-	 * Status when content is currently being processed
-	 */
-	const STATUS_PROCESSING = 'processing';
-	
-	/**
-	 * Status when content is processed and ok
-	 */
-	const STATUS_OK = 'ok';
+    /**
+     * Status when content is currently being processed
+     */
+    const STATUS_PROCESSING = 'processing';
+    
+    /**
+     * Status when content is processed and ok
+     */
+    const STATUS_OK = 'ok';
 
-	/**
-	 * Status when object is deleted
-	 */
-	const STATUS_DELETED = 'deleted';
+    /**
+     * Status when object is deleted
+     */
+    const STATUS_DELETED = 'deleted';
 
-	/**
-	 * Array of scalar property type validators, because PHP sucks and doesn't do scalar type hinting.  This is used in the `validate()` method.
-	 *
-	 * @JMS\Exclude
-	 * 
-	 * @var array
-	 */
-	protected $_validators = array(
-		'title' => 'string',
-		'description' => 'string',
-		'keywords' => 'string',
-		'type' => 'string',
-		'contributer' => 'string',
-		'contributerName' => 'string',
-		'public' => 'bool',
-		'copyright' => 'string',
-		'license' => 'string',
-		'status' => 'string',
-	);
-	
+    /**
+     * Array of scalar property type validators, because PHP sucks and doesn't do scalar type hinting.  This is used in the `validate()` method.
+     *
+     * @JMS\Exclude
+     * 
+     * @var array
+     */
+    protected $_validators = array(
+        'title' => 'string',
+        'description' => 'string',
+        'keywords' => 'string',
+        'type' => 'string',
+        'contributer' => 'string',
+        'contributerName' => 'string',
+        'public' => 'bool',
+        'copyright' => 'string',
+        'license' => 'string',
+        'status' => 'string',
+    );
+    
     /**
      * @MongoDB\Id
      */
@@ -96,7 +96,7 @@ class Resource {
     
     /**
      * @MongoDB\String
-	 * @JMS\SerializedName("contributerName")
+     * @JMS\SerializedName("contributerName")
      */
     protected $contributerName;
     
@@ -107,25 +107,25 @@ class Resource {
         
     /**
      * @MongoDB\Hash
-	 * @JMS\SerializedName("l2Data")
+     * @JMS\SerializedName("l2Data")
      */
     protected $l2Data;
     
     /**
      * @MongoDB\Date
-	 * @JMS\SerializedName("dateAdded")
+     * @JMS\SerializedName("dateAdded")
      */
     protected $dateAdded;
     
     /**
      * @MongoDB\Date
-	 * @JMS\SerializedName("dateModified")
+     * @JMS\SerializedName("dateModified")
      */
     protected $dateModified;
     
     /**
      * @MongoDB\Date
-	 * @JMS\SerializedName("dateDeleted")
+     * @JMS\SerializedName("dateDeleted")
      */
     protected $dateDeleted;
     
@@ -133,11 +133,11 @@ class Resource {
      * @MongoDB\String
      */
     protected $copyright;
-	
+    
     /**
      * @MongoDB\String
      */
-	protected $license = "Creative Commons";
+    protected $license = "Creative Commons";
     
     /**
      * @MongoDB\String
@@ -153,7 +153,7 @@ class Resource {
      * @MongoDB\EmbedMany(targetDocument="Ayamel\ResourceBundle\Document\Relation")
      */
     protected $relations;
-	    
+        
     public function __construct()
     {
         $this->relations = new ArrayCollection();
@@ -348,54 +348,54 @@ class Resource {
     {
         return $this->l2Data;
     }
-	
-	/**
-	 * Returns a specific l2Data field by key, or a default value if it doesn't exist
-	 *
-	 * @param string $key 
-	 * @param mixed $default 
-	 * @return mixed
-	 */
-	public function getL2Datum($key, $default = null) {
-		return isset($this->l2Data[$key]) ? $this->l2Data[$key] : $default;
-	}
-	
-	/*
-	 * Add an individual l2Data property
-	 *
-	 * @param string $key 
-	 * @param mixed $val 
-	 * @return self
-	 */
-	public function addL2Datum($key, $val) {
-		$this->l2Data[$key] = $val;
-		return $this;
-	}
+    
+    /**
+     * Returns a specific l2Data field by key, or a default value if it doesn't exist
+     *
+     * @param string $key 
+     * @param mixed $default 
+     * @return mixed
+     */
+    public function getL2Datum($key, $default = null) {
+        return isset($this->l2Data[$key]) ? $this->l2Data[$key] : $default;
+    }
+    
+    /*
+     * Add an individual l2Data property
+     *
+     * @param string $key 
+     * @param mixed $val 
+     * @return self
+     */
+    public function addL2Datum($key, $val) {
+        $this->l2Data[$key] = $val;
+        return $this;
+    }
 
-	/**
-	 * Return true/false if specific l2Data property exists
-	 *
-	 * @param string $key 
-	 * @return boolean
-	 */
-	public function hasL2Datum($key) {
-		return isset($this->l2Data[$key]);
-	}
-	
-	/**
-	 * remove specific l2Data property
-	 *
-	 * @param string $key 
-	 * @return void
-	 * @author Evan Villemez
-	 */
-	public function removeL2Datum($key) {
-		if(isset($this->l2Data[$key])) {
-			unset($$this->l2Data[$key]);
-		}
-		
-		return $this;
-	}
+    /**
+     * Return true/false if specific l2Data property exists
+     *
+     * @param string $key 
+     * @return boolean
+     */
+    public function hasL2Datum($key) {
+        return isset($this->l2Data[$key]);
+    }
+    
+    /**
+     * remove specific l2Data property
+     *
+     * @param string $key 
+     * @return void
+     * @author Evan Villemez
+     */
+    public function removeL2Datum($key) {
+        if(isset($this->l2Data[$key])) {
+            unset($$this->l2Data[$key]);
+        }
+        
+        return $this;
+    }
 
     /**
      * Set dateAdded
@@ -476,24 +476,24 @@ class Resource {
     {
         return $this->copyright;
     }
-	
-	/**
-	 * Set license field
-	 *
-	 * @param string $license 
-	 */
-	public function setLicense($license) {
-		return $this->license;
-	}
-	
-	/**
-	 * Get license
-	 *
-	 * @return string
-	 */
-	public function getLicense() {
-		return $this->license;
-	}
+    
+    /**
+     * Set license field
+     *
+     * @param string $license 
+     */
+    public function setLicense($license) {
+        return $this->license;
+    }
+    
+    /**
+     * Get license
+     *
+     * @return string
+     */
+    public function getLicense() {
+        return $this->license;
+    }
 
     /**
      * Set status
@@ -523,18 +523,18 @@ class Resource {
      */
     public function setRelations(array $relations = null)
     {
-		if($relations) {
-			$this->relations = new ArrayCollection();
-	        foreach($relations as $relation) {
-				$this->addRelation($relation);
-			}
-		} else {
-			$this->relations = new ArrayCollection();
-		}
-		
-		return $this;
+        if($relations) {
+            $this->relations = new ArrayCollection();
+            foreach($relations as $relation) {
+                $this->addRelation($relation);
+            }
+        } else {
+            $this->relations = new ArrayCollection();
+        }
+        
+        return $this;
     }
-	
+    
     /**
      * Add a relation
      *
@@ -544,27 +544,27 @@ class Resource {
     public function addRelation(Relation $relation)
     {
         $this->relations[] = $relation;
-		return $this;
+        return $this;
     }
-	
-	/**
-	 * Remove an instance of a relation
-	 *
-	 * @param Relation $relation 
-	 * @return self
-	 */
-	public function removeRelation(Relation $relation) {
-		$new = array();
-		
-		foreach($this->relations as $instance) {
-			if(!$instance->equals($relation)) {
-				$new[] = $instance;
-			}
-		}
+    
+    /**
+     * Remove an instance of a relation
+     *
+     * @param Relation $relation 
+     * @return self
+     */
+    public function removeRelation(Relation $relation) {
+        $new = array();
+        
+        foreach($this->relations as $instance) {
+            if(!$instance->equals($relation)) {
+                $new[] = $instance;
+            }
+        }
 
-		$this->setRelations($new);
-		return $this;
-	}
+        $this->setRelations($new);
+        return $this;
+    }
 
     /**
      * Get relations
@@ -596,43 +596,43 @@ class Resource {
         return $this->content;
     }
 
-	/**
-	 * Validation method, because PHP sucks and can't do scalar type hinting.  Called automatically by Mongodb ODM before create/update operations.
-	 * 
-	 * Note that this validation is only for checking that values are of a certain type for a given field.  This validation has nothing to do with whether or not
-	 * a client has sent acceptable input via an api.
-	 *
-	 * @MongoDB\PrePersist
-	 * @MongoDB\PreUpdate
-	 * 
-	 * @param $return - whether or not to return errors, or throw exception
-	 * @throws InvalidArgumentException if $return is false
-	 * @return true on success or array if validation fails
-	 */
-	public function validate($return = false) {
-		$errors = array();
-		
-		//check scalar fields
-		foreach($this->_validators as $field => $type) {	
-			//ignore null, that's how we unset/remove properties
-			if($this->$field !== null) {
-				if(function_exists($func = "is_".$type)) {
-					if(!$func($this->$field)) {
-						$errors[] = sprintf("Field '%s' must be of type '%s'", $field, $type);
-					}
-				}
-			}
-		}
-		
-		if(empty($errors)) {
-			return true;
-		}
-		
-		if($return) {
-			return $errors;
-		}
-		
-		throw new \InvalidArgumentException(implode(". ", $errors));
-	}
+    /**
+     * Validation method, because PHP sucks and can't do scalar type hinting.  Called automatically by Mongodb ODM before create/update operations.
+     * 
+     * Note that this validation is only for checking that values are of a certain type for a given field.  This validation has nothing to do with whether or not
+     * a client has sent acceptable input via an api.
+     *
+     * @MongoDB\PrePersist
+     * @MongoDB\PreUpdate
+     * 
+     * @param $return - whether or not to return errors, or throw exception
+     * @throws InvalidArgumentException if $return is false
+     * @return true on success or array if validation fails
+     */
+    public function validate($return = false) {
+        $errors = array();
+        
+        //check scalar fields
+        foreach($this->_validators as $field => $type) {    
+            //ignore null, that's how we unset/remove properties
+            if($this->$field !== null) {
+                if(function_exists($func = "is_".$type)) {
+                    if(!$func($this->$field)) {
+                        $errors[] = sprintf("Field '%s' must be of type '%s'", $field, $type);
+                    }
+                }
+            }
+        }
+        
+        if(empty($errors)) {
+            return true;
+        }
+        
+        if($return) {
+            return $errors;
+        }
+        
+        throw new \InvalidArgumentException(implode(". ", $errors));
+    }
 
 }
