@@ -52,8 +52,7 @@ abstract class ApiController extends Controller
     protected function getRequestedResourceById($id) {
 
         //get repository and find requested object
-        $repo = $this->container->get('doctrine.odm.mongodb.document_manager')->getRepository('AyamelResourceBundle:Resource');
-        $resource = $repo->find($id);
+		$resource = $this->container->get('ayamel.resource.manager')->getResourceById($id);
 
         //throw not found exception if necessary
         if(!$resource) {

@@ -167,7 +167,7 @@ class ContentCollection {
         
         //TODO: this... not so efficient, can be refactored later
         foreach($this->files as $instance) {
-            if($instance !== $file) {
+            if(!$instance->equals($file)) {
                 $new[] = $instance;
             }
         }

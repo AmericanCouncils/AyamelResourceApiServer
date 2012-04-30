@@ -28,16 +28,11 @@ class CreateResource extends ApiController {
 		$resource = $validator->createAndValidateNewResource($data);
 		
 		//set the properties controlled by the resource library
-		$date = new \DateTime();
-		$resource->setDateAdded($date);
-		$resource->setDateModified($date);
 		$resource->setStatus(Resource::STATUS_AWAITING_CONTENT);
 		
         //attempt to persist object to Mongo
-        $dm = $this->get('doctrine.odm.mongodb.document_manager');
 		try {
-	        $dm->persist($resource);
-	        $dm->flush();
+            $this->container->get('ayamel.resource.manager')->persistResource($resource);
 		} catch(\Exception $e) {
 			throw $this->createHttpException(400, $e->getMessage());
 		}

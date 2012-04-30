@@ -24,15 +24,10 @@ class ModifyResource extends ApiController {
         
         //validate incoming fields and modify resource
         $resource = $validator->modifyAndValidateExistingResource($resource, $data);
-        
-        //modify fields controlled by the resource library
-        $resource->setDateModified(new \DateTime());
-                
+                        
         //save it
-        $dm = $this->container->get('doctrine.odm.mongodb.document_manager');
         try {
-            $dm->persist($resource);
-            $dm->flush();
+            $this->container->get('ayamel.resource.manager')->persistResource($resource);
         } catch (\Exception $e) {
             throw $this->createHttpException(400, $e->getMessage());
         }

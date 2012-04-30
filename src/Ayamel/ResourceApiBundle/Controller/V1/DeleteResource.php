@@ -27,21 +27,7 @@ class DeleteResource extends ApiController {
         // - contributer name
         // - date added
         
-        //unset all fields (for now)
-        foreach(get_class_methods($resource) as $method) {
-            if(0 === strpos($method, 'set')) {
-                $resource->$method(null);
-            }
-        }
-        
-        //set date deleted
-        $resource->setDateDeleted(new \DateTime());
-        $resource->setStatus(Resource::STATUS_DELETED);
-
-        //save deleted resource
-        $dm = $this->get('doctrine.odm.mongodb.document_manager');
-        $dm->persist($resource);
-        $dm->flush();
+        $resource = $this->container->get('ayamel.resource.manager')->deleteResource($resource);
         
         //return ok
         return array(

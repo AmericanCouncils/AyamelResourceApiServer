@@ -1,0 +1,36 @@
+parameters:
+	ayamel.resources.types:
+        mp4: video
+        m4v: video
+        wmv: video
+        mov: video
+        avi: video
+        webm: video
+        mp3: audio
+        wma: audio
+        m4a: audio
+        aac: audio
+        wav: audio
+        jpg: image
+        jpeg: image
+        gif: image
+        png: image
+        tiff: image
+        txt: document
+        rtf: document
+        doc: document
+        docx: document
+        xls: document
+        xlsx: document
+        ppt: document
+        pptx: document
+        odt: document
+        csv: document
+        pdf: document
+        csv: document
+        zip: archive
+        tar: archive
+        rar: archive
+        iso: archive
+        gz: archive
+        tz: archive

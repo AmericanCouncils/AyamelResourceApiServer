@@ -147,7 +147,7 @@ class Resource {
     /**
      * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\ContentCollection")
      */
-    public $content; //array of objects, variable type
+    public $content;
     
     /**
      * @MongoDB\EmbedMany(targetDocument="Ayamel\ResourceBundle\Document\Relation")
