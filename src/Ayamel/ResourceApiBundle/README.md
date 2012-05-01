@@ -31,7 +31,11 @@ In the future, this bundle should be split into two bundles.  The generic api wo
 
 ## Todo list ##
 
-* Implement ResourceManager instead of hard-coded doctrine-mongo stuff
+* Configure services properly
+    * ayamel.api.filesystem
+    * ayamel.api.filesystem_subscriber
+    * ayamel.api.dispatcher
+        * ayamel.api.dispatcher.listener tags
 * Replace docs by implementing `NelmioApiDocBundle`
 * Implement ServiceResponse and api-specific listeners
 * Implement remaining controllers

@@ -29,7 +29,7 @@ interface ProviderInterface {
      * Build a full Resource object structure, providing as many fields as possible, from a given string uri.
      *
      * @param string $uri 
-     * @return Ayamel\ResourceBundle\Document\Resource
+     * @return Ayamel\ResourceBundle\Document\Resource or false
      * @author Evan Villemez
      */
     function createResourceFromUri($uri);

@@ -7,17 +7,12 @@ use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Special base Event class that is container and Resource aware
+ * Base Event class that is Resource aware
  *
  * @author Evan Villemez
  */
 class ResourceEvent extends Event {
 
-    /**
-     * @var object Symfony\Component\DependencyInjection\ContainerInterface
-     */
-	protected $container;
-    
     /**
      * @var object Ayamle\ResourceBundle\Document\Resource
      */
@@ -52,14 +47,5 @@ class ResourceEvent extends Event {
     public function getResource() {
         return $this->resource;
     }
-    
-    /**
-     * Set the container instance for listeners to use.
-     *
-     * @param ContainerInterface $container 
-     */
-    public function setContainer(ContainerInterface $container) {
-        $this->container = $container;
-    }
-    
+        
 }

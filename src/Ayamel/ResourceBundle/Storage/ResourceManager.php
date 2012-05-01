@@ -1,15 +1,16 @@
 <?php
 
-namespace Ayamel\ResourceBundle;
+namespace Ayamel\ResourceBundle\Storage;
 
 use Ayamel\ResourceBundle\Storage\StorageInterface;
+use Ayamel\ResourceBundle\Document\Resource;
 use Ayamel\ResourceBundle\Event\Events;
 use Ayamel\ResourceBundle\Event\ResourceEvent;
 use Ayamel\ResourceBundle\Event\GetResourceEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
-* ResourceManager wraps another storage interface, but also fires pre and post events for any action taken.
+* ResourceManager wraps another storage interface, but also fires pre and post events for any storge action taken.
  *
  * @author Evan Villemez
  */

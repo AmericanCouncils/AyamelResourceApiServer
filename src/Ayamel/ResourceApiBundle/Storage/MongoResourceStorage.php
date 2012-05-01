@@ -1,19 +1,30 @@
 <?php
 
-namespace Ayamel\ResourceBundle\Storage;
+namespace Ayamel\ResourceApiBundle\Storage;
 
 use Ayamel\ResourceBundle\Document\Resource;
+use Ayamel\ResourceBundle\Storage\StorageInterface;
 use Doctrine\ODM\MongoDB\DocumentRepository;
 
 /**
- * A ManagerInterface instance must provide a way to persist Resource objects, performing basic CRUD functionality, and some bulk retrieval functionality.
+ * Implements basic Resource object storage in MongoDB using Doctrine.
  *
  * @author Evan Villemez
  */
-class MongoResourceStorage implements ManagerInterface {
+class MongoResourceStorage implements StorageInterface {
     
+    /**
+     * undocumented variable
+     *
+     * @var object Doctrine\ODM\MongoDB\DocumentRepository
+     */
     protected $repo;
     
+    /**
+     * Constructor requires a Doctrine Mongo DocumentRepository instance.
+     *
+     * @param DocumentRepository $repo 
+     */
     public function __construct(DocumentRepository $repo) {
         $this->repo = $repo;
     }
@@ -38,6 +49,11 @@ class MongoResourceStorage implements ManagerInterface {
     
     /**
      * {@inheritdoc}
+     *
+     * Note:  The API's Mongo implementation will never actually delete a resource from storage, rather it
+     * will mark a resource as having been deleted, noting the date, thus preserving it's unique id and allowing
+     * handling of future errors properly.
+     * 
      */
     function deleteResource(Resource $resource) {
 

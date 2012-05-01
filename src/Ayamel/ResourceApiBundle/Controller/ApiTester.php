@@ -7,6 +7,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Ayamel\ResourceApiBundle\ApiTester as Tester;
 
+/**
+ * Send a test request to the API from user-specified data.
+ *
+ * @author Evan Villemez
+ */
 class ApiTester extends Controller
 {
     public function indexAction(Request $request) {
@@ -28,11 +33,11 @@ class ApiTester extends Controller
                 $responseDebug = $api->debugLastQuery();
             }
         } else {            
-            $responseDebug = "None";
+            $responseDebug = "No requests made.";
         }
         
         //return page template
-        return $this->render("AyamelResourceApiBundle:Default:tester.html.twig", array(
+        return $this->render("AyamelResourceApiBundle:tester.html.twig", array(
             'form' => $form->createView(),
             'response_debug' => $responseDebug,
         ));

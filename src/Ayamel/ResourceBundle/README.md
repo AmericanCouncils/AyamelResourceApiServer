@@ -27,7 +27,9 @@ Eventually there will be real documentation [here](Resources/docs/index.md).
 
 ## Todo list ##
 
-* file system class
 * write config files for services
-* move the MongoResourceStorage into AyamelResourceApiBundle, as it makes a few assumptions about implementation
-* implement new manager in api controllers
+    * ayamel.resource.manager.dispatcher (regular dispatcher, nothing special)
+        * ayamel.resource.manager.listener tags
+        * DI CompilerPass ?
+* Change namespace Document to Model - move Mongo/JMS mappings, validation and L2 functionality into AyamelResourceApiBundle
+    * Maybe... that is...
