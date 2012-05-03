@@ -2,7 +2,8 @@ imports:
     - { resource: parameters.yml }
 #    - { resource: security.yml }
     - { resource: '@ACWebServicesBundle/Resources/config/config.yml' }
-    - { resource: '@AyamelResourceApiBundle/Resources/config/services.yml' }
+    - { resource: '@AyamelResourceBundle/Resources/config/config.yml' }
+    - { resource: '@AyamelResourceApiBundle/Resources/config/config.yml' }
     
 framework:
     #esi:             ~

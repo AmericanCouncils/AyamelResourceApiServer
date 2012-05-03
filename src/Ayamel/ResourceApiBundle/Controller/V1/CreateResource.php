@@ -2,6 +2,8 @@
 namespace Ayamel\ResourceApiBundle\Controller\V1;
 
 use Ayamel\ResourceApiBundle\Controller\ApiController;
+use Ayamel\ResourceApiBundle\Event\Events;
+use Ayamel\ResourceApiBundle\Event\ApiEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Ayamel\ResourceBundle\Document\Resource;
@@ -28,23 +30,24 @@ class CreateResource extends ApiController {
 		$resource = $validator->createAndValidateNewResource($data);
 		
 		//set the properties controlled by the resource library
-		$date = new \DateTime();
-		$resource->setDateAdded($date);
-		$resource->setDateModified($date);
 		$resource->setStatus(Resource::STATUS_AWAITING_CONTENT);
 		
-        //attempt to persist object to Mongo
-        $dm = $this->get('doctrine.odm.mongodb.document_manager');
+        //attempt to persisting the object, most likely to mongo
 		try {
-	        $dm->persist($resource);
-	        $dm->flush();
+            $this->container->get('ayamel.resource.manager')->persistResource($resource);
 		} catch(\Exception $e) {
 			throw $this->createHttpException(400, $e->getMessage());
 		}
 		
+        //generate an upload token
 		$newID = $resource->getId();
 		$uploadToken = $this->container->get('ayamel.api.upload_token_manager')->createTokenForId($newID);
 		
+        //notify rest of system of new resource
+        $event = new ApiEvent;
+        $event->setResource($resource);
+        $this->container->get('ayamel.api.dispatcher')->dispatch(Events::RESOURCE_CREATED, $event);
+        
         //define returned content structure
         $content = array(
             'response' => array(

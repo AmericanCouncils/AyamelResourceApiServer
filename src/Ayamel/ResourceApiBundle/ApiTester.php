@@ -30,6 +30,7 @@ class ApiTester {
     protected $last_result = false;
     protected $query_time = false;
     protected $queryParams = false;
+    protected $last_uri = false;
     
     public function __construct($base_url = null, $queryParams = array()) {
         if($base_url) {
@@ -40,6 +41,10 @@ class ApiTester {
     
     public function setBaseUrl($string) {
         $this->base_url = $string;
+    }
+    
+    public function getLastUri() {
+        return $this->last_uri;
     }
     
     public function getLastResponseCode() {
@@ -75,6 +80,7 @@ class ApiTester {
 "<h3>Query Debug</h3>
 <pre>
     Query Time: ".$this->getLastQueryTime()." ms
+    Requested Uri: ".$this->getLastUri()."
     Response Code: ".$this->getLastResponseCode()."
     Response Type: ".$this->getLastResponseType()."
     Response Body: 
@@ -117,6 +123,7 @@ class ApiTester {
         //execute, store query data, and return response
         $startTime = microtime(true);
         $content = curl_exec($ch);
+        $this->last_uri = $uri;
         $this->query_time = (microtime(true)-$startTime) * 1000;
         $this->last_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $this->last_type = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
