@@ -2,6 +2,8 @@
 namespace Ayamel\ResourceApiBundle\Controller\V1;
 
 use Ayamel\ResourceApiBundle\Controller\ApiController;
+use Ayamel\ResourceApiBundle\Event\Events;
+use Ayamel\ResourceApiBundle\Event\ApiEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Ayamel\ResourceBundle\Document\Resource;
@@ -30,7 +32,7 @@ class CreateResource extends ApiController {
 		//set the properties controlled by the resource library
 		$resource->setStatus(Resource::STATUS_AWAITING_CONTENT);
 		
-        //attempt to persist object to Mongo
+        //attempt to persisting the object, most likely to mongo
 		try {
             $this->container->get('ayamel.resource.manager')->persistResource($resource);
 		} catch(\Exception $e) {

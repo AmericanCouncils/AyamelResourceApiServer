@@ -2,7 +2,7 @@
 
 namespace Ayamel\ResourceBundle\Event;
 
-use Ayamle\ResourceBundle\Document\Resource;
+use Ayamel\ResourceBundle\Document\Resource;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 

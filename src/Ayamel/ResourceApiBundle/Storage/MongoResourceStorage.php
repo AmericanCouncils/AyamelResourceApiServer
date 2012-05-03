@@ -4,7 +4,7 @@ namespace Ayamel\ResourceApiBundle\Storage;
 
 use Ayamel\ResourceBundle\Document\Resource;
 use Ayamel\ResourceBundle\Storage\StorageInterface;
-use Doctrine\ODM\MongoDB\DocumentRepository;
+use Doctrine\ODM\MongoDB\DocumentManager;
 
 /**
  * Implements basic Resource object storage in MongoDB using Doctrine.
@@ -14,19 +14,17 @@ use Doctrine\ODM\MongoDB\DocumentRepository;
 class MongoResourceStorage implements StorageInterface {
     
     /**
-     * undocumented variable
-     *
-     * @var object Doctrine\ODM\MongoDB\DocumentRepository
+     * @var object Doctrine\ODM\MongoDB\DocumentManager
      */
-    protected $repo;
+    protected $manager;
     
     /**
      * Constructor requires a Doctrine Mongo DocumentRepository instance.
      *
-     * @param DocumentRepository $repo 
+     * @param DocumentRepository $manager 
      */
-    public function __construct(DocumentRepository $repo) {
-        $this->repo = $repo;
+    public function __construct(DocumentManager $manager) {
+        $this->manager = $manager;
     }
     
     /**
@@ -41,8 +39,8 @@ class MongoResourceStorage implements StorageInterface {
     		$resource->setDateModified($date);
         }
                 
-        $this->repo->persist($resource);
-        $this->repo->flush();
+        $this->manager->persist($resource);
+        $this->manager->flush();
 
         return $resource;
     }
@@ -68,8 +66,8 @@ class MongoResourceStorage implements StorageInterface {
         $resource->setDateDeleted(new \DateTime());
         $resource->setStatus(Resource::STATUS_DELETED);
         
-        $this->repo->persist($resource);
-        $this->repo->flush();
+        $this->manager->persist($resource);
+        $this->manager->flush();
         
         return $resource;
     }
@@ -78,7 +76,7 @@ class MongoResourceStorage implements StorageInterface {
      * {@inheritdoc}
      */
     function getResourceById($id) {
-        return $repo->getRepository('AyamelResourceBundle:Resource')->find($id);
+        return $this->manager->getRepository('AyamelResourceBundle:Resource')->find($id);
     }
     
 }

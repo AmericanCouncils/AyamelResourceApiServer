@@ -2,6 +2,8 @@
 
 namespace Ayamel\ResourceApiBundle\Filesystem;
 
+use Ayamel\ResourceBundle\Document\FileReference;
+
 /**
  * Implements local file storage for Resource objects.
  *
@@ -20,11 +22,10 @@ class LocalFilesystem implements FilesystemInterface {
     protected $secret;
     
     /**
-     * undocumented function
+     * Constructor requires a root directory (should be an absolute path), and a secret for use in hash generation.
      *
-     * @param string $dir 
-     * @param string $secret 
-     * @author Evan Villemez
+     * @param string $dir - Absolute local file system path for use as root point.
+     * @param string $secret - A secret to use when generating hashes.
      */
     public function __construct($dir, $secret = 'changeme') {
         $this->rootDir = $dir;
@@ -32,14 +33,17 @@ class LocalFilesystem implements FilesystemInterface {
     }
     
     /**
-    * {@inheritdoc}
+     * {@inheritdoc}
+     *
+     * Uses md5() of the received id to generate a 3 level hashed directory structure, using 2 hex characters per directory (0-9, a-f).  This yields
+     * 16,777,216 possible directories, with no more than 256 subdirectories per containing directory, and should guarantee relatively uniform file distribution among them.
      */
     public function generateBaseDirectoryForId($id) {
-        $secret = $this->createFileSecretForId($id);
-        $hash1 = $secret[1].$secret[3].$secret[5];
-        $hash2 = $secret[4].$secret[9].$secret[11];
+        $hash = md5((string) $id);
+        $end = strlen($hash);
+        $hashDirs = $hash[$end-1].$hash[$end-2].DIRECTORY_SEPARATOR.$hash[$end-3].$hash[$end-4].DIRECTORY_SEPARATOR.$hash[$end-5].$hash[$end-6];
         
-        return $this->rootDir.DIRECTORY_SEPARATOR.$hash1.DIRECTORY_SEPARATOR.$hash2;
+        return $this->rootDir.DIRECTORY_SEPARATOR.$hashDirs;
     }
 
     /**
@@ -66,9 +70,16 @@ class LocalFilesystem implements FilesystemInterface {
     /**
      * {@inheritdoc}
      */
+    public function removeFileForId($id, $name) {
+        return $this->removeFile($this->generateBasePathForId($id).$name);
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
     public function removeFilesForId($id) {
-        foreach($this->getFilesForId($id) as $path) {
-            $this->removeFile($path);
+        foreach($this->getFilesForId($id) as $ref) {
+            $this->removeFile($ref->getInternalUri());
         }
     }
     
@@ -76,7 +87,7 @@ class LocalFilesystem implements FilesystemInterface {
      * {@inheritdoc}
      */
     public function getFilesForId($id) {
-        $pattern = $this->generateBasePathForId($id).DIRECTORY_SEPARATOR.$this->generateBaseFilenameForId($id)."*";
+        $pattern = $this->generateBasePathForId($id)."*";
         $files = array();
 
         foreach(glob($pattern) as $path) {
@@ -97,7 +108,7 @@ class LocalFilesystem implements FilesystemInterface {
         //make the containing dir if it doesn't exist
         $base = $this->generateBasePathForId($id);
         $dir = dirname($base);
-        if(!file_exists($dir)) {
+        if(!is_dir($dir)) {
             if(!mkdir($dir, 0755, true)) {
                 throw new \RuntimeException(sprintf("%s could not create a required directory for file storage.", __CLASS__));
             }
@@ -107,11 +118,13 @@ class LocalFilesystem implements FilesystemInterface {
         $filename = ($newBasename) ? $base.$newBasename : $base.basename($file->getInternalUri());
         
         //check for conflicts
-        if(file_exists($filename)) {
+        if(is_file($filename)) {
             if($onConflict === FilesystemInterface::CONFLICT_EXCEPTION) {
-                throw new \RuntimeException(sprintf("%s Cannot overwrite a pre-existing file.", __CLASS__));
+                throw new \RuntimeException(sprintf("%s cannot overwrite a pre-existing file.", __CLASS__));
+            } else {
+                unlink($filename);
             }
-        }
+        } 
 
         //copy or move file to new location
         if($copy) {
@@ -126,11 +139,39 @@ class LocalFilesystem implements FilesystemInterface {
         
         return false;
     }
+        
+    /**
+     * {@inheritdoc}
+     */
+    public function getCount($includeDirectories = false) {
+        $ds = DIRECTORY_SEPARATOR;
+        $fCount = 0;
+        $dCount = 0;
+
+        //TODO: this may scale terribly with lots of files, might want consider implementing with readdir instead
+        foreach(scandir($this->rootDir) as $lvl1) {
+            if($lvl1 === '.' || $lvl1 === '..') continue;
+            foreach(scandir($this->rootDir.$ds.$lvl1) as $lvl2) {
+                if($lvl2 === '.' || $lvl2 === '..') continue;
+                foreach(scandir($this->rootDir.$ds.$lvl1.$ds.$lvl2) as $lvl3) {
+                    if($lvl3 === '.' || $lvl3 === '..') continue;
+                    foreach(scandir($this->rootDir.$ds.$lvl1.$ds.$lvl2.$ds.$lvl3) as $file) {
+                        if($file === '.' || $file === '..') continue;
+                        $fCount++;
+                    }
+                    $dCount++;
+                }
+                $dCount++;
+            }
+            $dCount++;
+        }
+        
+        return ($includeDirectories) ? $fCount + $dCount : $fCount;
+    }    
     
-    protected function createFileSecretForId($id) {
-        //TODO: finish this
+    public function createFileSecretForId($id) {
+        $hash = sha1($id.$this->secret);
         return substr($hash, 3, 15);
     }
-    
-    
+
 }

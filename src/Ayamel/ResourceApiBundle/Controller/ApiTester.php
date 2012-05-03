@@ -37,7 +37,7 @@ class ApiTester extends Controller
         }
         
         //return page template
-        return $this->render("AyamelResourceApiBundle:tester.html.twig", array(
+        return $this->render("AyamelResourceApiBundle:Default:tester.html.twig", array(
             'form' => $form->createView(),
             'response_debug' => $responseDebug,
         ));

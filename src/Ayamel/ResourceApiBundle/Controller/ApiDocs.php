@@ -13,7 +13,7 @@ use Ayamel\ResourceBundle\Document\Resource;
 class ApiDocs extends ApiController {
     
     public function indexAction() {
-        return $this->render("AyamelResourceApiBundle:docs.html.twig");
+        return $this->render("AyamelResourceApiBundle:Default:docs.html.twig");
     }
 	
 }

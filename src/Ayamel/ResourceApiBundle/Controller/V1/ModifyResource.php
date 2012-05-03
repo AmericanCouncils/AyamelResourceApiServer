@@ -2,6 +2,8 @@
 
 namespace Ayamel\ResourceApiBundle\Controller\V1;
 
+use Ayamel\ResourceApiBundle\Event\Events;
+use Ayamel\ResourceApiBundle\Event\ApiEvent;
 use Ayamel\ResourceApiBundle\Controller\ApiController;
 
 class ModifyResource extends ApiController {
@@ -31,6 +33,11 @@ class ModifyResource extends ApiController {
         } catch (\Exception $e) {
             throw $this->createHttpException(400, $e->getMessage());
         }
+        
+        //notify rest of system of modified resource
+        $event = new ApiEvent;
+        $event->setResource($resource);
+        $this->container->get('ayamel.api.dispatcher')->dispatch(Events::RESOURCE_MODIFIED, $event);
         
         //return it
         //TODO: return $this->createServiceResponse($data, 200);

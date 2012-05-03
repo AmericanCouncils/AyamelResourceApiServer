@@ -27,9 +27,5 @@ Eventually there will be real documentation [here](Resources/docs/index.md).
 
 ## Todo list ##
 
-* write config files for services
-    * ayamel.resource.manager.dispatcher (regular dispatcher, nothing special)
-        * ayamel.resource.manager.listener tags
-        * DI CompilerPass ?
 * Change namespace Document to Model - move Mongo/JMS mappings, validation and L2 functionality into AyamelResourceApiBundle
     * Maybe... that is...

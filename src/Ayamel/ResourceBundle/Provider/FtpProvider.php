@@ -20,7 +20,7 @@ class FtpProvider extends AbstractFilePathProvider {
      * {@inheritdoc}
      */
     function handlesScheme($scheme) {
-        return ('ftp' === strtolower($scheme));
+        return in_array(strtolower($scheme), array('ftp','sftp'));
     }
-    
+
 }

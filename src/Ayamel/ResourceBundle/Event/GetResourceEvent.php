@@ -30,7 +30,7 @@ class GetResourceEvent extends ResourceEvent {
         if($id instanceof Resource) {
             parent::__construct($id);
         } else {
-            $this->setId($id);
+            $this->setResourceId($id);
         }
     }
     

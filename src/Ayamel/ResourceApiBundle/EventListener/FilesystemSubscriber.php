@@ -3,9 +3,8 @@
 namespace Ayamel\ResourceApiBundle\EventListener;
 
 use Ayamel\ResourceApiBundle\Filesystem\FilesystemInterface;
-use Ayamel\ResourceBundle\Event\Events;
-use Ayamel\ResourceBundle\Event\ResourceEvent;
-use Ayamel\ResourceBundle\Event\GetResourceEvent;
+use Ayamel\ResourceApiBundle\Event\Events;
+use Ayamel\ResourceApiBundle\Event\ApiEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -30,7 +29,7 @@ class FilesystemSubscriber implements EventSubscriberInterface {
      *
      * @return array
      */
-    public function getSubscribedEvents() {
+    public static function getSubscribedEvents() {
         return array(
             Events::RESOURCE_CREATED => 'onResourcePersisted',
             Events::RESOURCE_MODIFIED => 'onResourcePersisted',
@@ -62,5 +61,5 @@ class FilesystemSubscriber implements EventSubscriberInterface {
         $fs = $this->container->get('ayamel.api.filesystem');
         $fs->addFileForId($resource->getId(), $files[0]);
     }
-    
+
 }
