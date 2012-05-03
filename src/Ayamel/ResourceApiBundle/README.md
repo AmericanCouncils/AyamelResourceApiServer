@@ -31,6 +31,7 @@ In the future, this bundle should be split into two bundles.  The generic api wo
 
 ## Todo list ##
 
+* implement file upload
 * Replace docs by implementing `NelmioApiDocBundle`
 * Implement ServiceResponse and api-specific listeners
 * Implement remaining controllers

@@ -2,8 +2,9 @@
 
 namespace Ayamel\ResourceApiBundle\Controller\V1;
 
+use Ayamel\ResourceApiBundle\Event\Events;
+use Ayamel\ResourceApiBundle\Event\ApiEvent;
 use Ayamel\ResourceApiBundle\Controller\ApiController;
-use Ayamel\ResourceBundle\Document\Resource;
 
 class DeleteResource extends ApiController {
     
@@ -27,21 +28,12 @@ class DeleteResource extends ApiController {
         // - contributer name
         // - date added
         
-        //unset all fields (for now)
-        foreach(get_class_methods($resource) as $method) {
-            if(0 === strpos($method, 'set')) {
-                $resource->$method(null);
-            }
-        }
+        $resource = $this->container->get('ayamel.resource.manager')->deleteResource($resource);
         
-        //set date deleted
-        $resource->setDateDeleted(new \DateTime());
-        $resource->setStatus(Resource::STATUS_DELETED);
-
-        //save deleted resource
-        $dm = $this->get('doctrine.odm.mongodb.document_manager');
-        $dm->persist($resource);
-        $dm->flush();
+        //notify rest of system of deleted resource
+        $event = new ApiEvent;
+        $event->setResource($resource);
+        $this->container->get('ayamel.api.dispatcher')->dispatch(Events::RESOURCE_DELETED, $event);
         
         //return ok
         return array(

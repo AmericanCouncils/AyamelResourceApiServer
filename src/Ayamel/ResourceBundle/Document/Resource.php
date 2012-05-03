@@ -147,7 +147,7 @@ class Resource {
     /**
      * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\ContentCollection")
      */
-    public $content; //array of objects, variable type
+    public $content;
     
     /**
      * @MongoDB\EmbedMany(targetDocument="Ayamel\ResourceBundle\Document\Relation")
@@ -613,7 +613,7 @@ class Resource {
         $errors = array();
         
         //check scalar fields
-        foreach($this->_validators as $field => $type) {    
+        foreach($this->_validators as $field => $type) {
             //ignore null, that's how we unset/remove properties
             if($this->$field !== null) {
                 if(function_exists($func = "is_".$type)) {

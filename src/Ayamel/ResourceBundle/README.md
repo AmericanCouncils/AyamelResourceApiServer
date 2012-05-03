@@ -24,11 +24,8 @@ This bundle defines the base Resource objects and provides MongoDB mappings for 
 ## Documentation ##
 
 Eventually there will be real documentation [here](Resources/docs/index.md).
-	
-## Roadmap ##
-
-In the future, this bundle should be split into two bundles.  The generic api workflow bundle will be renamed to `ACWebServicesBundle`, and specific Ayamel api functionality will remain in `AyamelResourceApiBundle`.
 
 ## Todo list ##
 
-* implement document `validate` methods
+* Change namespace Document to Model - move Mongo/JMS mappings, validation and L2 functionality into AyamelResourceApiBundle
+    * Maybe... that is...

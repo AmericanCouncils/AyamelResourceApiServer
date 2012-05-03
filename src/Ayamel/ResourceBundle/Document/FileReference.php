@@ -38,6 +38,11 @@ class FileReference {
      */
     protected $type;
 
+	/**
+	 * @MongoDB\Boolean
+	 */
+	protected $original;
+
     /**
      * @MongoDB\Hash
      */
@@ -49,7 +54,7 @@ class FileReference {
      * @param string $internalUri 
      * @return FileReference
      */
-    static public function createFromPath($internalUri) {
+    static public function createFromLocalPath($internalUri) {
         $ref = new static();
         $ref->setInternalUri($internalUri);
         return $ref;
@@ -67,6 +72,24 @@ class FileReference {
         return $ref;
     }
     
+	/**
+	 * Set boolean if this file reference is the original file content added.
+	 *
+	 * @param boolean $bool 
+	 */
+	public function setOriginal($bool = true) {
+		$this->original = $bool;
+	}
+	
+	/**
+	 * Get whether or not this file reference was the original resource content.
+	 *
+	 * @return boolean
+	 */
+	public function getOriginal() {
+		return $this->original;
+	}
+	
     /**
      * TODO: docs
      *

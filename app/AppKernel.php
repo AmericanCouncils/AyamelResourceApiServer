@@ -23,6 +23,8 @@ class AppKernel extends Kernel
 			//added by Evan
 			new Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle(),
 			new JMS\SerializerBundle\JMSSerializerBundle($this),
+			
+			//custom
             new AC\WebServicesBundle\ACWebServicesBundle(),
             new Ayamel\ResourceBundle\AyamelResourceBundle(),
             new Ayamel\ResourceApiBundle\AyamelResourceApiBundle(),
