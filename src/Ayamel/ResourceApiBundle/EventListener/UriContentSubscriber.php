@@ -1,0 +1,93 @@
+<?php
+
+namespace Ayamel\ResourceApiBundle\EventListener;
+
+use Ayamel\ResourceApiBundle\Event\Events;
+use Ayamel\ResourceApiBundle\Event\ApiEvent;
+use Ayamel\ResourceApiBundle\Event\ResolveUploadedContentEvent;
+use Ayamel\ResourceApiBundle\Event\HandleUploadedContentEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
+/**
+ * Registers API event listeners for handling special URI uploads.
+ *
+ * @author Evan Villemez
+ */
+class UriContentSubscriber implements EventSubscriberInterface {
+	
+    /**
+     * @var object Symfony\Component\DependencyInjection\ContainerInterface
+     */
+    protected $container;
+    
+    public function __construct(ContainerInterface $container) {
+        $this->container = $container;
+    }
+    
+    /**
+     * Array of events subscribed to.
+     *
+     * @return array
+     */
+    public static function getSubscribedEvents() {
+        return array(
+            Events::RESOLVE_UPLOADED_CONTENT => 'onResolveContent',
+            Events::HANDLE_UPLOADED_CONTENT => 'onHandleContent',
+        );
+    }
+    
+    /**
+     * Check incoming request for an uploaded file.
+     *
+     * @param ResolveUploadedContentEvent $e 
+     */
+    public function onResolveContent(ResolveUploadedContentEvent $e) {
+        $request = $e->getRequest();
+        $uri = false;
+        if($json = json_decode($request->getContent())) {
+            $uri = isset($json->uri) ? $json->uri : false;
+        } else {
+            $uri = $request->request->get('uri', false);
+        }
+        
+        if(!$uri) return;
+        
+        $exp = explode("://", $uri);
+        if(2 === count($exp)) {
+            if($this->container->get('ayamel.resource.provider')->handlesScheme($exp[0])) {
+                $e->setContentType('uri');
+                $e->setContentData($uri);
+            }
+        }
+    }
+    
+    /**
+     * Handle a file upload and modify resource accordingly.
+     *
+     * @param HandleUploadedContentEvent $e 
+     */
+    public function onHandleContent(HandleUploadedContentEvent $e) {
+        if('uri' !== $e->getContentType()) {
+            return;
+        }
+        
+        //try to derive a resource from the received uri
+        $uri = $e->getContentData();
+        if(!$derivedResource = $this->container->get('ayamel.resource.provider')->createResourceFromUri($uri)) {
+            return;
+        }
+        
+        //add file reference for uri
+        $resource->content->addFile(FileReference::createFromPublicUri($uri));
+        
+        //TODO: compare with derived resource for empty fields
+        if(!is_null($oembed = $derivedResource->content->getOembed())) {
+            $resource->content->setOembed($oembed);
+        }
+
+        //set the modified resource and stop propagation of this event
+        $e->setResource($resource);
+    }
+
+}

@@ -9,12 +9,14 @@ class ApiEvent extends Event {
 	
     protected $resource = false;
     
-    public function getResource() {
-        return $this->resource;
+    public function __construct(Resource $resource = null) {
+        if($resource) {
+            $this->resource = $resource;
+        }
     }
     
-    public function setResource(Resource $resource) {
-        $this->resource = $resource;
+    public function getResource() {
+        return $this->resource;
     }
     
 }
