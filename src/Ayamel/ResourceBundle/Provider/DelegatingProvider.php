@@ -51,6 +51,8 @@ class DelegatingProvider implements ProviderInterface {
         $exp = explode("://", $uri);
         $scheme = $exp[0];
         
+        //TODO: take into account local file paths, transform to file://
+        
         $scheme = $this->checkScheme($scheme);
         
         foreach($this->providers as $provider) {

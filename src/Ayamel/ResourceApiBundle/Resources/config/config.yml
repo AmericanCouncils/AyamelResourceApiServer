@@ -24,13 +24,18 @@ services:
         class: Symfony\Bundle\FrameworkBundle\ContainerAwareEventDispatcher
         arguments: [@service_container]
 
-    ayamel.api.filesystem_subscriber:
-        class: Ayamel\ResourceApiBundle\EventListener\FilesystemSubscriber
-        arguments: [@service_container]
-        tags:
-            - { name: ayamel.api.dispatcher.event_subscriber }
-
     #provides the backend storage service for the resource manager in AyamelResourceBundle
     ayamel.resource.manager.backend:
         class: Ayamel\ResourceApiBundle\Storage\MongoResourceStorage
         arguments: [@doctrine.odm.mongodb.document_manager]
+        
+    ayamel.api.content.filesystem_subscriber:
+        class: Ayamel\ResourceApiBundle\EventListener\FileContentSubscriber
+        arguments: [@service_container]
+        tags:
+            - { name: ayamel.api.dispatcher.event_subscriber }
+    ayamel.api.content.uri_subscriber:
+        class: Ayamel\ResourceApiBundle\EventListener\UriContentSubscriber
+        arguments: [@service_container]
+        tags:
+            - { name: ayamel.api.dispatcher.event_subscriber }

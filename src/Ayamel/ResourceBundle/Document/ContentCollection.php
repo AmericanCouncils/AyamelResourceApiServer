@@ -185,6 +185,5 @@ class ContentCollection {
     {
         return $this->files;
     }
-    
-    
+
 }
