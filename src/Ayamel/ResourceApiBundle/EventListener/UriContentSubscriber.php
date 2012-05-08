@@ -2,6 +2,8 @@
 
 namespace Ayamel\ResourceApiBundle\EventListener;
 
+use Ayamel\ResourceBundle\Document\FileReference;
+use Ayamel\ResourceBundle\Document\ContentCollection;
 use Ayamel\ResourceApiBundle\Event\Events;
 use Ayamel\ResourceApiBundle\Event\ApiEvent;
 use Ayamel\ResourceApiBundle\Event\ResolveUploadedContentEvent;
@@ -38,7 +40,7 @@ class UriContentSubscriber implements EventSubscriberInterface {
     }
     
     /**
-     * Check incoming request for an uploaded file.
+     * Check incoming request for a string uri, either as a post field, or json structure.
      *
      * @param ResolveUploadedContentEvent $e 
      */
@@ -63,7 +65,7 @@ class UriContentSubscriber implements EventSubscriberInterface {
     }
     
     /**
-     * Handle a file upload and modify resource accordingly.
+     * Process a specified uri and modify resource accordingly.
      *
      * @param HandleUploadedContentEvent $e 
      */
@@ -78,14 +80,11 @@ class UriContentSubscriber implements EventSubscriberInterface {
             return;
         }
         
-        //add file reference for uri
-        $resource->content->addFile(FileReference::createFromPublicUri($uri));
+        $resource = $e->getResource();
         
-        //TODO: compare with derived resource for empty fields
-        if(!is_null($oembed = $derivedResource->content->getOembed())) {
-            $resource->content->setOembed($oembed);
-        }
-
+        //TODO: check for previous content that should be removed "properly"
+        $resource->content = $derivedResource->content;
+        
         //set the modified resource and stop propagation of this event
         $e->setResource($resource);
     }

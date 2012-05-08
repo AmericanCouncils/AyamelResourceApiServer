@@ -18,11 +18,6 @@ class DeleteResource extends ApiController {
             return $this->returnDeletedResource($resource);
         }
 
-        //TODO:
-        // - remove files
-        // - cancel pending transcode jobs
-        // - remove from search
-        
         //TODO: preserve some fields:
         // - contributer
         // - contributer name
@@ -31,9 +26,7 @@ class DeleteResource extends ApiController {
         $resource = $this->container->get('ayamel.resource.manager')->deleteResource($resource);
         
         //notify rest of system of deleted resource
-        $event = new ApiEvent;
-        $event->setResource($resource);
-        $this->container->get('ayamel.api.dispatcher')->dispatch(Events::RESOURCE_DELETED, $event);
+        $this->container->get('ayamel.api.dispatcher')->dispatch(Events::RESOURCE_DELETED, new ApiEvent($resource));
         
         //return ok
         return array(

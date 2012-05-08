@@ -77,6 +77,12 @@ abstract class AbstractFilePathProvider implements ProviderInterface {
             $path = $exp[1];
         }
         
+        //does the file actually exist?
+        if(!$handle = @fopen($uri, "r")) {
+            throw new \InvalidArgumentException(sprintf("Resource at [%s] could not be found.", $uri));
+        }
+        fclose($handle);        
+        
         //create original file reference
         $file = ($scheme === 'file') ? FileReference::createFromLocalPath($uri) : FileReference::createFromPublicUri($uri);
         $type = $this->guessTypeFromExtension($this->getPathExtension($path));
@@ -85,7 +91,7 @@ abstract class AbstractFilePathProvider implements ProviderInterface {
         
         //build new resource
         $r = new Resource;
-        $r->setName($this->getFilenameFromPath($path));
+        $r->setTitle($this->getFilenameFromPath($path));
         $r->setType($type);
         $r->setContent(new ContentCollection);
         $r->content->addFile($file);

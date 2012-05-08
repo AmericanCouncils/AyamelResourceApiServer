@@ -15,11 +15,11 @@ class HandleUploadedContentEvent extends ApiEvent {
 
     protected $type;
     
-    public function __construct(Resource $resource, $contentData, $contentType) {
+    public function __construct(Resource $resource, $contentType, $contentData) {
         parent::__construct($resource);
         
-        $this->content = $contentData;
         $this->type = $contentType;
+        $this->content = $contentData;
     }
     
     public function getContentType() {

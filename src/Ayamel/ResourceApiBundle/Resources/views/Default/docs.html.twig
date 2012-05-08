@@ -49,11 +49,11 @@ li code {
     </li>
     <li>
         <code>POST: /resources/{id}/content/{token}</code>
-        <p>Receives and processes content for a resource.  Content can either be a file upload, or a string URI, which will be parsed.</p>
+        <p>Receives and processes content for a resource.  Content can be in several formats.  Currently it can be either be a file upload via the "file" upload field, or a string URI via the "uri" post field, which will be parsed.</p>
     </li>
     <li>
-        <code>GET: /resources/scan/{uri}</code>
-        <p>This will eventually return a full resource structure, given a uri.  This would be used for deriving resources from special uris, like youtube videos, in order to pre-fill forms for users who want to add something from there.</p>
+        <code>GET: /resources/scan</code>
+        <p>Returns a full resource structure, given a uri.  The uri should be suplied in the "uri" query parameter after the "?" in the url.  This route can be used for deriving resources from special uris, like youtube videos, in order to pre-fill forms for users who want to add something from there.</p>
     </li>
     <li>
         <code>GET: /resources/search</code>

@@ -4,6 +4,8 @@ namespace Ayamel\ResourceApiBundle\Filesystem;
 
 use Ayamel\ResourceBundle\Document\FileReference;
 
+//TODO: File secret must include timestamp - base path should only include the ID, not the secret, as IDs are unique, and secrets should be random, thus un-recoverable
+
 /**
  * Implements local file storage for Resource objects.
  *
@@ -22,14 +24,20 @@ class LocalFilesystem implements FilesystemInterface {
     protected $secret;
     
     /**
+     * @var string - the root public uri from which files in this system are accessible from the web
+     */
+    protected $publicRootUri;
+    
+    /**
      * Constructor requires a root directory (should be an absolute path), and a secret for use in hash generation.
      *
      * @param string $dir - Absolute local file system path for use as root point.
      * @param string $secret - A secret to use when generating hashes.
      */
-    public function __construct($dir, $secret = 'changeme') {
+    public function __construct($dir, $secret = 'changeme', $publicRootUri = false) {
         $this->rootDir = $dir;
         $this->secret = $secret;
+        $this->publicRootUri = $publicRootUri;
     }
     
     /**
@@ -129,15 +137,36 @@ class LocalFilesystem implements FilesystemInterface {
         //copy or move file to new location
         if($copy) {
             if(copy($file->getInternalUri(), $filename)) {
-                return FileReference::createFromLocalPath($filename);
+                return $this->ensurePaths(FileReference::createFromLocalPath($filename));
             }
         } else {
             if(rename($file->getInternalUri(), $filename)) {
-                return FileReference::createFromLocalPath($filename);
+                return $this->ensurePaths(FileReference::createFromLocalPath($filename));
             }
         }
         
+        //consider throwing exception... throw new \RuntimeException(sprintf("File movement error: %s", error_get_last()));
+        
         return false;
+    }
+    
+    /**
+     * If this filesystem has a public uri set, make sure it's set in the file reference accordingly.
+     *
+     * @param FileReference $ref 
+     * @return FileReference
+     */
+    protected function ensurePaths(FileReference $ref) {
+        //check for a public uri corresponding to the local root dir
+        if($this->publicRootUri) {
+            $localPath = $ref->getInternalUri();
+            
+            $filePath = implode("/", array_diff(explode("/", $localPath), explode("/", $this->rootDir)));
+
+            $ref->setPublicUri($this->publicRootUri.'/'.$filePath);
+        }
+        
+        return $ref;
     }
         
     /**
@@ -167,7 +196,7 @@ class LocalFilesystem implements FilesystemInterface {
         }
         
         return ($includeDirectories) ? $fCount + $dCount : $fCount;
-    }    
+    }
     
     public function createFileSecretForId($id) {
         $hash = sha1($id.$this->secret);
