@@ -205,7 +205,7 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
     public function onApiTerminate(PostResponseEvent $e) {
 
         //TODO: log the request, maybe do this via dispatching listeners instead of directly?
-        
+        //$restDispatcher->dispatch(Events::REST_TERMINATE);
     }
 
 }

@@ -2,11 +2,13 @@
 
 namespace Ayamel\ResourceApiBundle\Controller\V1;
 
+use Ayamel\ResourceBundle\Document\Resource;
 use Ayamel\ResourceApiBundle\Controller\ApiController;
 use Ayamel\ResourceApiBundle\Event\Events;
 use Ayamel\ResourceApiBundle\Event\ApiEvent;
 use Ayamel\ResourceApiBundle\Event\ResolveUploadedContentEvent;
 use Ayamel\ResourceApiBundle\Event\HandleUploadedContentEvent;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Receives, validates and process content uploads for a resource object.
@@ -16,8 +18,6 @@ use Ayamel\ResourceApiBundle\Event\HandleUploadedContentEvent;
 class UploadContent extends ApiController {
     
     public function executeAction($id, $token) {
-        throw $this->createHttpException(501);
-        
         //get the resource
         $resource = $this->getRequestedResourceById($id);
                 
@@ -36,14 +36,23 @@ class UploadContent extends ApiController {
             $tm->removeTokenForId($id);
             throw $this->createHttpException(401, $e->getMessage());
         }
-        $tm->removeTokenForId($id);        
+        $tm->removeTokenForId($id);
+        
+        //make sure the resource isn't currently being processed by something
+        if(Resource::STATUS_PROCESSING === $resource->getStatus()) {
+            throw $this->createHttpException(423, "Resource content is currently being processed, try modifying the content later.");
+        }
         
         //get the api event dispatcher
         $apiDispatcher = $this->container->get('ayamel.api.dispatcher');
         
         //notify system to resolve uploaded content from the request
         $request = $this->getRequest();
-        $event = $apiDispatcher->dispatch(Events::RESOLVE_UPLOADED_CONTENT, new ResolveUploadedContentEvent($resource, $request));
+        try {
+            $event = $apiDispatcher->dispatch(Events::RESOLVE_UPLOADED_CONTENT, new ResolveUploadedContentEvent($resource, $request));
+        } catch (\Exception $e) {
+            throw ($e instanceof HttpException) ? $e : $this->createHttpException(500, $e->getMessage());
+        }
         $contentType = $event->getContentType();
         $contentData = $event->getContentData();
         
@@ -53,10 +62,15 @@ class UploadContent extends ApiController {
         }
         
         //notify system to handle uploaded content however is necessary and modify the resource accordingly
-        $event = $apiDispatcher->dispatch(Events::HANDLE_UPLOADED_CONTENT, new HandleUploadedContentEvent($resource, $contentType, $contentData));
+        try {
+            $event = $apiDispatcher->dispatch(Events::HANDLE_UPLOADED_CONTENT, new HandleUploadedContentEvent($resource, $contentType, $contentData));
+        } catch (\Exception $e) {
+            throw ($e instanceof HttpException) ? $e : $this->createHttpException(500, $e->getMessage());
+        }
         
         //persist the resource, as it may have changed
         $resource = $event->getResource();
+        $resource->setStatus(Resource::STATUS_AWAITING_PROCESSING);
         $this->container->get('ayamel.resource.manager')->persistResource($resource);
         
         //notify the system that a resource has changed
@@ -71,5 +85,4 @@ class UploadContent extends ApiController {
             'resource' => $resource
         );
     }
-
 }

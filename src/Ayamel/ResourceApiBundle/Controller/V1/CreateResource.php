@@ -17,9 +17,7 @@ use Ayamel\ResourceBundle\Document\Relation;
 class CreateResource extends ApiController {
     	
 	public function executeAction(Request $request) {
-		
-		//TODO: check authorization depending on how it's implemented
-		
+				
 		//get validator
 		$validator = $this->container->get('ayamel.api.client_data_validator');
 		

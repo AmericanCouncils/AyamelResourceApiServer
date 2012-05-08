@@ -137,7 +137,7 @@ class Resource {
     /**
      * @MongoDB\String
      */
-    protected $license = "Creative Commons";
+    protected $license;
     
     /**
      * @MongoDB\String

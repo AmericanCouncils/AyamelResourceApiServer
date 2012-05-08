@@ -26,13 +26,15 @@ class ApiTester extends Controller
                 $data = (null !== $form['client_data']->getData()) ? json_decode($form['client_data']->getData()) : null;
                 
                 //call api
-                $api = new Tester($base_url);
-                $result = $api->$method($route, $data);
-                
-                //set result
-                $responseDebug = $api->debugLastQuery();
+                try {
+                    $api = new Tester($base_url);
+                    $result = $api->$method($route, $data);
+                    $responseDebug = $api->debugLastQuery();
+                } catch (\Exception $e) {
+                    $responseDebug = sprintf("Error encountered: %s", $e->getMessage());
+                }
             }
-        } else {            
+        } else {
             $responseDebug = "No requests made.";
         }
         
