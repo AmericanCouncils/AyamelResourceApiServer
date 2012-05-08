@@ -45,6 +45,13 @@ class ApiBootstrapListener {
         }
         
         //eventually, if decided, listen for SOAP requests ... maybe?
-
+        
+        
+        //TODO:
+        //$servicesDispatcher->dispatch(Events::REQUEST);
+    }
+    
+    public function onKernelTerminate(PostResponseEvent $e) {
+        //$servicesDispatcher->dispatch(Events::TERMINATE)
     }
 }

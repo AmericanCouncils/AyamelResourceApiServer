@@ -2,6 +2,9 @@
 
 namespace Ayamel\ResourceApiBundle\EventListener;
 
+use Ayamel\ResourceBundle\Document\Resource;
+use Ayamel\ResourceBundle\Document\FileReference;
+use Ayamel\ResourceBundle\Document\ContentCollection;
 use Ayamel\ResourceApiBundle\Event\Events;
 use Ayamel\ResourceApiBundle\Event\ApiEvent;
 use Ayamel\ResourceApiBundle\Event\ResolveUploadedContentEvent;
@@ -14,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @author Evan Villemez
  */
-class FileContentSubscriber implements EventSubscriberInterface {
+class FileUploadContentSubscriber implements EventSubscriberInterface {
 	
     /**
      * @var object Symfony\Component\DependencyInjection\ContainerInterface
@@ -42,6 +45,8 @@ class FileContentSubscriber implements EventSubscriberInterface {
     public function onResourceDeleted(ApiEvent $e) {
         $resource = $e->getResource();
         
+        //TODO: test
+        
         $this->container->get('ayamel.api.filesystem')->removeFilesForId($resource->getId());
     }
     
@@ -52,6 +57,7 @@ class FileContentSubscriber implements EventSubscriberInterface {
      */
     public function onResolveContent(ResolveUploadedContentEvent $e) {
         $request = $e->getRequest();
+                
         if($file = $request->files->get('file', false)) {
             $e->setContentType('file_upload');
             $e->setContentData($file);
@@ -68,21 +74,33 @@ class FileContentSubscriber implements EventSubscriberInterface {
             return;
         }
         
-        $uploadedFile = $e->getContentData();        
+        //get the uploaded file, and the api filesystem
+        $uploadedFile = $e->getContentData();
         $resource = $e->getResource();
         $fs = $this->container->get('ayamel.api.filesystem');
-
-        //TODO: figure out new name, preserving extension
-        $newname = 'original';
-
-        $fileRef = $fs->addFileForId($resource->getId(), FileReference::createFromLocalPath($file->getBasePath()), $newname, true);
-        //TODO: check config, set a public uri
         
-        //TODO: fire filesystem events for other systems to parse the file reference (getid3 could listen here)
-        
+        //process files
+        if($uploadedFile->isValid()) {
+            //remove old files for resource
+            $fs->removeFilesForId($resource->getId());
+            
+            //add new file
+            //TODO: fire filesystem events for other systems to parse the file reference (getid3 could listen here)
+            $fileRef = $fs->addFileForId($resource->getId(), FileReference::createFromLocalPath($uploadedFile->getPathname()), $uploadedFile->getClientOriginalName(), true);
+            if(!$fileRef->getAttribute('mime-type', false)) {
+                $fileRef->setAttribute('mime-type', $uploadedFile->getClientMimeType());
+            }
+            if(!$fileRef->getAttribute('size', false)) {
+                $fileRef->setAttribute('size', $uploadedFile->getClientSize());
+            }
+
+        } else {
+            throw new \InvalidArgumentException(sprintf("File upload error %s", $uploadedFile->getError()));
+        }
+
+        //set new content
+        $resource->content = new ContentCollection;
         $resource->content->addFile($fileRef);
-
-        //TODO: remove files if necessary, 
 
         //set the modified resource and stop propagation of this event
         $e->setResource($resource);

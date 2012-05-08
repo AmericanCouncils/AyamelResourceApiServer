@@ -25,6 +25,13 @@ class ResolveUploadedContentEvent extends ApiEvent {
 
     protected $content = false;
     
+    /**
+     * Constructor requires the Resource which is being modified, and the incoming Http Request, which should 
+     * contain content to be processed for the resource.
+     *
+     * @param Resource $resource 
+     * @param Request $request 
+     */
     public function __construct(Resource $resource, Request $request) {
         parent::__construct($resource);
         $this->request = $request;
@@ -40,6 +47,11 @@ class ResolveUploadedContentEvent extends ApiEvent {
         $this->type = $type;
     }
     
+    /**
+     * Get the type of content to be handled.
+     *
+     * @return string, or false if not set
+     */
     public function getContentType() {
         return $this->type;
     }
@@ -61,10 +73,20 @@ class ResolveUploadedContentEvent extends ApiEvent {
         $this->stopPropagation();
     }
     
+    /**
+     * Get the actual content to be handled.
+     *
+     * @return mixed, false if not set
+     */
     public function getContentData() {
         return $this->content;
     }
     
+    /**
+     * Get the raw http request from which to derive any uploaded content content.
+     *
+     * @return Symfony\Component\HttpFoundation\Request
+     */
     public function getRequest() {
         return $this->request;
     }

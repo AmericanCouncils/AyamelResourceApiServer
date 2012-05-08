@@ -1,0 +1,24 @@
+{
+  "title" : "I like turtles",
+  "description" : "zombie kid",
+  "public": true,
+  "relations":[
+  	{
+	    "subjectId": "4f849c484c76556c4f00000c",
+	    "objectId": "4f7a1db84c76553b66000001",
+	    "type": "derivative_work",
+	    "attributes": {
+	       "foo": "bar"
+		}
+	},
+  	{
+	    "subjectId": "4f849c484c76556c4f00000c",
+	    "objectId": "4f7a1db84c76553b66000001",
+	    "type": "part_of",
+	    "attributes": {
+	       "foo": "bar",
+		   "index": 55
+		}
+  	}
+  ]
+}
