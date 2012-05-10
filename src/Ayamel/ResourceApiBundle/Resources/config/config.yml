@@ -1,8 +1,5 @@
 parameters:
     ayamel.api.token_cache_dir: %kernel.cache_dir%/ayamel_upload_tokens
-    ayamel.api.filesystem.root_dir: %kernel.root_dir%/files/ayamel_resource_uploads
-    ayamel.api.filesystem.base_uri: http://ayamel.americancouncils.org/resources/assets
-    ayamel.api.filesystem.secret: 34565dfg897jksksk4wk4ksdfkj34
 
 services:
     ayamel.api.client_data_validator:
@@ -17,10 +14,6 @@ services:
         public: false
         arguments: [%ayamel.api.token_cache_dir%]
 
-    ayamel.api.filesystem:
-        class: Ayamel\ResourceApiBundle\Filesystem\LocalFilesystem
-        arguments: [%ayamel.api.filesystem.root_dir%, %ayamel.api.filesystem.secret%, %ayamel.api.filesystem.base_uri%]
-
     ayamel.api.dispatcher:
         class: Symfony\Bundle\FrameworkBundle\ContainerAwareEventDispatcher
         arguments: [@service_container]
@@ -30,11 +23,6 @@ services:
         class: Ayamel\ResourceApiBundle\Storage\MongoResourceStorage
         arguments: [@doctrine.odm.mongodb.document_manager]
         
-    ayamel.api.content.filesystem_subscriber:
-        class: Ayamel\ResourceApiBundle\EventListener\FileUploadContentSubscriber
-        arguments: [@service_container]
-        tags:
-            - { name: ayamel.api.dispatcher.event_subscriber }
     ayamel.api.content.uri_subscriber:
         class: Ayamel\ResourceApiBundle\EventListener\UriContentSubscriber
         arguments: [@service_container]

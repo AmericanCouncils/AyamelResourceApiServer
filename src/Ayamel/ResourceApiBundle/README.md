@@ -31,12 +31,6 @@ In the future, this bundle should be split into two bundles.  The generic api wo
 
 ## Todo list ##
 
-* Move Filesystem related stuff into separate bundle
-    * Fix filesystem secret generation, should include timestamp for randomization
-    * Implement FilesystemManager
-        * uses other interface
-        * plus dispatcher for filesystem events
-            * other bundles (getid3) can listen for these events for FileReference modifications
 * Replace docs by implementing `NelmioApiDocBundle`
 * Implement ServiceResponse and api-specific listeners
 * Implement remaining controllers

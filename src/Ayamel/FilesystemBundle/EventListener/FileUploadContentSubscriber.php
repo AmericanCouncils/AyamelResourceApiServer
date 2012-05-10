@@ -1,6 +1,6 @@
 <?php
 
-namespace Ayamel\ResourceApiBundle\EventListener;
+namespace Ayamel\FilesystemBundle\EventListener;
 
 use Ayamel\ResourceBundle\Document\Resource;
 use Ayamel\ResourceBundle\Document\FileReference;

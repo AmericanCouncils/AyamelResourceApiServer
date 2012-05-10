@@ -1,10 +1,8 @@
 <?php
 
-namespace Ayamel\ResourceApiBundle\Filesystem;
+namespace Ayamel\FilesystemBundle\Filesystem;
 
 use Ayamel\ResourceBundle\Document\FileReference;
-
-//TODO: File secret must include timestamp - base path should only include the ID, not the secret, as IDs are unique, and secrets should be random, thus un-recoverable
 
 /**
  * Implements local file storage for Resource objects.
@@ -12,7 +10,7 @@ use Ayamel\ResourceBundle\Document\FileReference;
  * @author Evan Villemez
  */
 class LocalFilesystem implements FilesystemInterface {
-	
+    
     /**
      * @var string - the base filepath used for all resource file storage
      */
@@ -67,19 +65,34 @@ class LocalFilesystem implements FilesystemInterface {
     public function generateBaseFilenameForId($id) {
         return $id."_".$this->createFileSecretForId($id)."_";
     }
+	
+    /**
+     * {@inheritdoc}
+     */
+	public function getIdForFile(FileReference $ref) {
+		if(!$uri = $ref->getInternalUri()) {
+			return false;
+		}
+		$exp = explode("_", $ref->getInternalUri());
+		return $exp[0];
+	}
+	
+    /**
+     * {@inheritdoc}
+     */
+	public function removeFile(FileReference $ref) {
+		if(!$uri = $ref->getInternalUri()) {
+			return false;
+		}
+		
+		return unlink($uri);
+	}
 
     /**
      * {@inheritdoc}
      */
-    public function removeFile($path) {
-        return unlink($path);
-    }
-    
-    /**
-     * {@inheritdoc}
-     */
     public function removeFileForId($id, $name) {
-        return $this->removeFile($this->generateBasePathForId($id).$name);
+        return unlink($this->generateBasePathForId($id).$name);
     }
     
     /**
@@ -89,6 +102,15 @@ class LocalFilesystem implements FilesystemInterface {
         foreach($this->getFilesForId($id) as $ref) {
             $this->removeFile($ref->getInternalUri());
         }
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getFileForId($id, $name) {
+        $path = $this->generateBasePathForId($id).$name;
+        
+        return file_exists($path) ? FileReference::createFromLocalPath($path) : false;
     }
     
     /**
@@ -104,6 +126,13 @@ class LocalFilesystem implements FilesystemInterface {
 
         return $files;
     }
+	
+    /**
+     * {@inheritdoc}
+     */
+	public function hasFileForId($id, $name) {
+		return file_exists($this->generateBasePathForId($id).$name);
+	}
     
     /**
      * {@inheritdoc}

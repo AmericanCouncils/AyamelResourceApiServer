@@ -1,9 +1,9 @@
 <?php
 
-namespace Ayamel\ResourceApiBundle\Tests;
+namespace Ayamel\FilesystemBundle\Tests;
 
-use Ayamel\ResourceApiBundle\Filesystem\FilesystemInterface;
-use Ayamel\ResourceApiBundle\Filesystem\LocalFilesystem;
+use Ayamel\FilesystemBundle\Filesystem\FilesystemInterface;
+use Ayamel\FilesystemBundle\Filesystem\LocalFilesystem;
 use Ayamel\ResourceBundle\Document\FileReference;
 
 
