@@ -23,6 +23,21 @@ interface FilesystemInterface {
     const CONFLICT_EXCEPTION = 2;
     
     /**
+     * Count only real files, not directories.
+     */
+    const COUNT_FILES = 1;
+    
+    /**
+     * Count only directories
+     */
+    const COUNT_DIRECTORIES = 2;
+    
+    /**
+     * Count both files and directories
+     */
+    const COUNT_ALL = 3;
+    
+    /**
      * Generate a string base directory given an id.
      *
      * @param string $id 
@@ -77,7 +92,7 @@ interface FilesystemInterface {
      * Remove all files for a given Resource ID.
      *
      * @param string $id 
-     * @return boolean
+     * @return int - the number of files successfully removed
      */
     function removeFilesForId($id);
 	
@@ -133,5 +148,5 @@ interface FilesystemInterface {
      * @param string $includeDirectories - whether or not to include directories in the count
      * @return int
      */
-    function getCount($includeDirectories = false);
+    function getCount($return = FilesystemInterface::COUNT_FILES);
 }

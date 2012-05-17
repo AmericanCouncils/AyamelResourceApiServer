@@ -9,3 +9,7 @@ A FilesystemManager can wrap another instance of a Filesystem, and fires pre/pos
 ## Services ##
 
 * `ayamel.api.filesystem` is the main filesystem service, it's exact implementation should be defined in the configuration.
+
+## Todo ##
+
+* Command for converting FileReference records in the database to a new base url

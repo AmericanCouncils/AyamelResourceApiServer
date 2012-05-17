@@ -4,6 +4,7 @@ namespace Ayamel\FilesystemBundle\Filesystem;
 
 use Ayamel\ResourceBundle\Document\FileReference;
 use Ayamel\FilesystemBundle\Event\FilesystemEvent;
+use Ayamel\FilesystemBundle\Event\Events;
 use Ayamel\FilesystemBundle\Filesystem\FilesystemInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -132,7 +133,7 @@ class FilesystemManager implements FilesystemInterface {
     /**
      * {@inheritdoc}
      */
-    public function getCount($includeDirectories = false) {
-		return $this->fs->getCount($includeDirectories);
+    public function getCount($return = FilesystemInterface::COUNT_FILES) {
+		return $this->fs->getCount($return);
 	}
 }

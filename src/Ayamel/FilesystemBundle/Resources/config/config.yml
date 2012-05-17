@@ -16,8 +16,8 @@ services:
         class: Ayamel\FilesystemBundle\Filesystem\LocalFilesystem
         arguments: 
             - %ayamel.filesystem.local_filesystem.root_dir%
-            - %ayamel.filesystem.local_filesystem.base_uri%
             - %ayamel.filesystem.local_filesystem.secret%
+            - %ayamel.filesystem.local_filesystem.base_uri%
 
     ayamel.api.content.filesystem_subscriber:
         class: Ayamel\FilesystemBundle\EventListener\FileUploadContentSubscriber

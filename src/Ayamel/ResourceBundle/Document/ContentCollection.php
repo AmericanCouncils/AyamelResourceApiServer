@@ -175,6 +175,22 @@ class ContentCollection {
         $this->setFiles($new);
         return $this;
     }
+    
+    /**
+     * Return boolean if a given file reference is contained in this content collection
+     *
+     * @param FileReference $ref 
+     * @return booleah
+     */
+    public function hasFile(FileReference $ref) {
+        foreach($this->files as $files) {
+            if($ref->equals($file)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
 
     /**
      * Get files

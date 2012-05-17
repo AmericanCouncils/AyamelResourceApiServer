@@ -63,6 +63,10 @@ class UploadContent extends ApiController {
         
         //notify system to handle uploaded content however is necessary and modify the resource accordingly
         try {
+            
+            //remove old resource content
+            $apiDispatcher->dispatch(Events::REMOVE_RESOURCE_CONTENT, new ApiEvent($resource));
+            
             $event = $apiDispatcher->dispatch(Events::HANDLE_UPLOADED_CONTENT, new HandleUploadedContentEvent($resource, $contentType, $contentData));
         } catch (\Exception $e) {
             throw ($e instanceof HttpException) ? $e : $this->createHttpException(500, $e->getMessage());

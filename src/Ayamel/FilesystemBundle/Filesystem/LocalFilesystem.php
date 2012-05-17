@@ -41,7 +41,7 @@ class LocalFilesystem implements FilesystemInterface {
     /**
      * {@inheritdoc}
      *
-     * Uses md5() of the received id to generate a 3 level hashed directory structure, using 2 hex characters per directory (0-9, a-f).  This yields
+     * This implementation uses an md5() hash of the received id to generate a 3 level hashed directory structure, using 2 hex characters per directory (0-9, a-f).  This yields
      * 16,777,216 possible directories, with no more than 256 subdirectories per containing directory, and should guarantee relatively uniform file distribution among them.
      */
     public function generateBaseDirectoryForId($id) {
@@ -99,9 +99,14 @@ class LocalFilesystem implements FilesystemInterface {
      * {@inheritdoc}
      */
     public function removeFilesForId($id) {
+        $removed = 0;
         foreach($this->getFilesForId($id) as $ref) {
-            $this->removeFile($ref->getInternalUri());
+            if($this->removeFile($ref)) {
+                $removed++;
+            }
         }
+        
+        return $removed;
     }
     
     /**
@@ -201,19 +206,22 @@ class LocalFilesystem implements FilesystemInterface {
     /**
      * {@inheritdoc}
      */
-    public function getCount($includeDirectories = false) {
+    public function getCount($return = FilesystemInterface::COUNT_FILES) {
         $ds = DIRECTORY_SEPARATOR;
         $fCount = 0;
         $dCount = 0;
+        
+        //check if we're in php 5.4 or higher, if so, we can avoid sorting because it's irrelevant here
+        $sortOrder = (defined('SCANDIR_SORT_NONE')) ? SCANDIR_SORT_NONE : 0;
 
         //TODO: this may scale terribly with lots of files, might want consider implementing with readdir instead
-        foreach(scandir($this->rootDir) as $lvl1) {
+        foreach(scandir($this->rootDir, $sortOrder) as $lvl1) {
             if($lvl1 === '.' || $lvl1 === '..') continue;
-            foreach(scandir($this->rootDir.$ds.$lvl1) as $lvl2) {
+            foreach(scandir($this->rootDir.$ds.$lvl1, $sortOrder) as $lvl2) {
                 if($lvl2 === '.' || $lvl2 === '..') continue;
-                foreach(scandir($this->rootDir.$ds.$lvl1.$ds.$lvl2) as $lvl3) {
+                foreach(scandir($this->rootDir.$ds.$lvl1.$ds.$lvl2, $sortOrder) as $lvl3) {
                     if($lvl3 === '.' || $lvl3 === '..') continue;
-                    foreach(scandir($this->rootDir.$ds.$lvl1.$ds.$lvl2.$ds.$lvl3) as $file) {
+                    foreach(scandir($this->rootDir.$ds.$lvl1.$ds.$lvl2.$ds.$lvl3, $sortOrder) as $file) {
                         if($file === '.' || $file === '..') continue;
                         $fCount++;
                     }
@@ -224,7 +232,12 @@ class LocalFilesystem implements FilesystemInterface {
             $dCount++;
         }
         
-        return ($includeDirectories) ? $fCount + $dCount : $fCount;
+        switch($return) {
+            case FilesystemInterface::COUNT_FILES : return ($fCount);
+            case FilesystemInterface::COUNT_DIRECTORIES : return ($dCount);
+            case FilesystemInterface::COUNT_ALL : return ($fCount + $dCount);
+            default : return false;
+        }
     }
     
     public function createFileSecretForId($id) {
