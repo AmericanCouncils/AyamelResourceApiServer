@@ -3,6 +3,7 @@
 namespace Ayamel\ResourceApiBundle\Controller\V1;
 
 use Ayamel\ResourceBundle\Document\Resource;
+use Ayamel\ResourceBundle\Document\ContentCollection;
 use Ayamel\ResourceApiBundle\Controller\ApiController;
 use Ayamel\ResourceApiBundle\Event\Events;
 use Ayamel\ResourceApiBundle\Event\ApiEvent;
@@ -52,37 +53,43 @@ class UploadContent extends ApiController {
         //notify system to resolve uploaded content from the request
         $request = $this->getRequest();
         try {
-            $event = $apiDispatcher->dispatch(Events::RESOLVE_UPLOADED_CONTENT, new ResolveUploadedContentEvent($resource, $request));
+            $resolveEvent = $apiDispatcher->dispatch(Events::RESOLVE_UPLOADED_CONTENT, new ResolveUploadedContentEvent($resource, $request));
         } catch (\Exception $e) {
             //TODO: unlock resource
             throw ($e instanceof HttpException) ? $e : $this->createHttpException(500, $e->getMessage());
         }
-        $contentType = $event->getContentType();
-        $contentData = $event->getContentData();
+        $contentType = $resolveEvent->getContentType();
+        $contentData = $resolveEvent->getContentData();
         
         //if we weren't able to resolve incoming content, it must be a bad request
         if(false === $contentData) {
             //TODO: unlock resource
             throw $this->createHttpException(422, "Could not resolve valid content.");
-        }        
+        }
         
         //notify system to handle uploaded content however is necessary and modify the resource accordingly
         try {
-            //remove old resource content
-            $apiDispatcher->dispatch(Events::REMOVE_RESOURCE_CONTENT, new ApiEvent($resource));
+
+            //notify system old content removal if necessary
+            if($resolveEvent->getRemovePreviousContent()) {
+                if(!isset($resource->content)) {
+                    $resource->content = new ContentCollection;
+                }
+                $apiDispatcher->dispatch(Events::REMOVE_RESOURCE_CONTENT, new ApiEvent($resource));
+                $resource->content = new ContentCollection;
+            }
             
-            $event = $apiDispatcher->dispatch(Events::HANDLE_UPLOADED_CONTENT, new HandleUploadedContentEvent($resource, $contentType, $contentData));
+            $handleEvent = $apiDispatcher->dispatch(Events::HANDLE_UPLOADED_CONTENT, new HandleUploadedContentEvent($resource, $contentType, $contentData));
         } catch (\Exception $e) {
             //TODO: unlock resource
-            throw ($e instanceof HttpException) ? $e : $this->createHttpException(500);
+            throw ($e instanceof HttpException) ? $e : $this->createHttpException(500, $e->getMessage());
         }
         
         //if resource was processed, persist it and notify the system that a resource has changed
-        if ($event->isResourceModified()) {
+        if ($handleEvent->isResourceModified()) {
             try {
                 //persist it
-                $resource = $event->getResource();
-                $resource->setStatus(Resource::STATUS_AWAITING_PROCESSING);
+                $resource = $handleEvent->getResource();
                 $this->container->get('ayamel.resource.manager')->persistResource($resource);
             
                 //notify system
@@ -102,7 +109,7 @@ class UploadContent extends ApiController {
         //TODO: return ServiceResponse::create(200, array('resource' => $resource));
         return array(
             'response' => array(
-                'code' => 202
+                'code' => 202       //TODO: implement $handleEvent->getStatus();
             ),
             'resource' => $resource
         );

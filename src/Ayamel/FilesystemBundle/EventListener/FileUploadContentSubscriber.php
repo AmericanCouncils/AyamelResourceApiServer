@@ -70,6 +70,7 @@ class FileUploadContentSubscriber implements EventSubscriberInterface {
                 
         if ($file = $request->files->get('file', false)) {
             $e->setContentType('file_upload');
+            $e->setRemovePreviousContent(true);
             $e->setContentData($file);
         }
     }
@@ -117,10 +118,10 @@ class FileUploadContentSubscriber implements EventSubscriberInterface {
         }
 
         //set new content
-        $resource->content = new ContentCollection;
         $resource->content->addFile($newRef);
 
         //set the modified resource and stop propagation of this event
+        $resource->setStatus(Resource::STATUS_AWAITING_PROCESSING);
         $e->setResource($resource);
     }
     
