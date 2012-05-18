@@ -2,6 +2,7 @@
 
 namespace Ayamel\ResourceApiBundle\EventListener;
 
+use Ayamel\ResourceBundle\Document\Resource;
 use Ayamel\ResourceBundle\Document\FileReference;
 use Ayamel\ResourceBundle\Document\ContentCollection;
 use Ayamel\ResourceApiBundle\Event\Events;
@@ -59,6 +60,7 @@ class UriContentSubscriber implements EventSubscriberInterface {
         if(2 === count($exp)) {
             if($this->container->get('ayamel.resource.provider')->handlesScheme($exp[0])) {
                 $e->setContentType('uri');
+                $e->setRemovePreviousContent(true);
                 $e->setContentData($uri);
             }
         }
@@ -85,10 +87,21 @@ class UriContentSubscriber implements EventSubscriberInterface {
         //set content properly
         $resource->content = $derivedResource->content;
         $originalRef = FileReference::createFromPublicUri($uri);
-        $originalRef->setOriginal(true);
-        $resource->content->addFile($originalRef);
+        if(!$resource->content->hasFile($originalRef)) {
+            $originalRef->setOriginal(true);
+            $resource->content->addFile($originalRef);
+        }
+        
+        //TODO: implement origin
+        //persist origin field not specified by client, and available in derived resource
+        /*
+        if(!$resource->getOrigin() && $derivedResource->getOrigin()) {
+            $resource->origin = $derivedResource->origin;
+        }
+        */
         
         //set the modified resource and stop propagation of this event
+        $resource->setStatus(Resource::STATUS_OK);
         $e->setResource($resource);
     }
 

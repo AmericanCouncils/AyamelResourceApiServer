@@ -29,6 +29,8 @@ class ResolveUploadedContentEvent extends ApiEvent {
     
     protected $post_body = false;
     
+    protected $remove_previous_content = false;
+    
     /**
      * Constructor requires the Resource which is being modified, and the incoming Http Request, which should 
      * contain content to be processed for the resource.
@@ -41,11 +43,12 @@ class ResolveUploadedContentEvent extends ApiEvent {
         $this->request = $request;
         
         //figure out the request body format, try json first
-        if($data = @json_decode($string, true)) {
+        $body = $request->getContent();
+        if($data = @json_decode($body, true)) {
             $this->json_body = $data;
         } else {
             //otherwise attempt to parse as a query string (aka post fields)
-            parse_str($string, $data);
+            parse_str($body, $data);
             
             if(empty($data) || !is_array($data)) {
                 $this->post_body = $data;
@@ -99,6 +102,24 @@ class ResolveUploadedContentEvent extends ApiEvent {
     }
     
     /**
+     * Set whether or not previous content should be removed for this resource
+     *
+     * @param boolean $bool 
+     */
+    public function setRemovePreviousContent($bool) {
+        $this->remove_previous_content = (bool) $bool;
+    }
+    
+    /**
+     * Return whether or not previous content should be removed for this resource
+     *
+     * @return boolean - default is false
+     */
+    public function getRemovePreviousContent() {
+        return $this->remove_previous_content;
+    }
+    
+    /**
      * Get the raw http request from which to derive any uploaded content content.
      *
      * @return Symfony\Component\HttpFoundation\Request
@@ -123,6 +144,23 @@ class ResolveUploadedContentEvent extends ApiEvent {
      */
     public function getPostBody() {
         return $this->post_body;
+    }
+    
+    /**
+     * Get the request body data in array format, regardless of what format in came in originally (json or post fields)
+     *
+     * @return array or false
+     */
+    public function getRequestBody() {
+        if($this->getJsonBody()) {
+            return $this->getJsonBody();
+        }
+        
+        if($this->getPostBody()) {
+            return $this->getPostBody();
+        }
+        
+        return false;
     }
     
 }
