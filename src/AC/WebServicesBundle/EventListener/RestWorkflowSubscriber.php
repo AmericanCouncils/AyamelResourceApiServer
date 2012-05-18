@@ -17,6 +17,8 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * TODO: needs to be properly abstracted, some functionality needs to move out of here and into Ayamel\ResourceApiBundle... could do this via special event dispatchers
  * TODO: Need to implement ServiceResponse where possible
+ * TODO: Need to make formatHeaders configurable
+ * TODO: Need to implement ServiceException + configuration, + kernel listener for proper handling
  */
 
 
@@ -183,7 +185,7 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
         $request = $e->getRequest();
         $data = $e->getControllerResult();
         
-        //TODO: Implement an ApiView class, with cache/code/status controls that can be processed here
+        //TODO: Implement an ApiResponse class, with cache/code/status controls that can be processed here
 
         //figure out meta status and code, and actual outgoing http response code
         $httpStatusCode = isset($data['response']['code']) ? $data['response']['code'] : 200;

@@ -1,9 +1,9 @@
 <?php
 
-namespace Ayamel\ResourceApiBundle\Tests;
+namespace Ayamel\FilesystemBundle\Tests;
 
-use Ayamel\ResourceApiBundle\Filesystem\FilesystemInterface;
-use Ayamel\ResourceApiBundle\Filesystem\LocalFilesystem;
+use Ayamel\FilesystemBundle\Filesystem\FilesystemInterface;
+use Ayamel\FilesystemBundle\Filesystem\LocalFilesystem;
 use Ayamel\ResourceBundle\Document\FileReference;
 
 
@@ -70,7 +70,7 @@ class LocalFilesystemTest extends \PHPUnit_Framework_TestCase {
     public function testGetCount() {
         $fs = $this->getFs();
         $this->assertSame(0, $fs->getCount());
-        $this->assertSame(0, $fs->getCount(true));
+        $this->assertSame(0, $fs->getCount(FilesystemInterface::COUNT_ALL));
     }
     
     //add file and inherit name
@@ -84,7 +84,7 @@ class LocalFilesystemTest extends \PHPUnit_Framework_TestCase {
         $this->assertFalse(is_dir($info['baseDirectory']));
         $this->assertFalse(is_file($newFilePath));
         $this->assertSame(0, $fs->getCount());
-        $this->assertSame(0, $fs->getCount(true));
+        $this->assertSame(0, $fs->getCount(FilesystemInterface::COUNT_ALL));
         
         $ref = FileReference::createFromLocalPath(__DIR__."/files/foo.txt");
         
@@ -95,7 +95,7 @@ class LocalFilesystemTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue(is_dir($info['baseDirectory']));
         $this->assertTrue(is_file($newFilePath));
         $this->assertSame(1, $fs->getCount());
-        $this->assertSame(4, $fs->getCount(true));
+        $this->assertSame(4, $fs->getCount(FilesystemInterface::COUNT_ALL));
     }
     
     //add file and change name
@@ -119,7 +119,7 @@ class LocalFilesystemTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue(is_dir($info['baseDirectory']));
         $this->assertTrue(is_file($newFilePath));
         $this->assertSame(1, $fs->getCount());
-        $this->assertSame(4, $fs->getCount(true));
+        $this->assertSame(4, $fs->getCount(FilesystemInterface::COUNT_ALL));
     }
     
     //add multiple files
@@ -139,7 +139,7 @@ class LocalFilesystemTest extends \PHPUnit_Framework_TestCase {
 
         $this->assertTrue(is_dir($info['baseDirectory']));
         $this->assertSame(4, $fs->getCount());
-        $this->assertSame(7, $fs->getCount(true));
+        $this->assertSame(7, $fs->getCount(FilesystemInterface::COUNT_ALL));
     }
     
     public function testRemoveFilesForId() {
@@ -147,17 +147,17 @@ class LocalFilesystemTest extends \PHPUnit_Framework_TestCase {
         $fs = $this->getFs();
         $fs->removeFilesForId('id');
         $this->assertSame(0, $fs->getCount());
-        $this->assertSame(3, $fs->getCount(true));
+        $this->assertSame(3, $fs->getCount(FilesystemInterface::COUNT_ALL));
     }
     
     public function testRemoveFileForId() {
         $this->testAddFileForId3();
         $fs = $this->getFs();
         $this->assertSame(4, $fs->getCount());
-        $this->assertSame(7, $fs->getCount(true));
+        $this->assertSame(7, $fs->getCount(FilesystemInterface::COUNT_ALL));
         $fs->removeFileForId('id', 'newname4.txt');
         $this->assertSame(3, $fs->getCount());
-        $this->assertSame(6, $fs->getCount(true));
+        $this->assertSame(6, $fs->getCount(FilesystemInterface::COUNT_ALL));
     }
     
     public function testGetFilesForId() {

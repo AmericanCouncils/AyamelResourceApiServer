@@ -1,6 +1,6 @@
 <?php
 
-namespace Ayamel\ResourceApiBundle\EventListener;
+namespace Ayamel\FilesystemBundle\EventListener;
 
 use Ayamel\ResourceBundle\Document\Resource;
 use Ayamel\ResourceBundle\Document\FileReference;
@@ -24,7 +24,8 @@ class FileUploadContentSubscriber implements EventSubscriberInterface {
      */
     protected $container;
     
-    public function __construct(ContainerInterface $container) {
+    public function __construct(ContainerInterface $container)
+    {
         $this->container = $container;
     }
     
@@ -33,21 +34,24 @@ class FileUploadContentSubscriber implements EventSubscriberInterface {
      *
      * @return array
      */
-    public static function getSubscribedEvents() {
+    public static function getSubscribedEvents()
+    {
         //TODO: consider setting the priorities for this to very low, in order to give other listeners a chance to handle specific file types earlier
         return array(
-            Events::RESOURCE_DELETED => 'onResourceDeleted',
+            Events::REMOVE_RESOURCE_CONTENT => 'onRemoveContent',
             Events::RESOLVE_UPLOADED_CONTENT => 'onResolveContent',
             Events::HANDLE_UPLOADED_CONTENT => 'onHandleContent',
         );
     }
     
-    public function onResourceDeleted(ApiEvent $e) {
-        $resource = $e->getResource();
-        
-        //TODO: test
-        
-        $this->container->get('ayamel.api.filesystem')->removeFilesForId($resource->getId());
+    /**
+     * Tell filesystem to remove files for a given resource.
+     *
+     * @param ApiEvent $e 
+     */
+    public function onRemoveContent(ApiEvent $e)
+    {
+        $this->container->get('ayamel.api.filesystem')->removeFilesForId($e->getResource()->getId());
     }
     
     /**
@@ -55,10 +59,11 @@ class FileUploadContentSubscriber implements EventSubscriberInterface {
      *
      * @param ResolveUploadedContentEvent $e 
      */
-    public function onResolveContent(ResolveUploadedContentEvent $e) {
+    public function onResolveContent(ResolveUploadedContentEvent $e)
+    {
         $request = $e->getRequest();
                 
-        if($file = $request->files->get('file', false)) {
+        if ($file = $request->files->get('file', false)) {
             $e->setContentType('file_upload');
             $e->setContentData($file);
         }
@@ -69,30 +74,38 @@ class FileUploadContentSubscriber implements EventSubscriberInterface {
      *
      * @param HandleUploadedContentEvent $e 
      */
-    public function onHandleContent(HandleUploadedContentEvent $e) {
-        if('file_upload' !== $e->getContentType()) {
+    public function onHandleContent(HandleUploadedContentEvent $e)
+    {
+        if ('file_upload' !== $e->getContentType()) {
             return;
         }
         
         //get the uploaded file, and the api filesystem
         $uploadedFile = $e->getContentData();
         $resource = $e->getResource();
-        $fs = $this->container->get('ayamel.api.filesystem');
         
         //process files
-        if($uploadedFile->isValid()) {
+        if ($uploadedFile->isValid()) {
             //remove old files for resource
+            $fs = $this->container->get('ayamel.api.filesystem');
             $fs->removeFilesForId($resource->getId());
             
             //add new file
-            //TODO: fire filesystem events for other systems to parse the file reference (getid3 could listen here)
-            $fileRef = $fs->addFileForId($resource->getId(), FileReference::createFromLocalPath($uploadedFile->getPathname()), $uploadedFile->getClientOriginalName(), true);
-            if(!$fileRef->getAttribute('mime-type', false)) {
-                $fileRef->setAttribute('mime-type', $uploadedFile->getClientMimeType());
+            $filename = $this->cleanUploadedFileName($uploadedFile->getClientOriginalName());
+            $uploadedRef = FileReference::createFromLocalPath($uploadedFile->getPathname());
+            $newRef = $fs->addFileForId($resource->getId(), $uploadedRef, $filename, true);
+            
+            //inject relevant client-uploaded data, but only if it has not already been set by the
+            //filesystem that handled the upload, as the client data may not be accurate
+            if(!$newRef->getAttribute('mime-type', false)) {
+                $newRef->setAttribute('mime-type', $uploadedFile->getClientMimeType());
             }
-            if(!$fileRef->getAttribute('size', false)) {
-                $fileRef->setAttribute('size', $uploadedFile->getClientSize());
+            if(!$newRef->getAttribute('size', false)) {
+                $newRef->setAttribute('size', $uploadedFile->getClientSize());
             }
+            
+            //the newly uploaded file is now the original reference
+            $newRef->setOriginal(true);
 
         } else {
             throw new \InvalidArgumentException(sprintf("File upload error %s", $uploadedFile->getError()));
@@ -100,10 +113,21 @@ class FileUploadContentSubscriber implements EventSubscriberInterface {
 
         //set new content
         $resource->content = new ContentCollection;
-        $resource->content->addFile($fileRef);
+        $resource->content->addFile($newRef);
 
         //set the modified resource and stop propagation of this event
         $e->setResource($resource);
+    }
+    
+    /**
+     * Remove disgusting crap from the client file name, there's sure to be tons.
+     *
+     * @param string $name 
+     * @return string
+     */
+    protected function cleanUploadedFilename($name)
+    {
+        return preg_replace("/[^\w\.-]/", "-", strtolower($name));
     }
 
 }

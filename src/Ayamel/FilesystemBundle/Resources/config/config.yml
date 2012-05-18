@@ -1,0 +1,26 @@
+parameters:
+    ayamel.filesystem.local_filesystem.root_dir: %kernel.root_dir%/files/ayamel_resource_uploads
+    ayamel.filesystem.local_filesystem.base_uri: http://ayamel.americancouncils.org/resources/assets
+    ayamel.filesystem.local_filesystem.secret: 34565dfg897jksksk4wk4ksdfkj34
+
+services:
+    ayamel.api.filesystem:
+        class: Ayamel\FilesystemBundle\Filesystem\FilesystemManager
+        arguments: [@ayamel.api.filesystem.backend, @ayamel.api.filesystem.dispatcher]
+
+    ayamel.api.filesystem.dispatcher:
+        class: Symfony\Bundle\FrameworkBundle\ContainerAwareEventDispatcher
+        arguments: [@service_container]
+        
+    ayamel.api.filesystem.backend:
+        class: Ayamel\FilesystemBundle\Filesystem\LocalFilesystem
+        arguments: 
+            - %ayamel.filesystem.local_filesystem.root_dir%
+            - %ayamel.filesystem.local_filesystem.secret%
+            - %ayamel.filesystem.local_filesystem.base_uri%
+
+    ayamel.api.content.filesystem_subscriber:
+        class: Ayamel\FilesystemBundle\EventListener\FileUploadContentSubscriber
+        arguments: [@service_container]
+        tags:
+            - { name: ayamel.api.dispatcher.event_subscriber }

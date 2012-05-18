@@ -43,5 +43,12 @@ final class Events {
      * Listeners receive an instance of `HandleUploadedContentEvent`
      */
     const HANDLE_UPLOADED_CONTENT = "ayamel.api.handle_uploaded_content";
+    
+    /**
+     * Fires when content should be permanentaly removed for a given resource.
+     *
+     * Listeners receive an instance of `ApiEvent`
+     */
+    const REMOVE_RESOURCE_CONTENT = "ayamel.api.remove_resource_content";
 
 }
