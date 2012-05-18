@@ -183,7 +183,7 @@ class ContentCollection {
      * @return booleah
      */
     public function hasFile(FileReference $ref) {
-        foreach($this->files as $files) {
+        foreach($this->files as $file) {
             if($ref->equals($file)) {
                 return true;
             }

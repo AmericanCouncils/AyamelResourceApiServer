@@ -57,14 +57,17 @@ class RemoteFilesContentSubscriber implements EventSubscriberInterface {
     public function onResolveContent(ResolveUploadedContentEvent $e)
     {
         $request = $e->getRequest();
-        $remoteFiles = array();
         
         //if no json, or `remoteFiles` key isn't set, skip
-        if (!$body = $e->getJsonBody() || !isset($body['remoteFiles'])) {
+        $body = $e->getRequestBody();
+//        die("<pre>".print_r($body, true)."</pre>");
+        
+        if (!$body || !isset($body['remoteFiles']) || !is_array($body['remoteFiles'])) {
             return;
         }
         
         //create FileReference instances
+        $remoteFiles = array();
         try {
             foreach ($body['remoteFiles'] as $fileData) {
             
@@ -82,6 +85,7 @@ class RemoteFilesContentSubscriber implements EventSubscriberInterface {
         }
         
         $e->setContentType('remote_files');
+        $e->setRemovePreviousContent(true);
         $e->setContentData($remoteFiles);
     }
     
@@ -96,17 +100,16 @@ class RemoteFilesContentSubscriber implements EventSubscriberInterface {
             return;
         }
         
-        //make sure any old files are removed from the filesystem (if stored)
-//        $this->container->get('ayamel.api.filesystem')->removeFilesForId($e->getResource()->getId());
-
+        $resource = $e->getResource();
+        
         //set new content
-        $resource->content = new ContentCollection;
         foreach ($e->getContentData() as $fileRef) {
             $resource->content->addFile($fileRef);
         }
 
         //set the modified resource and stop propagation of this event
+        $resource->setStatus(Resource::STATUS_OK);
         $e->setResource($resource);
     }
-    
+
 }
