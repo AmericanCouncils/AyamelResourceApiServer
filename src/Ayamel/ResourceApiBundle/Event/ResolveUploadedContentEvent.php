@@ -25,6 +25,10 @@ class ResolveUploadedContentEvent extends ApiEvent {
 
     protected $content = false;
     
+    protected $json_body = false;
+    
+    protected $post_body = false;
+    
     /**
      * Constructor requires the Resource which is being modified, and the incoming Http Request, which should 
      * contain content to be processed for the resource.
@@ -35,6 +39,18 @@ class ResolveUploadedContentEvent extends ApiEvent {
     public function __construct(Resource $resource, Request $request) {
         parent::__construct($resource);
         $this->request = $request;
+        
+        //figure out the request body format, try json first
+        if($data = @json_decode($string, true)) {
+            $this->json_body = $data;
+        } else {
+            //otherwise attempt to parse as a query string (aka post fields)
+            parse_str($string, $data);
+            
+            if(empty($data) || !is_array($data)) {
+                $this->post_body = $data;
+            }
+        }
     }
     
     /**
@@ -89,6 +105,24 @@ class ResolveUploadedContentEvent extends ApiEvent {
      */
     public function getRequest() {
         return $this->request;
+    }
+    
+    /**
+     * Get the JSON structure of the content request, if present, returns false if not present.
+     *
+     * @return array or false
+     */
+    public function getJsonBody() {
+        return $this->json_body;
+    }
+    
+    /**
+     * Get the array of post fields associated with the request body.  Returns false if not set.
+     *
+     * @return array or false
+     */
+    public function getPostBody() {
+        return $this->post_body;
     }
     
 }

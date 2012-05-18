@@ -49,7 +49,12 @@ li code {
     </li>
     <li>
         <code>POST: /resources/{id}/content/{token}</code>
-        <p>Receives and processes content for a resource.  Content can be in several formats.  Currently it can be either be a file upload via the "file" upload field, or a string URI via the "uri" post field, which will be parsed.</p>
+        <p>Receives and processes content for a resource.  Content can be specified in one of several formats.  If multiple formats are supplied, only the first matching format will be handled, and others will be ignored.  The available formats are:</p>
+        <ul>
+            <li><p>Upload a file to be stored and automatically transcoded by the Ayamel server by providing a file upload via the <code>file</code> post field.</p></li>
+            <li><p>Specify a reference to an original file via a public URI, this can be done via the <code>uri</code> post field, or by passing a JSON object with the <code>uri</code> key.  The specified uri will be processed to check for availability. If the uri is in a custom format known to the Ayamel Resource Library, other resource information may be derived and added into the resource.</p></li>
+            <li><p>Specify an array of file references on a remote file server by passing a JSON object with the <code>remoteFiles</code> key containing an array of file objects.  These references are stored exactly as received.</p></li>
+        </ul>
     </li>
     <li>
         <code>GET: /resources/scan</code>

@@ -15,6 +15,8 @@ class HandleUploadedContentEvent extends ApiEvent {
 
     protected $type;
     
+    protected $isResourceModified = false;
+    
     public function __construct(Resource $resource, $contentType, $contentData) {
         parent::__construct($resource);
         
@@ -39,11 +41,24 @@ class HandleUploadedContentEvent extends ApiEvent {
      * if you set a Resource, you are declaring that you have handled the content
      * appropriately, thus there is no need to call other listeners.
      *
+     * Calling this also sets `isResourceModified` to true, which tells the system
+     * to persist the resource to storage if changes were made.
+     *
      * @param Resource $resource 
      */
     public function setResource(Resource $resource) {
         $this->resource = $resource;
+        $this->isResourceModified = true;
         $this->stopPropagation();
+    }
+    
+    /**
+     * Return boolean whether or not the Resource object has been modified.
+     *
+     * @return boolean
+     */
+    public function isResourceModified() {
+        return $this->isResourceModified;
     }
     
 }
