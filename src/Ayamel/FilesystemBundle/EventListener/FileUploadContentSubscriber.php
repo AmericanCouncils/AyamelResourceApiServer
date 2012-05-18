@@ -24,6 +24,11 @@ class FileUploadContentSubscriber implements EventSubscriberInterface {
      */
     protected $container;
     
+    /**
+     * Constructor requires the Container for retrieving the filesystem service as needed.
+     *
+     * @param ContainerInterface $container 
+     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
@@ -108,7 +113,7 @@ class FileUploadContentSubscriber implements EventSubscriberInterface {
             $newRef->setOriginal(true);
 
         } else {
-            throw new \InvalidArgumentException(sprintf("File upload error %s", $uploadedFile->getError()));
+            throw new \RuntimeException(sprintf("File upload error %s", $uploadedFile->getError()));
         }
 
         //set new content

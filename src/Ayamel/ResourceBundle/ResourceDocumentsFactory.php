@@ -122,7 +122,7 @@ class ResourceDocumentsFactory {
             if(method_exists($object, $method)) {
                 $object->$method($val);
             } else {
-                throw new \RuntimeException("Tried setting a non-existing field ($key)");
+                throw new \InvalidArgumentException("Tried setting a non-existing field ($key)");
             }
         }
 
