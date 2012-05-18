@@ -7,6 +7,9 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use AC\WebServicesBundle\EventListener\ApiWorkflowSubscriber;
 
+
+//TODO: listen for all kernel events, firing an early/late listener pair.
+
 /**
  * A listener that monitors for incoming requests under `/rest/`.  When detected, registers the RestWorkflowSubscriber to handle Api events.
  * 

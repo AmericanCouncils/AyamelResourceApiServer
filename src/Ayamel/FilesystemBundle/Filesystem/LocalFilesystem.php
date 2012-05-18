@@ -1,10 +1,8 @@
 <?php
 
-namespace Ayamel\ResourceApiBundle\Filesystem;
+namespace Ayamel\FilesystemBundle\Filesystem;
 
 use Ayamel\ResourceBundle\Document\FileReference;
-
-//TODO: File secret must include timestamp - base path should only include the ID, not the secret, as IDs are unique, and secrets should be random, thus un-recoverable
 
 /**
  * Implements local file storage for Resource objects.
@@ -12,7 +10,7 @@ use Ayamel\ResourceBundle\Document\FileReference;
  * @author Evan Villemez
  */
 class LocalFilesystem implements FilesystemInterface {
-	
+    
     /**
      * @var string - the base filepath used for all resource file storage
      */
@@ -43,7 +41,7 @@ class LocalFilesystem implements FilesystemInterface {
     /**
      * {@inheritdoc}
      *
-     * Uses md5() of the received id to generate a 3 level hashed directory structure, using 2 hex characters per directory (0-9, a-f).  This yields
+     * This implementation uses an md5() hash of the received id to generate a 3 level hashed directory structure, using 2 hex characters per directory (0-9, a-f).  This yields
      * 16,777,216 possible directories, with no more than 256 subdirectories per containing directory, and should guarantee relatively uniform file distribution among them.
      */
     public function generateBaseDirectoryForId($id) {
@@ -67,28 +65,57 @@ class LocalFilesystem implements FilesystemInterface {
     public function generateBaseFilenameForId($id) {
         return $id."_".$this->createFileSecretForId($id)."_";
     }
+	
+    /**
+     * {@inheritdoc}
+     */
+	public function getIdForFile(FileReference $ref) {
+		if(!$uri = $ref->getInternalUri()) {
+			return false;
+		}
+		$exp = explode("_", $ref->getInternalUri());
+		return $exp[0];
+	}
+	
+    /**
+     * {@inheritdoc}
+     */
+	public function removeFile(FileReference $ref) {
+		if(!$uri = $ref->getInternalUri()) {
+			return false;
+		}
+		
+		return unlink($uri);
+	}
 
     /**
      * {@inheritdoc}
      */
-    public function removeFile($path) {
-        return unlink($path);
-    }
-    
-    /**
-     * {@inheritdoc}
-     */
     public function removeFileForId($id, $name) {
-        return $this->removeFile($this->generateBasePathForId($id).$name);
+        return unlink($this->generateBasePathForId($id).$name);
     }
     
     /**
      * {@inheritdoc}
      */
     public function removeFilesForId($id) {
+        $removed = 0;
         foreach($this->getFilesForId($id) as $ref) {
-            $this->removeFile($ref->getInternalUri());
+            if($this->removeFile($ref)) {
+                $removed++;
+            }
         }
+        
+        return $removed;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getFileForId($id, $name) {
+        $path = $this->generateBasePathForId($id).$name;
+        
+        return file_exists($path) ? FileReference::createFromLocalPath($path) : false;
     }
     
     /**
@@ -104,6 +131,13 @@ class LocalFilesystem implements FilesystemInterface {
 
         return $files;
     }
+	
+    /**
+     * {@inheritdoc}
+     */
+	public function hasFileForId($id, $name) {
+		return file_exists($this->generateBasePathForId($id).$name);
+	}
     
     /**
      * {@inheritdoc}
@@ -172,19 +206,22 @@ class LocalFilesystem implements FilesystemInterface {
     /**
      * {@inheritdoc}
      */
-    public function getCount($includeDirectories = false) {
+    public function getCount($return = FilesystemInterface::COUNT_FILES) {
         $ds = DIRECTORY_SEPARATOR;
         $fCount = 0;
         $dCount = 0;
+        
+        //check if we're in php 5.4 or higher, if so, we can avoid sorting because it's irrelevant here
+        $sortOrder = (defined('SCANDIR_SORT_NONE')) ? SCANDIR_SORT_NONE : 0;
 
         //TODO: this may scale terribly with lots of files, might want consider implementing with readdir instead
-        foreach(scandir($this->rootDir) as $lvl1) {
+        foreach(scandir($this->rootDir, $sortOrder) as $lvl1) {
             if($lvl1 === '.' || $lvl1 === '..') continue;
-            foreach(scandir($this->rootDir.$ds.$lvl1) as $lvl2) {
+            foreach(scandir($this->rootDir.$ds.$lvl1, $sortOrder) as $lvl2) {
                 if($lvl2 === '.' || $lvl2 === '..') continue;
-                foreach(scandir($this->rootDir.$ds.$lvl1.$ds.$lvl2) as $lvl3) {
+                foreach(scandir($this->rootDir.$ds.$lvl1.$ds.$lvl2, $sortOrder) as $lvl3) {
                     if($lvl3 === '.' || $lvl3 === '..') continue;
-                    foreach(scandir($this->rootDir.$ds.$lvl1.$ds.$lvl2.$ds.$lvl3) as $file) {
+                    foreach(scandir($this->rootDir.$ds.$lvl1.$ds.$lvl2.$ds.$lvl3, $sortOrder) as $file) {
                         if($file === '.' || $file === '..') continue;
                         $fCount++;
                     }
@@ -195,7 +232,12 @@ class LocalFilesystem implements FilesystemInterface {
             $dCount++;
         }
         
-        return ($includeDirectories) ? $fCount + $dCount : $fCount;
+        switch($return) {
+            case FilesystemInterface::COUNT_FILES : return ($fCount);
+            case FilesystemInterface::COUNT_DIRECTORIES : return ($dCount);
+            case FilesystemInterface::COUNT_ALL : return ($fCount + $dCount);
+            default : return false;
+        }
     }
     
     public function createFileSecretForId($id) {

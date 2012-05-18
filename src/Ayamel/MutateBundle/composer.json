@@ -1,0 +1,21 @@
+{
+    "name": "ayamel/mutate-bundle",
+    "type": "symfony-bundle",
+    "description": "This bundle integrates the Resource API and Filesystem with the Mutate transcoding library.",
+    "keywords": ["mutate", "files", "transcoding", "resources", "media"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Evan Villemez",
+            "email": "evan.villemez@americancouncils.org"
+        }
+    ],
+    "autoload": {
+        "psr-0": { "Ayamel\\MutateBundle": "" }
+    },
+    "target-dir": "Ayamel/MutateBundle",
+    "require": {
+        "php": ">=5.3.2",
+        "americancouncils/mutate-bundle": "dev-master"
+    }
+}

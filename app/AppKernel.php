@@ -28,6 +28,9 @@ class AppKernel extends Kernel
             new AC\WebServicesBundle\ACWebServicesBundle(),
             new Ayamel\ResourceBundle\AyamelResourceBundle(),
             new Ayamel\ResourceApiBundle\AyamelResourceApiBundle(),
+            new Ayamel\FilesystemBundle\AyamelFilesystemBundle(),
+            //new AC\MutateBundle\ACMutateBundle(),
+            //new Ayamel\MutateBundle\AyamelMutateBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

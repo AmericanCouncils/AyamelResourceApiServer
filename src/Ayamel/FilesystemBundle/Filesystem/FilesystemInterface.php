@@ -1,6 +1,6 @@
 <?php
 
-namespace Ayamel\ResourceApiBundle\Filesystem;
+namespace Ayamel\FilesystemBundle\Filesystem;
 
 use Ayamel\ResourceBundle\Document\FileReference;
 
@@ -21,6 +21,21 @@ interface FilesystemInterface {
      * If a file already exists, throw an exception
      */
     const CONFLICT_EXCEPTION = 2;
+    
+    /**
+     * Count only real files, not directories.
+     */
+    const COUNT_FILES = 1;
+    
+    /**
+     * Count only directories
+     */
+    const COUNT_DIRECTORIES = 2;
+    
+    /**
+     * Count both files and directories
+     */
+    const COUNT_ALL = 3;
     
     /**
      * Generate a string base directory given an id.
@@ -46,15 +61,23 @@ interface FilesystemInterface {
      * @return string
      */
     function generateBaseFilenameForId($id);
-
-    /**
-     * Remove a file given a path.
-     *
-     * @param string $tag 
-     * @return boolean
-     */
-    function removeFile($path);
-    
+	
+	/**
+	 * Get the resource id associated with a given FileReference
+	 *
+	 * @param FileReference $ref 
+	 * @return string
+	 */
+	function getIdForFile(FileReference $ref);
+	
+	/**
+	 * Remove a specific FileReference instance, regardless of which object it's associated with.
+	 *
+	 * @param FileReference $ref 
+	 * @return boolean on success
+	 */
+	function removeFile(FileReference $ref);
+	    
     /**
      * Remove a specific file by name for an id.  The name should NOT include elements of the base file name generated
      * by the file system.
@@ -69,9 +92,18 @@ interface FilesystemInterface {
      * Remove all files for a given Resource ID.
      *
      * @param string $id 
-     * @return boolean
+     * @return int - the number of files successfully removed
      */
     function removeFilesForId($id);
+	
+    /**
+     * Return a specific FileReference instance for an id, given a unique name.
+     *
+     * @param string $id 
+     * @param string $name 
+     * @return FileReference
+     */
+    function getFileForId($id, $name);
     
     /**
      * Get array of FileReference instances for all files from a given Resource ID
@@ -80,6 +112,15 @@ interface FilesystemInterface {
      * @return array
      */
     function getFilesForId($id);
+	
+	/**
+	 * Return boolean whether or not a file by a particular name exists for the given Resource ID.
+	 *
+	 * @param string $id 
+	 * @param string $name 
+	 * @return boolean
+	 */
+	function hasFileForId($id, $name);
     
     /**
      * Add a new file for a given id.  The basename, if provided, will be appended to the base path for
@@ -107,5 +148,5 @@ interface FilesystemInterface {
      * @param string $includeDirectories - whether or not to include directories in the count
      * @return int
      */
-    function getCount($includeDirectories = false);
+    function getCount($return = FilesystemInterface::COUNT_FILES);
 }

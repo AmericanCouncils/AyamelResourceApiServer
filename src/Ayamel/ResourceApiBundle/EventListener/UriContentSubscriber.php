@@ -82,8 +82,11 @@ class UriContentSubscriber implements EventSubscriberInterface {
         
         $resource = $e->getResource();
         
-        //TODO: check for previous content that should be removed "properly"
+        //set content properly
         $resource->content = $derivedResource->content;
+        $originalRef = FileReference::createFromPublicUri($uri);
+        $originalRef->setOriginal(true);
+        $resource->content->addFile($originalRef);
         
         //set the modified resource and stop propagation of this event
         $e->setResource($resource);
