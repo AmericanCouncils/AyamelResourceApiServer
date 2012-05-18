@@ -43,14 +43,18 @@ class UploadContent extends ApiController {
             throw $this->createHttpException(423, "Resource content is currently being processed, try modifying the content later.");
         }
         
+        //TODO: check for (cache) resource lock, throw 423
+        //TODO: lock resource
+        
         //get the api event dispatcher
         $apiDispatcher = $this->container->get('ayamel.api.dispatcher');
-        
+
         //notify system to resolve uploaded content from the request
         $request = $this->getRequest();
         try {
             $event = $apiDispatcher->dispatch(Events::RESOLVE_UPLOADED_CONTENT, new ResolveUploadedContentEvent($resource, $request));
         } catch (\Exception $e) {
+            //TODO: unlock resource
             throw ($e instanceof HttpException) ? $e : $this->createHttpException(500, $e->getMessage());
         }
         $contentType = $event->getContentType();
@@ -58,27 +62,41 @@ class UploadContent extends ApiController {
         
         //if we weren't able to resolve incoming content, it must be a bad request
         if(false === $contentData) {
-            throw $this->createHttpException(400, "Could not resolve valid content.");
-        }
+            //TODO: unlock resource
+            throw $this->createHttpException(422, "Could not resolve valid content.");
+        }        
         
         //notify system to handle uploaded content however is necessary and modify the resource accordingly
         try {
-            
             //remove old resource content
             $apiDispatcher->dispatch(Events::REMOVE_RESOURCE_CONTENT, new ApiEvent($resource));
             
             $event = $apiDispatcher->dispatch(Events::HANDLE_UPLOADED_CONTENT, new HandleUploadedContentEvent($resource, $contentType, $contentData));
         } catch (\Exception $e) {
-            throw ($e instanceof HttpException) ? $e : $this->createHttpException(500, $e->getMessage());
+            //TODO: unlock resource
+            throw ($e instanceof HttpException) ? $e : $this->createHttpException(500);
         }
         
-        //persist the resource, as it may have changed
-        $resource = $event->getResource();
-        $resource->setStatus(Resource::STATUS_AWAITING_PROCESSING);
-        $this->container->get('ayamel.resource.manager')->persistResource($resource);
+        //if resource was processed, persist it and notify the system that a resource has changed
+        if ($event->isResourceModified()) {
+            try {
+                //persist it
+                $resource = $event->getResource();
+                $resource->setStatus(Resource::STATUS_AWAITING_PROCESSING);
+                $this->container->get('ayamel.resource.manager')->persistResource($resource);
+            
+                //notify system
+                $apiDispatcher->dispatch(Events::RESOURCE_MODIFIED, new ApiEvent($resource));
+            } catch (\Exception $e) {
+                //TODO: unlock resource
+                throw $e;
+            }
+        } else {
+            //TODO: unlock resource
+            throw $this->createHttpException(422, "The content was not processed, thus the resource was not modified.");
+        }
         
-        //notify the system that a resource has changed
-        $apiDispatcher->dispatch(Events::RESOURCE_MODIFIED, new ApiEvent($resource));
+        //TODO: unlock resource
         
         //return 202 on success
         //TODO: return ServiceResponse::create(200, array('resource' => $resource));
