@@ -10,15 +10,6 @@
 
 {% block body %}
 <style>
-textarea {
-    width: 600px;
-    height: 200px;
-}
-
-input {
-    width: 600px;
-}
-
 li code {
     font-size: 12px;
 }
@@ -49,7 +40,7 @@ li code {
     </li>
     <li>
         <code>POST: /resources/{id}/content/{token}</code>
-        <p>Receives and processes content for a resource.  Content can be specified in one of several formats.  If multiple formats are supplied, only the first matching format will be handled, and others will be ignored.  The available formats are:</p>
+        <p>Receives and processes content for a resource.  Content can be specified in one of several formats.  If multiple formats are supplied, only the first matching format will be handled, and others will be ignored.  By default all previous content will be removed and replaced by the new content received.  If old content should be preseved, provided the query parameter <code>replace=false</code> in the url.  The available formats are:</p>
         <ul>
             <li><p>Upload a file to be stored and automatically transcoded by the Ayamel server by providing a file upload via the <code>file</code> post field.</p></li>
             <li><p>Specify a reference to an original file via a public URI, this can be done via the <code>uri</code> post field, or by passing a JSON object with the <code>uri</code> key.  The specified uri will be processed to check for availability. If the uri is in a custom format known to the Ayamel Resource Library, other resource information may be derived and added into the resource.</p></li>

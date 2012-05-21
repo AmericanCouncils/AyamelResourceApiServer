@@ -60,7 +60,6 @@ class UriContentSubscriber implements EventSubscriberInterface {
         if(2 === count($exp)) {
             if($this->container->get('ayamel.resource.provider')->handlesScheme($exp[0])) {
                 $e->setContentType('uri');
-                $e->setRemovePreviousContent(true);
                 $e->setContentData($uri);
             }
         }

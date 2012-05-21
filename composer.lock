@@ -1,57 +1,63 @@
 {
-    "hash": "0f4c622c1750b6fdf40a48b1a876d26d",
+    "hash": "697567c13c92875dc1ce1940617d5800",
     "packages": [
         {
             "package": "alb/oauth2-php",
             "version": "dev-master",
-            "source-reference": "4d32c17abb586fcb9d7f7565920b77c585726b7b"
+            "source-reference": "950b0bc00e669b2a47fd0440c78c085a89af4378"
         },
         {
             "package": "doctrine/common",
-            "version": "2.2.1"
+            "version": "2.2.x-dev",
+            "source-reference": "1e0aa60d109c630d19543d999f12e2852ef8f932"
         },
         {
             "package": "doctrine/dbal",
-            "version": "2.2.1"
+            "version": "2.2.0-RC3"
         },
         {
             "package": "doctrine/doctrine-bundle",
             "version": "dev-master",
-            "source-reference": "50ee2c81bc7d0f413f402de46ecedfd98b79b4f3"
+            "source-reference": "74632539010f1f8887e8afadf41a732efce971c1"
         },
         {
             "package": "doctrine/mongodb",
             "version": "dev-master",
-            "source-reference": "727a12d25ba12d18aa293bc6eb61f203a9545912"
+            "source-reference": "71d862d27dad00b82f45f2c98f2000ecdd654ea6"
         },
         {
             "package": "doctrine/mongodb-odm",
             "version": "dev-master",
-            "source-reference": "bba938ee566f9942bb0adf6fb07f77e94671df2b"
+            "source-reference": "36b376ef50088ec13cc372b896b01bdf96759409"
         },
         {
             "package": "doctrine/mongodb-odm-bundle",
             "version": "dev-master",
-            "source-reference": "61f34e19bb3412372a09a0b214436d91232b447f"
+            "source-reference": "e83bd0d310221e8325c8bff019a98991f1a1dae9"
         },
         {
             "package": "doctrine/orm",
-            "version": "2.2.1"
+            "version": "2.2.x-dev",
+            "source-reference": "36cac855dce4ec50f12ecc3628cd41f7801a4f1d"
         },
         {
             "package": "friendsofsymfony/oauth-server-bundle",
+            "version": "1.0.0"
+        },
+        {
+            "package": "friendsofsymfony/oauth2-php",
             "version": "dev-master",
-            "source-reference": "19b99c9c644aa084a95ff87f7ee5d5f945979e12"
+            "source-reference": "15e5f17426a9659f6ca49454d8f174effb881cc2"
         },
         {
             "package": "friendsofsymfony/rest",
             "version": "dev-master",
-            "source-reference": "a08b96b01e1ce26a7c43f993bf54aac756c0f6cb"
+            "source-reference": "d9f772ddb9bb4fd0d952fa45cf0e5e76510b111c"
         },
         {
             "package": "friendsofsymfony/rest-bundle",
             "version": "dev-master",
-            "source-reference": "d2e9aaca8128bfcbd7cd0cb8a80ae34ab71b0c7e"
+            "source-reference": "67158a05a76c469eef49f66dd22806465f03629f"
         },
         {
             "package": "jms/aop-bundle",
@@ -68,76 +74,81 @@
         {
             "package": "jms/security-extra-bundle",
             "version": "dev-master",
-            "source-reference": "a636402a8cb1893202f6f67231923cd36ef96e60"
+            "source-reference": "b564463433aed66e9dddad8cbb761afff5a80cb4"
         },
         {
             "package": "jms/serializer-bundle",
             "version": "dev-master",
-            "source-reference": "490efa42ec0940b07cb98e7152d7a2374ba747ff"
+            "source-reference": "4ce47e7ce898d6a431433c33e194d3fed7244bd1"
         },
         {
             "package": "kriswallsmith/assetic",
             "version": "dev-master",
-            "source-reference": "2634d29cc193981761e3daf28e1afc6358bb43b1"
+            "source-reference": "1a1b5f963db158a1065343fab617d25ce351a2dc"
         },
         {
             "package": "monolog/monolog",
-            "version": "1.0.2"
+            "version": "1.1.0"
         },
         {
             "package": "sensio/distribution-bundle",
             "version": "dev-master",
-            "source-reference": "e78f65f36b27ba07b1e44241b4cf5443e80d7bd5"
+            "source-reference": "9a1b2ef970575c8b35f72ce857df2fa9aef7b470"
         },
         {
             "package": "sensio/framework-extra-bundle",
             "version": "dev-master",
-            "source-reference": "7e1e52a241558264253179bb790f4c5d25544fb4"
+            "source-reference": "e00b525b14784ea4f21c14945e58b4a76a530a6a"
         },
         {
             "package": "sensio/generator-bundle",
             "version": "dev-master",
-            "source-reference": "3d16db1631a3648d1b6662efe6de32735118b1da"
+            "source-reference": "0813379920dcaa4b06361501f654379383d75f16"
         },
         {
             "package": "swiftmailer/swiftmailer",
-            "version": "4.1.6"
+            "version": "dev-master",
+            "source-reference": "9895567cec5a13d1a43db5053defbaad260c1b87",
+            "alias": "4.1.9999999.9999999-dev"
         },
         {
             "package": "symfony/assetic-bundle",
             "version": "dev-master",
-            "source-reference": "b9cff021abc3d9433a892fa9908d9856393c0d09"
+            "source-reference": "61c9f363e73b4ecbb72f81eb62675260a1132048"
         },
         {
             "package": "symfony/monolog-bundle",
             "version": "dev-master",
-            "source-reference": "289442e385e7c0fe4aa2e8884d11e774a8f9ad99"
+            "source-reference": "51a25acc57f4c027b28f0305976b887e2da6250a"
         },
         {
             "package": "symfony/swiftmailer-bridge",
             "version": "dev-master",
-            "source-reference": "23b8d5c049bb3dfb67ec04bbea09464da27c4ec7"
+            "source-reference": "408eb09f5799d393ddc3d916ec3667857fb3a20d"
         },
         {
             "package": "symfony/swiftmailer-bundle",
             "version": "dev-master",
-            "source-reference": "75f8f95c201922a966274547131b33291d15d51b"
+            "source-reference": "71e1789868665cf94dc7831f645625fd0f70aac6"
         },
         {
             "package": "symfony/symfony",
             "version": "dev-master",
-            "source-reference": "a7a696fc5a28e12871073fb0f5ecb163b450e86a",
+            "source-reference": "335d4eab86362a249e4c58d28320b7b843773492",
             "alias": "2.1.9999999.9999999-dev"
         },
         {
             "package": "twig/extensions",
             "version": "dev-master",
-            "source-reference": "1dfff8e793f50f651c4f74f796c2c68a4aee3147"
+            "source-reference": "feb6d3f10c411e2631997c0a905aa581c80305c1"
         },
         {
             "package": "twig/twig",
-            "version": "1.6.3"
+            "version": "dev-master",
+            "source-reference": "0fa26d642994630b2ec19c090149fa56ce84c789",
+            "alias": "1.8.9999999.9999999-dev"
         }
     ],
+    "packages-dev": null,
     "aliases": []
 }

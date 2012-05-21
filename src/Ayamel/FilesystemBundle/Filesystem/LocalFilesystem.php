@@ -236,6 +236,7 @@ class LocalFilesystem implements FilesystemInterface {
             case FilesystemInterface::COUNT_FILES : return ($fCount);
             case FilesystemInterface::COUNT_DIRECTORIES : return ($dCount);
             case FilesystemInterface::COUNT_ALL : return ($fCount + $dCount);
+            case FilesystemInterface::COUNT_BOTH : return array('files' => $fCount, 'directories' => $dCount);
             default : return false;
         }
     }

@@ -38,6 +38,11 @@ interface FilesystemInterface {
     const COUNT_ALL = 3;
     
     /**
+     * Return array with both file and directory counts.
+     */
+    const COUNT_BOTH = 4;
+    
+    /**
      * Generate a string base directory given an id.
      *
      * @param string $id 

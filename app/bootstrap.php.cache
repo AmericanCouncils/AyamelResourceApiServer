@@ -84,7 +84,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\DependencyInjection\ParameterBag\FrozenParameterBag;
 
 
-class Container implements ContainerInterface
+class Container implements IntrospectableContainerInterface
 {
     protected $parameterBag;
     protected $services;
@@ -205,6 +205,12 @@ class Container implements ContainerInterface
         if (self::EXCEPTION_ON_INVALID_REFERENCE === $invalidBehavior) {
             throw new ServiceNotFoundException($id);
         }
+    }
+
+    
+    public function initialized($id)
+    {
+        return isset($this->services[strtolower($id)]);
     }
 
     
@@ -438,14 +444,13 @@ use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\MergeExtensionConfigurationPass;
 use Symfony\Component\HttpKernel\DependencyInjection\AddClassesToCachePass;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension as DIExtension;
 use Symfony\Component\HttpKernel\Debug\ErrorHandler;
 use Symfony\Component\HttpKernel\Debug\ExceptionHandler;
 use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\Config\Loader\DelegatingLoader;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\ClassLoader\ClassCollectionLoader;
-use Symfony\Component\ClassLoader\DebugUniversalClassLoader;
+use Symfony\Component\ClassLoader\DebugClassLoader;
 
 
 abstract class Kernel implements KernelInterface, TerminableInterface
@@ -462,7 +467,12 @@ abstract class Kernel implements KernelInterface, TerminableInterface
     protected $classes;
     protected $errorReportingLevel;
 
-    const VERSION = '2.1.0-DEV';
+    const VERSION         = '2.1.0-DEV';
+    const VERSION_ID      = '20100';
+    const MAJOR_VERSION   = '2';
+    const MINOR_VERSION   = '1';
+    const RELEASE_VERSION = '0';
+    const EXTRA_VERSION   = 'DEV';
 
     
     public function __construct($environment, $debug)
@@ -487,7 +497,7 @@ abstract class Kernel implements KernelInterface, TerminableInterface
             ini_set('display_errors', 1);
             error_reporting(-1);
 
-            DebugUniversalClassLoader::enable();
+            DebugClassLoader::enable();
             ErrorHandler::register($this->errorReportingLevel);
             if ('cli' !== php_sapi_name()) {
                 ExceptionHandler::register();
@@ -860,7 +870,7 @@ abstract class Kernel implements KernelInterface, TerminableInterface
             }
         }
 
-        $container = new ContainerBuilder(new ParameterBag($this->getKernelParameters()));
+        $container = $this->getContainerBuilder();
         $extensions = array();
         foreach ($this->bundles as $bundle) {
             if ($extension = $bundle->getContainerExtension()) {
@@ -888,6 +898,12 @@ abstract class Kernel implements KernelInterface, TerminableInterface
         $container->compile();
 
         return $container;
+    }
+
+    
+    protected function getContainerBuilder()
+    {
+        return new ContainerBuilder(new ParameterBag($this->getKernelParameters()));
     }
 
     
@@ -1071,6 +1087,7 @@ class ClassCollectionLoader
                     $inNamespace = false;
                     --$i;
                 } else {
+                    $output = rtrim($output);
                     $output .= "\n{";
                     $inNamespace = true;
                 }
@@ -1091,7 +1108,7 @@ class ClassCollectionLoader
     {
         $tmpFile = tempnam(dirname($file), basename($file));
         if (false !== @file_put_contents($tmpFile, $content) && @rename($tmpFile, $file)) {
-            chmod($file, 0644);
+            @chmod($file, 0666 & ~umask());
 
             return;
         }
@@ -1306,6 +1323,45 @@ class UniversalClassLoader
 namespace Symfony\Component\HttpKernel\Bundle
 {
 
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
+
+
+interface BundleInterface extends ContainerAwareInterface
+{
+    
+    function boot();
+
+    
+    function shutdown();
+
+    
+    function build(ContainerBuilder $container);
+
+    
+    function getContainerExtension();
+
+    
+    function getParent();
+
+    
+    function getName();
+
+    
+    function getNamespace();
+
+    
+    function getPath();
+}
+}
+ 
+
+
+
+namespace Symfony\Component\HttpKernel\Bundle
+{
+
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Container;
@@ -1432,43 +1488,6 @@ abstract class Bundle extends ContainerAware implements BundleInterface
 
 
 
-namespace Symfony\Component\HttpKernel\Bundle
-{
-
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-
-
-interface BundleInterface
-{
-    
-    function boot();
-
-    
-    function shutdown();
-
-    
-    function build(ContainerBuilder $container);
-
-    
-    function getContainerExtension();
-
-    
-    function getParent();
-
-    
-    function getName();
-
-    
-    function getNamespace();
-
-    
-    function getPath();
-}
-}
- 
-
-
-
 namespace Symfony\Component\Config
 {
 
@@ -1532,7 +1551,7 @@ class ConfigCache
 
         $tmpFile = tempnam(dirname($this->file), basename($this->file));
         if (false !== @file_put_contents($tmpFile, $content) && @rename($tmpFile, $this->file)) {
-            chmod($this->file, 0666);
+            @chmod($this->file, 0666 & ~umask());
         } else {
             throw new \RuntimeException(sprintf('Failed to write cache file "%s".', $this->file));
         }
@@ -1541,7 +1560,7 @@ class ConfigCache
             $file = $this->file.'.meta';
             $tmpFile = tempnam(dirname($file), basename($file));
             if (false !== @file_put_contents($tmpFile, serialize($metadata)) && @rename($tmpFile, $file)) {
-                chmod($file, 0666);
+                @chmod($file, 0666 & ~umask());
             }
         }
     }

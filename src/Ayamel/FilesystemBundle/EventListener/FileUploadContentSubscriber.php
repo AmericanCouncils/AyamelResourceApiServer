@@ -70,7 +70,6 @@ class FileUploadContentSubscriber implements EventSubscriberInterface {
                 
         if ($file = $request->files->get('file', false)) {
             $e->setContentType('file_upload');
-            $e->setRemovePreviousContent(true);
             $e->setContentData($file);
         }
     }
@@ -92,9 +91,8 @@ class FileUploadContentSubscriber implements EventSubscriberInterface {
         
         //process files
         if ($uploadedFile->isValid()) {
-            //remove old files for resource
+            //get filesystem
             $fs = $this->container->get('ayamel.api.filesystem');
-            $fs->removeFilesForId($resource->getId());
             
             //add new file
             $filename = $this->cleanUploadedFileName($uploadedFile->getClientOriginalName());

@@ -38,9 +38,10 @@ class ResolveUploadedContentEvent extends ApiEvent {
      * @param Resource $resource 
      * @param Request $request 
      */
-    public function __construct(Resource $resource, Request $request) {
+    public function __construct(Resource $resource, Request $request, $removePrevious = false) {
         parent::__construct($resource);
         $this->request = $request;
+        $this->remove_previous_content = $removePrevious;
         
         //figure out the request body format, try json first
         $body = $request->getContent();
@@ -99,15 +100,6 @@ class ResolveUploadedContentEvent extends ApiEvent {
      */
     public function getContentData() {
         return $this->content;
-    }
-    
-    /**
-     * Set whether or not previous content should be removed for this resource
-     *
-     * @param boolean $bool 
-     */
-    public function setRemovePreviousContent($bool) {
-        $this->remove_previous_content = (bool) $bool;
     }
     
     /**
