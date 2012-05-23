@@ -40,5 +40,21 @@
     "extra": {
         "symfony-app-dir": "app",
         "symfony-web-dir": "web"
-    }
+    },
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "getid3/getid3",
+                "version": "1.9.3",
+                "autoload": {
+                    "classmap": "getid3/"
+                },
+                "dist": {
+                    "url": "http://downloads.sourceforge.net/project/getid3/getID3%28%29%201.x/1.9.3/getid3-1.9.3-20111213.zip?r=http%3A%2F%2Fwww.google.com%2Furl%3Fsa%3Dt%26rct%3Dj%26q%3Dgetid3%2520download%26source%3Dweb%26cd%3D3%26ved%3D0CGIQFjAC%26url%3Dhttp%253A%252F%252Fsourceforge.net%252Fprojects%252Fgetid3%252Ffiles%252Flatest%252Fdownload%26ei%3DNPu8T-r4GsG46QG_uoxG%26usg%3DAFQjCNFz3LqAXh-pQFwXXRLMnXy41BPkKQ&ts=1337785158&use_mirror=iweb",
+                    "type": "zip"
+                }
+            }
+        }
+    ]
 }

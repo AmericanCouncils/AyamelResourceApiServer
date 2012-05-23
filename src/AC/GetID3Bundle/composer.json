@@ -1,0 +1,22 @@
+{
+    "name": "americancouncils/getid3-bundle",
+    "type": "symfony-bundle",
+    "description": "This bundle provides container services for using the getid3 library in your own code.",
+    "keywords": ["getid3", "files", "id3"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Evan Villemez",
+            "email": "evan.villemez@americancouncils.org"
+        }
+    ],
+    "autoload": {
+        "psr-0": { "AC\\GetID3Bundle": "" }
+    },
+    "target-dir": "AC/GetID3Bundle",
+    "require": {
+        "php": ">=5.3.2",
+		"symfony/symfony": "2.1.*",
+        "getid3/getid3": "1.9.3"
+    }
+}

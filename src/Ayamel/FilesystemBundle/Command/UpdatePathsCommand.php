@@ -8,12 +8,12 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class UpdatePaths extends ContainerAwareCommand {
+class UpdatePathsCommand extends ContainerAwareCommand {
 	
     protected function configure() {
         $this
             ->setName('fs:update:paths')
-            ->setDescription('Return count of files and directories managed locally by the Ayamel API.');
+            ->setDescription('Update resource FileReference objects in database to point to a new local base path.');
     }
     
     protected function execute(InputInterface $input, OutputInterface $output)

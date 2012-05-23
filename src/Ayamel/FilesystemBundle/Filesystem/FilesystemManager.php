@@ -102,14 +102,22 @@ class FilesystemManager implements FilesystemInterface {
      * {@inheritdoc}
      */
 	public function getFileForId($id, $name) {
-		return $this->fs->getFileForId($id, $name);
+        $ref = $this->fs->getFileForId($id, $name);
+        $e = $this->dispatcher->dispatch(Events::FILESYSTEM_RETRIEVE, new FilesystemEvent($this->fs, $ref, $id));
+		return $e->getFileReference();
 	}
     
     /**
      * {@inheritdoc}
      */
     public function getFilesForId($id) {
-		return $this->fs->getFilesForId($id);
+		$returned = $this->fs->getFilesForId($id);
+        $processed = array();
+        foreach($returned as $ref) {
+            $processed[] = $this->dispatcher->dispatch(Events::FILESYSTEM_RETRIEVE, new FilesystemEvent($this->fs, $ref, $id))->getFileReference();
+        }
+        
+        return $processed;
 	}
 	
     /**
@@ -136,4 +144,20 @@ class FilesystemManager implements FilesystemInterface {
     public function getCount($return = FilesystemInterface::COUNT_FILES) {
 		return $this->fs->getCount($return);
 	}
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getStats() {
+        return $this->fs->getStats();
+    }
+    
+    /**
+     * Return the instance of the actual filesystem being wrapped by the manager.
+     *
+     * @return FilesystemInterface
+     */
+    public function getFilesystem() {
+        return $this->fs;
+    }
 }

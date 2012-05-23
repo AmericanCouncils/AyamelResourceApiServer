@@ -2,12 +2,21 @@
 
 namespace Ayamel\FilesystemBundle\Event;
 
+//TODO: consider an event for resolving file reference attributes
+
 /**
  * Defines core events that occur within the FilesystemManager instance.
  *
  * @author Evan Villemez
  */
 final class Events {
+    
+    /**
+     * Event fires when a specific reference is being retrieved.
+     *
+     * Listeners receive an instance of `FilesystemEvent`
+     */
+    const FILESYSTEM_RETRIEVE = "ayamel.filesystem.retrieve_reference";
 	
     /**
      * Event fires when a new FileReference is added into a filesystem.

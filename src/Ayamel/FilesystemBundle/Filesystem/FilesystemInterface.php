@@ -154,4 +154,12 @@ interface FilesystemInterface {
      * @return int
      */
     function getCount($return = FilesystemInterface::COUNT_FILES);
+    
+    /**
+     * Return key/val hash of stats unique to the filesystem.
+     *
+     * @return array
+     */
+    function getStats();
+     
 }

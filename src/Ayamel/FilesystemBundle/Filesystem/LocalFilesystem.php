@@ -214,7 +214,7 @@ class LocalFilesystem implements FilesystemInterface {
         //check if we're in php 5.4 or higher, if so, we can avoid sorting because it's irrelevant here
         $sortOrder = (defined('SCANDIR_SORT_NONE')) ? SCANDIR_SORT_NONE : 0;
 
-        //TODO: this may scale terribly with lots of files, might want consider implementing with readdir instead
+        //TODO: this may scale terribly with lots of files, it may be faster by implementing readdir instead of scandir
         foreach(scandir($this->rootDir, $sortOrder) as $lvl1) {
             if($lvl1 === '.' || $lvl1 === '..') continue;
             foreach(scandir($this->rootDir.$ds.$lvl1, $sortOrder) as $lvl2) {
@@ -222,9 +222,9 @@ class LocalFilesystem implements FilesystemInterface {
                 foreach(scandir($this->rootDir.$ds.$lvl1.$ds.$lvl2, $sortOrder) as $lvl3) {
                     if($lvl3 === '.' || $lvl3 === '..') continue;
                     foreach(scandir($this->rootDir.$ds.$lvl1.$ds.$lvl2.$ds.$lvl3, $sortOrder) as $file) {
-                        if($file === '.' || $file === '..') continue;
                         $fCount++;
                     }
+                    $fCount-=2;     //subtract 2 to take into account the '.' and '..' links, this will be faster than checking explicitly in large directories
                     $dCount++;
                 }
                 $dCount++;
@@ -241,9 +241,21 @@ class LocalFilesystem implements FilesystemInterface {
         }
     }
     
+    /**
+     * {@inheritdoc}
+     */
+    public function getStats() {
+        return array(
+            'root_dir' => $this->rootDir,
+            'root_uri' => $this->publicRootUri,
+            'secret' => "Check config files for secret"
+        );
+    }
+
     public function createFileSecretForId($id) {
         $hash = sha1($id.$this->secret);
         return substr($hash, 3, 15);
     }
+    
 
 }
