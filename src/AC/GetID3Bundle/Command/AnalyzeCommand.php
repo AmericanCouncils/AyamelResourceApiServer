@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
 use Ayamel\FilesystemBundle\Filesystem\FilesystemInterface;
+use Symfony\Component\Yaml\Dumper;
 
 class AnalyzeCommand extends ContainerAwareCommand {
 	
@@ -26,12 +27,19 @@ class AnalyzeCommand extends ContainerAwareCommand {
         //$stats = $this->getContainer()->get('getid3')->analyze($filePath);
 		$g = new \getID3;
 		$stats = $g->analyze($filePath);
-        
+
         if(!$stats) {
             throw new \RuntimeException(sprintf("Could not analyze file %s", $filePath));
         }
-        
-        var_dump($stats);
-	}
 
+        //convert to yaml
+        $dumper = new Dumper();
+        $yaml = $dumper->dump($stats);
+        
+        //print line by line
+        //TODO: fix this
+        foreach(explode("\n", $yaml) as $line) {
+            $output->writeln($line); 
+        }
+	}
 }

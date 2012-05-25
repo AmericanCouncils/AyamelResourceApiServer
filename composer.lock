@@ -4,14 +4,8 @@
         {
             "package": "doctrine/common",
             "version": "dev-master",
-            "source-reference": "f8e2aadf388ab1e6b36263a73d5e314c477f96c7"
-        },
-        {
-            "package": "doctrine/common",
-            "version": "dev-master",
             "source-reference": "f8e2aadf388ab1e6b36263a73d5e314c477f96c7",
-            "alias-pretty-version": "2.3.x-dev",
-            "alias-version": "2.3.9999999.9999999-dev"
+            "alias": "2.3.9999999.9999999-dev"
         },
         {
             "package": "doctrine/mongodb",
@@ -40,14 +34,7 @@
         {
             "package": "jms/serializer-bundle",
             "version": "dev-master",
-            "source-reference": "4ce47e7ce898d6a431433c33e194d3fed7244bd1"
-        },
-        {
-            "package": "kriswallsmith/assetic",
-            "version": "dev-master",
-            "source-reference": "1a1b5f963db158a1065343fab617d25ce351a2dc",
-            "alias-pretty-version": "1.1.x-dev",
-            "alias-version": "1.1.9999999.9999999-dev"
+            "source-reference": "904e41c55e795939b487d956ab5ebba5baebdc23"
         },
         {
             "package": "kriswallsmith/assetic",
@@ -61,7 +48,7 @@
         {
             "package": "sensio/distribution-bundle",
             "version": "dev-master",
-            "source-reference": "9a1b2ef970575c8b35f72ce857df2fa9aef7b470"
+            "source-reference": "b35ee4438b4d2351e8115cbf318c461b90fd8c7f"
         },
         {
             "package": "sensio/framework-extra-bundle",
@@ -76,14 +63,8 @@
         {
             "package": "swiftmailer/swiftmailer",
             "version": "dev-master",
-            "source-reference": "9895567cec5a13d1a43db5053defbaad260c1b87"
-        },
-        {
-            "package": "swiftmailer/swiftmailer",
-            "version": "dev-master",
-            "source-reference": "9895567cec5a13d1a43db5053defbaad260c1b87",
-            "alias-pretty-version": "4.1.x-dev",
-            "alias-version": "4.1.9999999.9999999-dev"
+            "source-reference": "d33d54cc8a081b0b85734744936ede1ba230dd64",
+            "alias": "4.1.9999999.9999999-dev"
         },
         {
             "package": "symfony/assetic-bundle",
@@ -101,13 +82,6 @@
             "source-reference": "408eb09f5799d393ddc3d916ec3667857fb3a20d"
         },
         {
-            "package": "symfony/swiftmailer-bridge",
-            "version": "dev-master",
-            "source-reference": "408eb09f5799d393ddc3d916ec3667857fb3a20d",
-            "alias-pretty-version": "2.1.x-dev",
-            "alias-version": "2.1.9999999.9999999-dev"
-        },
-        {
             "package": "symfony/swiftmailer-bundle",
             "version": "dev-master",
             "source-reference": "71e1789868665cf94dc7831f645625fd0f70aac6"
@@ -115,14 +89,8 @@
         {
             "package": "symfony/symfony",
             "version": "dev-master",
-            "source-reference": "b07fb3c459b78061d755df20ee3ad9461e5edec4",
-            "alias-pretty-version": "2.1.x-dev",
-            "alias-version": "2.1.9999999.9999999-dev"
-        },
-        {
-            "package": "symfony/symfony",
-            "version": "dev-master",
-            "source-reference": "b07fb3c459b78061d755df20ee3ad9461e5edec4"
+            "source-reference": "ff4d446c5e93c3261853d8e0da7fd0e146e3d1c0",
+            "alias": "2.1.9999999.9999999-dev"
         },
         {
             "package": "twig/extensions",
@@ -133,29 +101,9 @@
             "package": "twig/twig",
             "version": "dev-master",
             "source-reference": "573a36097146b319e5fb36546a0377c7440bbfe3",
-            "alias-pretty-version": "1.8.x-dev",
-            "alias-version": "1.8.9999999.9999999-dev"
-        },
-        {
-            "package": "twig/twig",
-            "version": "dev-master",
-            "source-reference": "573a36097146b319e5fb36546a0377c7440bbfe3"
+            "alias": "1.8.9999999.9999999-dev"
         }
     ],
     "packages-dev": null,
-    "aliases": [
-
-    ],
-    "minimum-stability": "dev",
-    "stability-flags": {
-        "doctrine/mongodb-odm-bundle": 20,
-        "twig/extensions": 20,
-        "symfony/assetic-bundle": 20,
-        "symfony/swiftmailer-bundle": 20,
-        "symfony/monolog-bundle": 20,
-        "sensio/distribution-bundle": 20,
-        "sensio/framework-extra-bundle": 20,
-        "sensio/generator-bundle": 20,
-        "jms/serializer-bundle": 20
-    }
+    "aliases": []
 }
