@@ -1,24 +1,17 @@
 {
-    "hash": "697567c13c92875dc1ce1940617d5800",
+    "hash": "dd3dc1f260fb37ea8cd3053056666580",
     "packages": [
         {
-            "package": "alb/oauth2-php",
+            "package": "doctrine/common",
             "version": "dev-master",
-            "source-reference": "950b0bc00e669b2a47fd0440c78c085a89af4378"
+            "source-reference": "f8e2aadf388ab1e6b36263a73d5e314c477f96c7"
         },
         {
             "package": "doctrine/common",
-            "version": "2.2.x-dev",
-            "source-reference": "1e0aa60d109c630d19543d999f12e2852ef8f932"
-        },
-        {
-            "package": "doctrine/dbal",
-            "version": "2.2.0-RC3"
-        },
-        {
-            "package": "doctrine/doctrine-bundle",
             "version": "dev-master",
-            "source-reference": "74632539010f1f8887e8afadf41a732efce971c1"
+            "source-reference": "f8e2aadf388ab1e6b36263a73d5e314c477f96c7",
+            "alias-pretty-version": "2.3.x-dev",
+            "alias-version": "2.3.9999999.9999999-dev"
         },
         {
             "package": "doctrine/mongodb",
@@ -33,53 +26,28 @@
         {
             "package": "doctrine/mongodb-odm-bundle",
             "version": "dev-master",
-            "source-reference": "e83bd0d310221e8325c8bff019a98991f1a1dae9"
+            "source-reference": "30211cc1eb2ec45d8028ac4663d00149a9abc913"
         },
         {
-            "package": "doctrine/orm",
-            "version": "2.2.x-dev",
-            "source-reference": "36cac855dce4ec50f12ecc3628cd41f7801a4f1d"
-        },
-        {
-            "package": "friendsofsymfony/oauth-server-bundle",
-            "version": "1.0.0"
-        },
-        {
-            "package": "friendsofsymfony/oauth2-php",
-            "version": "dev-master",
-            "source-reference": "15e5f17426a9659f6ca49454d8f174effb881cc2"
-        },
-        {
-            "package": "friendsofsymfony/rest",
-            "version": "dev-master",
-            "source-reference": "d9f772ddb9bb4fd0d952fa45cf0e5e76510b111c"
-        },
-        {
-            "package": "friendsofsymfony/rest-bundle",
-            "version": "dev-master",
-            "source-reference": "67158a05a76c469eef49f66dd22806465f03629f"
-        },
-        {
-            "package": "jms/aop-bundle",
-            "version": "1.0.0"
-        },
-        {
-            "package": "jms/cg",
-            "version": "1.0.0"
+            "package": "getid3/getid3",
+            "version": "1.9.3"
         },
         {
             "package": "jms/metadata",
-            "version": "1.1.1"
-        },
-        {
-            "package": "jms/security-extra-bundle",
             "version": "dev-master",
-            "source-reference": "b564463433aed66e9dddad8cbb761afff5a80cb4"
+            "source-reference": "a2ae95448bd13bcfbba5f7fead40b379a84da02d"
         },
         {
             "package": "jms/serializer-bundle",
             "version": "dev-master",
             "source-reference": "4ce47e7ce898d6a431433c33e194d3fed7244bd1"
+        },
+        {
+            "package": "kriswallsmith/assetic",
+            "version": "dev-master",
+            "source-reference": "1a1b5f963db158a1065343fab617d25ce351a2dc",
+            "alias-pretty-version": "1.1.x-dev",
+            "alias-version": "1.1.9999999.9999999-dev"
         },
         {
             "package": "kriswallsmith/assetic",
@@ -108,8 +76,14 @@
         {
             "package": "swiftmailer/swiftmailer",
             "version": "dev-master",
+            "source-reference": "9895567cec5a13d1a43db5053defbaad260c1b87"
+        },
+        {
+            "package": "swiftmailer/swiftmailer",
+            "version": "dev-master",
             "source-reference": "9895567cec5a13d1a43db5053defbaad260c1b87",
-            "alias": "4.1.9999999.9999999-dev"
+            "alias-pretty-version": "4.1.x-dev",
+            "alias-version": "4.1.9999999.9999999-dev"
         },
         {
             "package": "symfony/assetic-bundle",
@@ -127,6 +101,13 @@
             "source-reference": "408eb09f5799d393ddc3d916ec3667857fb3a20d"
         },
         {
+            "package": "symfony/swiftmailer-bridge",
+            "version": "dev-master",
+            "source-reference": "408eb09f5799d393ddc3d916ec3667857fb3a20d",
+            "alias-pretty-version": "2.1.x-dev",
+            "alias-version": "2.1.9999999.9999999-dev"
+        },
+        {
             "package": "symfony/swiftmailer-bundle",
             "version": "dev-master",
             "source-reference": "71e1789868665cf94dc7831f645625fd0f70aac6"
@@ -134,8 +115,14 @@
         {
             "package": "symfony/symfony",
             "version": "dev-master",
-            "source-reference": "335d4eab86362a249e4c58d28320b7b843773492",
-            "alias": "2.1.9999999.9999999-dev"
+            "source-reference": "b07fb3c459b78061d755df20ee3ad9461e5edec4",
+            "alias-pretty-version": "2.1.x-dev",
+            "alias-version": "2.1.9999999.9999999-dev"
+        },
+        {
+            "package": "symfony/symfony",
+            "version": "dev-master",
+            "source-reference": "b07fb3c459b78061d755df20ee3ad9461e5edec4"
         },
         {
             "package": "twig/extensions",
@@ -145,10 +132,30 @@
         {
             "package": "twig/twig",
             "version": "dev-master",
-            "source-reference": "0fa26d642994630b2ec19c090149fa56ce84c789",
-            "alias": "1.8.9999999.9999999-dev"
+            "source-reference": "573a36097146b319e5fb36546a0377c7440bbfe3",
+            "alias-pretty-version": "1.8.x-dev",
+            "alias-version": "1.8.9999999.9999999-dev"
+        },
+        {
+            "package": "twig/twig",
+            "version": "dev-master",
+            "source-reference": "573a36097146b319e5fb36546a0377c7440bbfe3"
         }
     ],
     "packages-dev": null,
-    "aliases": []
+    "aliases": [
+
+    ],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "doctrine/mongodb-odm-bundle": 20,
+        "twig/extensions": 20,
+        "symfony/assetic-bundle": 20,
+        "symfony/swiftmailer-bundle": 20,
+        "symfony/monolog-bundle": 20,
+        "sensio/distribution-bundle": 20,
+        "sensio/framework-extra-bundle": 20,
+        "sensio/generator-bundle": 20,
+        "jms/serializer-bundle": 20
+    }
 }

@@ -13,6 +13,7 @@ class AyamelFilesystemBundle extends Bundle {
         parent::build($container);
 
         $container->addCompilerPass(new RegisterFilesystemEventListenersPass());
+        //$container->addCompilerPass(new RegisterFilesystemAnalyzersPass());
     }
 
 }

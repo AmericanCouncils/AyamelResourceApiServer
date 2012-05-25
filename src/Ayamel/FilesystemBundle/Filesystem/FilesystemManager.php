@@ -151,7 +151,7 @@ class FilesystemManager implements FilesystemInterface {
     public function getStats() {
         return $this->fs->getStats();
     }
-    
+	    
     /**
      * Return the instance of the actual filesystem being wrapped by the manager.
      *

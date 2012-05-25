@@ -2,8 +2,6 @@
 
 namespace Ayamel\FilesystemBundle\Event;
 
-//TODO: consider an event for resolving file reference attributes
-
 /**
  * Defines core events that occur within the FilesystemManager instance.
  *

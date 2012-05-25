@@ -29,7 +29,8 @@ class AppKernel extends Kernel
             new Ayamel\ResourceBundle\AyamelResourceBundle(),
             new Ayamel\ResourceApiBundle\AyamelResourceApiBundle(),
             new Ayamel\FilesystemBundle\AyamelFilesystemBundle(),
-//            new AC\GetID3Bundle\ACGetID3Bundle(),
+            new AC\GetID3Bundle\ACGetID3Bundle(),
+//            new Ayamel\GetID3Bundle\AyamelGetID3Bundle(),
 //            new AC\MutateBundle\ACMutateBundle(),
 //            new Ayamel\MutateBundle\AyamelMutateBundle(),
         );

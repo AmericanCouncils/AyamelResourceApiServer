@@ -8,7 +8,8 @@ A FilesystemManager can wrap another instance of a Filesystem, and fires pre/pos
 
 ## Services ##
 
-> `ayamel.api.filesystem` is the main filesystem service, it's exact implementation should be defined in the configuration.
+* `ayamel.api.filesystem` is the main filesystem service, it's exact implementation should be defined in the configuration.
+* `ayamel.api.filesystem.analyzer` can be used to derive file attributes for a file reference
 
 By default the `ayamel.api.filesystem` service is defined as an instance of `FilesystemManager`, which receives an instance of `LocalFilesystem`.  The `LocalFilesystem` instance needs 3 config parameters:
 
@@ -18,4 +19,5 @@ By default the `ayamel.api.filesystem` service is defined as an instance of `Fil
 
 ## Todo ##
 
+* implement analyzer services
 * implement commands
