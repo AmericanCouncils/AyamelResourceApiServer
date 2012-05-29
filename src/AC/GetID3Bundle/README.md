@@ -1,11 +1,11 @@
 # ACGetID3Bundle #
 
-This bundle provides container services for loading the `getid3` library in your own code.
+This bundle makes the get `getid3` library usable from your own code.
 
 ## Installation ##
 
-The `getid3` library is not currently available via composer, github or packagist.org.  In order to have composer automatically download the required `getid3`
-dependency library, you will have to add a custom repository to your application's root `composer.json` file.  Below is the custom repository definition
+The `getid3` library is not currently available (as far as I know) via composer, github or packagist.org.  In order to have composer automatically download the required `getid3`
+dependency library, you will have to add a custom repository to your application's root `composer.json` file.  Below is a custom repository definition
 that points to a `zip` archive of `getid3` on sourceforge.com, add this JSON structure into your app's `composer.json` and run `php composer.phar update`
 to have it install the library properly.
 
@@ -25,25 +25,34 @@ to have it install the library properly.
             }
         }
     ]
+
+After you've added the custom repository, run composer, which should download and register the `getid3` library:
+
+    php composer.phar update
+
+Then, instantiate this bundle in your `AppKernel.php` to register the cli command:
     
+    <?php
+    
+    public function registerBundles()
+    {
+        return array(
+            /* ... */
+            
+            new AC\GetID3Bundle\ACGetID3Bundle(),
+
+            /* ... */
+        );
+    }
 
 ## Usage ##
 
-`getid3` is not available as a service, you can instantiate it directly, as shown below:
+Getid3 should be manually instantiated, as it has no dependencies.
 
-	<?php
-	//instantiate directly
-	$getid3 = new \getID3
-	
-	//analyze a file
-	$stats = $getid3->analyze('/path/to/file.mp3');
-	
-	//see the results
-	var_dump($stats);
-    
+    <?php
+    $getid3 = new \getID3;
+    $filestats = $getid3->analyze($stringPathToFile);
+
 ## Commands ##
 
-The command `getid3:analyze` is provided to allow you to analyze a file from the command line with `getid3`.  Example below:
- 
-	app/console getid3:analyze /path/to/file.mp3
-
+The `getid3:analyze` command will analyze a file path and print the results.  It provides some options for narrowing the results returned to a select subset, and for specifying the output format.
