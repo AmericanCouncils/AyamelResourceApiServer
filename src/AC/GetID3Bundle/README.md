@@ -5,7 +5,7 @@ This bundle provides container services for loading the `getid3` library in your
 ## Installation ##
 
 The `getid3` library is not currently available via composer, github or packagist.org.  In order to have composer automatically download the required `getid3`
-dependency library, you will have to add a custom repository to your application's root `composer.json` file.  Below is a custom repository definition
+dependency library, you will have to add a custom repository to your application's root `composer.json` file.  Below is the custom repository definition
 that points to a `zip` archive of `getid3` on sourceforge.com, add this JSON structure into your app's `composer.json` and run `php composer.phar update`
 to have it install the library properly.
 
@@ -27,15 +27,23 @@ to have it install the library properly.
     ]
     
 
-## Services ##
+## Usage ##
 
-* `getid3` - will return an instance of `getid3`, which can then be used to analyze files
+`getid3` is not available as a service, you can instantiate it directly, as shown below:
 
-    <?php
-    $getid3 = $container->get('getid3');
-    $filestats = $getid3->analyze($stringPathToFile);
+	<?php
+	//instantiate directly
+	$getid3 = new \getID3
+	
+	//analyze a file
+	$stats = $getid3->analyze('/path/to/file.mp3');
+	
+	//see the results
+	var_dump($stats);
     
+## Commands ##
 
-## Todo ##
+The command `getid3:analyze` is provided to allow you to analyze a file from the command line with `getid3`.  Example below:
+ 
+	app/console getid3:analyze /path/to/file.mp3
 
-* troubleshoot composer.json

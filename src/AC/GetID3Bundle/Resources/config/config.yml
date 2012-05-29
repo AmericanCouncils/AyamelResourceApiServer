@@ -1,6 +1,0 @@
-parameters:
-	getid3.class: getid3
-	
-services:
-	getid3:
-		class: %getid.class%

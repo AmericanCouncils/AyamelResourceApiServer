@@ -39,7 +39,7 @@ class AnalyzeCommand extends ContainerAwareCommand {
         //print line by line
         //TODO: fix this
         foreach(explode("\n", $yaml) as $line) {
-            $output->writeln($line); 
+            $output->writeln($line);
         }
 	}
 }
