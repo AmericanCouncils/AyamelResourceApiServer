@@ -65,7 +65,8 @@ class FilesystemSubscriber implements EventSubscriberInterface {
         }
         
         //otherwise actually use getid3, and cache the results
-        if($data = $this->container->get('getid3')->analyze($path)) {
+        $getid3 = new \getID3;
+        if($data = $getid3->analyze($path)) {
             $stats = $this->organizeGetid3Results($data);
             $this->cache->save($cacheKey, $stats, 0);
             return $stats;
@@ -83,7 +84,7 @@ class FilesystemSubscriber implements EventSubscriberInterface {
      */
     protected function organizeGetid3Results(array $data) {
         
-        //TODO: mangle data here
+        //TODO: mangle data here, or fire an event to handle the mangling
         
         return $data;
     }

@@ -88,18 +88,7 @@ class Resource {
      * @MongoDB\String
      */
     protected $type;
-    
-    /**
-     * @MongoDB\String
-     */
-    protected $contributer;
-    
-    /**
-     * @MongoDB\String
-     * @JMS\SerializedName("contributerName")
-     */
-    protected $contributerName;
-    
+        
     /**
      * @MongoDB\Boolean
      */
@@ -143,6 +132,16 @@ class Resource {
      * @MongoDB\String
      */
     protected $status;
+    
+    /**
+     * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\Origin")
+     */
+    public $origin;
+    
+    /**
+     * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\Client")
+     */    
+    public $client;
     
     /**
      * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\ContentCollection")
@@ -267,46 +266,6 @@ class Resource {
     public function getType()
     {
         return $this->type;
-    }
-
-    /**
-     * Set contributer
-     *
-     * @param string $contributer
-     */
-    public function setContributer($contributer)
-    {
-        $this->contributer = $contributer;
-    }
-
-    /**
-     * Get contributer
-     *
-     * @return string $contributer
-     */
-    public function getContributer()
-    {
-        return $this->contributer;
-    }
-
-    /**
-     * Set contributerName
-     *
-     * @param string $contributerName
-     */
-    public function setContributerName($contributerName)
-    {
-        $this->contributerName = $contributerName;
-    }
-
-    /**
-     * Get contributerName
-     *
-     * @return string $contributerName
-     */
-    public function getContributerName()
-    {
-        return $this->contributerName;
     }
 
     /**
@@ -513,6 +472,42 @@ class Resource {
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * Set the origin
+     *
+     * @param Origin $origin 
+     */
+    public function setOrigin(Origin $origin) {
+        $this->origin = $origin;
+    }
+    
+    /**
+     * Get the origin
+     *
+     * @return Origin
+     */
+    public function getOrigin() {
+        return $this->origin;
+    }
+    
+    /**
+     * Set the client
+     *
+     * @param Client $client 
+     */
+    public function setClient(Client $client) {
+        $this->client = $client;
+    }
+    
+    /**
+     * Get the client
+     *
+     * @return Client
+     */
+    public function getClient() {
+        return $this->client;
     }
 
     /**

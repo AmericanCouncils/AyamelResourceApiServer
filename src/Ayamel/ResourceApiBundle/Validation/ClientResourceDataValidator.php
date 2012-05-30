@@ -32,6 +32,8 @@ class ClientResourceDataValidator {
         'copyright',
         'keywords',
         'categories',
+        'origin',
+        'client'
     );
     
     /**
@@ -48,6 +50,8 @@ class ClientResourceDataValidator {
         'copyright',
         'keywords',
         'categories',
+        'origin',
+        'client'
     );
     
     /**

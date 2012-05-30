@@ -25,5 +25,12 @@ interface AnalyzerInterface {
 	 * @return FileReference
 	 */
 	function analyzeFile(FileReference $ref);
+    
+    /**
+     * Handles an event that fires when a resource is added to a filesystem.
+     *
+     * @param ResourceFileReferenceEvent $e 
+     */
+    function handleDeriveResourcesFromFileEvent(DeriveResourcesFromFileEvent $e);
 	
 }

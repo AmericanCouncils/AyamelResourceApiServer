@@ -19,5 +19,6 @@ By default the `ayamel.api.filesystem` service is defined as an instance of `Fil
 
 ## Todo ##
 
+* implement DeriveResourcesFromFileEvent, an event for use when a file is uploaded to a filesystem for a resource, and other information can be derived via the analyzer
 * implement analyzer services
 * implement commands
