@@ -11,3 +11,10 @@ parameters:
     mailer_password: null
     locale: en
     secret: 1b577a9e247bf2c882bd861e1e825d83
+    
+    # Added by evan for local environment #
+    
+    ayamel.filesystem.local_filesystem.root_dir: %kernel.root_dir%/files/resource_uploads
+    ayamel.filesystem.local_filesystem.secret: 34565dfg897jksksk4wk4ksdfkj34
+    ayamel.filesystem.local_filesystem.base_uri: http://ayamel.americancouncils.org/resources/files
+    
