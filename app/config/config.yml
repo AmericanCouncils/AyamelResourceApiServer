@@ -1,11 +1,12 @@
 imports:
-    - { resource: parameters.yml }
 #    - { resource: security.yml }
     - { resource: '@ACWebServicesBundle/Resources/config/config.yml' }
     - { resource: '@AyamelResourceBundle/Resources/config/config.yml' }
     - { resource: '@AyamelResourceApiBundle/Resources/config/config.yml' }
     - { resource: '@AyamelFilesystemBundle/Resources/config/config.yml' }
-    
+    # include parameters.yml last, git ignores it, so location specific overrides can go there safely
+    - { resource: parameters.yml }
+
 framework:
     #esi:             ~
     #translator:      { fallback: %locale% }
