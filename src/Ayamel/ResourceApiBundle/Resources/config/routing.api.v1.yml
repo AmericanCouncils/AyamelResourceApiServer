@@ -1,5 +1,13 @@
 ## Note that the order in which these routes are defined matters, don't rearrange them unless you know what you're doing ##
 
+
+AyamelResourceApiBundle_v1_get_resource_ids:
+    pattern: /resources
+    defaults: { _controller: Ayamel\ResourceApiBundle\Controller\V1\ViewResourceIds::executeAction }
+    requirements:
+        _method:  GET
+
+
 #browse the search index for resources, note this doesn't returns summary resources, not full resource structures
 AyamelResourceApiBundle_v1_search:
     pattern: /resources/search
