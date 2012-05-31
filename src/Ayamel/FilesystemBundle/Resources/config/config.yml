@@ -9,7 +9,7 @@ services:
         arguments: [@ayamel.api.filesystem.backend, @ayamel.api.filesystem.dispatcher]
 
     ayamel.api.filesystem.dispatcher:
-        class: Symfony\Bundle\FrameworkBundle\ContainerAwareEventDispatcher
+        class: Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher
         arguments: [@service_container]
         
     ayamel.api.filesystem.backend:

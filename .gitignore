@@ -6,3 +6,4 @@ vendor/
 composer.phar
 *.DS_Store
 app/files/*
+app/config/parameters.yml

@@ -25,6 +25,7 @@ class ClientResourceDataValidator {
      */
     protected $creationFieldWhitelist = array(
         'title',
+        'type',
         'description',
         'public',
         'relations',
@@ -32,6 +33,8 @@ class ClientResourceDataValidator {
         'copyright',
         'keywords',
         'categories',
+        'origin',
+        'client'
     );
     
     /**
@@ -41,6 +44,7 @@ class ClientResourceDataValidator {
      */
     protected $updateFieldWhitelist = array(
         'title',
+        'type',
         'description',
         'public',
         'relations',
@@ -48,6 +52,8 @@ class ClientResourceDataValidator {
         'copyright',
         'keywords',
         'categories',
+        'origin',
+        'client'
     );
     
     /**

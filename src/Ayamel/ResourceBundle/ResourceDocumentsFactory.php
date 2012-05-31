@@ -4,6 +4,8 @@ namespace Ayamel\ResourceBundle;
 
 use Ayamel\ResourceBundle\Document\Resource;
 use Ayamel\ResourceBundle\Document\Relation;
+use Ayamel\ResourceBundle\Document\Origin;
+use Ayamel\ResourceBundle\Document\Client;
 use Ayamel\ResourceBundle\Document\ContentCollection;
 use Ayamel\ResourceBundle\Document\FileReference;
 
@@ -39,6 +41,18 @@ class ResourceDocumentsFactory {
             unset($data['relations']);
         }
         
+        //check for client
+        if(isset($data['client'])) {
+            $resource->setClient(self::createClientFromArray($data['client']));
+            unset($data['client']);
+        }
+        
+        //check for origin
+        if(isset($data['origin'])) {
+            $resource->setOrigin(self::createOriginFromArray($data['origin']));
+            unset($data['origin']);
+        }
+        
         //call setters on remaining top-level fields
         self::callSetters($resource, $data);
 
@@ -54,6 +68,30 @@ class ResourceDocumentsFactory {
      */
     static public function modifyResourceWithArray(Resource $resource, array $data) {
         return self::createResourceFromArray($data, $resource);
+    }
+    
+    /**
+     * Create Origin document from php array.
+     *
+     * @param array $data 
+     * @return Origin
+     */
+    static public function createOriginFromArray(array $data) {
+        $origin = new Origin;
+        self::callSetters($origin, $data);
+        return $origin;
+    }
+    
+    /**
+     * Create Client document from php array.
+     *
+     * @param array $data 
+     * @return Client
+     */
+    static public function createClientFromArray(array $data) {
+        $client = new Client;
+        self::callSetters($client, $data);
+        return $client;
     }
     
     /**
@@ -119,10 +157,11 @@ class ResourceDocumentsFactory {
             //derive setter method name            
             $method = 'set'.ucfirst($key);
             
+            //call if it exists, if not, invalid argument
             if(method_exists($object, $method)) {
                 $object->$method($val);
             } else {
-                throw new \InvalidArgumentException("Tried setting a non-existing field ($key)");
+                throw new \InvalidArgumentException("Tried setting a non-existing field [$key]");
             }
         }
 

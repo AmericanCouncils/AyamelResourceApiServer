@@ -127,6 +127,16 @@ class FileReference {
     {
         return $this->attributes;
     }
+	
+	/**
+	 * Merge an array of attributes into the current set, this will overwrite conflicting keys
+	 * with the latest one received
+	 *
+	 * @param array $attrs 
+	 */
+	public function mergeAttributes(array $attrs) {
+		$this->attributes = array_merge($this->attributes, $attrs);
+	}
     
     /**
      * Set an individual attribute by key for the attributes propery.
