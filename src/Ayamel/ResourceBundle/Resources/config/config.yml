@@ -48,7 +48,7 @@ services:
         arguments: [@ayamel.resource.manager.backend, @ayamel.resource.manager.dispatcher]
         
     ayamel.resource.manager.dispatcher:
-        class: Symfony\Bundle\FrameworkBundle\ContainerAwareEventDispatcher
+        class: Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher
         arguments: [@service_container]
         public: false
     

@@ -4,6 +4,8 @@ namespace Ayamel\ResourceApiBundle\Cache;
 
 use Doctrine\Common\Cache\CacheProvider;
 
+//TODO: update to implement hashing structure
+
 /**
  * A simple file-based Doctrine cache implementation.
  *

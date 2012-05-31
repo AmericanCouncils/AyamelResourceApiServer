@@ -8,6 +8,13 @@ namespace Ayamel\FilesystemBundle\Event;
  * @author Evan Villemez
  */
 final class Events {
+    
+    /**
+     * Event fires when a specific reference is being retrieved.
+     *
+     * Listeners receive an instance of `FilesystemEvent`
+     */
+    const FILESYSTEM_RETRIEVE = "ayamel.filesystem.retrieve_reference";
 	
     /**
      * Event fires when a new FileReference is added into a filesystem.

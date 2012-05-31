@@ -44,7 +44,8 @@ class UploadContent extends ApiController {
             throw $this->createHttpException(423, "Resource content is currently being processed, try modifying the content later.");
         }
         
-        //TODO: check for (cache) resource lock, throw 423
+        $lockKey = $resource->getId()."_upload_lock";
+        //TODO: check for (cached) resource lock, throw 423 if present
         //TODO: lock resource
         
         //get the api event dispatcher
@@ -52,8 +53,13 @@ class UploadContent extends ApiController {
 
         //notify system to resolve uploaded content from the request
         $request = $this->getRequest();
+        
+        //determine whether or not to remove previous resource content
+        $removePreviousContent = ('true' === $request->query->get('replace', 'true'));
+        
         try {
-            $resolveEvent = $apiDispatcher->dispatch(Events::RESOLVE_UPLOADED_CONTENT, new ResolveUploadedContentEvent($resource, $request));
+            //dispatch the resolve event
+            $resolveEvent = $apiDispatcher->dispatch(Events::RESOLVE_UPLOADED_CONTENT, new ResolveUploadedContentEvent($resource, $request, $removePreviousContent));
         } catch (\Exception $e) {
             //TODO: unlock resource
             throw ($e instanceof HttpException) ? $e : $this->createHttpException(500, $e->getMessage());
@@ -109,7 +115,7 @@ class UploadContent extends ApiController {
         //TODO: return ServiceResponse::create(200, array('resource' => $resource));
         return array(
             'response' => array(
-                'code' => 202       //TODO: implement $handleEvent->getStatus();
+                'code' => ($resource->getStatus() === Resource::STATUS_OK) ? 200 : 202,
             ),
             'resource' => $resource
         );

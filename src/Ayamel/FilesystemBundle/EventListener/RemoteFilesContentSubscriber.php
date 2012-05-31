@@ -60,7 +60,6 @@ class RemoteFilesContentSubscriber implements EventSubscriberInterface {
         
         //if no json, or `remoteFiles` key isn't set, skip
         $body = $e->getRequestBody();
-//        die("<pre>".print_r($body, true)."</pre>");
         
         if (!$body || !isset($body['remoteFiles']) || !is_array($body['remoteFiles'])) {
             return;
@@ -84,8 +83,10 @@ class RemoteFilesContentSubscriber implements EventSubscriberInterface {
             return;
         }
         
+        //TODO: consider validating the remote files to disallow non-existant files.  Could make a HEAD request to avoid pulling lots of data.
+        
+        //notify the event as having been handled
         $e->setContentType('remote_files');
-        $e->setRemovePreviousContent(true);
         $e->setContentData($remoteFiles);
     }
     

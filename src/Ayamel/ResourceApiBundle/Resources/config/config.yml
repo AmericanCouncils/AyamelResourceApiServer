@@ -15,7 +15,7 @@ services:
         arguments: [%ayamel.api.token_cache_dir%]
 
     ayamel.api.dispatcher:
-        class: Symfony\Bundle\FrameworkBundle\ContainerAwareEventDispatcher
+        class: Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher
         arguments: [@service_container]
 
     #provides the backend storage service for the resource manager in AyamelResourceBundle

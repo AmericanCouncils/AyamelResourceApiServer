@@ -38,6 +38,11 @@ interface FilesystemInterface {
     const COUNT_ALL = 3;
     
     /**
+     * Return array with both file and directory counts.
+     */
+    const COUNT_BOTH = 4;
+    
+    /**
      * Generate a string base directory given an id.
      *
      * @param string $id 
@@ -149,4 +154,12 @@ interface FilesystemInterface {
      * @return int
      */
     function getCount($return = FilesystemInterface::COUNT_FILES);
+    
+    /**
+     * Return key/val hash of stats unique to the filesystem.
+     *
+     * @return array
+     */
+    function getStats();
+     
 }

@@ -9,7 +9,16 @@ A FilesystemManager can wrap another instance of a Filesystem, and fires pre/pos
 ## Services ##
 
 * `ayamel.api.filesystem` is the main filesystem service, it's exact implementation should be defined in the configuration.
+* `ayamel.api.filesystem.analyzer` can be used to derive file attributes for a file reference
+
+By default the `ayamel.api.filesystem` service is defined as an instance of `FilesystemManager`, which receives an instance of `LocalFilesystem`.  The `LocalFilesystem` instance needs 3 config parameters:
+
+* root directory on filesystem
+* string secret to use in file organization scheme
+* optional public URI that points to the same location as the root directory for web accessible files
 
 ## Todo ##
 
-* Command for converting FileReference records in the database to a new base url
+* implement DeriveResourcesFromFileEvent, an event for use when a file is uploaded to a filesystem for a resource, and other information can be derived via the analyzer
+* implement analyzer services
+* implement commands

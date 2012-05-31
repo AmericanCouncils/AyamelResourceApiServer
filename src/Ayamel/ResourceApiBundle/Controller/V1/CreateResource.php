@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Ayamel\ResourceBundle\Document\Resource;
 use Ayamel\ResourceBundle\Document\Relation;
+use Ayamel\ResourceBundle\Document\Client;
+use Ayamel\ResourceBundle\Document\Origin;
 
 /**
  * Accepts data from a request object, attempting to build and save a new resource object.
@@ -29,6 +31,15 @@ class CreateResource extends ApiController {
 		
 		//set the properties controlled by the resource library
 		$resource->setStatus(Resource::STATUS_AWAITING_CONTENT);
+        
+        //fill in client info
+        if(!isset($resource->client)) {
+            $resource->setClient(new Client);
+        }
+        if(!$resource->client->getId()) {
+            $request::trustProxyData();
+            $resource->client->setId($request->getClientIp());
+        }
 		
         //attempt to persisting the object, most likely to mongo
 		try {
