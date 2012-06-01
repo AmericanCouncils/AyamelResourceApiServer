@@ -35,8 +35,18 @@ class FileReference {
     
     /**
      * @MongoDB\String
+     *
+     * type;float
+     * summary;3
+     * original;1299
+     * 
      */
-    protected $type;
+    protected $representation;
+    
+    /**
+     * @MongoDB\String
+     */
+    protected $mime;
 
 	/**
 	 * @MongoDB\Boolean
