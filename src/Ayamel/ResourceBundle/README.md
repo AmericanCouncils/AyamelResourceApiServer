@@ -27,6 +27,5 @@ Eventually there will be real documentation [here](Resources/docs/index.md).
 
 ## Todo list ##
 
+* Make HEAD requests on http/https URI/files to get mime/bytes info
 * Test Providers and DelegatingProvider
-* Change namespace Document to Model - move Mongo/JMS mappings, validation and L2 functionality into AyamelResourceApiBundle
-    * Maybe... that is...

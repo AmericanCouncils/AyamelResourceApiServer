@@ -89,33 +89,33 @@ class FileUploadContentSubscriber implements EventSubscriberInterface {
         $uploadedFile = $e->getContentData();
         $resource = $e->getResource();
         
-        //process files
-        if ($uploadedFile->isValid()) {
-            //get filesystem
-            $fs = $this->container->get('ayamel.api.filesystem');
-            
-            //add new file
-            $filename = $this->cleanUploadedFileName($uploadedFile->getClientOriginalName());
-            $uploadedRef = FileReference::createFromLocalPath($uploadedFile->getPathname());
-            $newRef = $fs->addFileForId($resource->getId(), $uploadedRef, $filename, true);
-            
-            //inject relevant client-uploaded data, but only if it has not already been set by the
-            //filesystem that handled the upload, as the client data may not be accurate
-            if(!$newRef->getAttribute('mime-type', false)) {
-                $newRef->setAttribute('mime-type', $uploadedFile->getClientMimeType());
-            }
-            if(!$newRef->getAttribute('size', false)) {
-                $newRef->setAttribute('size', $uploadedFile->getClientSize());
-            }
-            
-            //the newly uploaded file is now the original reference
-            $newRef->setOriginal(true);
-
-        } else {
+        //check if valid
+        if (!$uploadedFile->isValid()) {
             throw new \RuntimeException(sprintf("File upload error %s", $uploadedFile->getError()));
         }
 
-        //set new content
+        //get filesystem
+        $fs = $this->container->get('ayamel.api.filesystem');
+            
+        //add new file
+        $filename = $this->cleanUploadedFileName($uploadedFile->getClientOriginalName());
+        $uploadedRef = FileReference::createFromLocalPath($uploadedFile->getPathname());
+        $newRef = $fs->addFileForId($resource->getId(), $uploadedRef, $filename, true);
+            
+        //inject relevant client-uploaded data, but only if it has not already been set by the
+        //filesystem that handled the upload, as the client data may not be accurate
+        if(!$newRef->getMime()) {
+            $newRef->setMime($uploadedFile->getClientMimeType());
+        }
+        if(!$newRef->getAttribute('bytes', false)) {
+            $newRef->setAttribute('bytes', $uploadedFile->getClientSize());
+        }
+            
+        //the newly uploaded file is now the original reference
+        $newRef->setOriginal(true);
+        $newRef->setRepresentation("original;0");
+
+            //set new content
         $resource->content->addFile($newRef);
 
         //set the modified resource and stop propagation of this event
