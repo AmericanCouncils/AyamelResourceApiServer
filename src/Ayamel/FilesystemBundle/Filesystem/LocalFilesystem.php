@@ -197,7 +197,7 @@ class LocalFilesystem implements FilesystemInterface {
             
             $filePath = implode("/", array_diff(explode("/", $localPath), explode("/", $this->rootDir)));
 
-            $ref->setPublicUri($this->publicRootUri.'/'.$filePath);
+            $ref->setDownloadUri($this->publicRootUri.'/'.$filePath);
         }
         
         return $ref;

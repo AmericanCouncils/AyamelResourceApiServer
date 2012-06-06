@@ -31,18 +31,19 @@ class HttpProvider extends AbstractFilePathProvider {
      * {@inheritdoc}
      */
     public function createResourceFromUri($uri) {
+        //TODO: use HEAD request to get mime/size
+
         try {
             $r = parent::createResourceFromUri($uri);
         } catch (\InvalidArgumentException $e) {
             throw new HttpException(424, $e->getMessage());
         }
         
-        //if file type is "binary", this is likely a web page instead
+        //if file type is original, mark it as such
         foreach($r->content->getFiles() as $file) {
-            if($file->getOriginal() && $file->getType() === 'binary') {
+            if($file->getOriginal()) {
                 //file references reporting as 'binary' are most likely webpages without an extension
-                $file->setType("webpage");
-                $r->setType("webpage");
+                $file->setRepresentation("original;0");
             }
         }
         

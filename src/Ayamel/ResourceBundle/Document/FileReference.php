@@ -16,9 +16,9 @@ class FileReference {
 
     /**
      * @MongoDB\String
-     * @JMS\SerializedName("publicUri")
+     * @JMS\SerializedName("downloadUri")
      */
-    protected $publicUri;
+    protected $downloadUri;
     
     /**
      * @MongoDB\String
@@ -36,6 +36,7 @@ class FileReference {
     /**
      * @MongoDB\String
      *
+     * Examples:
      * type;float
      * summary;3
      * original;1299
@@ -50,6 +51,7 @@ class FileReference {
 
 	/**
 	 * @MongoDB\Boolean
+     * @JMS\Exclude
 	 */
 	protected $original;
 
@@ -73,12 +75,12 @@ class FileReference {
     /**
      * Create a reference to a public uri
      *
-     * @param string $publicUri 
+     * @param string $downloadUri 
      * @return FileReference
      */
-    static public function createFromPublicUri($publicUri) {
+    static public function createFromDownloadUri($downloadUri) {
         $ref = new static();
-        $ref->setPublicUri($publicUri);
+        $ref->setDownloadUri($downloadUri);
         return $ref;
     }
     
@@ -101,21 +103,24 @@ class FileReference {
 	}
 	
     /**
-     * TODO: docs
+     * Get the string describing the files representation of the associated resource
      *
      * @return string
      */
-    public function getType() {
-        return $this->type;
+    public function getRepresentation() {
+        return $this->representation;
     }
     
     /**
-     * TODO: docs
+    * Set the representation string in the format of "type;quality"
+    * 
+    * Type can be any of "original","summary", or "transcoding"
+    * Quality can be a floating point number of up to 4 digits.
      *
-     * @param string $type 
+     * @param string $representation 
      */
-    public function setType($type) {
-        $this->type = $type;
+    public function setRepresentation($representation) {
+        $this->representation = $representation;
     }
 
     /**
@@ -196,23 +201,23 @@ class FileReference {
     }
 
     /**
-     * Set publicUri
+     * Set downloadUri
      *
-     * @param string $publicUri
+     * @param string $downloadUri
      */
-    public function setPublicUri($publicUri)
+    public function setDownloadUri($downloadUri)
     {
-        $this->publicUri = $publicUri;
+        $this->downloadUri = $downloadUri;
     }
 
     /**
-     * Get publicUri
+     * Get downloadUri
      *
-     * @return string $publicUri
+     * @return string $downloadUri
      */
-    public function getPublicUri()
+    public function getDownloadUri()
     {
-        return $this->publicUri;
+        return $this->downloadUri;
     }
 
     /**
@@ -266,7 +271,7 @@ class FileReference {
             return true;
         }
         
-        if(($file->getPublicUri() && $this->getPublicUri()) && ($file->getPublicUri() == $this->getPublicUri())) {
+        if(($file->getDownloadUri() && $this->getDownloadUri()) && ($file->getDownloadUri() == $this->getDownloadUri())) {
             return true;
         }
         

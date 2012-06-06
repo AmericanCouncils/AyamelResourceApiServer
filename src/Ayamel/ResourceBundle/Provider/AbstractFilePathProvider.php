@@ -84,7 +84,7 @@ abstract class AbstractFilePathProvider implements ProviderInterface {
         fclose($handle);        
         
         //create original file reference
-        $file = ($scheme === 'file') ? FileReference::createFromLocalPath($uri) : FileReference::createFromPublicUri($uri);
+        $file = ($scheme === 'file') ? FileReference::createFromLocalPath($uri) : FileReference::createFromDownloadUri($uri);
         $type = $this->guessTypeFromExtension($this->getPathExtension($path));
         $file->setType($type);
         $file->setOriginal(true);

@@ -27,9 +27,5 @@ Eventually there will be real documentation [here](Resources/docs/index.md).
 
 ## Todo list ##
 
-* change type to "representation"
-* change "publicUri" to "downloadUri"
-* put "mime" in top level
-* "size" in attributes to "bytes"
 * Make HEAD requests on http/https URI/files to get mime/bytes info
 * Test Providers and DelegatingProvider
