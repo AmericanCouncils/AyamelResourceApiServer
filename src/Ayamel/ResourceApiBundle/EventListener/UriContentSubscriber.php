@@ -85,7 +85,7 @@ class UriContentSubscriber implements EventSubscriberInterface {
         
         //set content properly
         $resource->content = $derivedResource->content;
-        $originalRef = FileReference::createFromPublicUri($uri);
+        $originalRef = FileReference::createFromDownloadUri($uri);
         if(!$resource->content->hasFile($originalRef)) {
             $originalRef->setOriginal(true);
             $resource->content->addFile($originalRef);

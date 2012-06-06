@@ -92,7 +92,7 @@ class DelegatingAnalyzer implements AnalyzerInterface {
 	 */
 	public function analyzeFile(FileReference $ref) {
 		//using md5 in the cache keys to avoid proplematic characters
-		$cacheKey = ($ref->getInternalUri()) ? md5($ref->getInternalUri())."_attrs" : md5($ref->getPublicUri())."_attrs";
+		$cacheKey = ($ref->getInternalUri()) ? md5($ref->getInternalUri())."_attrs" : md5($ref->getDownloadUri())."_attrs";
 		
 		//check for whether or not to copy a remote file for analysis
 		if($this->copyRemote) {
