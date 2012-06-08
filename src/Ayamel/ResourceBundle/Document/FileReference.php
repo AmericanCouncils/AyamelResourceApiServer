@@ -29,18 +29,11 @@ class FileReference {
     /**
      * @MongoDB\String
      * @JMS\Exclude
-     * @JMS\SerializedName("internalUri")
      */
     protected $internalUri;
     
     /**
      * @MongoDB\String
-     *
-     * Examples:
-     * type;float
-     * summary;3
-     * original;1299
-     * 
      */
     protected $representation;
     
