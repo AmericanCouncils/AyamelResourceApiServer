@@ -32,12 +32,10 @@ class MongoResourceStorage implements StorageInterface {
      */
     function persistResource(Resource $resource) {
         $date = new \DateTime();
-        if($resource->getId()) {
-    		$resource->setDateModified($date);
-        } else {
+        if(!$resource->getId()) {
     		$resource->setDateAdded($date);
-    		$resource->setDateModified($date);
         }
+    	$resource->setDateModified($date);
                 
         $this->manager->persist($resource);
         $this->manager->flush();
