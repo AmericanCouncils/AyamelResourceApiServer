@@ -43,10 +43,26 @@ class RenameFieldCommand extends ContainerAwareCommand {
         
         //if set to update, do it...
         if($input->getOption('update')) {
-            $exp = explode(".", $oldFieldName);
+            
+            //defines remap command for mongo to change names
+            $mongoCode = new \MongoCode(sprintf('
+                function remap(x){
+                    dNo = x.technicalData["%s"];
+                    db.products.update({"_id":x._id}, {
+                       $set: {"%s" : dNo},
+                       $unset: {"%s":1}
+                    });
+                }
+
+                db.products.find({"%s":{$ne:null}}).forEach(remap);',
+                $oldFieldName, 
+                $newFieldName,
+                $oldFieldName, 
+                'ayamel.'.$collection.'.'.$oldFieldName, 
+            ));
             
             //TODO: rename fields
-            
+            //$col->
         }
         
         return;
