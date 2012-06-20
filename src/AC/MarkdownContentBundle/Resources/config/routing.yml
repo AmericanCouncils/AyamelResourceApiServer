@@ -1,0 +1,3 @@
+ACMarkdownContentBundle:
+    resource: .
+    type: markdownDirectory
