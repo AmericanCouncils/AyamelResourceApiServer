@@ -1,0 +1,14 @@
+#AyamelApiBundle_api_docs:
+#    pattern: /tester
+
+#AyamelApiBundle_api_clients:
+#    pattern: /{version}/clients
+
+AyamelApiBundle_home:
+    pattern:   /
+    defaults:  { _controller: Ayamel\ApiBundle\Controller\ApiTester::indexAction }
+
+#version 1 of the api routes    
+AyamelApiBundle_api_v1:
+    resource: "@AyamelApiBundle/Resources/config/routing.api.v1.yml"
+    prefix:   /api/v1/rest

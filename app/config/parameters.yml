@@ -1,5 +1,6 @@
 parameters:
     database_driver: pdo_sqlite
+    database_path: %kernel.root_dir%/app/data/db.sqlite
     database_host: localhost
     database_port: '9999'
     database_name: ayamel

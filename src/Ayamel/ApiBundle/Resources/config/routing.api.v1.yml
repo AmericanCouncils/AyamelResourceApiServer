@@ -1,0 +1,100 @@
+## Note that the order in which these routes are defined matters, don't rearrange them unless you know what you're doing ##
+
+
+AyamelApiBundle_v1_get_resource_ids:
+    pattern: /resources
+    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\ViewResourceIds::executeAction }
+    requirements:
+        _method:  GET
+
+
+#browse the search index for resources, note this doesn't returns summary resources, not full resource structures
+AyamelApiBundle_v1_search:
+    pattern: /resources/search
+    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\Search::executeAction }
+    requirements:
+        _method:  GET
+
+#create a resource object structure (no id), from a given uri (if it's something special like youtube, we'll connect to the api to fill in the relevant fields for you)
+AyamelApiBundle_v1_scan_resource_uri:
+    pattern: /resources/scan
+    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\ScanResourceUri::executeAction }
+    requirements:
+        _method:  GET
+
+#gets multiple resources
+AyamelApiBundle_v1_get_resource_multiple:
+    pattern: /resources/multi
+    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\GetResources::executeAction }
+    requirements:
+        _method:  GET
+
+#creates multiple resources
+AyamelApiBundle_v1_create_resource_multiple:
+    pattern: /resources/multi
+    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\CreateResources::executeAction }
+    requirements:
+        _method:  POST
+
+#modifies multiple resources
+AyamelApiBundle_v1_modify_resource_multiple:
+    pattern: /resources/multi
+    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\ModifyResources::executeAction }
+    requirements:
+        _method:  PUT
+
+#deletes multiple resources
+AyamelApiBundle_v1_delete_resource_multiple:
+    pattern: /resources/multi
+    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\DeleteResources::executeAction }
+    requirements:
+        _method:  DELETE
+
+#creates a new resource
+AyamelApiBundle_v1_create_resource:
+    pattern: /resources
+    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\CreateResource::executeAction }
+    requirements:
+        _method:  POST
+    
+#get a specific resource by id
+AyamelApiBundle_v1_get_resource:
+    pattern:  /resources/{id}
+    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\GetResource::executeAction }
+    requirements:
+        _method:  GET
+
+#modify a resource by id
+AyamelApiBundle_v1_modify_resource:
+    pattern:  /resources/{id}
+    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\ModifyResource::executeAction }
+    requirements:
+        _method:  PUT
+
+#remove a resource by id
+AyamelApiBundle_v1_delete_resource:
+    pattern:  /resources/{id}
+    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\DeleteResource::executeAction }
+    requirements:
+        _method:  DELETE
+
+#request a valid content upload url
+AyamelApiBundle_v1_request_content_upload:
+    pattern: /resources/{id}/request-upload-url
+    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\RequestContentUpload::executeAction }
+    requirements:
+        _method:  GET
+
+#upload content for a resource (could be a file, could be a string uri)
+AyamelApiBundle_v1_upload_content:
+    pattern: /resources/{id}/content/{token}
+    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\UploadContent::executeAction }
+    requirements:
+        _method:  POST
+        
+#build an embeddable player for a given resource
+AyamelApiBundle_v1_player:
+    pattern: /resources/{id}/embed
+    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\EmbedPlayer::executeAction }
+    requirements:
+        _method:  GET

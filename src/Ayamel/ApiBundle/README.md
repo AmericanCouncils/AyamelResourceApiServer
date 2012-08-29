@@ -1,6 +1,6 @@
-# AyamelResourceBundle #
+# AyamelApiBundle #
 
-This bundle defines the base Resource objects and provides MongoDB mappings for data persistence.
+This bundle provides generic api workflow, and api logic for accessing resource objects defined in the `AyamelResourceBundle`.
 
 ## Installation ##
 
@@ -24,8 +24,10 @@ This bundle defines the base Resource objects and provides MongoDB mappings for 
 ## Documentation ##
 
 Eventually there will be real documentation [here](Resources/docs/index.md).
-
+	
 ## Todo list ##
 
-* Make HEAD requests on http/https URI/files to get mime/bytes info
-* Test Providers and DelegatingProvider
+* Implement JMSSerializer::deserialize for getting resource object from client requests (implement @ReadOnly annotations)
+* Implement ServiceResponse and api-specific listeners, or implement FOSRest
+* Replace docs by implementing `NelmioApiDocBundle`
+* Implement remaining controllers

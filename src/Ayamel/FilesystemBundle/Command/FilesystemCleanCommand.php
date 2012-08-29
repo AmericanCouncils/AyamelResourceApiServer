@@ -34,7 +34,7 @@ class FilesystemCleanCommand extends ContainerAwareCommand {
         }
         
         //get array of internal uris in database
-        $mongo = $this->getContainer()->get('doctrine.odm.mongodb.default_connection');
+        $mongo = $this->getContainer()->get('doctrine_mongodb.odm.default_connection');
         $results = $mongo->ayamel->resources->find(array('content.files.internalUri' => array('$exists'=>true)), array('content.files.internalUri' => 1));
         
         //check if file actually exists for each uri

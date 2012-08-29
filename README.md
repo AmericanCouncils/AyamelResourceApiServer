@@ -27,7 +27,9 @@ The code written specifically for this project is contained under `/src`.  It cu
 
 * `ACWebServicesBundle` - Provides event listeners to handle input/output on API routes, which enables content negotiation, error handling, and allows creation of format-agnostic controllers.  Note that this bundle may be replaced by the `FOSRestBundle` in the future, depending on what happens with its development.
 * `AyamelResourceBundle` - Provides base Resource classes, with persistence meta data for use with MongoDB, and serialization meta data for use when the object is converted to various formats for the client.  Will be updated along the way to provide support for other things that need to be plugged into, such as ElasticSearch and Mutate for transcoding.
-* `AyamelResourceApiBundle` - Provides actual API routes and logic for interacting with resource objects.  Relies on `ACWebServicesBundle` for proper format and error handling.  Relies on `AyamelResourceBundle` for the actual objects.  Will be updated along the way to provide nice human-readable documentation, a place to download client wrappers for the raw api, and deal with client authentication/authorization schemes.
+* `AyamelApiBundle` - Provides actual API routes and logic for interacting with resource objects.  Relies on `ACWebServicesBundle` for proper format and error handling.  Relies on `AyamelResourceBundle` for the actual objects.  Will be updated along the way to provide nice human-readable documentation, a place to download client wrappers for the raw api, and deal with client authentication/authorization schemes.
+
+The majority of the API works by firing events when actions of note occur.  Features like file handling, file transcoding and search indexing, work by listening by registering event listeners for said events.
 
 More details can be found in `TODO.md`.
 

@@ -5,10 +5,10 @@ namespace Ayamel\FilesystemBundle\EventListener;
 use Ayamel\ResourceBundle\Document\Resource;
 use Ayamel\ResourceBundle\Document\FileReference;
 use Ayamel\ResourceBundle\Document\ContentCollection;
-use Ayamel\ResourceApiBundle\Event\Events;
-use Ayamel\ResourceApiBundle\Event\ApiEvent;
-use Ayamel\ResourceApiBundle\Event\ResolveUploadedContentEvent;
-use Ayamel\ResourceApiBundle\Event\HandleUploadedContentEvent;
+use Ayamel\ApiBundle\Event\Events;
+use Ayamel\ApiBundle\Event\ApiEvent;
+use Ayamel\ApiBundle\Event\ResolveUploadedContentEvent;
+use Ayamel\ApiBundle\Event\HandleUploadedContentEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -115,7 +115,7 @@ class FileUploadContentSubscriber implements EventSubscriberInterface {
         $newRef->setOriginal(true);
         $newRef->setRepresentation("original;0");
 
-            //set new content
+        //set new content
         $resource->content->addFile($newRef);
 
         //set the modified resource and stop propagation of this event

@@ -1,7 +1,12 @@
 AyamelApiBundle:
-    resource: "@AyamelResourceApiBundle/Resources/config/routing.yml"
+    resource: "@AyamelApiBundle/Resources/config/routing.yml"
 
 # Internal routing configuration to handle ESI
 _internal:
    resource: "@FrameworkBundle/Resources/config/routing/internal.xml"
    prefix:   /_internal
+
+ApiDocs:
+    resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
+    prefix:   /api/v1/docs
+    

@@ -51,8 +51,6 @@ class Resource {
         'description' => 'string',
         'keywords' => 'string',
         'type' => 'string',
-        'contributer' => 'string',
-        'contributerName' => 'string',
         'public' => 'bool',
         'copyright' => 'string',
         'license' => 'string',
@@ -61,16 +59,19 @@ class Resource {
     
     /**
      * @MongoDB\Id
+     * @JMS\Type("string")
      */
     protected $id;
     
     /**
      * @MongoDB\String
+     * @JMS\Type("string")
      */
     protected $title;
     
     /**
      * @MongoDB\String
+     * @JMS\Type("string")
      */
     protected $description;
     
@@ -479,7 +480,7 @@ class Resource {
      *
      * @param Origin $origin 
      */
-    public function setOrigin(Origin $origin) {
+    public function setOrigin(Origin $origin = null) {
         $this->origin = $origin;
     }
     
@@ -497,7 +498,7 @@ class Resource {
      *
      * @param Client $client 
      */
-    public function setClient(Client $client) {
+    public function setClient(Client $client = null) {
         $this->client = $client;
     }
     
