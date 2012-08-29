@@ -71,10 +71,10 @@ jms_serializer:
         auto_detection: true
         
 nelmio_api_doc:
-    name:   Resource Library API
+    name:   Ayamel Resource Library API
     sandbox:
+        enabled:  true
+        endpoint: /AyamelResourceApiServer/web/index_dev.php
 #        authentication: # default null, if set, the value of the api key is read from the query string and appended to every sandbox api call
 #            name: access_token
 #            delivery: query # only query delivery is supported for now
-        enabled:  true
-        endpoint: /AyamelResourceApiServer/web/index_dev.php
