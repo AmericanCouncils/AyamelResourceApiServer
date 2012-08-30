@@ -112,10 +112,10 @@ class FileReference {
     }
     
     /**
-    * Set the representation string in the format of "type;quality"
-    * 
-    * Type can be any of "original","summary", or "transcoding"
-    * Quality can be a floating point number of up to 4 digits.
+     * Set the representation string in the format of "type;quality"
+     * 
+     * Type can be any of "original","summary", or "transcoding"
+     * Quality can be a floating point number of up to 4 digits.
      *
      * @param string $representation 
      */
@@ -198,6 +198,26 @@ class FileReference {
      */
     public function hasAttribute($key) {
         return isset($this->attributes[$key]);
+    }
+
+    /**
+     * Set the mime string
+     *
+     * @param string $mime 
+     */
+    public function setMime($mime)
+    {
+        $this->mime = $mime;
+    }
+    
+    /**
+     * Returns mime string
+     *
+     * @return string
+     */
+    public function getMime()
+    {
+        return $this->mime;
     }
 
     /**

@@ -55,7 +55,7 @@ class UploadContent extends ApiController {
      *                          "duration": 300,
      *                          "frameSize": {"width":720,"height":480},
      *                          "frameRate": 48,
-     *                          "averageBitRate": 44000,
+     *                          "bitrate": 44000,
      *                      }
      *                   },
      *                   {
@@ -67,7 +67,7 @@ class UploadContent extends ApiController {
      *                          "duration": 300,
      *                          "frameSize": {"width":720,"height":480},
      *                          "frameRate": 48,
-     *                          "averageBitRate": 44000,
+     *                          "bitrate": 36000,
      *                      }
      *                   }
      *              ]
