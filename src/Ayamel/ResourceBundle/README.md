@@ -21,10 +21,6 @@ This bundle defines the base Resource objects and provides MongoDB mappings for 
 		
 4. Clear and regenerate your app caches with the `app/console cache:clear` command.
 	
-## Documentation ##
-
-Eventually there will be real documentation [here](Resources/docs/index.md).
-
 ## Todo list ##
 
 * Make HEAD requests on http/https URI/files to get mime/bytes info

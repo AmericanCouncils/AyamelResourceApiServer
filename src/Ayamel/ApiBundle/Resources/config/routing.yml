@@ -6,7 +6,7 @@
 
 AyamelApiBundle_home:
     pattern:   /
-    defaults:  { _controller: Ayamel\ApiBundle\Controller\ApiTester::indexAction }
+    defaults:  { _controller: Ayamel\ApiBundle\Controller\Home::buildHomePage }
 
 #version 1 of the api routes    
 AyamelApiBundle_api_v1:

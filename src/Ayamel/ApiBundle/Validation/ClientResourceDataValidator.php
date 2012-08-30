@@ -128,7 +128,10 @@ class ClientResourceDataValidator {
     protected function scanWhitelistField(array $whiteList, array $data) {
         $badFields = array();
         foreach($data as $key => $val) {
-            if(!isset($whiteList[$key])) $badFields[] = $key;
+            //HACK: ignore params prepended with underscores
+            if (0 !== strpos($key, '_')) {
+                if(!isset($whiteList[$key])) $badFields[] = $key;
+            }
         }
         
         if(!empty($badFields)) {
