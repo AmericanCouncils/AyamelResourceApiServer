@@ -15,7 +15,10 @@ class RequestContentUpload extends ApiController {
      *
      * @ApiDoc(
      *      resource=true,
-     *      description="Get a content upload url."
+     *      description="Get a content upload url.",
+     *      filters={
+     *          {"name"="_format", "default"="json", "description"="Return format, can be one of xml, yml or json"},
+     *      }
      * )
      */
     public function executeAction($id) {

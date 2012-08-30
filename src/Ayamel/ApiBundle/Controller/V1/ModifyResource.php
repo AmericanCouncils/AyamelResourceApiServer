@@ -11,12 +11,17 @@ class ModifyResource extends ApiController {
     
 
     /**
-     * Accepts data from a request object, attempting to modify a specific resource object.
+     * Accepts data from a request object, attempting to modify a specific resource object.  If you want to remove
+     * a field value, you can do that by setting its value to null.
      * 
      * @ApiDoc(
      *      resource=true,
      *      description="Modify a resource",
-     *      input="Ayamel\ResourceBundle\Document\Resource"
+     *      return="Ayamel\ResourceBundle\Document\Resource",
+     *      input="Ayamel\ResourceBundle\Document\Resource",
+     *      filters={
+     *          {"name"="_format", "default"="json", "description"="Return format, can be one of xml, yml or json"}
+     *      }
      * );
      *
      * @param string $id 

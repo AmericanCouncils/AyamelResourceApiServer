@@ -16,7 +16,10 @@ class GetResource extends ApiController {
      * @ApiDoc(
      *      resource=true,
      *      description="Return a resource",
-     *      return="Ayamel\ResourceBundle\Document\Resource"
+     *      return="Ayamel\ResourceBundle\Document\Resource",
+     *      filters={
+     *          {"name"="_format", "default"="json", "description"="Return format, can be one of xml, yml or json"},
+     *      }
      * );
      *
      */

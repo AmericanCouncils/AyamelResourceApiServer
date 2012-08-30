@@ -21,7 +21,9 @@ class ScanResourceUri extends ApiController {
      * @ApiDoc(
      *      resource=true,
      *      description="Derive resource from a URI.",
+     *      return="Ayamel\ResourceBundle\Document\Resource",
      *      filters={
+     *          {"name"="_format", "default"="json", "description"="Return format, can be one of xml, yml or json"},
      *          {"name"="uri", "required"=true, "dataType"="urlencoded string", "description"="If true, will delete any previous content associated with the resource before adding new content."}
      *      }
      * )

@@ -25,7 +25,11 @@ class CreateResource extends ApiController {
      * @ApiDoc(
      *      resource=true,
      *      description="Create a resource",
-     *      input="Ayamel\ResourceBundle\Document\Resource"
+     *      input="Ayamel\ResourceBundle\Document\Resource",
+     *      return="Ayamel\ResourceBundle\Document\Resource",
+     *      filters={
+     *          {"name"="_format", "default"="json", "description"="Return format, can be one of xml, yml or json"},
+     *      }
      * );
      *
      * @param Request $request 

@@ -2,7 +2,6 @@
 
 These are the general steps, notes on actual implementation follow.
 
-* Properly implement API documentation w/ JMS and nesting models
 * Fix docs template to integrate more nicely w/ app
 * Refactor API input to use JMS deserialization
 * Add transcoding backend
