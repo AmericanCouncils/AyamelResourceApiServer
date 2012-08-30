@@ -5,7 +5,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use JMS\SerializerBundle\Annotation as JMS;
 
 /**
- * API Client object
+ * API Client object, which can contain optional user-specific data
  *
  * @MongoDB\EmbeddedDocument
  * 
@@ -15,31 +15,38 @@ class Client {
     /**
      * @MongoDB\String
      * @JMS\SerializedName("id")
+     * @JMS\Type("string")
+     * @JMS\ReadOnly
      */
     protected $id;
     
     /**
      * @MongoDB\String
      * @JMS\SerializedName("name")
+     * @JMS\Type("string")
+     * @JMS\ReadOnly
      */
     protected $name;
     
     /**
      * @MongoDB\String
      * @JMS\SerializedName("uri")
+     * @JMS\Type("string")
+     * @JMS\ReadOnly
      */    
     protected $uri;
     
     /**
      * @MongoDB\String
      * @JMS\SerializedName("user")
+     * @JMS\Type("string")
      */
     protected $user;
-    
     
     /**
      * @MongoDB\String
      * @JMS\SerializedName("userUri")
+     * @JMS\Type("string")
      */
     protected $userUri;
 
@@ -110,7 +117,7 @@ class Client {
      */
     public function setUser($user)
     {
-        $this->user = $user;
+        $this->user = (string) $user;
     }
 
     /**

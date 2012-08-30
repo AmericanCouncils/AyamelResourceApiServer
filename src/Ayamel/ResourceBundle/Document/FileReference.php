@@ -17,39 +17,46 @@ class FileReference {
     /**
      * @MongoDB\String
      * @JMS\SerializedName("downloadUri")
+     * @JMS\Type("string")
      */
     protected $downloadUri;
     
     /**
      * @MongoDB\String
      * @JMS\SerializedName("streamUri")
+     * @JMS\Type("string")
      */
     protected $streamUri;
     
     /**
      * @MongoDB\String
      * @JMS\Exclude
+     * @JMS\ReadOnly
      */
     protected $internalUri;
     
     /**
      * @MongoDB\String
+     * @JMS\Type("string")
      */
     protected $representation;
     
     /**
      * @MongoDB\String
+     * @JMS\Type("string")
      */
     protected $mime;
 
 	/**
 	 * @MongoDB\Boolean
      * @JMS\Exclude
+     * @JMS\ReadOnly
 	 */
 	protected $original;
 
     /**
      * @MongoDB\Hash
+     * @JMS\Type("array")
      */
     protected $attributes;
 

@@ -19,21 +19,27 @@ class ContentCollection {
     /**
      * @MongoDB\String
      * @JMS\SerializedName("canonicalUri")
+     * @JMS\Type("string")
      */
     protected $canonicalUri;
 
     /**
+     * Note that for now this is just a hash, in the future there will probably be a legitimate document.
+     * 
      * @MongoDB\Hash
+     * @JMS\Type("array")
      */
     protected $oembed;
     
     /**
      * @MongoDB\EmbedMany(targetDocument="Ayamel\ResourceBundle\Document\FileReference")
+     * @JMS\Type("array<Ayamel\ResourceBundle\Document\FileReference>")
      */
     protected $files;
 
     public function __construct()
     {
+        //TODO: don't set this in constructor, make it null when possible
         $this->files = new ArrayCollection();
     }
 
