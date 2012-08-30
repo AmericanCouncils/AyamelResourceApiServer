@@ -154,17 +154,19 @@ class ResourceDocumentsFactory {
         //assign received data
         foreach($data as $key => $val) {
             
-            //derive setter method name            
-            $method = 'set'.ucfirst($key);
+            //HACK: ignore fields prepended with underscores
+            if (0 !== strpos($key, "_")) {
+                //derive setter method name            
+                $method = 'set'.ucfirst($key);
             
-            //call if it exists, if not, invalid argument
-            if(method_exists($object, $method)) {
-                $object->$method($val);
-            } else {
-                throw new \InvalidArgumentException("Tried setting a non-existing field [$key]");
-            }
+                //call if it exists, if not, invalid argument
+                if(method_exists($object, $method)) {
+                    $object->$method($val);
+                } else {
+                    throw new \InvalidArgumentException("Tried setting a non-existing field [$key]");
+                }
+            }            
         }
-
     }
 
 }

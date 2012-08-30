@@ -16,6 +16,6 @@
     "target-dir": "Ayamel/GetID3Bundle",
     "require": {
         "php": ">=5.3.2",
-        "americancouncils/getid3-bundle": "dev-master"
+        "ac/getid3-bundle": "dev-master"
     }
 }

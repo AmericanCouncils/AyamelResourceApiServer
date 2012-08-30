@@ -1,5 +1,5 @@
 {
-    "name": "ayamel/resource-library-application",
+    "name": "ayamel/resource-library-api-server",
     "authors": [
         {
             "name": "Evan Villemez",
@@ -9,8 +9,9 @@
     "autoload": {
         "psr-0": { "": "src/" }
     },
+    "minimum-stability": "dev",
     "require": {
-        "php": ">=5.3.2",
+        "php": ">=5.3.3",
         "symfony/symfony": "2.1.*",
 		"doctrine/mongodb-odm-bundle": "dev-master",
         "twig/extensions": "dev-master",
@@ -21,7 +22,9 @@
         "sensio/framework-extra-bundle": "dev-master",
         "sensio/generator-bundle": "dev-master",
 		"jms/serializer-bundle": "dev-master",
-		"getid3/getid3": "1.9.3"
+		"getid3/getid3": "1.9.3",
+        "ac/transcoding-bundle": "dev-master",
+        "nelmio/api-doc-bundle": "dev-master"
     },
     "scripts": {
         "post-install-cmd": [

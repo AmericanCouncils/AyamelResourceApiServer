@@ -51,8 +51,6 @@ class Resource {
         'description' => 'string',
         'keywords' => 'string',
         'type' => 'string',
-        'contributer' => 'string',
-        'contributerName' => 'string',
         'public' => 'bool',
         'copyright' => 'string',
         'license' => 'string',
@@ -61,100 +59,124 @@ class Resource {
     
     /**
      * @MongoDB\Id
+     * @JMS\Type("string")
+     * @JMS\ReadOnly
      */
     protected $id;
     
     /**
      * @MongoDB\String
+     * @JMS\Type("string")
      */
     protected $title;
     
     /**
      * @MongoDB\String
+     * @JMS\Type("string")
      */
     protected $description;
     
     /**
      * @MongoDB\String
+     * @JMS\Type("string")
      */
     protected $keywords;
     
     /**
      * @MongoDB\Hash
+     * @JMS\Type("array<string>")
      */
     protected $categories;
     
     /**
      * @MongoDB\String
+     * @JMS\Type("string")
      */
     protected $type;
         
     /**
      * @MongoDB\Boolean
+     * @JMS\Type("boolean")
      */
     protected $public = true;
         
     /**
      * @MongoDB\Hash
      * @JMS\SerializedName("l2Data")
+     * @JMS\Type("array")
      */
     protected $l2Data;
     
     /**
      * @MongoDB\Date
      * @JMS\SerializedName("dateAdded")
+     * @JMS\Type("DateTime")
+     * @JMS\ReadOnly
      */
     protected $dateAdded;
     
     /**
      * @MongoDB\Date
      * @JMS\SerializedName("dateModified")
+     * @JMS\Type("DateTime")
+     * @JMS\ReadOnly
      */
     protected $dateModified;
     
     /**
      * @MongoDB\Date
      * @JMS\SerializedName("dateDeleted")
+     * @JMS\Type("DateTime")
+     * @JMS\ReadOnly
      */
     protected $dateDeleted;
     
     /**
      * @MongoDB\String
+     * @JMS\Type("string")
      */
     protected $copyright;
     
     /**
      * @MongoDB\String
+     * @JMS\Type("string")
      */
     protected $license;
     
     /**
      * @MongoDB\String
+     * @JMS\Type("string")
+     * @JMS\ReadOnly
      */
     protected $status;
     
     /**
      * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\Origin")
+     * @JMS\Type("Ayamel\ResourceBundle\Document\Origin")
      */
     public $origin;
     
     /**
      * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\Client")
+     * @JMS\Type("Ayamel\ResourceBundle\Document\Client")
      */    
     public $client;
     
     /**
      * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\ContentCollection")
+     * @JMS\Type("Ayamel\ResourceBundle\Document\ContentCollection")
      */
     public $content;
     
     /**
      * @MongoDB\EmbedMany(targetDocument="Ayamel\ResourceBundle\Document\Relation")
+     * @JMS\Type("array<Ayamel\ResourceBundle\Document\Relation>")
      */
     protected $relations;
         
     public function __construct()
     {
+        //TODO: stop setting this in the constructor, if it's empty it should be null
         $this->relations = new ArrayCollection();
     }
     
@@ -479,7 +501,7 @@ class Resource {
      *
      * @param Origin $origin 
      */
-    public function setOrigin(Origin $origin) {
+    public function setOrigin(Origin $origin = null) {
         $this->origin = $origin;
     }
     
@@ -497,7 +519,7 @@ class Resource {
      *
      * @param Client $client 
      */
-    public function setClient(Client $client) {
+    public function setClient(Client $client = null) {
         $this->client = $client;
     }
     

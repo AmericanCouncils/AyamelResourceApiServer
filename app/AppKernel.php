@@ -10,15 +10,12 @@ class AppKernel extends Kernel
         $bundles = array(
 			//taken from standard edition
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
-            new Symfony\Bundle\SecurityBundle\SecurityBundle(),
+//            new Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new Symfony\Bundle\TwigBundle\TwigBundle(),
             new Symfony\Bundle\MonologBundle\MonologBundle(),
 //            new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
 //            new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
-//            new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
-//            new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
-//            new JMS\AopBundle\JMSAopBundle(),
 			
 			//added by Evan
 			new Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle(),
@@ -27,12 +24,14 @@ class AppKernel extends Kernel
 			//custom
             new AC\WebServicesBundle\ACWebServicesBundle(),
             new Ayamel\ResourceBundle\AyamelResourceBundle(),
-            new Ayamel\ResourceApiBundle\AyamelResourceApiBundle(),
+            new Ayamel\ApiBundle\AyamelApiBundle(),
             new Ayamel\FilesystemBundle\AyamelFilesystemBundle(),
             new AC\GetID3Bundle\ACGetID3Bundle(),
 //            new Ayamel\GetID3Bundle\AyamelGetID3Bundle(),
-//            new AC\MutateBundle\ACMutateBundle(),
-//            new Ayamel\MutateBundle\AyamelMutateBundle(),
+            new AC\TranscodingBundle\ACTranscodingBundle(),
+//            new Sonata\NotificationBundle\SonataNotificationBundle(),
+//            new Ayamel\TranscodingBundle\AyamelTranscodingBundle(),
+            new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

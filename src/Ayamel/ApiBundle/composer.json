@@ -1,0 +1,22 @@
+{
+    "name": "ayamel/resource-api-bundle",
+	"type": "symfony-bundle",
+    "description": "This Bundle defines the structure of the REST api for managing resource objects defined in the AyamelResourceBundle.",
+    "keywords": ["media", "resource", "api", "rest"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Evan Villemez",
+            "email": "evan.villemez@americancouncils.org"
+        }
+    ],
+    "autoload": {
+        "psr-0": { "Ayamel\\ApiBundle": "" }
+    },
+    "target-dir": "Ayamel/ApiBundle",
+    "require": {
+        "php": ">=5.3.2",
+		"ayamel/resource-bundle": "dev-master",
+		"ac/web-services-bundle": "dev-master"
+    }
+}

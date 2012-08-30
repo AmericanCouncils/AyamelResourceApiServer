@@ -1,5 +1,6 @@
 parameters:
     database_driver: pdo_sqlite
+    database_path: %kernel.root_dir%/app/data/db.sqlite
     database_host: localhost
     database_port: '9999'
     database_name: ayamel
@@ -18,3 +19,4 @@ parameters:
     ayamel.filesystem.local_filesystem.secret: 34565dfg897jksksk4wk4ksdfkj34
     ayamel.filesystem.local_filesystem.base_uri: http://ayamel.americancouncils.org/files
     
+    nelmio_api_doc.sandbox.endpoint: /AyamelResourceApiServer/web/index_dev.php
