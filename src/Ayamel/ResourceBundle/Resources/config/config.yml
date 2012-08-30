@@ -25,7 +25,6 @@ parameters:
         ppt: document
         pptx: document
         odt: document
-        csv: document
         pdf: document
         csv: document
         zip: archive
@@ -34,6 +33,9 @@ parameters:
         iso: archive
         gz: archive
         tz: archive
+        xml: data
+        json: data
+        csv: data
     ayamel.resource.null_extension_type: binary
 
 services:

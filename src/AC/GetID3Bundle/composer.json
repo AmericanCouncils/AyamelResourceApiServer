@@ -1,5 +1,5 @@
 {
-    "name": "americancouncils/getid3-bundle",
+    "name": "ac/getid3-bundle",
     "type": "symfony-bundle",
     "description": "This bundle enables using the getid3 library in your own code.",
     "keywords": ["getid3", "files", "id3"],

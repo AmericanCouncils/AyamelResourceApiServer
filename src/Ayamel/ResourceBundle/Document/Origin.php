@@ -15,18 +15,21 @@ class Origin {
     /**
      * @MongoDB\String
      * @JMS\SerializedName("creator")
+     * @JMS\Type("string")
      */
     protected $creator;
     
     /**
      * @MongoDB\String
      * @JMS\SerializedName("location")
+     * @JMS\Type("string")
      */
     protected $location;
     
     /**
      * @MongoDB\Date
      * @JMS\SerializedName("date")
+     * @JMS\Type("DateTime")
      */
 	protected $date;
     
@@ -34,6 +37,7 @@ class Origin {
     /**
      * @MongoDB\String
      * @JMS\SerializedName("format")
+     * @JMS\Type("string")
      */
     protected $format;
     
@@ -41,12 +45,14 @@ class Origin {
     /**
      * @MongoDB\String
      * @JMS\SerializedName("note")
+     * @JMS\Type("string")
      */
     protected $note;
     
     /**
      * @MongoDB\String
      * @JMS\SerializedName("uri")
+     * @JMS\Type("string")
      */    
     protected $uri;
 

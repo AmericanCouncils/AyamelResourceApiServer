@@ -78,6 +78,8 @@ abstract class AbstractFilePathProvider implements ProviderInterface {
         }
         
         //does the file actually exist?
+        //TODO: change this to use a curl head request and get other file info as well
+        //http://stackoverflow.com/questions/2610713/get-mime-type-of-external-file-using-curl-and-php#4
         if(!$handle = @fopen($uri, "r")) {
             throw new \InvalidArgumentException(sprintf("Resource at [%s] could not be found.", $uri));
         }
@@ -85,14 +87,13 @@ abstract class AbstractFilePathProvider implements ProviderInterface {
         
         //create original file reference
         $file = ($scheme === 'file') ? FileReference::createFromLocalPath($uri) : FileReference::createFromDownloadUri($uri);
-        $type = $this->guessTypeFromExtension($this->getPathExtension($path));
-        $file->setType($type);
         $file->setOriginal(true);
         
         //build new resource
         $r = new Resource;
-        $r->setTitle($this->getFilenameFromPath($path));
+        $type = $this->guessTypeFromExtension($this->getPathExtension($path));
         $r->setType($type);
+        $r->setTitle($this->getFilenameFromPath($path));
         $r->setContent(new ContentCollection);
         $r->content->addFile($file);
         

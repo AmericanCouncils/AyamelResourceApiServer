@@ -1,0 +1,3 @@
+services:
+	ayamel.filesystem.subscriber.transcoder
+		

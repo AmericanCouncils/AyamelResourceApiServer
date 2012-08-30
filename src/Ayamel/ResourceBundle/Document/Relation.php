@@ -15,22 +15,26 @@ class Relation {
     /**
      * @MongoDB\String
      * @JMS\SerializedName("subjectId")
+     * @JMS\Type("string")
      */
     protected $subjectId;
     
     /**
      * @MongoDB\String
      * @JMS\SerializedName("objectId")
+     * @JMS\Type("string")
      */
     protected $objectId;
     
     /**
      * @MongoDB\String
+     * @JMS\Type("string")
      */
     protected $type;
     
     /**
      * @MongoDB\Hash
+     * @JMS\Type("array")
      */
     protected $attributes = array();
 

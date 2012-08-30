@@ -2,8 +2,11 @@ imports:
 #    - { resource: security.yml }
     - { resource: '@ACWebServicesBundle/Resources/config/config.yml' }
     - { resource: '@AyamelResourceBundle/Resources/config/config.yml' }
-    - { resource: '@AyamelResourceApiBundle/Resources/config/config.yml' }
+    - { resource: '@AyamelApiBundle/Resources/config/config.yml' }
     - { resource: '@AyamelFilesystemBundle/Resources/config/config.yml' }
+    - { resource: '@ACTranscodingBundle/Resources/config/services.core.yml' }
+#    - { resource: '@ACTranscodingBundle/Resources/config/services.ffmpeg.yml' }
+#    - { resource: '@ACTranscodingBundle/Resources/config/services.handbrake.yml' }
     # include parameters.yml last, git ignores it, so location specific overrides can go there safely
     - { resource: parameters.yml }
 
@@ -11,7 +14,6 @@ framework:
     #esi:             ~
     #translator:      { fallback: %locale% }
     secret:          %secret%
-    charset:         UTF-8
     router:          { resource: "%kernel.root_dir%/config/routing.yml" }
     form:            true
     csrf_protection: true
@@ -19,7 +21,6 @@ framework:
     templating:      { engines: ['twig', 'php'] } #assets_version: SomeVersionScheme
     default_locale:  %locale%
     session:
-        auto_start:     true
 
 # Twig Configuration
 twig:
@@ -38,36 +39,6 @@ assetic:
         #    jar: %kernel.root_dir%/Resources/java/compiler.jar
         #yui_css:
         #    jar: %kernel.root_dir%/Resources/java/yuicompressor-2.4.7.jar
-
-# Doctrine Configuration
-#doctrine:
-#    dbal:
-#        driver:   %database_driver%
-#        host:     %database_host%
-#        port:     %database_port%
-#        dbname:   %database_name%
-#        user:     %database_user%
-#        password: %database_password%
-#        charset:  UTF8
-
-#    orm:
-#        auto_generate_proxy_classes: %kernel.debug%
-#        auto_mapping: true
-
-# Swiftmailer Configuration
-#swiftmailer:
-#    transport: %mailer_transport%
-#    host:      %mailer_host%
-#    username:  %mailer_user%
-#    password:  %mailer_password%
-#    spool:     { type: memory }
-
-#jms_security_extra:
-#    secure_all_services: false
-
-#fos_rest:
-#    routing_loader:
-#        default_format: json
 
 doctrine_mongodb:
     connections:
@@ -89,14 +60,21 @@ jms_serializer:
         array_collection: true
         form_error: true
         constraint_violation: true
-
     property_naming:
         separator:  
         lower_case: true
-
     metadata:
         cache: file
         debug: "%kernel.debug%"
         file_cache:
             dir: "%kernel.cache_dir%/serializer"
         auto_detection: true
+        
+nelmio_api_doc:
+    name:   Ayamel Resource Library API
+    sandbox:
+        enabled:  true
+        endpoint: /AyamelResourceApiServer/web/index_dev.php
+#        authentication: # default null, if set, the value of the api key is read from the query string and appended to every sandbox api call
+#            name: access_token
+#            delivery: query # only query delivery is supported for now

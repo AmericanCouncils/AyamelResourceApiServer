@@ -17,39 +17,46 @@ class FileReference {
     /**
      * @MongoDB\String
      * @JMS\SerializedName("downloadUri")
+     * @JMS\Type("string")
      */
     protected $downloadUri;
     
     /**
      * @MongoDB\String
      * @JMS\SerializedName("streamUri")
+     * @JMS\Type("string")
      */
     protected $streamUri;
     
     /**
      * @MongoDB\String
      * @JMS\Exclude
+     * @JMS\ReadOnly
      */
     protected $internalUri;
     
     /**
      * @MongoDB\String
+     * @JMS\Type("string")
      */
     protected $representation;
     
     /**
      * @MongoDB\String
+     * @JMS\Type("string")
      */
     protected $mime;
 
 	/**
 	 * @MongoDB\Boolean
      * @JMS\Exclude
+     * @JMS\ReadOnly
 	 */
 	protected $original;
 
     /**
      * @MongoDB\Hash
+     * @JMS\Type("array")
      */
     protected $attributes;
 
@@ -105,10 +112,10 @@ class FileReference {
     }
     
     /**
-    * Set the representation string in the format of "type;quality"
-    * 
-    * Type can be any of "original","summary", or "transcoding"
-    * Quality can be a floating point number of up to 4 digits.
+     * Set the representation string in the format of "type;quality"
+     * 
+     * Type can be any of "original","summary", or "transcoding"
+     * Quality can be a floating point number of up to 4 digits.
      *
      * @param string $representation 
      */
@@ -191,6 +198,26 @@ class FileReference {
      */
     public function hasAttribute($key) {
         return isset($this->attributes[$key]);
+    }
+
+    /**
+     * Set the mime string
+     *
+     * @param string $mime 
+     */
+    public function setMime($mime)
+    {
+        $this->mime = $mime;
+    }
+    
+    /**
+     * Returns mime string
+     *
+     * @return string
+     */
+    public function getMime()
+    {
+        return $this->mime;
     }
 
     /**
