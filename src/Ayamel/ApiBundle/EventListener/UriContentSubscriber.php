@@ -100,7 +100,7 @@ class UriContentSubscriber implements EventSubscriberInterface {
         */
         
         //set the modified resource and stop propagation of this event
-        $resource->setStatus(Resource::STATUS_OK);
+        $resource->setStatus(Resource::STATUS_NORMAL);
         $e->setResource($resource);
     }
 

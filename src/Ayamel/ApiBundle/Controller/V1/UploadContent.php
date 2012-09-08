@@ -184,7 +184,7 @@ class UploadContent extends ApiController {
         //TODO: return ServiceResponse::create(200, array('resource' => $resource));
         return array(
             'response' => array(
-                'code' => ($resource->getStatus() === Resource::STATUS_OK) ? 200 : 202,
+                'code' => ($resource->getStatus() === Resource::STATUS_NORMAL) ? 200 : 202,
             ),
             'resource' => $resource
         );
