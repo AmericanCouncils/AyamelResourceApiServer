@@ -1,4 +1,5 @@
 <?php
+
 namespace Ayamel\ResourceBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
@@ -13,6 +14,10 @@ use JMS\SerializerBundle\Annotation as JMS;
 class Origin {
     
     /**
+     * A creator for the Resource.  For example, in the case of 
+     * an image of a painting, the creator could be the original 
+     * artist who painted the picture.
+     * 
      * @MongoDB\String
      * @JMS\SerializedName("creator")
      * @JMS\Type("string")
@@ -20,6 +25,10 @@ class Origin {
     protected $creator;
     
     /**
+     * A location relevant to the Resource.  No specific required format.
+     * In the case of an image of a painting, this could be the city and
+     * country where the painting originated.
+     * 
      * @MongoDB\String
      * @JMS\SerializedName("location")
      * @JMS\Type("string")
@@ -27,6 +36,10 @@ class Origin {
     protected $location;
     
     /**
+     * A date relevant to the creation of the Resource.  No specific required 
+     * format.  In the case of an image of a painting, this could be the general
+     * time period of when the painting was created.
+     * 
      * @MongoDB\Date
      * @JMS\SerializedName("date")
      * @JMS\Type("DateTime")
@@ -35,6 +48,10 @@ class Origin {
     
     
     /**
+     * A description of the original format of the Resource.  No specific
+     * required type.  In the case of an image of a painting, this could be
+     * similar to the descriptions of format in a museum, such as "oil on canvas".
+     * 
      * @MongoDB\String
      * @JMS\SerializedName("format")
      * @JMS\Type("string")
@@ -43,6 +60,9 @@ class Origin {
     
     
     /**
+     * Any relevant notes about the origin of the Resource or its
+     * original content.
+     * 
      * @MongoDB\String
      * @JMS\SerializedName("note")
      * @JMS\Type("string")
@@ -50,6 +70,9 @@ class Origin {
     protected $note;
     
     /**
+     * If applicable, a valid public URI that points to the original
+     * Resource content.
+     * 
      * @MongoDB\String
      * @JMS\SerializedName("uri")
      * @JMS\Type("string")

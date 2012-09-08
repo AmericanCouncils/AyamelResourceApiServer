@@ -32,6 +32,8 @@ class ContentCollection {
     protected $oembed;
     
     /**
+     * Array of FileReference objects.
+     * 
      * @MongoDB\EmbedMany(targetDocument="Ayamel\ResourceBundle\Document\FileReference")
      * @JMS\Type("array<Ayamel\ResourceBundle\Document\FileReference>")
      */
