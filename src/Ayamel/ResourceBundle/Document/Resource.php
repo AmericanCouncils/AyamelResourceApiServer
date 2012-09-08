@@ -105,12 +105,12 @@ class Resource {
      * 
      * Currently accepted types include:  
      * 
-     * * **video** - The primary content is video.
-     * * **audio** - The primary content is audio.
-     * * **image** - The primary content is a static image.
-     * * **document** - The primary content is a document meant for end-users.
-     * * **archive** - The primary content is a collection of content in some archival format.
-     * * **data** - The primary content is in a data format intended for primary use by a program.
+     * - **video** - The primary content is video.
+     * - **audio** - The primary content is audio.
+     * - **image** - The primary content is a static image.
+     * - **document** - The primary content is a document meant for end-users.
+     * - **archive** - The primary content is a collection of content in some archival format.
+     * - **data** - The primary content is in a data format intended for primary use by a program.
      * 
      * @MongoDB\String
      * @JMS\Type("string")
@@ -189,11 +189,11 @@ class Resource {
     /**
      * The status of the Resource, potential values include:
      *
-     * * "normal" - No problems, and nothing scheduled to be done with the object.
-     * * "awaiting_processing" - The Resource, or it's content, is in a queue to be processed and potentially modified.
-     * * "awaiting_content" - The resource has no content associated with it yet.  Note that if a Resource is "awaiting_content" for more than two weeks, it will be automatically deleted.
-     * * "processing" - The Resource, or its content, is currently being processed.  In this state, the Resource is locked and cannot be modified.
-     * * "deleted" - The Resource and its content has been removed.
+     * - **normal** - No problems, and nothing scheduled to be done with the object.
+     * - **awaiting_processing** - The Resource, or it's content, is in a queue to be processed and potentially modified.
+     * - **awaiting_content** - The resource has no content associated with it yet.  Note that if a Resource is "awaiting_content" for more than two weeks, it will be automatically deleted.
+     * - **processing** - The Resource, or its content, is currently being processed.  In this state, the Resource is locked and cannot be modified.
+     * - **deleted** - The Resource and its content has been removed.
      * 
      * @MongoDB\String
      * @JMS\Type("string")
