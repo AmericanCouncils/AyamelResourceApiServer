@@ -19,4 +19,4 @@ parameters:
     ayamel.filesystem.local_filesystem.secret: 34565dfg897jksksk4wk4ksdfkj34
     ayamel.filesystem.local_filesystem.base_uri: http://ayamel.americancouncils.org/files
     
-    nelmio_api_doc.sandbox.endpoint: /AyamelResourceApiServer/web/index_dev.php
+    nelmio_api_doc.sandbox.endpoint: http://ayamel.americancouncils.org/index_dev.php

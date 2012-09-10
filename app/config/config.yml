@@ -4,7 +4,7 @@ imports:
     - { resource: '@AyamelResourceBundle/Resources/config/config.yml' }
     - { resource: '@AyamelApiBundle/Resources/config/config.yml' }
     - { resource: '@AyamelFilesystemBundle/Resources/config/config.yml' }
-    - { resource: '@ACTranscodingBundle/Resources/config/services.core.yml' }
+#    - { resource: '@ACTranscodingBundle/Resources/config/services.core.yml' }
 #    - { resource: '@ACTranscodingBundle/Resources/config/services.ffmpeg.yml' }
 #    - { resource: '@ACTranscodingBundle/Resources/config/services.handbrake.yml' }
     # include parameters.yml last, git ignores it, so location specific overrides can go there safely
