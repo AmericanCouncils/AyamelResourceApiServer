@@ -32,7 +32,7 @@ class Resource {
     /**
      * Status when content is processed and ok
      */
-    const STATUS_OK = 'ok';
+    const STATUS_NORMAL = 'normal';
 
     /**
      * Status when object is deleted
@@ -58,6 +58,8 @@ class Resource {
     );
     
     /**
+     * The unique ID of the resource.
+     * 
      * @MongoDB\Id
      * @JMS\Type("string")
      * @JMS\ReadOnly
@@ -65,42 +67,71 @@ class Resource {
     protected $id;
     
     /**
+     * The title.
+     * 
      * @MongoDB\String
      * @JMS\Type("string")
      */
     protected $title;
     
     /**
+     * A short description.
+     * 
      * @MongoDB\String
      * @JMS\Type("string")
      */
     protected $description;
     
     /**
+     * A string of keywords for search.
+     * 
      * @MongoDB\String
      * @JMS\Type("string")
      */
     protected $keywords;
     
     /**
+     * An array of categories that apply to this resource.  Categories here are vetted
+     * against a list of accepted and documented categories. (TODO)
+     * 
      * @MongoDB\Hash
      * @JMS\Type("array<string>")
      */
     protected $categories;
     
     /**
+     * The generic type of resource.  Generic types are useful for sorting
+     * search results into generally similar types of resources.
+     * 
+     * Currently accepted types include:  
+     * 
+     * - **video** - The primary content is video.
+     * - **audio** - The primary content is audio.
+     * - **image** - The primary content is a static image.
+     * - **document** - The primary content is a document meant for end-users.
+     * - **archive** - The primary content is a collection of content in some archival format.
+     * - **data** - The primary content is in a data format intended for primary use by a program.
+     * 
      * @MongoDB\String
      * @JMS\Type("string")
      */
     protected $type;
         
     /**
+     * A boolean for whether or not the Resource is accisible or visible by other API clients.
+     *
+     * If false, the resource is only accessible by the client which uploaded the resource.
+     * 
      * @MongoDB\Boolean
      * @JMS\Type("boolean")
      */
     protected $public = true;
         
     /**
+     * An object containing linguistically relevant data for search.
+     * 
+     * *TODO:* this is not done, it's critical.
+     * 
      * @MongoDB\Hash
      * @JMS\SerializedName("l2Data")
      * @JMS\Type("array")
@@ -108,7 +139,8 @@ class Resource {
     protected $l2Data;
     
     /**
-     * @MongoDB\Date
+     * The date the Resource was added into the database.
+     * 
      * @JMS\SerializedName("dateAdded")
      * @JMS\Type("DateTime")
      * @JMS\ReadOnly
@@ -116,6 +148,8 @@ class Resource {
     protected $dateAdded;
     
     /**
+     * The last time the Resource was modified.
+     * 
      * @MongoDB\Date
      * @JMS\SerializedName("dateModified")
      * @JMS\Type("DateTime")
@@ -124,6 +158,8 @@ class Resource {
     protected $dateModified;
     
     /**
+     * The date the Resource was deleted from the database, if applicable.
+     * 
      * @MongoDB\Date
      * @JMS\SerializedName("dateDeleted")
      * @JMS\Type("DateTime")
@@ -132,18 +168,33 @@ class Resource {
     protected $dateDeleted;
     
     /**
+     * Copyright text associated with the resource.
+     * 
      * @MongoDB\String
      * @JMS\Type("string")
      */
     protected $copyright;
     
     /**
+     * License type assocated with the resource.
+     *
+     * This must be provided before the Resource will be added
+     * into the search index.
+     * 
      * @MongoDB\String
      * @JMS\Type("string")
      */
     protected $license;
     
     /**
+     * The status of the Resource, potential values include:
+     *
+     * - **normal** - No problems, and nothing scheduled to be done with the object.
+     * - **awaiting_processing** - The Resource, or it's content, is in a queue to be processed and potentially modified.
+     * - **awaiting_content** - The resource has no content associated with it yet.  Note that if a Resource is "awaiting_content" for more than two weeks, it will be automatically deleted.
+     * - **processing** - The Resource, or its content, is currently being processed.  In this state, the Resource is locked and cannot be modified.
+     * - **deleted** - The Resource and its content has been removed.
+     * 
      * @MongoDB\String
      * @JMS\Type("string")
      * @JMS\ReadOnly
@@ -151,24 +202,33 @@ class Resource {
     protected $status;
     
     /**
+     * An optional object containing information about the origin of the Resource.
+     * 
      * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\Origin")
      * @JMS\Type("Ayamel\ResourceBundle\Document\Origin")
      */
     public $origin;
     
     /**
+     * An object containing information about the API client that created the Resource.
+     * 
      * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\Client")
      * @JMS\Type("Ayamel\ResourceBundle\Document\Client")
      */    
     public $client;
     
     /**
+     * An object containing information about the primary content of the resource.
+     * 
      * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\ContentCollection")
      * @JMS\Type("Ayamel\ResourceBundle\Document\ContentCollection")
      */
     public $content;
     
     /**
+     * An array of Relation objects that describe the relationship between this Resource and
+     * other Resources.  Relations are critical to the search indexing process.
+     * 
      * @MongoDB\EmbedMany(targetDocument="Ayamel\ResourceBundle\Document\Relation")
      * @JMS\Type("array<Ayamel\ResourceBundle\Document\Relation>")
      */
@@ -611,6 +671,16 @@ class Resource {
     public function getContent()
     {
         return $this->content;
+    }
+    
+    /**
+     * Return whether or not the Resource is locked and should not be modified.
+     *
+     * @return boolean
+     */
+    public function isLocked()
+    {
+        return (self::STATUS_PROCESSING === $this->status);
     }
 
     /**

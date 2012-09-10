@@ -13,6 +13,8 @@ use JMS\SerializerBundle\Annotation as JMS;
 class Client {
     
     /**
+     * The ID of the API client which created the Resource.
+     * 
      * @MongoDB\String
      * @JMS\SerializedName("id")
      * @JMS\Type("string")
@@ -21,6 +23,8 @@ class Client {
     protected $id;
     
     /**
+     * A human-readable name of the API client.
+     * 
      * @MongoDB\String
      * @JMS\SerializedName("name")
      * @JMS\Type("string")
@@ -29,6 +33,8 @@ class Client {
     protected $name;
     
     /**
+     * A URI referencing the API client, if applicable.
+     * 
      * @MongoDB\String
      * @JMS\SerializedName("uri")
      * @JMS\Type("string")
@@ -37,6 +43,10 @@ class Client {
     protected $uri;
     
     /**
+     * An optional reference to an internal user of API client 
+     * system who uploaded the resource.  This would most likely
+     * be a unique ID from the client system.
+     * 
      * @MongoDB\String
      * @JMS\SerializedName("user")
      * @JMS\Type("string")
@@ -44,6 +54,9 @@ class Client {
     protected $user;
     
     /**
+     * An optional URI referencing the internal user of the API
+     * client who created the Resource.
+     * 
      * @MongoDB\String
      * @JMS\SerializedName("userUri")
      * @JMS\Type("string")

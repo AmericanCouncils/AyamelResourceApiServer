@@ -1,4 +1,5 @@
 <?php
+
 namespace Ayamel\ResourceBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
@@ -13,6 +14,8 @@ use JMS\SerializerBundle\Annotation as JMS;
 class Relation {
     
     /**
+     * The ID of the subject Resource.
+     * 
      * @MongoDB\String
      * @JMS\SerializedName("subjectId")
      * @JMS\Type("string")
@@ -20,6 +23,8 @@ class Relation {
     protected $subjectId;
     
     /**
+     * The ID of the object Resource.
+     * 
      * @MongoDB\String
      * @JMS\SerializedName("objectId")
      * @JMS\Type("string")
@@ -27,12 +32,20 @@ class Relation {
     protected $objectId;
     
     /**
+     * The type of the Relation.  Valid types include:
+     * 
+     * - **part_of** - words here...
+     * - **requires** - words here...
+     * - **depends_on** - words here...
+     * 
      * @MongoDB\String
      * @JMS\Type("string")
      */
     protected $type;
     
     /**
+     * A key/val hash of properties relevant to the given "type".
+     * 
      * @MongoDB\Hash
      * @JMS\Type("array")
      */

@@ -15,6 +15,8 @@ use JMS\SerializerBundle\Annotation as JMS;
 class FileReference {
 
     /**
+     * A public URI where the file is accessible.
+     * 
      * @MongoDB\String
      * @JMS\SerializedName("downloadUri")
      * @JMS\Type("string")
@@ -22,6 +24,8 @@ class FileReference {
     protected $downloadUri;
     
     /**
+     * A public URI where the file can be streamed from.
+     *
      * @MongoDB\String
      * @JMS\SerializedName("streamUri")
      * @JMS\Type("string")
@@ -36,12 +40,25 @@ class FileReference {
     protected $internalUri;
     
     /**
+     * A string including the type and quality. in the 
+     * format of `type`.`quality`.  For example: `transcoding.2`
+     *
+     * Valid types include:
+     *
+     * - **original** - If this is the original file.
+     * - **transcoding** - If this file is a transcoding of the original in its entirety.
+     * - **summary** - If this file is a partial transcoding of the original.
+     *
+     * Quality is an integer representing the relative quality.
+     * 
      * @MongoDB\String
      * @JMS\Type("string")
      */
     protected $representation;
     
     /**
+     * The mime type of the file.
+     * 
      * @MongoDB\String
      * @JMS\Type("string")
      */
@@ -52,9 +69,11 @@ class FileReference {
      * @JMS\Exclude
      * @JMS\ReadOnly
 	 */
-	protected $original;
+	private $original;
 
     /**
+     * A key/val hash of attributes, relevant to the `mime` of the file.
+     * 
      * @MongoDB\Hash
      * @JMS\Type("array")
      */
