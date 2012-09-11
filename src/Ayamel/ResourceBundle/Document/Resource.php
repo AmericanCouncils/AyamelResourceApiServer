@@ -110,6 +110,7 @@ class Resource {
      * - **image** - The primary content is a static image.
      * - **document** - The primary content is a document meant for end-users.
      * - **archive** - The primary content is a collection of content in some archival format.
+     * - **collection** - The primary content is a collection of other resources, which you can derive from the relations array.
      * - **data** - The primary content is in a data format intended for primary use by a program.
      * 
      * @MongoDB\String
@@ -118,14 +119,15 @@ class Resource {
     protected $type;
         
     /**
-     * A boolean for whether or not the Resource is accisible or visible by other API clients.
+     * An array of API Client IDs.  If present, only the specified clients will be allowed to view
+     * the Resource object.
      *
-     * If false, the resource is only accessible by the client which uploaded the resource.
-     * 
-     * @MongoDB\Boolean
-     * @JMS\Type("boolean")
+     * If empty, the Resource is public and visible to all client systems.
+     *
+     * @MongoDB\Hash
+     * @JMS\Type("array<string>")
      */
-    protected $public = true;
+    protected $restrictions;
         
     /**
      * An object containing linguistically relevant data for search.
@@ -222,6 +224,7 @@ class Resource {
      * 
      * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\ContentCollection")
      * @JMS\Type("Ayamel\ResourceBundle\Document\ContentCollection")
+     * @JMS\ReadOnly
      */
     public $content;
     
@@ -351,23 +354,23 @@ class Resource {
     }
 
     /**
-     * Set public
+     * Set restrictions
      *
      * @param boolean $public
      */
-    public function setPublic($public)
+    public function setRestrictions(array $restrictions = null)
     {
-        $this->public = $public;
+        $this->restrictions = $restrictions;
     }
 
     /**
-     * Get public
+     * Get restrictions
      *
      * @return boolean $public
      */
-    public function getPublic()
+    public function getRestrictions()
     {
-        return $this->public;
+        return $this->restrictions;
     }
 
     /**
