@@ -63,7 +63,7 @@ abstract class ApiController extends Controller
         $restrictions = $resource->getRestrictions();
         if(!empty($restrictions)) {
 //          if(!in_array($this->getApiClient()->getKey(), $restrictions)) {
-                throw $this->createHttpException(403, "You are not authorized to view the requested resource.");
+                //throw $this->createHttpException(403, "You are not authorized to view the requested resource.");
 //          }
         }
         
