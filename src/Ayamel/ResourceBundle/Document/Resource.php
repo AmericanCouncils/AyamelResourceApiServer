@@ -51,7 +51,6 @@ class Resource {
         'description' => 'string',
         'keywords' => 'string',
         'type' => 'string',
-        'public' => 'bool',
         'copyright' => 'string',
         'license' => 'string',
         'status' => 'string',

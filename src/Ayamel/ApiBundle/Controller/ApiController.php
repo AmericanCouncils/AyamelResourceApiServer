@@ -60,8 +60,9 @@ abstract class ApiController extends Controller
         }
         
         //throw access denied exception if resource isn't public and client doesn't own it
-        if(!empty($restrictions = $resource->getRestrictions())) {
-//          if(!in_array($this->getApiClient()->getKey(), $resource->getRestrictions())) {
+        $restrictions = $resource->getRestrictions();
+        if(!empty($restrictions)) {
+//          if(!in_array($this->getApiClient()->getKey(), $restrictions)) {
                 throw $this->createHttpException(403, "You are not authorized to view the requested resource.");
 //          }
         }

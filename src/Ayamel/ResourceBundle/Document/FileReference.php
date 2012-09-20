@@ -41,7 +41,7 @@ class FileReference {
     
     /**
      * A string including the type and quality. in the 
-     * format of `type`.`quality`.  For example: `transcoding.2`
+     * format of `type`;`quality`.  For example: `transcoding;2`
      *
      * Valid types include:
      *
