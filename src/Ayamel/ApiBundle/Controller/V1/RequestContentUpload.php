@@ -9,7 +9,8 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 class RequestContentUpload extends ApiController {
     
     /**
-     * Request a valid content upload url for a resource.
+     * Request a valid content upload url for a resource.  Note that a content upload url is only valid for one use only.
+     * For more information on this, see the documentation for the upload route: `POST: /resources/{id}/content/{token}`
      *
      * @param string $id 
      *

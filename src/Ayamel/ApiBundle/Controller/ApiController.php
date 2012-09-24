@@ -60,18 +60,26 @@ abstract class ApiController extends Controller
         }
         
         //throw access denied exception if resource isn't public and client doesn't own it
-        if(!$resource->getPublic()) {
-//          if($this->getApiClient()->getName() !== $resource->getContributer()) {
-                throw $this->createHttpException(403, "You are not authorized to view the requested resource.");
+        $restrictions = $resource->getRestrictions();
+        if(!empty($restrictions)) {
+//          if(!in_array($this->getApiClient()->getKey(), $restrictions)) {
+                //throw $this->createHttpException(403, "You are not authorized to view the requested resource.");
 //          }
         }
         
         return $resource;
     }
     
-    
-    protected function createServiceResponse($data, $code = 200, $headers = array()) {
-        return new \AC\WebServicesBundle\Response\ServiceResponse($data, $code, $headers);
+    /**
+     * Get an array of Resources by their ids.  Needs to handle authentication for multiple objects.  Error on one forces error on all.
+     *
+     * @param array $ids 
+     * @return array
+     * @throws Symfony\Component\HttpKernel\Exception\HttpException(403) if resource is private and requesting client is not the owner.
+     */
+    protected function getRequestedResourcesByIds(array $ids)
+    {
+        //TODO: 
     }
     
     protected function returnDeletedResource(Resource $resource) {

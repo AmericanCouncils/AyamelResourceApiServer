@@ -1,9 +1,38 @@
 parameters:
     ayamel.api.token_cache_dir: %kernel.cache_dir%/ayamel_upload_tokens
+    ayamel.api.client_data_validator.create_field_whitelist:
+        - title
+        - type
+        - description
+        - public
+        - relations
+        - l2Data
+        - copyright
+        - keywords
+        - categories
+        - origin
+        - client
+        - restrictions
+        
 
+    ayamel.api.client_data_validator.update_field_whitelist:
+        - title
+        - type
+        - description
+        - public
+        - relations
+        - l2Data
+        - copyright
+        - keywords
+        - categories
+        - origin
+        - client
+        - restrictions
+        
 services:
     ayamel.api.client_data_validator:
         class: Ayamel\ApiBundle\Validation\ClientResourceDataValidator
+        arguments: [%ayamel.api.client_data_validator.create_field_whitelist%, %ayamel.api.client_data_validator.update_field_whitelist%]
 
     ayamel.api.upload_token_manager:
         class: Ayamel\ApiBundle\Validation\UploadTokenManager

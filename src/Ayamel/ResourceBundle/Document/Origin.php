@@ -40,9 +40,9 @@ class Origin {
      * format.  In the case of an image of a painting, this could be the general
      * time period of when the painting was created.
      * 
-     * @MongoDB\Date
+     * @MongoDB\String
      * @JMS\SerializedName("date")
-     * @JMS\Type("DateTime")
+     * @JMS\Type("string")
      */
 	protected $date;
     
