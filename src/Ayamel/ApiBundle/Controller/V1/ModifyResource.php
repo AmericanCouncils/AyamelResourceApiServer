@@ -20,7 +20,7 @@ class ModifyResource extends ApiController {
      *      return="Ayamel\ResourceBundle\Document\Resource",
      *      input="Ayamel\ResourceBundle\Document\Resource",
      *      filters={
-     *          {"name"="_format", "default"="json", "description"="Return format, can be one of xml, yml or json"}
+     *          {"name"="_format", "dataType"="string", "default"="json", "description"="Return format, can be one of xml, yml or json"}
      *      }
      * );
      *

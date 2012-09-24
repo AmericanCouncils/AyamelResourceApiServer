@@ -23,38 +23,14 @@ class ClientResourceDataValidator {
      *
      * @var array
      */
-    protected $creationFieldWhitelist = array(
-        'title',
-        'type',
-        'description',
-        'public',
-        'relations',
-        'l2Data',
-        'copyright',
-        'keywords',
-        'categories',
-        'origin',
-        'client'
-    );
+    protected $creationFieldWhitelist = array();
     
     /**
      * Fields allowed to be set by the client during update operations.
      *
      * @var array
      */
-    protected $updateFieldWhitelist = array(
-        'title',
-        'type',
-        'description',
-        'public',
-        'relations',
-        'l2Data',
-        'copyright',
-        'keywords',
-        'categories',
-        'origin',
-        'client'
-    );
+    protected $updateFieldWhitelist = array();
     
     /**
      * Construct allows modifying default field whitelists used during create and update.
