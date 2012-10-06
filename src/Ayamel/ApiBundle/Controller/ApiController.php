@@ -59,9 +59,9 @@ abstract class ApiController extends Controller
             throw $this->createHttpException(404, "The requested resource does not exist.");
         }
         
-        //throw access denied exception if resource isn't public and client doesn't own it
-        $restrictions = $resource->getRestrictions();
-        if(!empty($restrictions)) {
+        //throw access denied exception if resource has visibility restrictions
+        $visibility = $resource->getVisibility();
+        if(!empty($visibility)) {
 //          if(!in_array($this->getApiClient()->getKey(), $restrictions)) {
                 //throw $this->createHttpException(403, "You are not authorized to view the requested resource.");
 //          }

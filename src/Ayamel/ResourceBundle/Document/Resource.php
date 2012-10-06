@@ -126,19 +126,8 @@ class Resource {
      * @MongoDB\Hash
      * @JMS\Type("array<string>")
      */
-    protected $restrictions;
+    protected $visibility;
         
-    /**
-     * An object containing linguistically relevant data for search.
-     * 
-     * *TODO:* this is not done, it's critical.
-     * 
-     * @MongoDB\Hash
-     * @JMS\SerializedName("l2Data")
-     * @JMS\Type("array")
-     */
-    protected $l2Data;
-    
     /**
      * The date the Resource was added into the database.
      * 
@@ -353,93 +342,25 @@ class Resource {
     }
 
     /**
-     * Set restrictions
+     * Set visibility
      *
      * @param boolean $public
      */
-    public function setRestrictions(array $restrictions = null)
+    public function setVisibility(array $visibility = null)
     {
-        $this->restrictions = $restrictions;
+        $this->visibility = $visibility;
     }
 
     /**
-     * Get restrictions
+     * Get visibility
      *
      * @return boolean $public
      */
-    public function getRestrictions()
+    public function getVisibility()
     {
-        return $this->restrictions;
-    }
-
-    /**
-     * Set l2Data
-     *
-     * @param hash $l2Data
-     */
-    public function setL2Data(array $l2Data = null)
-    {
-        $this->l2Data = $l2Data;
-    }
-
-    /**
-     * Get l2Data
-     *
-     * @return hash $l2Data
-     */
-    public function getL2Data()
-    {
-        return $this->l2Data;
+        return $this->visibility;
     }
     
-    /**
-     * Returns a specific l2Data field by key, or a default value if it doesn't exist
-     *
-     * @param string $key 
-     * @param mixed $default 
-     * @return mixed
-     */
-    public function getL2Datum($key, $default = null) {
-        return isset($this->l2Data[$key]) ? $this->l2Data[$key] : $default;
-    }
-    
-    /*
-     * Add an individual l2Data property
-     *
-     * @param string $key 
-     * @param mixed $val 
-     * @return self
-     */
-    public function addL2Datum($key, $val) {
-        $this->l2Data[$key] = $val;
-        return $this;
-    }
-
-    /**
-     * Return true/false if specific l2Data property exists
-     *
-     * @param string $key 
-     * @return boolean
-     */
-    public function hasL2Datum($key) {
-        return isset($this->l2Data[$key]);
-    }
-    
-    /**
-     * remove specific l2Data property
-     *
-     * @param string $key 
-     * @return void
-     * @author Evan Villemez
-     */
-    public function removeL2Datum($key) {
-        if(isset($this->l2Data[$key])) {
-            unset($$this->l2Data[$key]);
-        }
-        
-        return $this;
-    }
-
     /**
      * Set dateAdded
      *
@@ -526,7 +447,7 @@ class Resource {
      * @param string $license 
      */
     public function setLicense($license) {
-        return $this->license;
+        $this->license = $license;
     }
     
     /**

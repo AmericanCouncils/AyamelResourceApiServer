@@ -32,7 +32,7 @@ parameters:
 services:
     ayamel.api.client_data_validator:
         class: Ayamel\ApiBundle\Validation\ClientResourceDataValidator
-        arguments: [%ayamel.api.client_data_validator.create_field_whitelist%, %ayamel.api.client_data_validator.update_field_whitelist%]
+        arguments: [%ayamel.api.client_data_validator.create_field_whitelist%, %ayamel.api.client_data_validator.update_field_whitelist%, @serializer]
 
     ayamel.api.upload_token_manager:
         class: Ayamel\ApiBundle\Validation\UploadTokenManager

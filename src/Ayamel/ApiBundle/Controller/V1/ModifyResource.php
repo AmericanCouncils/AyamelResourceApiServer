@@ -35,25 +35,26 @@ class ModifyResource extends ApiController {
         if(null != $resource->getDateDeleted()) {
             return $this->returnDeletedResource($resource);
         }
+
+//HACK TESTING
+$modifiedResource = $this->container->get('ac.webservices.validator')->modifyObjectFromRequest('Ayamel\ResourceBundle\Document\Resource', $this->getRequest(), $resource);
         
         //get the resource validator
-        $validator = $this->container->get('ayamel.api.client_data_validator');
-        
+//        $validator = $this->container->get('ayamel.api.client_data_validator');        
         //decode incoming data
-        $data = $validator->decodeIncomingResourceDataByRequest($this->getRequest());
-        
+//        $data = $validator->decodeIncomingResourceDataByRequest($this->getRequest());      
         //validate incoming fields and modify resource
-        $resource = $validator->modifyAndValidateExistingResource($resource, $data);
-                        
+//        $resource = $validator->modifyAndValidateExistingResource($resource, $data);
+
         //save it
         try {
-            $this->container->get('ayamel.resource.manager')->persistResource($resource);
+            $this->container->get('ayamel.resource.manager')->persistResource($modifiedResource);
         } catch (\Exception $e) {
             throw $this->createHttpException(400, $e->getMessage());
         }
         
         //notify rest of system of modified resource
-        $event = new ApiEvent($resource);
+        $event = new ApiEvent($modifiedResource);
         $this->container->get('ayamel.api.dispatcher')->dispatch(Events::RESOURCE_MODIFIED, $event);
         
         //return it
@@ -62,7 +63,7 @@ class ModifyResource extends ApiController {
             'response' => array(
                 'code' => 200,
             ),
-            'resource' => $resource
+            'resource' => $modifiedResource
         );
         
         return $content;

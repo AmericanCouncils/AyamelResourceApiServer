@@ -100,6 +100,8 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
         $this->format = $request->query->get('_format', $this->format);
         //TODO: check headers for specified format
         
+        //TODO: implement JSONP, if request, _callback param is required, otherwise it's 400
+        
         //check if we should suppress http response codes, and always default to 200
         $this->suppress_response_codes = $request->query->get('_suppress_codes', false);
         
@@ -194,6 +196,8 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
         
         //load serializer, encode response structure into requested format
         $content = $this->container->get('serializer')->serialize($data, $this->format);
+        
+        //TODO: implement JSONP support, if _callback is present, use it
         
         //build the response
         $response = new Response($content, $outgoingStatusCode, array('content-type' => $this->formatHeaders[$this->format]));

@@ -40,10 +40,9 @@ class FileReference {
     protected $internalUri;
     
     /**
-     * A string including the type and quality. in the 
-     * format of `type`;`quality`.  For example: `transcoding;2`
+     * A string describing the representation.     
      *
-     * Valid types include:
+     * Valid values include:
      *
      * - **original** - If this is the original file.
      * - **transcoding** - If this file is a transcoding of the original in its entirety.
@@ -57,17 +56,34 @@ class FileReference {
     protected $representation;
     
     /**
-     * The mime type of the file.
+     * An integer describing the relative quality.  Higher means higher quality relative to others.
+     *
+     * @MongoDB\Int
+     * @JMS\Type("integer")
+     */
+    protected $quality;
+    
+    /**
+     * The full mime string of the file, in as much detail as possible.
      * 
      * @MongoDB\String
      * @JMS\Type("string")
      */
     protected $mime;
+    
+    /**
+     * The short mime type of the file
+     *
+     * @MongoDB\String
+     * @JMS\Type("string")
+     */
+    protected $mimeType;
 
 	/**
 	 * @MongoDB\Boolean
      * @JMS\Exclude
      * @JMS\ReadOnly
+     * @JMS\Type("boolean")
 	 */
 	private $original;
 
@@ -131,15 +147,32 @@ class FileReference {
     }
     
     /**
-     * Set the representation string in the format of "type;quality"
-     * 
-     * Type can be any of "original","summary", or "transcoding"
-     * Quality can be a floating point number of up to 4 digits.
+     * Set the representation string, which can an be any of "original","summary", or "transcoding"
      *
      * @param string $representation 
      */
     public function setRepresentation($representation) {
         $this->representation = $representation;
+    }
+    
+    /**
+     * Get the relative quality
+     *
+     * @return null|integer
+     */
+    public function getQuality()
+    {
+        return $this->quality;
+    }
+    
+    /**
+     * Set the relative quality
+     *
+     * @param int $quality 
+     */
+    public function setQuality($quality)
+    {
+        $this->quality = $quality;
     }
 
     /**

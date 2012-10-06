@@ -7,8 +7,8 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use AC\WebServicesBundle\EventListener\ApiWorkflowSubscriber;
 
-
-//TODO: listen for all kernel events, firing an early/late listener pair.
+//TODO: REIMPLEMENT THIS AS A FIREWALL LISTENER
+//TODO: listen for all kernel events, firing an early/late listener pair.... maybe
 
 /**
  * A listener that monitors for incoming requests under `/rest/`.  When detected, registers the RestWorkflowSubscriber to handle Api events.
@@ -36,7 +36,7 @@ class ApiBootstrapListener {
         $request = $e->getRequest();
 
         //if requested path contains `/rest/`, register the RestWorkflowListener
-        if(false !== strpos($request->getPathInfo(), "/rest/")) {
+        if(false !== strpos($request->getPathInfo(), "/api/")) {
             //build rest subscriber
             $subscriber = new RestWorkflowSubscriber($this->container);
 

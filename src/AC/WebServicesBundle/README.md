@@ -28,12 +28,9 @@ This bundle provides generic api workflow tools for developing RESTful apis.  Pr
 
 To activate the event listeners that handle API requests, include `/rest/` in the path of the API routes you want to be handled.  If it matches, event listeners will be added to invoke content format negotiation, error handling, and view handling, which will allow you to return raw data structures and objects that will automatically be encoded into the requested format.
 
-## Documentation ##
-
-Eventually there will be real documentation [here](Resources/docs/index.md).
-	
 ## Todo list ##
 
+* Implement client object validator
 * Implement ServiceResponse class
 * provide documentation generation commands based on definition files
 * provide code client generation commands based on defintion files

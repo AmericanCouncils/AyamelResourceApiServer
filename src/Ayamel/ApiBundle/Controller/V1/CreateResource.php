@@ -35,7 +35,8 @@ class CreateResource extends ApiController {
      * @param Request $request 
      */
 	public function executeAction(Request $request) {
-				
+		
+        /*
 		//get validator
 		$validator = $this->container->get('ayamel.api.client_data_validator');
 		
@@ -44,6 +45,10 @@ class CreateResource extends ApiController {
 		
 		//build a new resource instance based on received data
 		$resource = $validator->createAndValidateNewResource($data);
+        */
+        
+        //create object from client request
+        $resource = $this->container->get('ac.webservices.validator')->createObjectFromRequest('Ayamel\ResourceBundle\Document\Resource', $this->getRequest());
 		
 		//set the properties controlled by the resource library
 		$resource->setStatus(Resource::STATUS_AWAITING_CONTENT);

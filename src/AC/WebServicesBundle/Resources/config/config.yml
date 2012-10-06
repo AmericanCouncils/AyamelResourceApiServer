@@ -4,3 +4,11 @@ services:
         arguments:    [@service_container]
         tags:
             -  { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 1000 }
+
+    ac.webservices.validator:
+        class:      AC\WebServicesBundle\Util\ClientObjectValidator
+        arguments:  [@jms_serializer.metadata_factory, @serializer, @ac.webservices.jms_parser]
+    
+    ac.webservices.jms_parser:
+        class: AC\WebServicesBundle\Util\JmsDataTypeParser
+        
