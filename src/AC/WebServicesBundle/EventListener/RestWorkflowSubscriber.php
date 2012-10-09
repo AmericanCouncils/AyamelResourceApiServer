@@ -2,6 +2,7 @@
 
 namespace AC\WebServicesBundle\EventListener;
 
+use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -12,10 +13,11 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use AC\WebServicesBundle\Response\ServiceResponse;
 
 /**
- * TODO: needs to be properly abstracted, some functionality needs to move out of here and into Ayamel\ApiBundle... could do this via special event dispatchers
  * TODO: Need to implement ServiceResponse where possible
  * TODO: Need to make formatHeaders configurable
  * TODO: Need to implement ServiceException + configuration, + kernel listener for proper handling
@@ -23,11 +25,19 @@ use Symfony\Component\HttpFoundation\Response;
 
 
 /**
- * A listener that monitors input/output for all requests under `/rest/`.  Enforces accept header, logs requests and handles exceptions thrown by Controllers.
+ * A listener that monitors input/output for all REST api requests.  Enforces accept header, logs requests and handles exceptions thrown by Controllers.
  *
  * @author Evan Villemez
  */
 class RestWorkflowSubscriber implements EventSubscriberInterface {
+    
+    const API_REQUEST = 'webservice.request';
+    
+    const API_EXCEPTION = 'webservice.exception';
+    
+    const API_RESPONSE = 'webservice.response';
+    
+    const API_TERMINATE = 'webservice.terminate';
 
     /**
      * @var Symfony\Component\DependencyInjection\ContainerInterface
@@ -46,7 +56,7 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
      *
      * @var string
      */
-    protected $format = 'json';
+    protected $defaultResponseFormat = 'json';
     
     /**
      * Array of content-type headers to used, keyed by requested serialization format.
@@ -59,6 +69,10 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
         'yml' => 'text/yaml'
     );
     
+    private $responseFormat;
+    
+    private $isJsonp = false;
+    
     /**
      * Whether or not to suppress http error codes and always return 200 ok, even in event of error. (This may be necessary for some clients, such as Adobe Flash)
      *
@@ -66,62 +80,49 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
      */
     protected $suppress_response_codes = false;
 
-    public function __construct(ContainerInterface $container) {
+    /**
+     * Constructor needs container and a default response format.
+     *
+     * @param ContainerInterface $container 
+     * @param string $defaultResponseFormat 
+     */
+    public function __construct(ContainerInterface $container, $defaultResponseFormat = 'json')
+    {
         $this->container = $container;
-//      $this->dispatcher = $this->container->get('web_services.dispatcher');
-        //$this->exceptionCodes = $this->container->getParameter('web_services.exception_codes');
+        $this->defaultResponseFormat = $this->responseFormat = $defaultResponseFormat;
+        
     }
     
     /**
-     * Register a listener for all kernel events to implement api-specific workflow.
+     * {@inheritdoc}
      */
     public static function getSubscribedEvents() {
         return array(
-            KernelEvents::CONTROLLER => array('onApiController', 1000),
-            KernelEvents::EXCEPTION => array('onApiException', 1000),
-            KernelEvents::RESPONSE => array('onApiResponse', 1000),
-            KernelEvents::VIEW => array('onApiView', 1000),
-            KernelEvents::TERMINATE => array('onApiTerminate', 1000),
+            KernelEvents::EXCEPTION => array('onApiException', 1024),
+            KernelEvents::RESPONSE => array('onApiResponse', 1024),
+            KernelEvents::VIEW => array('onApiView', 1024),
+            KernelEvents::TERMINATE => array('onApiTerminate', 1024),
         );
     }
 
     /**
-     * Note that this event listener is NOT registered - it is called manually by the ApiBootstrapListener.
+     * Note that this event listener is NOT registered - it is called manually by the ApiBootstrapListener (TEMPORARY).
      *
      * @param GetResponseEvent $e 
      */
     public function onApiRequest(GetResponseEvent $e) {
         $request = $e->getRequest();
         
-        //get default format
-        $this->format = $this->container->hasParameter('ayamel.api.default_format') ? $this->container->getParameter('ayamel.api.default_format') : 'json';
+        //now check for best response format
+        $this->responseFormat = $this->negotiateResponseFormat($request);
         
-        //now check for client-specified format overrides
-        $this->format = $request->query->get('_format', $this->format);
-        //TODO: check headers for specified format
-        
-        //TODO: implement JSONP, if request, _callback param is required, otherwise it's 400
+        //generic validation regarding request/response formats
+        $this->validateRequest($request);
         
         //check if we should suppress http response codes, and always default to 200
         $this->suppress_response_codes = $request->query->get('_suppress_codes', false);
-        
-        //make sure the request format is valid, exception if not
-        if(!isset($this->formatHeaders[$this->format])) {
-            $this->format = 'json';
-            throw new HttpException(415);
-        }
                 
-        //TODO (MAYBE): get api client instance, set in container... ?, if no client, throw 401 - or use plug into the Security component for this... depends
-        
-    }
-
-    /**
-     * Called once the controller to be used has been resolved.
-     */
-    public function onApiController(FilterControllerEvent $e) {
-        //any auth logic if not integrated into security component, possibly profiling logic as well
-        
-        //TODO: check for format in the url
+        $e->getDispatcher()->dispatch(self::API_REQUEST, $e);
     }
 
     /**
@@ -158,12 +159,14 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
         }
         
         //serialize error content into requested format
-        $content = $this->container->get('serializer')->serialize($errorData, $this->format);
+        $content = $this->container->get('serializer')->serialize($errorData, $this->responseFormat);
                                 
         //build response
-        $response = new Response($content, $outgoingHttpStatusCode, array('content-type' => $this->formatHeaders[$this->format]));
+        $response = new Response($content, $outgoingHttpStatusCode, array('content-type' => $this->formatHeaders[$this->responseFormat]));
         
         $e->setResponse($response);
+
+        $e->getDispatcher()->dispatch(self::API_EXCEPTION, $e);
     }
 
     /**
@@ -172,22 +175,25 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
     public function onApiResponse(FilterResponseEvent $e) {
         //if supression is active, always return 200 no matter what
         if($this->suppress_response_codes) {
-            $response = $e->getResponse();
-            $response->setStatusCode(200);
+            $response = $e->getResponse()->setStatusCode(200);
         }
 
         //TODO: compare returned response with request header accepted mimes, modify accordingly, and prepare the response (if not already done, it may be unnecessary)
-        //$kernel->prepare($request, $response);
+        //$this->container->get('kernel')->prepare($request, $response); //do this here or elsewhere?
+        $e->getDispatcher()->dispatch(self::API_RESPONSE, $e);
     }
 
     /**
      * Called when a controller does not return a response object.  Checks specifically for content structures expected by the resource API.
      */
-    public function onApiView(GetResponseForControllerResultEvent $e) {
+    public function onApiView(GetResponseForControllerResultEvent $e)
+    {
         $request = $e->getRequest();
         $data = $e->getControllerResult();
         
-        //TODO: Implement an ApiResponse class, with cache/code/status controls that can be processed here
+        if ($data instanceof ServiceResponse) {
+            //TODO: Implement an ApiResponse class, with cache/code/status controls that can be processed here
+        }        
 
         //figure out meta status and code, and actual outgoing http response code
         $httpStatusCode = isset($data['response']['code']) ? $data['response']['code'] : 200;
@@ -195,23 +201,50 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
         $outgoingStatusCode = $this->suppress_response_codes ? 200 : $httpStatusCode;
         
         //load serializer, encode response structure into requested format
-        $content = $this->container->get('serializer')->serialize($data, $this->format);
+        $content = $this->container->get('serializer')->serialize($data, $this->responseFormat);
         
-        //TODO: implement JSONP support, if _callback is present, use it
+        //if JSONP, use _callback param
+        if ($this->isJsonp) {
+            $content = sprintf("%s(%s);", $this->jsonpCallback, $content);
+        }
         
-        //build the response
-        $response = new Response($content, $outgoingStatusCode, array('content-type' => $this->formatHeaders[$this->format]));
-                
-        $e->setResponse($response);
+        //set the final response
+        $e->setResponse(new Response($content, $outgoingStatusCode, array('content-type' => $this->formatHeaders[$this->responseFormat])));
     }
     
     /**
      * Called after a response has already been sent.  Any shutdown/bookeeping functionality should initiate here.
      */
-    public function onApiTerminate(PostResponseEvent $e) {
-
-        //TODO: log the request, maybe do this via dispatching listeners instead of directly?
-        //$restDispatcher->dispatch(Events::REST_TERMINATE);
+    public function onApiTerminate(PostResponseEvent $e)
+    {
+        $e->getDispatcher()->dispatch(self::API_TERMINATE, $e);
+    }
+    
+    
+    protected function validateRequest(Request $request)
+    {
+        //check for jsonp, make sure it's valid if so
+        if ('jsonp' === $this->responseFormat) {
+            $this->responseFormat = 'json';
+            $this->isJsonp = true;
+            if (!$this->jsonpCallback = $request->query->get('_callback', false)) {
+                throw new HttpException(400, "The [_callback] parameter was not specified, and is required for JSONP responses.");
+            }
+        }
+ 
+        //make sure the request format is valid, exception if not
+        if(!isset($this->formatHeaders[$this->responseFormat])) {
+            throw new HttpException(415);
+        }
+        
+    }
+    
+    public function negotiateResponseFormat(Request $request)
+    {
+        //TODO: eventual robust content negotiation here, for now just check query string
+        $responseFormat = strtolower($request->query->get('_format', $this->defaultResponseFormat));
+        
+        return $responseFormat;
     }
 
 }

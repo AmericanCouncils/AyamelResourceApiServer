@@ -1,4 +1,6 @@
 parameters:
+    ac.webservices.api_paths:
+        - "/api/"
     ayamel.api.token_cache_dir: %kernel.cache_dir%/ayamel_upload_tokens
     ayamel.api.client_data_validator.create_field_whitelist:
         - title

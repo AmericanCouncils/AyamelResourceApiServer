@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Base Resource persistence class
  *
- * @MongoDB\Document(db="ayamel", collection="resources")
+ * @MongoDB\Document(db="ayamel", collection="ratings")
  * @JMS\ExclusionPolicy("none")
  */
 class Rating
@@ -18,32 +18,43 @@ class Rating
     /**
      * An optional weight for this Rating.
      *
-     * @JMS/Type("integer")
-     * @MongoDB/Int
+     * @JMS\Type("integer")
+     * @MongoDB\Int
      */
     public $weight;
     
+    /**
+     * The type of rater.
+     *
+     * @JMS\Type("string")
+     * @MongoDB\String
+     */
     public $raterType;
     
+    /**
+     * A difficulty rating on a scale of 1-100.
+     *
+     * @JMS\Type("integer")
+     * @MongoDB\Int
+     */
     public $difficulty;
-    
-    
-    
     
 	/**
 	 * Unique ID for Mongo
 	 *
-	 * @JMS/ReadOnly
-	 * @MongoDB/Id
+	 * @JMS\ReadOnly
+     * @JMS\Type("string")
+	 * @MongoDB\Id
 	 */
     protected $id;
     
     /**
      * ID of Resource the rating is for
      *
-	 * @JMS/ReadOnly
-	 * @JMS/Type("string")
-	 * @MongoDB/String
+	 * @JMS\ReadOnly
+	 * @JMS\Type("string")
+	 * @MongoDB\String
      */
     protected $resourceId;
+    
 }

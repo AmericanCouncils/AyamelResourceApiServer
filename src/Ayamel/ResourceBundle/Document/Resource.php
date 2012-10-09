@@ -222,6 +222,7 @@ class Resource {
      * 
      * @MongoDB\EmbedMany(targetDocument="Ayamel\ResourceBundle\Document\Relation")
      * @JMS\Type("array<Ayamel\ResourceBundle\Document\Relation>")
+     * @JMS\ReadOnly
      */
     protected $relations;
         
