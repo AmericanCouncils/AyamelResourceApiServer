@@ -19,7 +19,7 @@ class Search extends ApiController {
      *
      * @ApiDoc(
      *      resource=true,
-     *      description="Add a Relation between two Resources",
+     *      description="Search for resources",
      *      filters={
      *          {"name"="foo", "description"="bar"},
      *          {"name"="baz", "description"="barf"}

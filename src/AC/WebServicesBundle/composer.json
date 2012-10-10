@@ -1,7 +1,7 @@
 {
     "name": "ac/web-services-bundle",
     "type": "symfony-bundle",
-    "description": "This Bundle provides tools and error handling for more easily developing web service APIs.",
+    "description": "This Bundle provides tools and error handling for easily developing RESTful APIs.",
     "keywords": ["api", "rest"],
     "license": "MIT",
     "authors": [
@@ -16,5 +16,8 @@
     "target-dir": "AC/WebServicesBundle",
     "require": {
         "jms/serializer-bundle": "dev-master"
+    },
+    "suggest": {
+        "nelmio/api-doc-bundle": "dev-master"
     }
 }

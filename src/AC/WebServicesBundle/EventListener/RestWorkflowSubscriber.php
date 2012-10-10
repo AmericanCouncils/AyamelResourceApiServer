@@ -25,7 +25,7 @@ use AC\WebServicesBundle\Response\ServiceResponse;
 
 
 /**
- * A listener that monitors input/output for all REST api requests.  Enforces accept header, logs requests and handles exceptions thrown by Controllers.
+ * A listener that monitors input/output for all REST api requests.
  *
  * @author Evan Villemez
  */
@@ -44,19 +44,6 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
      */
     protected $container;
     
-    /**
-     * The event dispathcher used specifically for API events.
-     * 
-     * @var Symfony\Component\EventDispatcher\EventDispatcherInterface
-     */
-    protected $dispatcher;
-    
-    /**
-     * String format to use during view events, passed to the JMS Serializer.  Default is JSON unless specified otherwise in configuration.
-     *
-     * @var string
-     */
-    protected $defaultResponseFormat = 'json';
     
     /**
      * Array of content-type headers to used, keyed by requested serialization format.
@@ -66,31 +53,42 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
     protected $formatHeaders = array(
         'json' => 'application/json',
         'xml' => 'application/xml',
-        'yml' => 'text/yaml'
+        'yml' => 'text/yaml',
+        'html' => 'text/html'
     );
     
+    private $defaultResponseFormat;
+
     private $responseFormat;
     
-    private $isJsonp = false;
+    private $allowCodeSuppression;
     
-    /**
-     * Whether or not to suppress http error codes and always return 200 ok, even in event of error. (This may be necessary for some clients, such as Adobe Flash)
-     *
-     * @var boolean
-     */
-    protected $suppress_response_codes = false;
+    private $includeResponseData;
+    
+    private $exceptionMap;
+    
+    private $includeDevExceptions;
+
+    private $isJsonp = false;
+
+    private $jsonpCallback;    
+
+    private $suppress_response_codes = false;
 
     /**
-     * Constructor needs container and a default response format.
+     * Constructor needs container and some behavior configs.
      *
      * @param ContainerInterface $container 
      * @param string $defaultResponseFormat 
      */
-    public function __construct(ContainerInterface $container, $defaultResponseFormat = 'json')
+    public function __construct(ContainerInterface $container, $defaultResponseFormat, $includeResponseData, $allowCodeSuppression, $includeDevExceptions, $exceptionMap = array())
     {
         $this->container = $container;
         $this->defaultResponseFormat = $this->responseFormat = $defaultResponseFormat;
-        
+        $this->includeResponseData = $includeResponseData;
+        $this->exceptionMap = $exceptionMap;
+        $this->allowCodeSuppression = $allowCodeSuppression;
+        $this->includeDevExceptions = $includeDevExceptions;
     }
     
     /**
@@ -106,7 +104,7 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
     }
 
     /**
-     * Note that this event listener is NOT registered - it is called manually by the ApiBootstrapListener (TEMPORARY).
+     * Note that this event listener is NOT registered - it is called manually by the ApiBootstrapListener (for now).
      *
      * @param GetResponseEvent $e 
      */
@@ -120,7 +118,7 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
         $this->validateRequest($request);
         
         //check if we should suppress http response codes, and always default to 200
-        $this->suppress_response_codes = $request->query->get('_suppress_codes', false);
+        $this->suppress_response_codes = ($this->allowCodeSuppression) ? $request->query->get('_suppress_codes', false) : false;
                 
         $e->getDispatcher()->dispatch(self::API_REQUEST, $e);
     }
@@ -129,16 +127,32 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
      * Called if an exception was thrown at any point.
      */
     public function onApiException(GetResponseForExceptionEvent $e) {
+        //notify of generic API error, return early if a response gets set
+        $e->getDispatcher()->dispatch(self::API_EXCEPTION, $e);
+        if ($e->getResponse()) {
+            return;
+        }
+        
         //handle exception body format
         $exception = $e->getException();
+        $exceptionClass = get_class($exception);
         
         //preserve specific http exception codes and messages, otherwise it's 500
-        $realHttpErrorCode = $outgoingHttpStatusCode = ($exception instanceof HttpException) ? $exception->getStatusCode() : 500;
-        if($this->suppress_response_codes == true) {
-            $outgoingHttpStatusCode = 200;
+        $realHttpErrorCode = $outgoingHttpStatusCode = 500;
+        $errorMessage = "Internal Server Error";
+        if ($exception instanceof HttpException) {
+            $realHttpErrorCode = $outgoingHttpStatusCode = $exception->getStatusCode();
+            $errorMessage = ($exception->getMessage()) ? $exception->getMessage() : Response::$statusTexts[$realHttpErrorCode];
+        } elseif (isset($this->exceptionMap[$exceptionClass])) {
+            //check exception map for overrides
+            $realHttpErrorCode = $this->exceptionMap[0];
+            $errorMessage =
+                (isset($this->exceptionMap[$exceptionClass][1]))
+                ? $this->exceptionMap[$exceptionClass][1]
+                : Response::$statusTexts[$realHttpErrorCode];
         }
-        $errorMessage = ($exception instanceof HttpException) ? (null != $exception->getMessage() ? $exception->getMessage() : Response::$statusTexts[$realHttpErrorCode]) : "Internal Server Error";
-        
+
+        //set generic error data
         $errorData = array(
             'response' => array(
                 'code' => $realHttpErrorCode,
@@ -146,27 +160,28 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
             )
         );
         
-        //inject exception data if we're in dev mode
-        if('dev' === $this->container->get('kernel')->getEnvironment()) {
+        //inject exception data if we're in dev mode and enabled
+        if($this->includeDevExceptions && 'dev' === $this->container->get('kernel')->getEnvironment()) {
             $errorData['exception'] = array(
                 'class' => get_class($exception),
                 'message' => $exception->getMessage(),
                 'code' => $exception->getCode(),
                 'file' => $exception->getFile(),
                 'line' => $exception->getLine(),
-                'trace' => explode("#", $exception->getTraceAsString())
+                'trace' => explode("#", $exception->getTraceAsString()),
             );
         }
         
         //serialize error content into requested format
         $content = $this->container->get('serializer')->serialize($errorData, $this->responseFormat);
-                                
-        //build response
-        $response = new Response($content, $outgoingHttpStatusCode, array('content-type' => $this->formatHeaders[$this->responseFormat]));
         
-        $e->setResponse($response);
-
-        $e->getDispatcher()->dispatch(self::API_EXCEPTION, $e);
+        //check for code suppression
+        if($this->suppress_response_codes) {
+            $outgoingHttpStatusCode = 200;
+        }
+        
+        //set response
+        $e->setResponse(new Response($content, $outgoingHttpStatusCode, array('content-type' => $this->formatHeaders[$this->responseFormat])));
     }
 
     /**
@@ -191,29 +206,50 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
         $request = $e->getRequest();
         $data = $e->getControllerResult();
         
+        //set defaults
+        $responseCode = 200;
+        $headers = array();
+        $template = null;
+        
+        //check specifically for service response
         if ($data instanceof ServiceResponse) {
-            //TODO: Implement an ApiResponse class, with cache/code/status controls that can be processed here
-        }        
+            $responseCode = $data->getResponseCode();
+            $headers = $data->getResponseHeaders();
+            $data = $data->getResponseData();
+        }
 
-        //figure out meta status and code, and actual outgoing http response code
-        $httpStatusCode = isset($data['response']['code']) ? $data['response']['code'] : 200;
-        $data['response']['message'] = isset($data['response']['message']) ? $data['response']['message'] : Response::$statusTexts[$httpStatusCode];
-        $outgoingStatusCode = $this->suppress_response_codes ? 200 : $httpStatusCode;
+        $outgoingStatusCode = $this->suppress_response_codes ? 200 : $responseCode;
         
-        //load serializer, encode response structure into requested format
-        $content = $this->container->get('serializer')->serialize($data, $this->responseFormat);
+        //inject response data?
+        if ($this->includeResponseData && is_array($data) && !isset($data['response'])) {
+            $data['response'] = array(
+                'code' => $responseCode,
+                'message' => Response::$statusTexts[$responseCode],
+            );
+        }
+
+        //render content accordingly
+        if ($template) {
+            $content = $this->container->get('templating')->render($template, $data);
+        } else {
+            //load serializer, encode response structure into requested format
+            $content = $this->container->get('serializer')->serialize($data, $this->responseFormat);
         
-        //if JSONP, use _callback param
-        if ($this->isJsonp) {
-            $content = sprintf("%s(%s);", $this->jsonpCallback, $content);
+            //if JSONP, use _callback param
+            if ($this->isJsonp) {
+                $content = sprintf("%s(%s);", $this->jsonpCallback, $content);
+            }
         }
         
+        //merge headers
+        $headers = array_merge($headers, array('content-type' => $this->formatHeaders[$this->responseFormat]));
+        
         //set the final response
-        $e->setResponse(new Response($content, $outgoingStatusCode, array('content-type' => $this->formatHeaders[$this->responseFormat])));
+        $e->setResponse(new Response($content, $outgoingStatusCode, $headers));
     }
     
     /**
-     * Called after a response has already been sent.  Any shutdown/bookeeping functionality should initiate here.
+     * Called after a response has already been sent.
      */
     public function onApiTerminate(PostResponseEvent $e)
     {
@@ -223,12 +259,16 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
     
     protected function validateRequest(Request $request)
     {
-        //check for jsonp, make sure it's valid if so
+        //check for jsonp, make sure it's valid
         if ('jsonp' === $this->responseFormat) {
             $this->responseFormat = 'json';
             $this->isJsonp = true;
             if (!$this->jsonpCallback = $request->query->get('_callback', false)) {
-                throw new HttpException(400, "The [_callback] parameter was not specified, and is required for JSONP responses.");
+                throw new HttpException(400, "The [_callback] parameter is missing, and is required for JSONP responses.");
+            }
+            
+            if ("GET" !== $request->getMethod()) {
+                throw new HttpException(400, "JSONP can only be used with GET requests.");
             }
         }
  
@@ -236,13 +276,12 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
         if(!isset($this->formatHeaders[$this->responseFormat])) {
             throw new HttpException(415);
         }
-        
     }
     
     public function negotiateResponseFormat(Request $request)
     {
-        //TODO: eventual robust content negotiation here, for now just check query string
-        $responseFormat = strtolower($request->query->get('_format', $this->defaultResponseFormat));
+        //TODO: eventual robust content negotiation here, for now just check request for explicit declaration
+        $responseFormat = strtolower($request->get('_format', $this->defaultResponseFormat));
         
         return $responseFormat;
     }

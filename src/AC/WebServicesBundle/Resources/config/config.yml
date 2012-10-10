@@ -1,14 +1,30 @@
+parameters:
+    ac.webservices.default_response_format: json
+    ac.webservices.include_response_data: true
+    ac.webservices.allow_code_suppression: true
+    ac.webservices.include_dev_exceptions: true
+
+    # default blank object
+    ac.webservices.exception_map: {}
+
+    # default blank array
+    ac.webservices.api_paths: []
+
 services:
-    api_bootstrap_listener:
+    # can be used to create and/or modify objects annoted with JMSSerializerBundle annotations
+    # from an incoming request
+    ac.webservices.object_validator:
+        class:      AC\WebServicesBundle\Util\ClientObjectValidator
+        arguments:  [@jms_serializer.metadata_factory, @serializer, @ac.webservices.jms_parser]
+
+    # responsible for instantiating the API request listeners for matching paths
+    ac.webservices.request_listener:
         class:        AC\WebServicesBundle\EventListener\ApiBootstrapListener
         arguments:    [@service_container, %ac.webservices.api_paths%]
         tags:
-            -  { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 1000 }
-
-    ac.webservices.validator:
-        class:      AC\WebServicesBundle\Util\ClientObjectValidator
-        arguments:  [@jms_serializer.metadata_factory, @serializer, @ac.webservices.jms_parser]
+            -  { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 1024 }
     
+    #used internally in the object validator
     ac.webservices.jms_parser:
         class: AC\WebServicesBundle\Util\JmsDataTypeParser
-        
+        public: false

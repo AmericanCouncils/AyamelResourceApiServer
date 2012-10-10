@@ -37,7 +37,7 @@ class ModifyResource extends ApiController {
         }
 
 //HACK TESTING
-$modifiedResource = $this->container->get('ac.webservices.validator')->modifyObjectFromRequest('Ayamel\ResourceBundle\Document\Resource', $this->getRequest(), $resource);
+$modifiedResource = $this->container->get('ac.webservices.object_validator')->modifyObjectFromRequest('Ayamel\ResourceBundle\Document\Resource', $this->getRequest(), $resource);
         
         //get the resource validator
 //        $validator = $this->container->get('ayamel.api.client_data_validator');        
@@ -58,15 +58,7 @@ $modifiedResource = $this->container->get('ac.webservices.validator')->modifyObj
         $this->container->get('ayamel.api.dispatcher')->dispatch(Events::RESOURCE_MODIFIED, $event);
         
         //return it
-        //TODO: return $this->createServiceResponse($data, 200);
-        $content = array(
-            'response' => array(
-                'code' => 200,
-            ),
-            'resource' => $modifiedResource
-        );
-        
-        return $content;
+        return $this->createServiceResponse(array('resource' => $modifiedResource), 200);
     }
     
 }

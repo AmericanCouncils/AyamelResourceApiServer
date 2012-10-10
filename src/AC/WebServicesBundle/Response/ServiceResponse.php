@@ -40,6 +40,11 @@ class ServiceResponse {
         $this->responseData = $data;
     }
     
+    public function getResponseCode()
+    {
+        return $this->statusCode;
+    }
+    
     public function getResponseHeaders()
     {
         return $this->responseHeaders;

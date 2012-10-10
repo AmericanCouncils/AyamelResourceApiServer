@@ -34,15 +34,20 @@ class ApiBootstrapListener {
     public function onKernelRequest(GetResponseEvent $e) {
         $request = $e->getRequest();
 
-        foreach ($this->paths as $pathRegex) {
-            if (preg_match($pathRegex, $request->getPathInfo())) {
+        foreach ($this->paths as $regex) {
+            if (preg_match($regex, $request->getPathInfo())) {
                 //build rest subscriber
-                $subscriber = new RestWorkflowSubscriber($this->container);
+                $subscriber = new RestWorkflowSubscriber(
+                    $this->container,
+                    $this->container->getParameter('ac.webservices.default_response_format'),
+                    $this->container->getParameter('ac.webservices.include_response_data'),
+                    $this->container->getParameter('ac.webservices.allow_code_suppression'),
+                    $this->container->getParameter('ac.webservices.include_dev_exceptions')
+                );
 
                 //register subscriber with dispatcher
                 $this->container->get('event_dispatcher')->addSubscriber($subscriber);
 
-                //manually call subscriber's `onKernelRequest`
                 $subscriber->onApiRequest($e);
                 
                 return;

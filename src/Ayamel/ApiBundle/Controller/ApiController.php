@@ -4,6 +4,7 @@ namespace Ayamel\ApiBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Ayamel\ResourceBundle\Document\Resource;
+use AC\WebServicesBundle\Response\ServiceResponse;
 
 /**
  * A base API Controller to provide convenience methods for actions commonly performed in various places in the Ayamel Resource API.
@@ -39,6 +40,20 @@ abstract class ApiController extends Controller
      */
     protected function createHttpException($code = 500, $message = null) {
         return new \Symfony\Component\HttpKernel\Exception\HttpException($code, $message);
+    }
+    
+    /**
+     * Shortcut to create a ServiceResponse
+     *
+     * @param string $data 
+     * @param string $code 
+     * @param array $headers 
+     * @param string $template 
+     * @return ServiceResponse
+     */
+    protected function createServiceResponse($data, $code, $headers = array(), $template = null)
+    {
+        return new ServiceResponse($data, $code, $headers, $template);
     }
     
     /**
@@ -83,11 +98,8 @@ abstract class ApiController extends Controller
     }
     
     protected function returnDeletedResource(Resource $resource) {
-        return array(
-            'response' => array(
-                'code' => 410,
-            ),
-            'resource' => $resource,
-        );
+        //TODO: deleted resources can be cached indefinitely, implement this
+        
+        return new ServiceResponse(array('resource' => $resource), 410);
     }
 }
