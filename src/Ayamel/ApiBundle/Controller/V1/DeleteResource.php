@@ -54,12 +54,7 @@ class DeleteResource extends ApiController {
         $apiDispatcher->dispatch(Events::RESOURCE_DELETED, new ApiEvent($resource));
         
         //return ok
-        return array(
-            'response' => array(
-                'code' => 200
-            ),
-            'resource' => $resource
-        );
+        return $this->createServiceResponse(array('resource' => $resource, 200));
     }
 
 }

@@ -20,7 +20,7 @@ class ModifyResource extends ApiController {
      *      return="Ayamel\ResourceBundle\Document\Resource",
      *      input="Ayamel\ResourceBundle\Document\Resource",
      *      filters={
-     *          {"name"="_format", "default"="json", "description"="Return format, can be one of xml, yml or json"}
+     *          {"name"="_format", "dataType"="string", "default"="json", "description"="Return format, can be one of xml, yml or json"}
      *      }
      * );
      *
@@ -35,37 +35,30 @@ class ModifyResource extends ApiController {
         if(null != $resource->getDateDeleted()) {
             return $this->returnDeletedResource($resource);
         }
+
+//HACK TESTING
+$modifiedResource = $this->container->get('ac.webservices.object_validator')->modifyObjectFromRequest('Ayamel\ResourceBundle\Document\Resource', $this->getRequest(), $resource);
         
         //get the resource validator
-        $validator = $this->container->get('ayamel.api.client_data_validator');
-        
+//        $validator = $this->container->get('ayamel.api.client_data_validator');        
         //decode incoming data
-        $data = $validator->decodeIncomingResourceDataByRequest($this->getRequest());
-        
+//        $data = $validator->decodeIncomingResourceDataByRequest($this->getRequest());      
         //validate incoming fields and modify resource
-        $resource = $validator->modifyAndValidateExistingResource($resource, $data);
-                        
+//        $resource = $validator->modifyAndValidateExistingResource($resource, $data);
+
         //save it
         try {
-            $this->container->get('ayamel.resource.manager')->persistResource($resource);
+            $this->container->get('ayamel.resource.manager')->persistResource($modifiedResource);
         } catch (\Exception $e) {
             throw $this->createHttpException(400, $e->getMessage());
         }
         
         //notify rest of system of modified resource
-        $event = new ApiEvent($resource);
+        $event = new ApiEvent($modifiedResource);
         $this->container->get('ayamel.api.dispatcher')->dispatch(Events::RESOURCE_MODIFIED, $event);
         
         //return it
-        //TODO: return $this->createServiceResponse($data, 200);
-        $content = array(
-            'response' => array(
-                'code' => 200,
-            ),
-            'resource' => $resource
-        );
-        
-        return $content;
+        return $this->createServiceResponse(array('resource' => $modifiedResource), 200);
     }
     
 }

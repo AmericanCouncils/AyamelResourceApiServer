@@ -4,27 +4,27 @@
  * This... totally copy/pasted from Symfony/Bundle/FrameworkBundle/DependencyInjection/Compiler/RegisterKernelListenersPass.php
  */
 
-namespace Ayamel\ApiBundle\DependencyInjection\Compiler;
+namespace AC\WebServicesBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 
-class RegisterApiEventListenersPass implements CompilerPassInterface
+class RegisterWebserviceListenersPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition('ayamel.api.dispatcher')) {
+        if (!$container->hasDefinition('event_dispatcher')) {
             return;
         }
 
-        $definition = $container->getDefinition('ayamel.api.dispatcher');
+        $definition = $container->getDefinition('event_dispatcher');
 
-        foreach ($container->findTaggedServiceIds('ayamel.api.dispatcher.event_listener') as $id => $events) {
+        foreach ($container->findTaggedServiceIds('ac.webservice.listener') as $id => $events) {
             foreach ($events as $event) {
                 $priority = isset($event['priority']) ? $event['priority'] : 0;
 
                 if (!isset($event['event'])) {
-                    throw new \InvalidArgumentException(sprintf('Service "%s" must define the "event" attribute on "ayamel.api.dispatcher.event_listener" tags.', $id));
+                    throw new \InvalidArgumentException(sprintf('Service "%s" must define the "event" attribute on "webservice.listener" tags.', $id));
                 }
 
                 if (!isset($event['method'])) {
@@ -38,7 +38,7 @@ class RegisterApiEventListenersPass implements CompilerPassInterface
             }
         }
 
-        foreach ($container->findTaggedServiceIds('ayamel.api.dispatcher.event_subscriber') as $id => $attributes) {
+        foreach ($container->findTaggedServiceIds('ac.webservice.subscriber') as $id => $attributes) {
             // We must assume that the class value has been correcly filled, even if the service is created by a factory
             $class = $container->getDefinition($id)->getClass();
 

@@ -30,7 +30,7 @@ class MongoResourceStorage implements StorageInterface {
     /**
      * {@inheritdoc}
      */
-    function persistResource(Resource $resource) {
+    public function persistResource(Resource $resource) {
         $date = new \DateTime();
         if(!$resource->getId()) {
     		$resource->setDateAdded($date);
@@ -51,9 +51,10 @@ class MongoResourceStorage implements StorageInterface {
      * handling of future errors properly.
      * 
      */
-    function deleteResource(Resource $resource) {
+    public function deleteResource(Resource $resource) {
 
         //unset all fields (for now)
+        //TODO: preserve certain fields
         foreach(get_class_methods($resource) as $method) {
             if(0 === strpos($method, 'set')) {
                 $resource->$method(null);
@@ -69,12 +70,16 @@ class MongoResourceStorage implements StorageInterface {
         
         return $resource;
     }
-        
+    
     /**
      * {@inheritdoc}
      */
-    function getResourceById($id) {
+    public function getResourceById($id) {
         return $this->manager->getRepository('AyamelResourceBundle:Resource')->find($id);
     }
     
+    public function getResourcesByIds(array $ids)
+    {
+        throw new \RuntimeException(sprintf("Method [%s] not yet implemented.", __METHOD__));
+    }
 }

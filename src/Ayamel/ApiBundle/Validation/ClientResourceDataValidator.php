@@ -7,10 +7,6 @@ use Ayamel\ResourceBundle\Document\Resource;
 use Ayamel\ResourceBundle\Document\Relation;
 use Ayamel\ResourceBundle\ResourceDocumentsFactory;
 
-/*
-TODO: allowed categories should be specified in config and checked here
-*/
-
 /**
  * A class with convenience methods for decoding and validating incoming API data for create and update actions.
  *
@@ -23,38 +19,14 @@ class ClientResourceDataValidator {
      *
      * @var array
      */
-    protected $creationFieldWhitelist = array(
-        'title',
-        'type',
-        'description',
-        'public',
-        'relations',
-        'l2Data',
-        'copyright',
-        'keywords',
-        'categories',
-        'origin',
-        'client'
-    );
+    protected $creationFieldWhitelist = array();
     
     /**
      * Fields allowed to be set by the client during update operations.
      *
      * @var array
      */
-    protected $updateFieldWhitelist = array(
-        'title',
-        'type',
-        'description',
-        'public',
-        'relations',
-        'l2Data',
-        'copyright',
-        'keywords',
-        'categories',
-        'origin',
-        'client'
-    );
+    protected $updateFieldWhitelist = array();
     
     /**
      * Construct allows modifying default field whitelists used during create and update.
@@ -70,6 +42,8 @@ class ClientResourceDataValidator {
         if($updateFieldWhitelist) {
             $this->updateFieldWhitelist = $updateFieldWhitelist;
         }
+        
+        $this->serializer = $serializer;
     }
     
     /**
@@ -158,5 +132,4 @@ class ClientResourceDataValidator {
             throw new HttpException(400, $e->getMessage());
         }
     }
-    
 }

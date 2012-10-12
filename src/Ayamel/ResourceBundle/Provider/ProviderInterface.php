@@ -30,7 +30,6 @@ interface ProviderInterface {
      *
      * @param string $uri 
      * @return Ayamel\ResourceBundle\Document\Resource or false
-     * @author Evan Villemez
      */
     function createResourceFromUri($uri);
     

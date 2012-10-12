@@ -20,11 +20,18 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 class UploadContent extends ApiController {
     
     /**
-     * Upload content for a resource object.  Content can be provided in one of many formats, refer to the list below:
+     * Upload content for a resource object.  Note that an upload URL is a one-time-use url.  If uploading content fails
+     * for any reason, you must request a new upload url to try again.  The reason for this is that the upload
+     * url may or may not handle content directly from an authorized client.  Technically files can be uploaded directly
+     * from a user of a client system in order to avoid having to send a file via multiple servers.  Because of this, the library
+     * will allow clients to reserve one-time-use urls for sending content, which they can then expose to their internal users
+     * as nedded.  
+     *
+     * Content can be provided in one of many formats, refer to the list below:
      *
      * -    Upload a file to be stored by the Ayamel server by providing a file upload via the `file` post field. 
      *      Files uploaded in this manner will be automatically scheduled to be transcoded into other web-accessible
-     *      formats, if applicable.
+     *      formats, if applicable. (Not implemented yet)
      *
      * -    Specify a reference to an original file via a public URI, this can be done via the `uri` post field, or 
      *      by passing a JSON object with the `uri` key.  The specified uri will be processed to check for availability.
@@ -144,7 +151,6 @@ class UploadContent extends ApiController {
         
         //notify system to handle uploaded content however is necessary and modify the resource accordingly
         try {
-
             //notify system old content removal if necessary
             if($resolveEvent->getRemovePreviousContent()) {
                 if(!isset($resource->content)) {
@@ -181,12 +187,7 @@ class UploadContent extends ApiController {
         //TODO: unlock resource
         
         //return 202 on success
-        //TODO: return ServiceResponse::create(200, array('resource' => $resource));
-        return array(
-            'response' => array(
-                'code' => ($resource->getStatus() === Resource::STATUS_NORMAL) ? 200 : 202,
-            ),
-            'resource' => $resource
-        );
+        $code = ($resource->getStatus() === Resource::STATUS_NORMAL) ? 200 : 202;
+        return $this->createServiceResponse(array('resource' => $resource), $code);
     }
 }

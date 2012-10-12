@@ -51,7 +51,6 @@ class Resource {
         'description' => 'string',
         'keywords' => 'string',
         'type' => 'string',
-        'public' => 'bool',
         'copyright' => 'string',
         'license' => 'string',
         'status' => 'string',
@@ -110,6 +109,7 @@ class Resource {
      * - **image** - The primary content is a static image.
      * - **document** - The primary content is a document meant for end-users.
      * - **archive** - The primary content is a collection of content in some archival format.
+     * - **collection** - The primary content is a collection of other resources, which you can derive from the relations array.
      * - **data** - The primary content is in a data format intended for primary use by a program.
      * 
      * @MongoDB\String
@@ -118,26 +118,16 @@ class Resource {
     protected $type;
         
     /**
-     * A boolean for whether or not the Resource is accisible or visible by other API clients.
+     * An array of API Client IDs.  If present, only the specified clients will be allowed to view
+     * the Resource object.
      *
-     * If false, the resource is only accessible by the client which uploaded the resource.
-     * 
-     * @MongoDB\Boolean
-     * @JMS\Type("boolean")
-     */
-    protected $public = true;
-        
-    /**
-     * An object containing linguistically relevant data for search.
-     * 
-     * *TODO:* this is not done, it's critical.
-     * 
+     * If empty, the Resource is public and visible to all client systems.
+     *
      * @MongoDB\Hash
-     * @JMS\SerializedName("l2Data")
-     * @JMS\Type("array")
+     * @JMS\Type("array<string>")
      */
-    protected $l2Data;
-    
+    protected $visibility;
+        
     /**
      * The date the Resource was added into the database.
      * 
@@ -222,6 +212,7 @@ class Resource {
      * 
      * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\ContentCollection")
      * @JMS\Type("Ayamel\ResourceBundle\Document\ContentCollection")
+     * @JMS\ReadOnly
      */
     public $content;
     
@@ -231,6 +222,7 @@ class Resource {
      * 
      * @MongoDB\EmbedMany(targetDocument="Ayamel\ResourceBundle\Document\Relation")
      * @JMS\Type("array<Ayamel\ResourceBundle\Document\Relation>")
+     * @JMS\ReadOnly
      */
     protected $relations;
         
@@ -351,93 +343,25 @@ class Resource {
     }
 
     /**
-     * Set public
+     * Set visibility
      *
      * @param boolean $public
      */
-    public function setPublic($public)
+    public function setVisibility(array $visibility = null)
     {
-        $this->public = $public;
+        $this->visibility = $visibility;
     }
 
     /**
-     * Get public
+     * Get visibility
      *
      * @return boolean $public
      */
-    public function getPublic()
+    public function getVisibility()
     {
-        return $this->public;
-    }
-
-    /**
-     * Set l2Data
-     *
-     * @param hash $l2Data
-     */
-    public function setL2Data(array $l2Data = null)
-    {
-        $this->l2Data = $l2Data;
-    }
-
-    /**
-     * Get l2Data
-     *
-     * @return hash $l2Data
-     */
-    public function getL2Data()
-    {
-        return $this->l2Data;
+        return $this->visibility;
     }
     
-    /**
-     * Returns a specific l2Data field by key, or a default value if it doesn't exist
-     *
-     * @param string $key 
-     * @param mixed $default 
-     * @return mixed
-     */
-    public function getL2Datum($key, $default = null) {
-        return isset($this->l2Data[$key]) ? $this->l2Data[$key] : $default;
-    }
-    
-    /*
-     * Add an individual l2Data property
-     *
-     * @param string $key 
-     * @param mixed $val 
-     * @return self
-     */
-    public function addL2Datum($key, $val) {
-        $this->l2Data[$key] = $val;
-        return $this;
-    }
-
-    /**
-     * Return true/false if specific l2Data property exists
-     *
-     * @param string $key 
-     * @return boolean
-     */
-    public function hasL2Datum($key) {
-        return isset($this->l2Data[$key]);
-    }
-    
-    /**
-     * remove specific l2Data property
-     *
-     * @param string $key 
-     * @return void
-     * @author Evan Villemez
-     */
-    public function removeL2Datum($key) {
-        if(isset($this->l2Data[$key])) {
-            unset($$this->l2Data[$key]);
-        }
-        
-        return $this;
-    }
-
     /**
      * Set dateAdded
      *
@@ -524,7 +448,7 @@ class Resource {
      * @param string $license 
      */
     public function setLicense($license) {
-        return $this->license;
+        $this->license = $license;
     }
     
     /**

@@ -83,7 +83,7 @@ abstract class AbstractFilePathProvider implements ProviderInterface {
         if(!$handle = @fopen($uri, "r")) {
             throw new \InvalidArgumentException(sprintf("Resource at [%s] could not be found.", $uri));
         }
-        fclose($handle);        
+        fclose($handle);
         
         //create original file reference
         $file = ($scheme === 'file') ? FileReference::createFromLocalPath($uri) : FileReference::createFromDownloadUri($uri);

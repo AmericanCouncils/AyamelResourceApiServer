@@ -12,6 +12,9 @@ use Ayamel\ApiBundle\Event\HandleUploadedContentEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+//TODO: a little more care in when the original flag and mime is set - transcoding needs
+//a reliable place to listen for when to schedule new transcoding jobs
+
 /**
  * Registers API event listeners for managing the filesystem when certain actions occur.
  *
@@ -23,6 +26,21 @@ class FileUploadContentSubscriber implements EventSubscriberInterface {
      * @var object Symfony\Component\DependencyInjection\ContainerInterface
      */
     protected $container;
+    
+    /**
+     * PHP's default upload error constants with text explanations.
+     *
+     * @var array
+     */
+    private $uploadErrorTexts = array(
+        UPLOAD_ERR_INI_SIZE => "The uploaded file exceeds the upload_max_filesize setting.",
+        UPLOAD_ERR_FORM_SIZE => "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the submited form.",
+        UPLOAD_ERR_PARTIAL => "The uploaded file was only partially uploaded.",
+        UPLOAD_ERR_NO_FILE => "No file was uploaded.",
+        UPLOAD_ERR_NO_TMP_DIR => "Missing a temporary folder.",
+        UPLOAD_ERR_CANT_WRITE => "Failed to write file to disk.",
+        UPLOAD_ERR_EXTENSION => "A server extension stopped the file upload."
+    );
     
     /**
      * Constructor requires the Container for retrieving the filesystem service as needed.
@@ -71,6 +89,10 @@ class FileUploadContentSubscriber implements EventSubscriberInterface {
         if ($file = $request->files->get('file', false)) {
             $e->setContentType('file_upload');
             $e->setContentData($file);
+            
+            //TODO: optionally allow the client to ALSO specify the
+            //representation, for example "transcoding;3"
+            
         }
     }
     
@@ -91,35 +113,50 @@ class FileUploadContentSubscriber implements EventSubscriberInterface {
         
         //check if valid
         if (!$uploadedFile->isValid()) {
-            throw new \RuntimeException(sprintf("File upload error %s", $uploadedFile->getError()));
+            $msg = isset($this->uploadErrorTexts[$uploadedFile->getError()]) ? $this->uploadErrorTexts[$uploadedFile->getError()] : "Generic file upload error.";
+            throw new \RuntimeException($msg);
         }
 
         //get filesystem
         $fs = $this->container->get('ayamel.api.filesystem');
             
-        //add new file
-        $filename = $this->cleanUploadedFileName($uploadedFile->getClientOriginalName());
+        //clean the filename
+        $receivedName = ($uploadedFile->getClientOriginalName()) ? $uploadedFile->getClientOriginalName() : $uploadedFile->getTempName();
+        $filename = $this->cleanUploadedFileName($receivedName);
+
+        //create a file reference for the uploaded file
         $uploadedRef = FileReference::createFromLocalPath($uploadedFile->getPathname());
+        
+        //save it to the filesystem (which may modify the reference to include additional information)
         $newRef = $fs->addFileForId($resource->getId(), $uploadedRef, $filename, true);
             
         //inject relevant client-uploaded data, but only if it has not already been set by the
         //filesystem that handled the upload, as the client data may not be accurate
         if(!$newRef->getMime()) {
-            $newRef->setMime($uploadedFile->getClientMimeType());
+            $mime = ($uploadedFile->getClientMimeType()) ? $uploadedFile->getClientMimeType() : $uploadedFile->getMimeType();
+            $newRef->setMime($mime);
         }
         if(!$newRef->getAttribute('bytes', false)) {
             $newRef->setAttribute('bytes', $uploadedFile->getClientSize());
         }
             
         //the newly uploaded file is now the original reference
+        //TODO: make this optional, there may already be an original
+        //update this to allow the client to specify
         $newRef->setOriginal(true);
         $newRef->setRepresentation("original;0");
 
         //set new content
         $resource->content->addFile($newRef);
 
+        //if this is the original reference, set the status properly
+        if ("original;0" === $newRef->getRepresentation()) {
+            $resource->setStatus(Resource::STATUS_AWAITING_PROCESSING);
+        } else {
+            $resource->setStatus(Resource::STATUS_NORMAL);
+        }
+        
         //set the modified resource and stop propagation of this event
-        $resource->setStatus(Resource::STATUS_AWAITING_PROCESSING);
         $e->setResource($resource);
     }
     
@@ -131,7 +168,7 @@ class FileUploadContentSubscriber implements EventSubscriberInterface {
      */
     protected function cleanUploadedFilename($name)
     {
-        return preg_replace("/[^\w\.-]/", "-", strtolower($name));
+        return preg_replace("/[^\w\.-]/", "_", strtolower($name));
     }
 
 }

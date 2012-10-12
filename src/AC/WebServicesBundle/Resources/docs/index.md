@@ -1,3 +1,0 @@
-# TODO #
-
-Write real documentation.
