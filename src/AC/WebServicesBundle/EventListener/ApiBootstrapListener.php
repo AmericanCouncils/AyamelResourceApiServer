@@ -7,8 +7,6 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use AC\WebServicesBundle\EventListener\ApiWorkflowSubscriber;
 
-//TODO: REIMPLEMENT THIS AS A FIREWALL LISTENER
-
 /**
  * A listener that monitors for incoming Api requests.  When detected, registers the RestWorkflowSubscriber to handle generic REST API functionality.
  */
@@ -37,7 +35,7 @@ class ApiBootstrapListener {
         foreach ($this->paths as $regex) {
             if (preg_match($regex, $request->getPathInfo())) {
                 //build rest subscriber
-                $subscriber = new RestWorkflowSubscriber(
+                $subscriber = new RestServiceSubscriber(
                     $this->container,
                     $this->container->getParameter('ac.webservices.default_response_format'),
                     $this->container->getParameter('ac.webservices.include_response_data'),

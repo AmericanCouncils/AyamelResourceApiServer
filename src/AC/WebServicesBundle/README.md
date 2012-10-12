@@ -126,13 +126,23 @@ functionality, such as logging, that should apply to all API services routes.  T
 * `webservice.response` - The final response from the API
 * `webservice.terminate` - After the API response has been sent
 
-You can register a listener service for any of these events with the `ac.webservice.listener` container tag.
+You can register a listener service for any of these events with the `ac.webservice.listener` container tag, or register
+subscribers to multiple events via the `ac.webservice.subscriber` tag.
 
 ### Services ###
 
-> TODO: describe `ac.webservices.object_validator` service
+* `ac.webservices.object_validator` - This service will use the JMS serializer and its metadata to create, or modify pre-existing
+objects from a client's incoming request.
+
+    Example:
+        
+        // ... get previous object
+
+        $this->container->get('ac.webservices.object_validator')->modifyObjectFromRequest($this->getRequest(), 'MyBundle\Namespaced\Class', $previousObject);
+        
+        // ... $previousObject now contains the modifications from the incoming data
 
 ## Todo list ##
 
-* Implement client object validator
-* DependencyInjection register ac.webservice.listener tags
+* Test client object validator
+* Real format negotiation where applicable

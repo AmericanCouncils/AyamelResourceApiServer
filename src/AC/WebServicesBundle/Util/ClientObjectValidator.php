@@ -7,6 +7,9 @@ use JMS\SerializerBundle\Serializer\SerializerInterface;
 use Metadata\MetadataFactoryInterface;
 use Metadata\ClassMetadata;
 
+//TODO: Take into account JMS Exclusion Policies / Groups
+//TODO: Take into account JMS getter/setter annotation
+
 /**
  * A class with convenience methods for decoding and validating incoming API data for create and update actions.
  *
@@ -176,7 +179,6 @@ class ClientObjectValidator {
                     //validate data
                     $i = 0;
                     foreach ($clientData[$name] as $item) {
-                        //TODO: get nested object
                         $prevObj = isset($previous[$i]) ? $previous[$i] : null;
                         $newArray[] = $this->validateObjectData($item, $this->graph[$nestedObjectPropertyName]['class'], $prevObj);
                         $i++;
@@ -188,8 +190,19 @@ class ClientObjectValidator {
                     }
                     
                 } else {
-                    //TODO: get nested object
-                    $this->validateObjectData($clientData[$name], $this->graph[$nestedObjectPropertyName]['class']);
+                    $getter = 'get'.ucfirst($name);
+                    $setter = 'set'.ucfirst($name);
+                    $prevObj = null;
+                    
+                    if ($objectToModify && method_exists($objectToModify, $getter)) {
+                        $prevObj = $objectToModify->$getter();
+                    }
+                    
+                    $newObj = $this->validateObjectData($clientData[$name], $this->graph[$nestedObjectPropertyName]['class'], $prevObj);
+
+                    if ($objectToModify && method_exists($objectToModify, $setter)) {
+                        $objectToModify->$setter($newObj);
+                    }
                 }
             } elseif ($objectToModify) {
                 //call setter for property immediately
@@ -204,9 +217,8 @@ class ClientObjectValidator {
             throw new HttpException(400, sprintf("The following fields cannot be set by the client: %s", implode(", ", $invalidFields)));
         }
         
-        return $this->serializer->deserialize(json_encode($clientData), $className, 'json');
-        
-        return true;
+        //return the modified object if present, otherwise return new one
+        return ($objectToModify) ? $objectToModify : $this->serializer->deserialize(json_encode($clientData), $className, 'json');
     }
     
     /**

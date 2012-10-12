@@ -18,9 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use AC\WebServicesBundle\Response\ServiceResponse;
 
 /**
- * TODO: Need to implement ServiceResponse where possible
  * TODO: Need to make formatHeaders configurable
- * TODO: Need to implement ServiceException + configuration, + kernel listener for proper handling
  */
 
 
@@ -29,15 +27,15 @@ use AC\WebServicesBundle\Response\ServiceResponse;
  *
  * @author Evan Villemez
  */
-class RestWorkflowSubscriber implements EventSubscriberInterface {
+class RestServiceSubscriber implements EventSubscriberInterface {
     
-    const API_REQUEST = 'webservice.request';
+    const API_REQUEST = 'ac.webservice.request';
     
-    const API_EXCEPTION = 'webservice.exception';
+    const API_EXCEPTION = 'ac.webservice.exception';
     
-    const API_RESPONSE = 'webservice.response';
+    const API_RESPONSE = 'ac.webservice.response';
     
-    const API_TERMINATE = 'webservice.terminate';
+    const API_TERMINATE = 'ac.webservice.terminate';
 
     /**
      * @var Symfony\Component\DependencyInjection\ContainerInterface
@@ -172,7 +170,8 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
             );
         }
         
-        //serialize error content into requested format
+        //serialize error content into requested format, if format is not supported by the serializer, do json
+        $this->responseFormat = (in_array($this->responseFormat, array('json','xml','yml'))) ? $this->responseFormat : 'json';
         $content = $this->container->get('serializer')->serialize($errorData, $this->responseFormat);
         
         //check for code suppression
@@ -205,6 +204,11 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
     {
         $request = $e->getRequest();
         $data = $e->getControllerResult();
+        
+        //should we handle this return at all?
+        if (!$data instanceof ServiceResponse && !is_array($data)) {
+            return;
+        }
         
         //set defaults
         $responseCode = 200;
@@ -256,7 +260,6 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
         $e->getDispatcher()->dispatch(self::API_TERMINATE, $e);
     }
     
-    
     protected function validateRequest(Request $request)
     {
         //check for jsonp, make sure it's valid
@@ -278,12 +281,11 @@ class RestWorkflowSubscriber implements EventSubscriberInterface {
         }
     }
     
-    public function negotiateResponseFormat(Request $request)
+    protected function negotiateResponseFormat(Request $request)
     {
         //TODO: eventual robust content negotiation here, for now just check request for explicit declaration
         $responseFormat = strtolower($request->get('_format', $this->defaultResponseFormat));
         
         return $responseFormat;
     }
-
 }
