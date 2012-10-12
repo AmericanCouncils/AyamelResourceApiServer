@@ -62,13 +62,7 @@ class ScanResourceUri extends ApiController {
             throw $this->createHttpException(422, "Could not derive a valid resource from the given uri.");
         }
         
-        //return it
-        return array(
-            'response' => array(
-                'code' => 203,
-            ),
-            'resource' => $resource
-        );
+        return $this->createServiceResponse(array('resource' => $resource), 203);
     }
 
 }

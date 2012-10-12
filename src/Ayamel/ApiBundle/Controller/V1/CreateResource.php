@@ -35,7 +35,8 @@ class CreateResource extends ApiController {
      * @param Request $request 
      */
 	public function executeAction(Request $request) {
-				
+		
+        /*
 		//get validator
 		$validator = $this->container->get('ayamel.api.client_data_validator');
 		
@@ -44,6 +45,10 @@ class CreateResource extends ApiController {
 		
 		//build a new resource instance based on received data
 		$resource = $validator->createAndValidateNewResource($data);
+        */
+        
+        //create object from client request
+        $resource = $this->container->get('ac.webservices.object_validator')->createObjectFromRequest('Ayamel\ResourceBundle\Document\Resource', $this->getRequest());
 		
 		//set the properties controlled by the resource library
 		$resource->setStatus(Resource::STATUS_AWAITING_CONTENT);
@@ -71,16 +76,13 @@ class CreateResource extends ApiController {
         //notify rest of system of new resource
         $this->container->get('ayamel.api.dispatcher')->dispatch(Events::RESOURCE_CREATED, new ApiEvent($resource));
         
-        //define returned content structure
-        $content = array(
-            'response' => array(
-                'code' => 201,
-            ),
-			'content_upload_url' => $this->container->get('router')->generate('AyamelApiBundle_v1_upload_content', array('id' => $resource->getId(), 'token' => $uploadToken), true),
-            'resource' => $resource
-        );
+        $uploadUrl = $this->container->get('router')->generate('AyamelApiBundle_v1_upload_content', array('id' => $resource->getId(), 'token' => $uploadToken), true);
         
-		return $content;
+        //define returned content structure
+        return $this->createServiceResponse(array(
+			'content_upload_url' => $uploadUrl,
+            'resource' => $resource
+        ), 201);
 	}
 
 }

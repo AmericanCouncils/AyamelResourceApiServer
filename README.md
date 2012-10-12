@@ -31,8 +31,6 @@ The code written specifically for this project is contained under `/src`.  It cu
 
 The majority of the API works by firing events when actions of note occur.  Features like file handling, file transcoding and search indexing, work by listening by registering event listeners for said events.
 
-More details can be found in `TODO.md`.
-
 ## Roadmap ##
 
 See `TODO.md`.
