@@ -4,6 +4,7 @@ namespace Ayamel\ApiBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Ayamel\ResourceBundle\Document\Resource;
+use AC\WebServicesBundle\Response\ServiceResponse;
 
 /**
  * A base API Controller to provide convenience methods for actions commonly performed in various places in the Ayamel Resource API.
@@ -42,6 +43,20 @@ abstract class ApiController extends Controller
     }
     
     /**
+     * Shortcut to create a ServiceResponse
+     *
+     * @param string $data 
+     * @param string $code 
+     * @param array $headers 
+     * @param string $template 
+     * @return ServiceResponse
+     */
+    protected function createServiceResponse($data, $code, $headers = array(), $template = null)
+    {
+        return new ServiceResponse($data, $code, $headers, $template);
+    }
+    
+    /**
      * Get a resource by ID, assuming it's for an api user request.  Throw 404 and 403 exceptions if necessary.
      *
      * @param string $id    id of requested resource
@@ -59,9 +74,9 @@ abstract class ApiController extends Controller
             throw $this->createHttpException(404, "The requested resource does not exist.");
         }
         
-        //throw access denied exception if resource isn't public and client doesn't own it
-        $restrictions = $resource->getRestrictions();
-        if(!empty($restrictions)) {
+        //throw access denied exception if resource has visibility restrictions
+        $visibility = $resource->getVisibility();
+        if(!empty($visibility)) {
 //          if(!in_array($this->getApiClient()->getKey(), $restrictions)) {
                 //throw $this->createHttpException(403, "You are not authorized to view the requested resource.");
 //          }
@@ -83,11 +98,8 @@ abstract class ApiController extends Controller
     }
     
     protected function returnDeletedResource(Resource $resource) {
-        return array(
-            'response' => array(
-                'code' => 410,
-            ),
-            'resource' => $resource,
-        );
+        //TODO: deleted resources can be cached indefinitely, implement this
+        
+        return new ServiceResponse(array('resource' => $resource), 410);
     }
 }

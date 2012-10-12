@@ -187,12 +187,7 @@ class UploadContent extends ApiController {
         //TODO: unlock resource
         
         //return 202 on success
-        //TODO: return ServiceResponse::create(200, array('resource' => $resource));
-        return array(
-            'response' => array(
-                'code' => ($resource->getStatus() === Resource::STATUS_NORMAL) ? 200 : 202,
-            ),
-            'resource' => $resource
-        );
+        $code = ($resource->getStatus() === Resource::STATUS_NORMAL) ? 200 : 202;
+        return $this->createServiceResponse(array('resource' => $resource), $code);
     }
 }

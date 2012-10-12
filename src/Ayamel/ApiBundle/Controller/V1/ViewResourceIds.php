@@ -44,14 +44,6 @@ class ViewResourceIds extends ApiController {
         */
         
         //assemble final content structure
-        $content = array(
-            'response' => array(
-                'code' => 200,
-            ),
-            'ids' => array_keys(iterator_to_array($results)),
-        );
-        
-        return $content;
-        //return \FOS\RestBundle\View::create($content, $httpStatusCode);
+        return $this->createServiceResponse(array('ids' => array_keys(iterator_to_array($results))), 200);
     }
 }

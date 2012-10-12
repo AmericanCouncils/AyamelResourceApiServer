@@ -32,16 +32,8 @@ class GetResource extends ApiController {
         if(null != $resource->getDateDeleted()) {
             return $this->returnDeletedResource($resource);
         }
-
-        //assemble final content structure
-        $content = array(
-            'response' => array(
-                'code' => 200,
-            ),
-            'resource' => $resource,
-        );
         
-        return $content;
-        //return \FOS\RestBundle\View::create($content, $httpStatusCode);
+        //return service response
+        return $this->createServiceResponse(array('resource' => $resource), 200);
     }
 }

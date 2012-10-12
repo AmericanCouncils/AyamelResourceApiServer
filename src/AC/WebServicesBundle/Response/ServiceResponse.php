@@ -2,6 +2,12 @@
 
 namespace AC\WebServicesBundle\Response;
 
+/**
+ * Note that this does not extend the HttpFoundation Response for a reason, so there is some duplicate functionality.
+ *
+ * @package ACWebServicesBundle
+ * @author Evan Villemez
+ */
 class ServiceResponse {
     
     protected $statusCode;
@@ -10,42 +16,59 @@ class ServiceResponse {
     
     protected $responseHeaders;
     
-    public function __construct($data, $code = 200, $headers = array()) {
+    protected $template;
+    
+    public function __construct($data, $code = 200, $headers = array(), $template = null) {
         $this->responseData = $data;
         $this->statusCode = $code;
         $this->responseHeaders = $headers;
+        $this->template = $template;
     }
     
-    public static function create($data, $code = 200, $headers = array()) {
-        return new static($data, $code, $headers);
+    public static function create($data, $code = 200, $headers = array(), $template = null)
+    {
+        return new static($data, $code, $headers, $template);
     }
     
-    public function getStatusCode() {
-        return $this->statusCode;
-    }
-    
-    public function setStatusCode($code) {
-        $this->statusCode = $code;
-    }
-
-    public function getResponseData() {
+    public function getResponseData()
+    {
         return $this->responseData;
     }
     
-    public function setResponseData($data) {
+    public function setResponseData($data)
+    {
         $this->responseData = $data;
     }
     
-    public function getResponseHeaders() {
+    public function getResponseCode()
+    {
+        return $this->statusCode;
+    }
+    
+    public function getResponseHeaders()
+    {
         return $this->responseHeaders;
     }
     
-    public function setResponseHeaders(array $array) {
+    public function setResponseHeaders(array $array)
+    {
         $this->responseHeaders = $array;
     }
     
-    public function setResponseHeader($key, $val) {
+    public function setResponseHeader($key, $val)
+    {
         $this->responseHeaders[$key] = $val;
     }
+    
+    public function getTemplate()
+    {
+        return $this->template;
+    }
+    
+    public function setTemplate($template)
+    {
+        $this->template = $template;
+    }
+    
     
 }

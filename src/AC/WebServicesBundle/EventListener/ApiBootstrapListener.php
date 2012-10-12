@@ -7,13 +7,8 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use AC\WebServicesBundle\EventListener\ApiWorkflowSubscriber;
 
-
-//TODO: listen for all kernel events, firing an early/late listener pair.
-
 /**
- * A listener that monitors for incoming requests under `/rest/`.  When detected, registers the RestWorkflowSubscriber to handle Api events.
- * 
- * Note: As of right now we only support REST...if we ever decide to support SOAP, it can register listeners for that here as well, but it may not actually be necessary.
+ * A listener that monitors for incoming Api requests.  When detected, registers the RestWorkflowSubscriber to handle generic REST API functionality.
  */
 class ApiBootstrapListener {
 
@@ -22,39 +17,39 @@ class ApiBootstrapListener {
      */
     protected $container;
 
-    public function __construct(ContainerInterface $container) {
+    protected $paths;
+
+    public function __construct(ContainerInterface $container, $paths = array()) {
         $this->container = $container;
+        $this->paths = $paths;
     }
 
     /**
-     * Listens for request uris beginning with `/rest/`, and registers other listeners accordingly.
-     * Also scans the incoming request accept headers - if JSON is not an acceptible format, throws exception.
+     * Checks arrays of regex against requested route, and registers other listeners accordingly.
      *
      * @param GetResponseEvent $e 
      */
     public function onKernelRequest(GetResponseEvent $e) {
         $request = $e->getRequest();
 
-        //if requested path contains `/rest/`, register the RestWorkflowListener
-        if(false !== strpos($request->getPathInfo(), "/rest/")) {
-            //build rest subscriber
-            $subscriber = new RestWorkflowSubscriber($this->container);
+        foreach ($this->paths as $regex) {
+            if (preg_match($regex, $request->getPathInfo())) {
+                //build rest subscriber
+                $subscriber = new RestServiceSubscriber(
+                    $this->container,
+                    $this->container->getParameter('ac.webservices.default_response_format'),
+                    $this->container->getParameter('ac.webservices.include_response_data'),
+                    $this->container->getParameter('ac.webservices.allow_code_suppression'),
+                    $this->container->getParameter('ac.webservices.include_dev_exceptions')
+                );
 
-            //register subscriber with dispatcher
-            $this->container->get('event_dispatcher')->addSubscriber($subscriber);
+                //register subscriber with dispatcher
+                $this->container->get('event_dispatcher')->addSubscriber($subscriber);
 
-            //manually call subscriber's `onKernelRequest`
-            $subscriber->onApiRequest($e);
+                $subscriber->onApiRequest($e);
+                
+                return;
+            }
         }
-        
-        //eventually, if decided, listen for SOAP requests ... maybe?
-        
-        
-        //TODO:
-        //$servicesDispatcher->dispatch(Events::REQUEST);
-    }
-    
-    public function onKernelTerminate(PostResponseEvent $e) {
-        //$servicesDispatcher->dispatch(Events::TERMINATE)
     }
 }
