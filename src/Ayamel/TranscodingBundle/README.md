@@ -1,7 +1,9 @@
 # AyamelTranscodingBundle #
 
-This bundle adds a subscriber that listens for new files uploaded via the Resource API.  Then it uses the ACTranscodingBundle to schedule a transcode job to be handled asynchronously.  It also provides a custom transcode logger.
+This bundle adds a subscriber that listens for new files uploaded via the Resource API.  Then it uses the ACTranscodingBundle to schedule a transcode job to be handled asynchronously.  It also provides a custom transcode logger to help with tracking server overhead for clients that upload files.
 
 ## TODO ##
 
-* Listen to handle_content event and resource modified event - if handled content, then enable, so on resource_modify will schedule transcode event for "original" files with internal uri
+* finish `Mapper` for dealing with preset configuration & implement convenience methods
+    * and test the damn thing
+* move logic from `RabbitMQ\Consumer` to `TranscodeManager`

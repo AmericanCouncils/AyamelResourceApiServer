@@ -1,0 +1,56 @@
+parameters:
+    ayamel.transcoding.temp_directory: %ayamel.filesystem.local_filesystem.root_dir%/tmp
+    ayamel.trascoding.preset_map:
+        handbrake.ipod:
+            tag: low
+            extension: mp4
+            representation: transcoding
+            quality: 1
+            mimes:
+    			- video/mp4
+    			- video/x-ms-wmv
+                - video/quicktime
+                - video/x-msvideo
+                - video/x-flv                
+		handbrake.classic:
+            tag: medium
+            extension: mp4
+            representation: transcoding
+            quality: 2
+            mimes:
+    			- video/mp4
+    			- video/x-ms-wmv
+                - video/quicktime
+                - video/x-msvideo
+                - video/x-flv
+        handbrake.high_profile:
+            tag: high
+            extension: mp4
+            representation: transcoding
+            quality: 3
+            mimes:
+    			- video/mp4
+    			- video/x-ms-wmv
+                - video/quicktime
+                - video/x-msvideo
+                - video/x-flv
+
+services:
+    ayamel.transcoding.mapper:
+        class: Ayamel\TranscodingBundle\PresetMapper;
+        arguments: [%ayamel.transcoding.preset_map%]
+        scope: prototype
+        
+    # This service listens for file uploads, then registers a resource to have it's uploaded file
+    # transcoded asyncronously
+	ayamel.transcoding.publisher_listener:
+        class: Ayamel\TranscodingBundle\RabbitMQ\PublisherListener
+        arguments: [@service_container]
+        tags:
+            - { name: ayamel.api.dispatcher.event_listener , event: ayamel.api.handle_uploaded_content, method: onHandleUploadedContent }
+
+    # This service handles rabbitMQ for transcoding Resource files asyncronously
+    ayamel.transcoding.consumer:
+        class: Ayamel\TranscodingBundle\RabbitMQ\Consumer
+        arguments: [@service_container, %ayamel.transcoding.preset_map%]
+        

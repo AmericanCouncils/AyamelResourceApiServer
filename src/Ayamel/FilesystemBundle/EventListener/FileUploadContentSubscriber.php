@@ -129,7 +129,7 @@ class FileUploadContentSubscriber implements EventSubscriberInterface {
         
         //save it to the filesystem (which may modify the reference to include additional information)
         $newRef = $fs->addFileForId($resource->getId(), $uploadedRef, $filename, true);
-            
+        
         //inject relevant client-uploaded data, but only if it has not already been set by the
         //filesystem that handled the upload, as the client data may not be accurate
         if(!$newRef->getMime()) {
@@ -150,7 +150,7 @@ class FileUploadContentSubscriber implements EventSubscriberInterface {
         $resource->content->addFile($newRef);
 
         //if this is the original reference, set the status properly
-        if ("original;0" === $newRef->getRepresentation()) {
+        if ("original" === $newRef->getRepresentation()) {
             $resource->setStatus(Resource::STATUS_AWAITING_PROCESSING);
         } else {
             $resource->setStatus(Resource::STATUS_NORMAL);
@@ -168,6 +168,13 @@ class FileUploadContentSubscriber implements EventSubscriberInterface {
      */
     protected function cleanUploadedFilename($name)
     {
+        //if there's an extension, save it, and call it "original"
+        $exp = explode(".", $name);
+        if (count($exp > 1)) {
+            $ext = end($exp);
+            return 'original.' . $ext;
+        }
+        
         return preg_replace("/[^\w\.-]/", "_", strtolower($name));
     }
 
