@@ -269,7 +269,17 @@ class FileReference {
      */
     public function getMime()
     {
-        return $this->mime;
+        return $this->mime ? $this->mime : $this->mimeType;
+    }
+
+    public function setMimeType($mimeType)
+    {
+        $this->mimeType = $mimeType;
+    }
+    
+    public function getMimeType()
+    {
+        return $this->mimeType;
     }
 
     /**

@@ -2,6 +2,9 @@
 
 namespace Ayamel\TranscodingBundle;
 
+use Ayamel\ResourceBundle\Document\Resource;
+use Ayamel\ResourceBundle\Document\FileReference;
+
 /**
  * This class transcodes original files in a resource into multiple files
  * depending on mappings from configuration.  This class uses various other
@@ -30,7 +33,7 @@ class TranscodeManager
 	private $filesystem;
 	private $resourceManager;
 	private $transcoder;
-    private $mapper;
+    private $mapperConfig;
     //private $clientManager;
 	
     /**
@@ -41,15 +44,25 @@ class TranscodeManager
      * @param Transcoder $t 
      * @param Mapper $m 
      */
-    public function __construct(FilesystemInterface $fs, ResourceManagerInterface $rm, Transcoder $t, Mapper $m)
+    public function __construct(FilesystemInterface $fs, ResourceManagerInterface $rm, Transcoder $t, $mapperConfig = array())
     {
-        
+        $this->filesystem = $fs;
+        $this->resourceManager = $rm;
+        $this->transcoder = $t;
+        $this->mapperConfig = $mapperConfig;
     }
     
+    protected function createMapperForResource(Resource $resource)
+    {
+        //NOTE: eventually we'll check the client for custom preset and inject them here
+        return new PresetMapper($this->mapperConfig);
+    }
     
-	public function transcodeFilesForResource($id, $appendFiles = false, $mimeRestrictions, )
+	public function transcodeFilesForResource($id, $appendFiles = false, $mimeRestrictions = array(), $presetRestrictions = array())
 	{
         
 	}
+    
+    
 	
 }
