@@ -10,4 +10,5 @@ The bundle adds a subscriber that listens for new files uploaded via the Resourc
 
 * finish `PresetMapper` for dealing with preset configuration & implement convenience methods
     * and test the damn thing
+* properly configure RabbitMQ
 * move logic from `RabbitMQ\Consumer` to `TranscodeManager`

@@ -71,15 +71,9 @@ class PublisherListener
      */
     public function onApiTerminate()
     {
-        $mapper = $this->container->get('ayamel.transcoding.mapper');
-
-        //TODO: add client-specific presets if applicable
-        //$mapper->addPresetDefinitions($clientPresetDefinitions);
-
-        if ($mapper->canTranscodeFileReference($this->uploadedReference)) {
-            $this->container->get('ayamel.transcoding.publisher')->publish(serialize(array(
-                'id' => $resource->getId()
-            )));
-        }
+        $this->container->get('ayamel.transcoding.publisher')->publish(serialize(array(
+            'id' => $resource->getId(),
+            'file' => $this->uploadedReference->getInternalUri()
+        )));
     }
 }

@@ -11,45 +11,31 @@ class PresetMapperTest extends \PHPUnit_Framework_TestCase
     protected function getMapperConfig()
     {
         return array(
-            'handbrake.classic' => array(
-                'tag' => 'medium',
-                'extension' => 'mp4',
-                'representation' => 'transcoding',
-                'quality' => 3,
-                'mimes' => array(
-        			'video/mp4',
-        			'video/x-ms-wmv',
-                    'video/quicktime',
-                    'video/x-msvideo',
-                    'video/x-flv',
-                ),
+			'video/mp4' => array(
+			    array('preset' => 'handbrake.classic', 'tag' => 'medium', 'extension' => 'mp4', 'representation' => 'transcoding', 'quality' => 2),
+			    array('preset' => 'handbrake.ipod', 'tag' => 'medium', 'extension' => 'mp4', 'representation' => 'transcoding', 'quality' => 1),
+			    array('preset' => 'imagine.resize', 'tag' => 'medium', 'extension' => 'mp4', 'representation' => 'transcoding', 'quality' => 3),
+			),
+			'video/x-ms-wmv' => array(
+			    array('preset' => 'handbrake.classic', 'tag' => 'medium', 'extension' => 'mp4', 'representation' => 'transcoding', 'quality' => 2),
+			    array('preset' => 'handbrake.ipod', 'tag' => 'medium', 'extension' => 'mp4', 'representation' => 'transcoding', 'quality' => 1),
+			    array('preset' => 'imagine.resize', 'tag' => 'medium', 'extension' => 'mp4', 'representation' => 'transcoding', 'quality' => 3),
+			),
+            'video/quicktime' => array(
+			    array('preset' => 'handbrake.classic', 'tag' => 'medium', 'extension' => 'mp4', 'representation' => 'transcoding', 'quality' => 2),
+			    array('preset' => 'handbrake.ipod', 'tag' => 'medium', 'extension' => 'mp4', 'representation' => 'transcoding', 'quality' => 1),
+			    array('preset' => 'imagine.resize', 'tag' => 'medium', 'extension' => 'mp4', 'representation' => 'transcoding', 'quality' => 3),
             ),
-            'handbrake.ipod' => array(
-                'tag' => 'medium',
-                'extension' => 'mp4',
-                'representation' => 'transcoding',
-                'quality' => 3,
-                'mimes' => array(
-        			'video/mp4',
-        			'video/x-ms-wmv',
-                    'video/quicktime',
-                    'video/x-msvideo',
-                    'video/x-flv',
-                ),
+            'video/x-msvideo' => array(
+			    array('preset' => 'handbrake.classic', 'tag' => 'medium', 'extension' => 'mp4', 'representation' => 'transcoding', 'quality' => 2),
+			    array('preset' => 'handbrake.ipod', 'tag' => 'medium', 'extension' => 'mp4', 'representation' => 'transcoding', 'quality' => 1),
+			    array('preset' => 'imagine.resize', 'tag' => 'medium', 'extension' => 'mp4', 'representation' => 'transcoding', 'quality' => 3),
             ),
-            'imagine.resize' => array(
-                'tag' => 'thumb',
-                'extension' => 'jpg',
-                'representation' => 'summary',
-                'quality' => 3,
-                'mimes' => array(
-        			'video/mp4',
-        			'video/x-ms-wmv',
-                    'video/quicktime',
-                    'video/x-msvideo',
-                    'video/x-flv',
-                ),
-            )
+            'video/x-flv' => array(
+			    array('preset' => 'handbrake.classic', 'tag' => 'medium', 'extension' => 'mp4', 'representation' => 'transcoding', 'quality' => 2),
+			    array('preset' => 'handbrake.ipod', 'tag' => 'medium', 'extension' => 'mp4', 'representation' => 'transcoding', 'quality' => 1),
+			    array('preset' => 'imagine.resize', 'tag' => 'medium', 'extension' => 'mp4', 'representation' => 'transcoding', 'quality' => 3),
+            ),
         );
     }
 
