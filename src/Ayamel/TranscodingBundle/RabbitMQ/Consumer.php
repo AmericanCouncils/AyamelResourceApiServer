@@ -22,6 +22,7 @@ use Ayamel\FilesystemBundle\Filesystem\FilesystemInterface;
  *      'presetFilter' => array(),              //optional: limit job to specific presets
  *      'mimeFilter' => array(),                //optional: limit job to specific mimes
  *      'replacePreexisting' => true            //optional: whether or not to replace a preexisting file
+ *      'notifyClient' => true                  //optional: whether or not to send notifications to the client upon success/failure of job
  *  );
  *
  * @package AyamelTranscodingBundle
@@ -51,6 +52,7 @@ class Consumer implements ConsumerInterface
         $presetFilter = $msg->body['presetFilter'] ?: array();
         $mimeFilter = $msg->body['mimeFilter'] ?: array();
         $file = $msg->body['file'] ?: false;
+        $notifyClient = $msg->body['notifyClient'] ?: false;
         
         //try the transcode, if it fails, depending on how, either remove the job from the queue
         //or requeue for later
@@ -70,9 +72,23 @@ class Consumer implements ConsumerInterface
             return true;
         } catch (NoRelevantPresetsException $e) {
             return true;
+        } catch (\Exception $e) {
+            if ($notifyClient) {
+                //TODO:
+                //for any other error that we didn't expect, notify the client
+                //by publishing another rabbitMQ message to send an email
+                //saying there was a problem
+            }
+
+            //and try handling the message again
+            return false;
         }
         
         //if we got this far we've transcoded everything cleanly
+        if ($notifyClient) {
+            //schedule success message
+        }
+        
         return true;
 	}
         

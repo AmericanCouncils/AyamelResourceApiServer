@@ -39,6 +39,9 @@ class TranscodeManager
 	private $resourceManager;
 	private $transcoder;
     private $defaultMapperConfig;
+    private $tmpDirectory;
+    private $dispatcher;
+    //private $logger;
     //private $clientManager;
 	
     /**
@@ -49,14 +52,164 @@ class TranscodeManager
      * @param Transcoder $t 
      * @param $defaulMapperConfig 
      */
-    public function __construct(FilesystemInterface $fs, StorageInterface $rm, Transcoder $t, $defaultMapperConfig = array())
+    public function __construct(FilesystemInterface $fs, StorageInterface $rm, Transcoder $t, $tmpDirectory, DispatcherInterface $dispatcher, $defaultMapperConfig = array())
     {
         $this->filesystem = $fs;
         $this->resourceManager = $rm;
         $this->transcoder = $t;
+        $this->dispatcher = $dispatcher;
         $this->defaultMapperConfig = $defaultMapperConfig;
+        $this->tmpDirectory = $tmpDirectory;
     }
     
+	public function transcodeResource($id, $appendFiles = false, $presetFilter = array(), $mimeFilter = array())
+	{
+        //get resource or fail with relevant exception
+        $resource = $this->getResource($id);
+        
+        //get file to transcode
+        $refsToTranscode = $this->getRefsToTranscode($resource);
+        
+        //get mapper, start transcoding files
+        $mapper = $this->createMapperForResource($resource);
+        $processed = false;
+        $i = 0;
+        foreach ($refsToTranscode as $ref) {
+            $append = ($i < 1) ? $appendFiles : true;
+            $mappings = $mapper->getPresetMappingsForFileReference($ref);
+            $mappings = $this->filterPresetMappings($mappings, $ref, $presetFilter, $mimeFilter);
+            if (empty($mappings)) {
+                continue;
+            }
+            
+            //this is just making sure that there ARE valid mappings to process
+            $processed = true;
+                        
+            //transcode new files, modifying Resource accordingly
+            $resource = $this->transcodeReferenceForResource($ref, $resource, $mappings, $append);
+        }
+        
+        //was anything processed at all?
+        if (!$processed) {
+            throw new NoRelevantPresetsException();
+        }
+                
+        //TODO: MODIFY RESOURCE EVENT on success here
+        //$this->dispatcher->dispatch(ApiEvents::RESOURCE_MODIFIED, new ApiEvent($resource));
+
+        return true;
+	}
+    
+    public function transcodeFileForResource($id, $path, $presetFilter)
+    {
+        //TODO:
+    }
+
+    /**
+     * The real work happens here.  Locks a resource before doing work, then on completion
+     * of any transcode work, cleans up the filesystem, and stores the data.0
+     *
+     * @param FileReference $ref 
+     * @param string $resource 
+     * @param array $presetDefinitions 
+     * @return void
+     * @author Evan Villemez
+     */
+    protected function transcodeFileReferenceForResource(FileReference $ref, $resource, array $presetDefinitions, $appendFiles = false)
+    {
+        //first lock the resource
+        $this->lockResource($resource);
+        $newFiles = array();
+        try {
+            foreach ($presetDefinitions as $def) {
+                //run the transcode & create a FileReference from the resulting file
+                $newFileReference = FileReference::createFromPath($transcoder->transcodeWithPreset(
+                    $ref->getInternalUri(),
+                    $def['preset'],
+                    $this->generateTemporaryOutputPath($resource->getId(), $def)
+                )->getRealPath());
+                
+                //inject file reference data from the mapper
+                $newFileReference->setQuality($def['quality']);
+                $newFileReference->setRepresentation($def['representation']);
+                
+                //new base name for file with tag + output extension
+                $newBaseName = $def['tag'].".".$def['extension'];
+                
+                //add file into filesystem (will move it to final location)
+                $finalReference = $this->filesystem->addFileForId($resource->getId(), $newFileReference, $newBaseName, FilesystemInterface::CONFLICT_OVERWRITE);
+                
+                //store good file reference in array
+                $newFiles[] = $finalReference;
+            }
+        } catch (\Exception $e) {
+            $this->unlockResource($resource);
+
+            foreach ($newFiles as $failedFile) {
+                $this->filesystem->removeFile($failedFile);
+            }
+            
+            //rethrow exception to be handled by environment
+            throw $e;
+        }
+        
+        //Remove old files or not?
+        if (!$appendFiles) {
+            $toRemove = array();
+            foreach ($resource->content->getFiles() as $file) {
+                if ('original' !== $file->getRepresentation()) {
+                    $toRemove[] = $file;
+                }
+            }
+
+            foreach ($toRemove as $oldFile) {
+                $this->filesystem->removeFile($oldFile);
+                $resource->content->removeFile($oldFile);
+            }
+        }
+        
+        //if we got this far, modify the Resource object
+        foreach ($newFiles as $newRef) {
+            $resource->content->addFile($newRef);
+        }
+                
+        //save the resource, and then unlock it
+        $this->resourceManager->persistResource($resource);
+        $this->unlockResource($resource);
+        
+        //clean up the filesystem
+        $this->cleanupFilesystem($resource);
+        
+        return $resource;
+    }
+
+    protected function lockResource(Resource $resource)
+    {
+        $resource->setStatus(Resource::STATUS_PROCESSING);
+        $this->resourceManager->persistResource($resource);
+    }
+    
+    protected function unlockResource(Resource $resource)
+    {
+        $resource->setStatus(Resource::STATUS_NORMAL);
+        $this->resourceManager->persistResource($resource);
+    }
+    
+    protected function cleanupFilesystem(Resource $resource)
+    {
+        foreach ($this->filesystem->getFilesForId($resource->getId()) as $ref) {
+            if (!$resource->content->hasFile($ref)) {
+                $this->filesystem->removeFile($ref);
+            }
+        }
+    }
+
+    /**
+     * Get the preset mapper for the resource.
+     *
+     * @param Resource $resource 
+     * @return PresetMapper
+     */
     protected function createMapperForResource(Resource $resource)
     {
         $mapper = new PresetMapper($this->defaultMapperConfig);
@@ -66,60 +219,6 @@ class TranscodeManager
 
         return $mapper;
     }
-    
-	public function transcodeResource($id, $appendFiles = false, $presetFilter = array(), $mimeFilter = array())
-	{
-        //get resource or fail with relevant exception
-        $resource = $this->getResource($id);
-        
-        //get file to transcode
-        $refToTranscode = $this->getRefToTranscode($resource);
-        
-        //get relevant preset mappings
-        $mappings = $this->createMapperForResource($resource)->getPresetMappingsForFileReference($refToTranscode);
-        
-        //filter mappings
-        $mappings = $this->filterPresetMappings($refToTranscode, $presetFilter, $mimeFilter);
-        if (empty($mappings)) {
-            throw new NoRelevantPresetsException();
-        }
-        
-        //transcode new files
-        $newReferences = $this->transcodeFileForResource($refToTranscode, $resource, $mappings);
-        
-        //resolve old/new data, move files into place, etc...
-        $resource->content->setFiles($newFileReferences);
-        $resource->content->addFile($fileToTranscode);
-        
-        //we only transcode original files, if there isn't one we can stop
-        $fileToTranscode = false;
-        foreach ($resource->content->getFiles() as $file) {
-            if ("original" === $file->getRepresentation()) {
-                $fileToTranscode = $file;
-                break;
-            }
-        }
-        if (!$fileToTranscode) {
-            return true;
-        }
-                
-        //TODO: check for preset and or mime restrictions for this job (may have been initiated from CLI)
-        
-        //if we got this far, we can transcode the file
-        $newFileReferences = $this->transcodeFileReferenceForResource($fileToTranscode, $resource, $presetDefinitions);
-        
-        //store old files array in memory until we have finished successfully
-        $oldFilesArray = $resource->content->getFiles();
-
-        //TODO: delete pre-existing files?
-        //get $fileReferencesToBeRemoved
-        
-        //set file content as newly created files & add original file back into array
-        //TODO: this isn't quite right
-        
-        
-        return true;
-	}
     
     /**
      * Get the Resource to transcode by an id, throwing exceptions
@@ -146,57 +245,66 @@ class TranscodeManager
         if ($resource->isLocked()) {
             throw new ResourceLockedException(sprintf("Resource [%s] is currently locked.", $id));
         }
-        
-        //should be at least one file
-        $files = $resource->content->getFiles();
-        if (!$files || empty($files)) {
-            throw new NoTranscodeableFilesException(sprintf("Resource [%s] has no transcodeable files.", $id));
-        }
-        
+                
         return $resource;
     }
     
-    protected function transcodeFileReferenceForResource(FileReference $ref, $resource, $presetDefinitions)
+    /**
+     * Get file references that should be transcoded.
+     *
+     * @param Resource $resource 
+     * @param string $path 
+     * @return array
+     */
+    protected function getRefsToTranscode(Resource $resource, $path = false)
     {
-        $newFiles = array();
-        foreach ($presetDefinitions as $presetName => $refInfo) {
-            try {
-                //run the transcode & create a FileReference from the resulting file
-                $newFileReference = FileReference::createFromPath($this->container->get('transcoder')->transcodeWithPreset(
-                    $ref->getInternalUri(),
-                    $presetName,
-                    $this->generateTemporaryOutputPath($resource->getId(), $refInfo)
-                )->getRealPath());
-                
-                //inject file reference data from the mapper
-                $newFileReference->setQuality($refInfo['quality']);
-                $newFileReference->setRepresentation($refInfo['representation']);
-                
-                //new base name for file with tag + output extension
-                $newBaseName = $refInfo['tag'].".".$refInfo['extension'];
-                
-                //add file into filesystem (will move it to final location)
-                $finalReference = $this->container->get('ayamel.api.filesystem')->addFileForId($resource->getid(), $newFileReference, $newBaseName, FilesystemInterface::CONFLICT_EXCEPTION);
-                
-                //store good file reference in array
-                $newFiles[] = $finalReference;
-            } catch (\Exception $e) {
-                
+        $refsToTranscode = array();
+        if (!$fileRefs = $resource->content->getFiles() || empty($fileRefs)) {
+            throw new NoTranscodeableFilesException(sprintf("Resource [%s] has no files.", $resource->getId()));
+        }
+        
+        foreach ($fileRefs as $ref) {
+            if (!$path) {
+                //NOTE: we only transcode original, and locally stored file references (may change?)
+                if ('original' === $ref->getRepresentation() && $ref->getInternalUri()) {
+                    $refsToTranscode[] = $ref;
+                }
+            } else {
+                if ($path === $ref->getInternalUri()) {
+                    $refsToTranscode[] = $ref;
+                }
             }
         }
         
-        return $newFiles;
+        if (empty($refsToTranscode)) {
+            throw new NoTranscodeableFilesException(sprintf("Resource [%s] has no files suitable for transcoding.", $resource->getId()));
+        }
+        
+        return $refsToTranscode;
     }
-
+    
     protected function generateTemporaryOutputPath($id, $presetInfo)
     {
         $ext = $presetInfo['extension'];
         $tag = $presetInfo['tag'];
-        return $this->container->get('ayamel.transcoding.temp_directory').DIRECTORY_SEPARATOR.$id.".".$tag.".".$ext;
+        return $this->tmpDirectory.DIRECTORY_SEPARATOR.$id.".".$tag.".".$ext;
     }
     
-	protected function filterPresetMappings(FileReference $ref, $presetFilter, $mimeFilter)
+	protected function filterPresetMappings(array $mappings, FileReference $ref, $presetFilter = array(), $mimeFilter = array())
     {
+        if (!empty($mimeFilter) && !in_array($ref->getMimeType(), $mimeFilter)) {
+            return array();
+        }
         
+        $filtered = array();
+        foreach ($mappings as $map) {
+            if (!empty($presetFilter) && !in_array($map['preset'], $presetFilter)) {
+                continue;
+            }
+            
+            $filtered[] = $map;
+        }
+        
+        return $filtered;
     }
 }

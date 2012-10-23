@@ -1,5 +1,18 @@
 <?php
 
+namespace Ayamel\TranscodingBundle\Command;
+
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use AC\TranscodingBundle\OutputSubscriber;
+
+/**
+ * Run transcode jobs for a Resource by ID.
+ *
+ * @package AyamelTranscodingBundle
+ * @author Evan Villemez
+ */
 class ProcessCommand extends ContainerAwareCommand
 {
 	
@@ -19,10 +32,10 @@ class ProcessCommand extends ContainerAwareCommand
             $outputSubscriber = new OutputSubscriber;
             $outputSubscriber->setOutput($output);
             $outputSubscriber->setHelperSet($this->getHelperSet());
-            $this->getContainer()->get('transcoder')->getDispatcher()->registerSubscriber($outputSubscriber);
+            $this->getContainer()->get('transcoder')->getDispatcher()->addSubscriber($outputSubscriber);
         
-            //run transcode for Resource
-            $this->getContainer()->get('ayamel.transcoding.manager')->transcodeFilesForResource();
+            //run transcode for Resource immediately
+            $this->getContainer()->get('ayamel.transcoding.manager')->transcodeFilesForResource($id);
             
         } else {
             //schedule rabbit job

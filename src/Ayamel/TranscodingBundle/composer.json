@@ -16,7 +16,7 @@
     "target-dir": "Ayamel/TranscodingBundle",
     "require": {
         "ayamel/api-bundle": "dev-master",
-        "ac/transcoding": "dev-master",
+        "ac/transcoding-bundle": "dev-master",
         "oldsound/rabbitmq-bundle": "dev-master",
     }
 }

@@ -13,13 +13,14 @@ use AC\Component\Transcoding\File;
 /**
  * Listens for upload events, and if it's of the proper type, registers a transcode job.
  *
- * @package TranscodingBundle
+ * @package AyamelTranscodingBundle
  * @author Evan Villemez
  */
 class PublisherListener
 {
     private $container;
     private $uploaded_file;
+    private $resource;
     
     public function __construct(ContainerInterface $container)
     {
@@ -73,7 +74,8 @@ class PublisherListener
     {
         $this->container->get('ayamel.transcoding.publisher')->publish(serialize(array(
             'id' => $resource->getId(),
-            'file' => $this->uploadedReference->getInternalUri()
+            'notifyClient' => true,
+//            'file' => $this->uploadedReference->getInternalUri()
         )));
     }
 }
