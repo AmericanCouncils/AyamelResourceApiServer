@@ -4,8 +4,10 @@ namespace Ayamel\TranscodingBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
-use AC\TranscodingBundle\OutputSubscriber;
+use AC\TranscodingBundle\Console\OutputSubscriber;
 
 /**
  * Run transcode jobs for a Resource by ID.
@@ -20,14 +22,13 @@ class ProcessCommand extends ContainerAwareCommand
 	{
 		$this->setName('api:transcode:resource')
 			->setDescription("Transcode files for a given Resource ID.")
-			->setWhatever(....);
+            ->addArgument('id', InputArgument::REQUIRED, "ID of Resource to transcode.")
+            ->addOption('force','-f', InputOption::VALUE_OPTIONAL, "If forced, the transcode will happen immediately, rather than asynchronously.", false);
 	}
 	
-	protected function execute()
+	protected function execute(InputInterface $input, OutputInterface $output)
 	{
-        //TODO: flag for immediate transcode, or asyncronous transcode via RabbitMQ
-        
-        if ($forced) {
+        if ($input->getOption('force')) {
             //Inject CLI listener into transcoder
             $outputSubscriber = new OutputSubscriber;
             $outputSubscriber->setOutput($output);
@@ -38,13 +39,14 @@ class ProcessCommand extends ContainerAwareCommand
             $this->getContainer()->get('ayamel.transcoding.manager')->transcodeFilesForResource($id);
             
         } else {
-            //schedule rabbit job
-            
+            //otherwise publish message via RabbitMQ
+            $this->getContainer()->get('ayamel.transcoding.publisher')->publish(serialize(array(
+                'id' => $input->getArgument('id')
+            )));
             
             $output->writeln(sprintf("Transcode job for Resource %s scheduled.", $id));
         }
         
         return;
 	}
-	
 }

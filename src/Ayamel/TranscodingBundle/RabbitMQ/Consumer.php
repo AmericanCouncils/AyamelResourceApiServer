@@ -17,7 +17,6 @@ use Ayamel\FilesystemBundle\Filesystem\FilesystemInterface;
  * The format of the message processed is the following:
  *  array(
  *      'id' => $id,                            //required: the string resource id
- *      'file' => $path,                        //optional: the specific file to transcode, (otherwise all 'original' files are transcoded)
  *      'appendFiles' => false,                 //optional: whether or not to add transcoded files into the existing files array, or replace them
  *      'presetFilter' => array(),              //optional: limit job to specific presets
  *      'mimeFilter' => array(),                //optional: limit job to specific mimes
@@ -57,11 +56,8 @@ class Consumer implements ConsumerInterface
         //try the transcode, if it fails, depending on how, either remove the job from the queue
         //or requeue for later
         try {
-            if ($file) {
-                $this->container->get('ayamel.transcoding.manager')->transcodeFileForResource($id, $file, $appendFiles, $presetFilter);
-            } else {
-                $this->container->get('ayamel.transcoding.manager')->transcodeResource($id, $appendFiles, $presetFilter, $mimeFilter);
-            }
+            $this->container->get('ayamel.transcoding.manager')->transcodeResource($id, $appendFiles, $presetFilter, $mimeFilter);
+        }
         } catch (ResourceLockedException $e) {
             return false;
         } catch (NoTranscodeableFilesException $e) {
