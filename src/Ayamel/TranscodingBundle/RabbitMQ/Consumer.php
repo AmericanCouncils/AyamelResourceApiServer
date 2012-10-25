@@ -6,6 +6,7 @@ use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 use PhpAmqpLib\Message\AMQPMessage;
 use AC\Component\Transcoding\Transcoder;
 use Ayamel\FilesystemBundle\Filesystem\FilesystemInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Listens for Resource transcode jobs and processes accordingly.

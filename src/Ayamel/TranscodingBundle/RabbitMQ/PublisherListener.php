@@ -9,6 +9,7 @@ use Ayamel\ResourceBundle\Document\FileReference;
 use AC\WebServicesBundle\EventListener\RestServiceSubscriber;
 use AC\Component\Transcoding\Transcoder;
 use AC\Component\Transcoding\File;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Listens for upload events, and if it's of the proper type, registers a transcode job.
@@ -52,7 +53,7 @@ class PublisherListener
         $this->resource = $e->getResource();
         
         $this->uploadedReference = false;
-        $uploadedReference = FileReference::createFromPath($this->uploaded_file->getRealPath());
+        $uploadedReference = FileReference::createFromLocalPath($this->uploaded_file->getRealPath());
         foreach ($this->resource->content->getFiles() as $file) {
             if ($file->getInternalUri() && $file->equals($uploadedReference)) {
                 $this->uploadedReference = $uploadedReference;

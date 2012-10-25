@@ -23,7 +23,7 @@ class ProcessCommand extends ContainerAwareCommand
 		$this->setName('api:transcode:resource')
 			->setDescription("Transcode files for a given Resource ID.")
             ->addArgument('id', InputArgument::REQUIRED, "ID of Resource to transcode.")
-            ->addOption('force','-f', InputOption::VALUE_OPTIONAL, "If forced, the transcode will happen immediately, rather than asynchronously.", false);
+            ->addOption('force','-f', InputOption::VALUE_NONE, "If forced, the transcode will happen immediately, rather than asynchronously.");
 	}
 	
 	protected function execute(InputInterface $input, OutputInterface $output)
@@ -36,7 +36,7 @@ class ProcessCommand extends ContainerAwareCommand
             $this->getContainer()->get('transcoder')->getDispatcher()->addSubscriber($outputSubscriber);
         
             //run transcode for Resource immediately
-            $this->getContainer()->get('ayamel.transcoding.manager')->transcodeFilesForResource($id);
+            $this->getContainer()->get('ayamel.transcoding.manager')->transcodeResource($input->getArgument('id'));
             
         } else {
             //otherwise publish message via RabbitMQ

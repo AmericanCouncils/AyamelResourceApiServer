@@ -1,5 +1,5 @@
 parameters:
-    ayamel.trascoding.preset_map:
+    ayamel.transcoding.preset_map:
         video/mp4:
             - { preset: handbrake.ipod, tag: low, extension: mp4, representation: transcoding, quality: 1 }
             - { preset: handbrake.classic, tag: medium, extension: mp4, representation: transcoding, quality: 2 }

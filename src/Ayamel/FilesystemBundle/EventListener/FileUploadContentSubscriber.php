@@ -132,9 +132,9 @@ class FileUploadContentSubscriber implements EventSubscriberInterface {
         
         //inject relevant client-uploaded data, but only if it has not already been set by the
         //filesystem that handled the upload, as the client data may not be accurate
-        if(!$newRef->getMime()) {
+        if(!$newRef->getMimeType()) {
             $mime = ($uploadedFile->getClientMimeType()) ? $uploadedFile->getClientMimeType() : $uploadedFile->getMimeType();
-            $newRef->setMime($mime);
+            $newRef->setMimeType($mime);
         }
         if(!$newRef->getAttribute('bytes', false)) {
             $newRef->setAttribute('bytes', $uploadedFile->getClientSize());
@@ -144,7 +144,8 @@ class FileUploadContentSubscriber implements EventSubscriberInterface {
         //TODO: make this optional, there may already be an original
         //update this to allow the client to specify
         $newRef->setOriginal(true);
-        $newRef->setRepresentation("original;0");
+        $newRef->setRepresentation("original");
+        $newRef->setQuality(1);
 
         //set new content
         $resource->content->addFile($newRef);
@@ -175,7 +176,7 @@ class FileUploadContentSubscriber implements EventSubscriberInterface {
             return 'original.' . $ext;
         }
         
-        return preg_replace("/[^\w\.-]/", "_", strtolower($name));
+        return "original";
     }
 
 }

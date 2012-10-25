@@ -1,15 +1,26 @@
 parameters:
     ayamel.transcoding.temp_directory: %ayamel.filesystem.local_filesystem.root_dir%/tmp
-
+    
 services:
     ayamel.transcoding.mapper:
-        class: Ayamel\TranscodingBundle\PresetMapper;
+        class: Ayamel\TranscodingBundle\PresetMapper
         arguments: [%ayamel.transcoding.preset_map%]
         scope: prototype
         
+        
+    ayamel.transcoding.manager:
+        class: Ayamel\TranscodingBundle\TranscodeManager
+        arguments:
+            - @ayamel.api.filesystem
+            - @ayamel.resource.manager
+            - @transcoder
+            - %ayamel.transcoding.temp_directory%
+            - @event_dispatcher
+            - %ayamel.transcoding.preset_map%
+        
     # This service listens for file uploads, then registers a resource to have it's uploaded file
     # transcoded asyncronously
-	ayamel.transcoding.publisher_listener:
+    ayamel.transcoding.publisher_listener:
         class: Ayamel\TranscodingBundle\RabbitMQ\PublisherListener
         arguments: [@service_container]
         tags:

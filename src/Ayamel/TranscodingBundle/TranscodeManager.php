@@ -2,11 +2,17 @@
 
 namespace Ayamel\TranscodingBundle;
 
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Ayamel\ResourceBundle\Storage\StorageInterface;
 use Ayamel\ResourceBundle\Document\Resource;
 use Ayamel\ResourceBundle\Document\FileReference;
 use Ayamel\FilesystemBundle\Filesystem\FilesystemInterface;
 use AC\Component\Transcoding\Transcoder;
+use Ayamel\TranscodingBundle\Exception\NoRelevantPresetsException;
+use Ayamel\TranscodingBundle\Exception\NoTranscodeableFilesException;
+use Ayamel\TranscodingBundle\Exception\ResourceDeletedException;
+use Ayamel\TranscodingBundle\Exception\ResourceLockedException;
+use Ayamel\TranscodingBundle\Exception\ResourceNotFoundException;
 
 //TODO: Fire RESOURCE_MODIFIED event if everything goes correctly
 
@@ -52,7 +58,7 @@ class TranscodeManager
      * @param Transcoder $t 
      * @param $defaulMapperConfig 
      */
-    public function __construct(FilesystemInterface $fs, StorageInterface $rm, Transcoder $t, $tmpDirectory, DispatcherInterface $dispatcher, $defaultMapperConfig = array())
+    public function __construct(FilesystemInterface $fs, StorageInterface $rm, Transcoder $t, $tmpDirectory, EventDispatcherInterface $dispatcher, $defaultMapperConfig = array())
     {
         $this->filesystem = $fs;
         $this->resourceManager = $rm;
@@ -86,7 +92,7 @@ class TranscodeManager
             $processed = true;
                         
             //transcode new files, modifying Resource accordingly
-            $resource = $this->transcodeReferenceForResource($ref, $resource, $mappings, $append);
+            $resource = $this->transcodeFileReferenceForResource($ref, $resource, $mappings, $append);
         }
         
         //was anything processed at all?
@@ -123,7 +129,7 @@ class TranscodeManager
         try {
             foreach ($presetDefinitions as $def) {
                 //run the transcode & create a FileReference from the resulting file
-                $newFileReference = FileReference::createFromPath($transcoder->transcodeWithPreset(
+                $newFileReference = FileReference::createFromLocalPath($transcoder->transcodeWithPreset(
                     $ref->getInternalUri(),
                     $def['preset'],
                     $this->generateTemporaryOutputPath($resource->getId(), $def)
@@ -259,10 +265,12 @@ class TranscodeManager
     protected function getRefsToTranscode(Resource $resource, $path = false)
     {
         $refsToTranscode = array();
-        if (!$fileRefs = $resource->content->getFiles() || empty($fileRefs)) {
+        $fileRefs = $resource->content->getFiles();
+
+        if (!$fileRefs || empty($fileRefs)) {
             throw new NoTranscodeableFilesException(sprintf("Resource [%s] has no files.", $resource->getId()));
         }
-        
+
         foreach ($fileRefs as $ref) {
             if (!$path) {
                 //NOTE: we only transcode original, and locally stored file references (may change?)
