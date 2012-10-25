@@ -73,10 +73,9 @@ class PublisherListener
      */
     public function onApiTerminate()
     {
-        $this->container->get('ayamel.transcoding.publisher')->publish(serialize(array(
+        $this->container->get('old_sound_rabbit_mq.transcoding_producer')->publish(serialize(array(
             'id' => $resource->getId(),
             'notifyClient' => true,
-//            'file' => $this->uploadedReference->getInternalUri()
         )));
     }
 }

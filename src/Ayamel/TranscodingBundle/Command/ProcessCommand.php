@@ -8,6 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
 use AC\TranscodingBundle\Console\OutputSubscriber;
+use AC\Component\Transcoding\Adapter\AbstractCliAdapter;
 
 /**
  * Run transcode jobs for a Resource by ID.
@@ -28,20 +29,33 @@ class ProcessCommand extends ContainerAwareCommand
 	
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
+        $id = $input->getArgument('id');
+        
         if ($input->getOption('force')) {
+            $transcoder = $this->getContainer()->get('transcoder');
+
             //Inject CLI listener into transcoder
             $outputSubscriber = new OutputSubscriber;
             $outputSubscriber->setOutput($output);
             $outputSubscriber->setHelperSet($this->getHelperSet());
-            $this->getContainer()->get('transcoder')->getDispatcher()->addSubscriber($outputSubscriber);
+            $transcoder->getDispatcher()->addSubscriber($outputSubscriber);
+            
+            //check for verbose
+            if ($input->getOption('verbose')) {
+                foreach ($transcoder->getAdapters() as $adapter) {
+                    if ($adapter instanceof AbstractCliAdapter) {
+                        $adapter->setStreamBuffer(true);
+                    }
+                }
+            }
         
             //run transcode for Resource immediately
-            $this->getContainer()->get('ayamel.transcoding.manager')->transcodeResource($input->getArgument('id'));
+            $this->getContainer()->get('ayamel.transcoding.manager')->transcodeResource($id);
             
         } else {
             //otherwise publish message via RabbitMQ
-            $this->getContainer()->get('ayamel.transcoding.publisher')->publish(serialize(array(
-                'id' => $input->getArgument('id')
+            $this->getContainer()->get('old_sound_rabbit_mq.transcoding_producer')->publish(serialize(array(
+                'id' => $id
             )));
             
             $output->writeln(sprintf("Transcode job for Resource %s scheduled.", $id));

@@ -1,5 +1,5 @@
 parameters:
-    ayamel.transcoding.temp_directory: %ayamel.filesystem.local_filesystem.root_dir%/tmp
+    ayamel.transcoding.temp_directory: %kernel.root_dir%/tmp
     
 services:
     ayamel.transcoding.mapper:

@@ -1,4 +1,20 @@
-parameters:
+old_sound_rabbit_mq:
+    connections:
+        default:
+            host:      'localhost'
+            port:      5672
+            user:      'guest'
+            password:  'guest'
+            vhost:     '/'
+    
+    producers:
+        transcoding:
+            connection: default
+            exchange_options: { name: 'transcoding', type: direct }
 
-services:
-
+    consumers:
+        transcoding:
+            connection: default
+            exchange_options: { name: 'transcoding', type: direct }
+            queue_options:    { name: 'transcoding' }
+            callback:         ayamel.transcoding.consumer

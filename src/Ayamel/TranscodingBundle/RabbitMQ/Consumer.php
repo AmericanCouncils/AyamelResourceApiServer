@@ -32,7 +32,7 @@ class Consumer implements ConsumerInterface
 {
     private $container;
     
-    public function __construct(ContianerInterface $container)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
@@ -47,18 +47,17 @@ class Consumer implements ConsumerInterface
      */
 	public function execute(AMQPMessage $msg)
 	{
-		$id = $msg->body['id'];
-        $appendFiles = isset($msg->body['appendFiles']) ? (bool) $msg->body['appendFiles'] : false;
-        $presetFilter = $msg->body['presetFilter'] ?: array();
-        $mimeFilter = $msg->body['mimeFilter'] ?: array();
-        $file = $msg->body['file'] ?: false;
-        $notifyClient = $msg->body['notifyClient'] ?: false;
+        $body = unserialize($msg->body);
+		$id = $body['id'];
+        $appendFiles = isset($body['appendFiles']) ? (bool) $body['appendFiles'] : false;
+        $presetFilter = isset($body['presetFilter']) ? $body['presetFilter'] : array();
+        $mimeFilter = isset($body['mimeFilter']) ? $body['mimeFilter'] : array();
+        $notifyClient = isset($body['notifyClient']) ? $body['notifyClient'] : false;
         
         //try the transcode, if it fails, depending on how, either remove the job from the queue
         //or requeue for later
         try {
             $this->container->get('ayamel.transcoding.manager')->transcodeResource($id, $appendFiles, $presetFilter, $mimeFilter);
-        }
         } catch (ResourceLockedException $e) {
             return false;
         } catch (NoTranscodeableFilesException $e) {
@@ -76,6 +75,8 @@ class Consumer implements ConsumerInterface
                 //by publishing another rabbitMQ message to send an email
                 //saying there was a problem
             }
+            
+            throw $e;
 
             //and try handling the message again
             return false;

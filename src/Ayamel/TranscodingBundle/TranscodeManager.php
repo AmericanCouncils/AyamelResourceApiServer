@@ -2,17 +2,17 @@
 
 namespace Ayamel\TranscodingBundle;
 
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Ayamel\ResourceBundle\Storage\StorageInterface;
 use Ayamel\ResourceBundle\Document\Resource;
 use Ayamel\ResourceBundle\Document\FileReference;
 use Ayamel\FilesystemBundle\Filesystem\FilesystemInterface;
 use AC\Component\Transcoding\Transcoder;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Ayamel\TranscodingBundle\Exception\NoRelevantPresetsException;
 use Ayamel\TranscodingBundle\Exception\NoTranscodeableFilesException;
 use Ayamel\TranscodingBundle\Exception\ResourceDeletedException;
-use Ayamel\TranscodingBundle\Exception\ResourceLockedException;
 use Ayamel\TranscodingBundle\Exception\ResourceNotFoundException;
+use Ayamel\TranscodingBundle\Exception\ResourceLockedException;
 
 //TODO: Fire RESOURCE_MODIFIED event if everything goes correctly
 
@@ -106,11 +106,6 @@ class TranscodeManager
         return true;
 	}
     
-    public function transcodeFileForResource($id, $path, $presetFilter)
-    {
-        //TODO:
-    }
-
     /**
      * The real work happens here.  Locks a resource before doing work, then on completion
      * of any transcode work, cleans up the filesystem, and stores the data.0
@@ -129,21 +124,28 @@ class TranscodeManager
         try {
             foreach ($presetDefinitions as $def) {
                 //run the transcode & create a FileReference from the resulting file
-                $newFileReference = FileReference::createFromLocalPath($transcoder->transcodeWithPreset(
+                $transcodedFile = $this->transcoder->transcodeWithPreset(
                     $ref->getInternalUri(),
                     $def['preset'],
-                    $this->generateTemporaryOutputPath($resource->getId(), $def)
-                )->getRealPath());
+                    $this->generateTemporaryOutputPath($resource->getId(), $def),
+                    Transcoder::ONCONFLICT_DELETE,
+                    Transcoder::ONDIR_CREATE,
+                    Transcoder::ONFAIL_DELETE
+                );
                 
-                //inject file reference data from the mapper
+                $newFileReference = FileReference::createFromLocalPath($transcodedFile->getRealPath());
+                
+                //inject file reference data from the mapper & transcoded file
+                $newFileReference->setMimeType($transcodedFile->getMimeType());
                 $newFileReference->setQuality($def['quality']);
                 $newFileReference->setRepresentation($def['representation']);
+                $newFileReference->setAttribute('bytes', $transcodedFile->getSize());
                 
                 //new base name for file with tag + output extension
                 $newBaseName = $def['tag'].".".$def['extension'];
                 
                 //add file into filesystem (will move it to final location)
-                $finalReference = $this->filesystem->addFileForId($resource->getId(), $newFileReference, $newBaseName, FilesystemInterface::CONFLICT_OVERWRITE);
+                $finalReference = $this->filesystem->addFileForId($resource->getId(), $newFileReference, $newBaseName, false, FilesystemInterface::CONFLICT_OVERWRITE);
                 
                 //store good file reference in array
                 $newFiles[] = $finalReference;
@@ -169,7 +171,12 @@ class TranscodeManager
             }
 
             foreach ($toRemove as $oldFile) {
-                $this->filesystem->removeFile($oldFile);
+                if ($this->filterOverwrittenFiles($newFiles, $oldFile)) {
+                    $this->filesystem->removeFile($oldFile);
+                }
+
+                //remove it from the content anyway, the new reference will
+                //be re-added in the next step
                 $resource->content->removeFile($oldFile);
             }
         }
@@ -187,6 +194,26 @@ class TranscodeManager
         $this->cleanupFilesystem($resource);
         
         return $resource;
+    }
+
+    /**
+     * Return false if the new file array contains a reference to the same
+     * file as the old file, this means the new file overwrote a previously
+     * existing file.
+     *
+     * @param array $new 
+     * @param FileReference $old 
+     * @return boolean
+     */
+    protected function filterOverwrittenFiles(array $new, FileReference $old)
+    {
+        foreach ($new as $file) {
+            if ($file->equals($old)) {
+                return false;
+            }
+        }
+        
+        return true;
     }
 
     protected function lockResource(Resource $resource)
@@ -270,7 +297,7 @@ class TranscodeManager
         if (!$fileRefs || empty($fileRefs)) {
             throw new NoTranscodeableFilesException(sprintf("Resource [%s] has no files.", $resource->getId()));
         }
-
+        
         foreach ($fileRefs as $ref) {
             if (!$path) {
                 //NOTE: we only transcode original, and locally stored file references (may change?)

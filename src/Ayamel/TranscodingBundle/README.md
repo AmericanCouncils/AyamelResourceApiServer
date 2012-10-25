@@ -8,6 +8,5 @@ The bundle adds a subscriber that listens for new files uploaded via the Resourc
 
 ## TODO ##
 
-* properly configure RabbitMQ
-* Finish `TranscodeManager`
-* finish process command
+* activate publisher listener
+* implement resource_modified event
