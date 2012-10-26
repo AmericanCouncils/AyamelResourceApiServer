@@ -30,3 +30,8 @@ parameters:
             - { preset: handbrake.classic, tag: medium, extension: mp4, representation: transcoding, quality: 2 }
             - { preset: handbrake.high_profile, tag: high, extension: mp4, representation: transcoding, quality: 3 }
 #            - { preset: ffmpeg.thumbnail, tag: thumb, extension: jpg, representation: transcoding, quality: 3, params: {} }
+        video/avi:
+            - { preset: handbrake.ipod, tag: low, extension: mp4, representation: transcoding, quality: 1 }
+            - { preset: handbrake.classic, tag: medium, extension: mp4, representation: transcoding, quality: 2 }
+            - { preset: handbrake.high_profile, tag: high, extension: mp4, representation: transcoding, quality: 3 }
+#            - { preset: ffmpeg.thumbnail, tag: thumb, extension: jpg, representation: transcoding, quality: 3, params: {} }

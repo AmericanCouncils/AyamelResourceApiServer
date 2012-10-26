@@ -16,12 +16,12 @@ use AC\Component\Transcoding\Adapter\AbstractCliAdapter;
  * @package AyamelTranscodingBundle
  * @author Evan Villemez
  */
-class ProcessCommand extends ContainerAwareCommand
+class TranscodeResourceCommand extends ContainerAwareCommand
 {
 	
 	protected function configure()
 	{
-		$this->setName('api:transcode:resource')
+		$this->setName('api:resource:transcode')
 			->setDescription("Transcode files for a given Resource ID.")
             ->addArgument('id', InputArgument::REQUIRED, "ID of Resource to transcode.")
             ->addOption('force','-f', InputOption::VALUE_NONE, "If forced, the transcode will happen immediately, rather than asynchronously.");

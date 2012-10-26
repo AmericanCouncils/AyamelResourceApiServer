@@ -10,6 +10,7 @@ use AC\WebServicesBundle\EventListener\RestServiceSubscriber;
 use AC\Component\Transcoding\Transcoder;
 use AC\Component\Transcoding\File;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 
 /**
  * Listens for upload events, and if it's of the proper type, registers a transcode job.
@@ -36,7 +37,7 @@ class PublisherListener
         if ('file_upload' !== $e->getContentType()) {
             return;
         }
-        
+
         //keep track of newly uploaded file reference
         $this->uploaded_file = $e->getContentData();
         
@@ -53,10 +54,9 @@ class PublisherListener
         $this->resource = $e->getResource();
         
         $this->uploadedReference = false;
-        $uploadedReference = FileReference::createFromLocalPath($this->uploaded_file->getRealPath());
         foreach ($this->resource->content->getFiles() as $file) {
-            if ($file->getInternalUri() && $file->equals($uploadedReference)) {
-                $this->uploadedReference = $uploadedReference;
+            if ('original' === $file->getRepresentation() && $file->getInternalUri()) {
+                $this->uploadedReference = $file;
                 break;
             }
         }
@@ -71,10 +71,11 @@ class PublisherListener
     /**
      * During API Terminate register job to transcode the modified resource
      */
-    public function onApiTerminate()
+    public function onApiTerminate(PostResponseEvent $e)
     {
+        
         $this->container->get('old_sound_rabbit_mq.transcoding_producer')->publish(serialize(array(
-            'id' => $resource->getId(),
+            'id' => $this->resource->getId(),
             'notifyClient' => true,
         )));
     }
