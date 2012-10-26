@@ -203,11 +203,11 @@ class ContentCollection {
     /**
      * Get files
      *
-     * @return Doctrine\Common\Collections\Collection $files
+     * @return array
      */
     public function getFiles()
     {
-        return $this->files;
+        return $this->files->toArray();
     }
 
 }

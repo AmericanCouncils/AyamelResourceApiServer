@@ -56,7 +56,8 @@ class UploadContent extends ApiController {
      *                  {
      *                      "downloadUri": "http://example.com/files/some_video_original.wmv",
      *                      "mime": "video/x-ms-wmv",
-     *                      "representation": "original;0",
+     *                      "representation": "original",
+     *                      "quality": "1",
      *                      "attributes": {
      *                          "bytes": 14658,
      *                          "duration": 300,
@@ -68,7 +69,8 @@ class UploadContent extends ApiController {
      *                   {
      *                      "downloadUri": "http://example.com/files/transcoded.mp4",
      *                      "mime": "video/mp4",
-     *                      "representation": "transcoded;1",
+     *                      "representation": "transcoded",
+     *                      "quality": "1",
      *                      "attributes": {
      *                          "bytes": 9600,
      *                          "duration": 300,

@@ -151,8 +151,8 @@ class LocalFilesystem implements FilesystemInterface {
         $base = $this->generateBasePathForId($id);
         $dir = dirname($base);
         if(!is_dir($dir)) {
-            if(!mkdir($dir, 0755, true)) {
-                throw new \RuntimeException(sprintf("%s could not create a required directory for file storage.", __CLASS__));
+            if(!@mkdir($dir, 0755, true)) {
+                throw new \RuntimeException(sprintf("%s could not create a required storage directory [%s].", __CLASS__, $dir));
             }
         }
         
@@ -170,12 +170,18 @@ class LocalFilesystem implements FilesystemInterface {
 
         //copy or move file to new location
         if($copy) {
-            if(copy($file->getInternalUri(), $filename)) {
-                return $this->ensurePaths(FileReference::createFromLocalPath($filename));
+            if(@copy($file->getInternalUri(), $filename)) {
+                $file->setInternalUri($filename);
+                return $this->ensurePaths($file);
+            } else {
+                throw new \RuntimeException(sprintf("Could not copy file [%s] to [%s].", $file->getInternalUri(), $filename));
             }
         } else {
-            if(rename($file->getInternalUri(), $filename)) {
-                return $this->ensurePaths(FileReference::createFromLocalPath($filename));
+            if(@rename($file->getInternalUri(), $filename)) {
+                $file->setInternalUri($filename);
+                return $this->ensurePaths($file);
+            } else {
+                throw new \RuntimeException(sprintf("Could not move file [%s] to [%s].", $file->getInternalUri(), $filename));
             }
         }
         

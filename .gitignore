@@ -8,4 +8,5 @@ composer.phar
 app/files/*
 web/examples/
 app/config/parameters.yml
+web/files
 
