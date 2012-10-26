@@ -57,6 +57,7 @@ class FileReference {
     
     /**
      * An integer describing the relative quality.  Higher means higher quality relative to others.
+     * Default quality is `1`.
      *
      * @MongoDB\Int
      * @JMS\Type("integer")
@@ -76,6 +77,7 @@ class FileReference {
      *
      * @MongoDB\String
      * @JMS\Type("string")
+     * @JMS\SerializedName("mimeType")
      */
     protected $mimeType;
 
@@ -269,7 +271,17 @@ class FileReference {
      */
     public function getMime()
     {
-        return $this->mime;
+        return $this->mime ? $this->mime : $this->mimeType;
+    }
+
+    public function setMimeType($mimeType)
+    {
+        $this->mimeType = $mimeType;
+    }
+    
+    public function getMimeType()
+    {
+        return $this->mimeType;
     }
 
     /**

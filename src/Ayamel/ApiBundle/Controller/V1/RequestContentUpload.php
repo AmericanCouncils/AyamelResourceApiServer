@@ -34,7 +34,7 @@ class RequestContentUpload extends ApiController {
         
 		$uploadToken = $this->container->get('ayamel.api.upload_token_manager')->createTokenForId($resource->getId());
         
-        $url = $this->container->get('router')->generate('AyamelApiBundle_v1_upload_content', array('id' => $resource->getId(), 'token' => $uploadToken), true);
+        $url = $this->container->get('router')->generate('api_v1_upload_content', array('id' => $resource->getId(), 'token' => $uploadToken), true);
         
         return $this->createServiceResponse(array('content_upload_url' => $url), 200);
     }

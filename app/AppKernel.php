@@ -29,8 +29,8 @@ class AppKernel extends Kernel
             new AC\GetID3Bundle\ACGetID3Bundle(),
 //            new Ayamel\GetID3Bundle\AyamelGetID3Bundle(),
             new AC\TranscodingBundle\ACTranscodingBundle(),
-//            new Sonata\NotificationBundle\SonataNotificationBundle(),
-//            new Ayamel\TranscodingBundle\AyamelTranscodingBundle(),
+            new OldSound\RabbitMqBundle\OldSoundRabbitMqBundle(),
+            new Ayamel\TranscodingBundle\AyamelTranscodingBundle(),
             new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
         );
 

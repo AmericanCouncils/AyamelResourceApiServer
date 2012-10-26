@@ -76,7 +76,7 @@ class CreateResource extends ApiController {
         //notify rest of system of new resource
         $this->container->get('ayamel.api.dispatcher')->dispatch(Events::RESOURCE_CREATED, new ApiEvent($resource));
         
-        $uploadUrl = $this->container->get('router')->generate('AyamelApiBundle_v1_upload_content', array('id' => $resource->getId(), 'token' => $uploadToken), true);
+        $uploadUrl = $this->container->get('router')->generate('api_v1_upload_content', array('id' => $resource->getId(), 'token' => $uploadToken), true);
         
         //define returned content structure
         return $this->createServiceResponse(array(
