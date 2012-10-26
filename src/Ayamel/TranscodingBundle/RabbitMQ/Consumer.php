@@ -76,10 +76,10 @@ class Consumer implements ConsumerInterface
                 //saying there was a problem
             }
             
-            throw $e;
+            //throw $e;
 
             //and try handling the message again
-            return false;
+            return true;
         }
         
         //if we got this far we've transcoded everything cleanly

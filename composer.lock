@@ -1,19 +1,19 @@
 {
-    "hash": "58b17df01775136fd6080e345e7b1fff",
+    "hash": "055fbb46c10f0b66e28816b85e6092e4",
     "packages": [
         {
             "name": "ac/transcoding",
-            "version": "0.2.1",
+            "version": "0.3.0",
             "target-dir": "AC/Component/Transcoding",
             "source": {
                 "type": "git",
                 "url": "git://github.com/AmericanCouncils/Transcoding.git",
-                "reference": "0.2.1"
+                "reference": "0.3.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/AmericanCouncils/Transcoding/zipball/0.2.1",
-                "reference": "0.2.1",
+                "url": "https://github.com/AmericanCouncils/Transcoding/zipball/0.3.0",
+                "reference": "0.3.0",
                 "shasum": ""
             },
             "require": {
@@ -24,14 +24,36 @@
             "require-dev": {
                 "symfony/process": "2.1.*"
             },
-            "time": "2012-08-21 18:39:58",
+            "time": "2012-10-16 13:26:04",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "AC\\Component\\Transcoding": ""
                 }
-            }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Evan Villemez",
+                    "email": "evan.villemez@americancouncils.org"
+                },
+                {
+                    "name": "Andrew Freix"
+                },
+                {
+                    "name": "Jay Hebert"
+                }
+            ],
+            "description": "File transcoding abstraction component for PHP 5.3+.",
+            "homepage": "http://github.com/americancouncils/transcoding",
+            "keywords": [
+                "file",
+                "convert",
+                "transcode"
+            ]
         },
         {
             "name": "ac/transcoding-bundle",
@@ -40,24 +62,24 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/AmericanCouncils/TranscodingBundle",
-                "reference": "e771a764fbc2c1327aaada74f572db83855709a6"
+                "reference": "4143fd60a242a42103101b44d01e6be9b99bbd69"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/AmericanCouncils/TranscodingBundle/zipball/e771a764fbc2c1327aaada74f572db83855709a6",
-                "reference": "e771a764fbc2c1327aaada74f572db83855709a6",
+                "url": "https://github.com/AmericanCouncils/TranscodingBundle/zipball/4143fd60a242a42103101b44d01e6be9b99bbd69",
+                "reference": "4143fd60a242a42103101b44d01e6be9b99bbd69",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3",
-                "symfony/dependency-injection": "2.1.*",
-                "symfony/http-kernel": "2.1.*",
-                "ac/transcoding": "0.2.*"
+                "ac/transcoding": "0.3.*",
+                "symfony/framework-bundle": "2.1.*"
             },
             "suggest": {
-                "sonata-project/notification-bundle": "2.0.*"
+                "sonata-project/notification-bundle": "2.0.*",
+                "oldsound/rabbitmq-bundle": "dev-master"
             },
-            "time": "1347034444",
+            "time": "1351174155",
             "type": "symfony-bundle",
             "installation-source": "source",
             "autoload": {
@@ -97,14 +119,14 @@
             "require": {
                 "php": ">=5.3"
             },
-            "time": "1342369887",
+            "time": "9887-10-26 13:42:36",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "1.0-dev"
                 }
             },
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "dflydev\\markdown": "src"
@@ -128,14 +150,13 @@
             "require": {
                 "php": ">=5.3.2"
             },
-            "time": "1348120518",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.3.x-dev"
                 }
             },
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "Doctrine\\Common": "lib/"
@@ -201,14 +222,13 @@
                 "symfony/console": ">=2.0,<2.2-dev",
                 "doctrine/common": ">=2.1.0,<2.5-dev"
             },
-            "time": "1348955973",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "1.0.x-dev"
                 }
             },
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "Doctrine\\MongoDB": "lib/"
@@ -247,12 +267,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/mongodb-odm.git",
-                "reference": "3f6779f5abaf5ee2d278e40d930e90d714074aae"
+                "reference": "1.0.0-BETA6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/doctrine/mongodb-odm/zipball/3f6779f5abaf5ee2d278e40d930e90d714074aae",
-                "reference": "3f6779f5abaf5ee2d278e40d930e90d714074aae",
+                "url": "https://github.com/doctrine/mongodb-odm/zipball/1.0.0-BETA6",
+                "reference": "1.0.0-BETA6",
                 "shasum": ""
             },
             "require": {
@@ -285,7 +305,7 @@
                     "homepage": "http://avalanche123.com"
                 },
                 {
-                    "name": "Jonathan H. Wage",
+                    "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com",
                     "homepage": "http://www.jwage.com/"
                 },
@@ -330,14 +350,13 @@
             "suggest": {
                 "doctrine/data-fixtures": "Load data fixtures"
             },
-            "time": "1349978842",
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
                     "dev-master": "3.0-dev"
                 }
             },
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "Doctrine\\Bundle\\MongoDBBundle": ""
@@ -410,14 +429,13 @@
             "suggest": {
                 "doctrine/common": ">=2.0"
             },
-            "time": "1350036797",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "1.2.x-dev"
                 }
             },
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "Metadata\\": "src/"
@@ -476,7 +494,7 @@
                     "dev-master": "0.9.x-dev"
                 }
             },
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "JMS\\SerializerBundle": ""
@@ -509,12 +527,12 @@
             "source": {
                 "type": "git",
                 "url": "http://github.com/kriswallsmith/assetic.git",
-                "reference": "e22c5e07e672bb0cf43127e97e9368b53abf4aa8"
+                "reference": "a1b6fa1f7bb27c203b6c3cf7d0dd0184f8dffcdc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/kriswallsmith/assetic/zipball/e22c5e07e672bb0cf43127e97e9368b53abf4aa8",
-                "reference": "e22c5e07e672bb0cf43127e97e9368b53abf4aa8",
+                "url": "https://github.com/kriswallsmith/assetic/zipball/a1b6fa1f7bb27c203b6c3cf7d0dd0184f8dffcdc",
+                "reference": "a1b6fa1f7bb27c203b6c3cf7d0dd0184f8dffcdc",
                 "shasum": ""
             },
             "require": {
@@ -535,7 +553,7 @@
                 "ptachoire/cssembed": "Assetic provides the integration with phpcssembed to embed data uris",
                 "leafo/scssphp-compass": "Assetic provides the integration with the SCSS compass plugin"
             },
-            "time": "1349004759",
+            "time": "1351079542",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -575,12 +593,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog",
-                "reference": "09b3a80cfaf3e323e348a5e817afeee98d5e6b48"
+                "reference": "38bb472abb27db138536f845f7d259c1c47bbd3f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/Seldaek/monolog/zipball/09b3a80cfaf3e323e348a5e817afeee98d5e6b48",
-                "reference": "09b3a80cfaf3e323e348a5e817afeee98d5e6b48",
+                "url": "https://github.com/Seldaek/monolog/zipball/38bb472abb27db138536f845f7d259c1c47bbd3f",
+                "reference": "38bb472abb27db138536f845f7d259c1c47bbd3f",
                 "shasum": ""
             },
             "require": {
@@ -594,7 +612,7 @@
                 "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
                 "ext-mongo": "Allow sending log messages to a MongoDB server"
             },
-            "time": "1347983448",
+            "time": "1351084926",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -632,29 +650,29 @@
             "source": {
                 "type": "git",
                 "url": "http://github.com/nelmio/NelmioApiDocBundle",
-                "reference": "65c634d32bb73302f2a9a92e1606718cf06265a9"
+                "reference": "9c7577f7c21a65a4cbaa101603275259be574d7d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/nelmio/NelmioApiDocBundle/zipball/65c634d32bb73302f2a9a92e1606718cf06265a9",
-                "reference": "65c634d32bb73302f2a9a92e1606718cf06265a9",
+                "url": "https://github.com/nelmio/NelmioApiDocBundle/zipball/9c7577f7c21a65a4cbaa101603275259be574d7d",
+                "reference": "9c7577f7c21a65a4cbaa101603275259be574d7d",
                 "shasum": ""
             },
             "require": {
-                "symfony/framework-bundle": "2.1.*",
-                "symfony/twig-bundle": "2.1.*",
-                "symfony/form": "2.1.*",
-                "dflydev/markdown": "1.0.*"
+                "dflydev/markdown": "1.0.*",
+                "symfony/framework-bundle": ">=2.1,<2.3-dev",
+                "symfony/twig-bundle": ">=2.1,<2.3-dev",
+                "symfony/form": ">=2.1,<2.3-dev"
             },
             "require-dev": {
-                "symfony/css-selector": "2.1.*",
-                "symfony/browser-kit": "2.1.*",
-                "symfony/validator": "2.1.*",
-                "symfony/yaml": "2.1.*",
                 "friendsofsymfony/rest-bundle": "dev-master",
-                "jms/serializer-bundle": "0.9.*"
+                "jms/serializer-bundle": "0.9.*",
+                "symfony/css-selector": ">=2.1,<2.3-dev",
+                "symfony/browser-kit": ">=2.1,<2.3-dev",
+                "symfony/validator": ">=2.1,<2.3-dev",
+                "symfony/yaml": ">=2.1,<2.3-dev"
             },
-            "time": "1346402290",
+            "time": "1351085922",
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
@@ -666,7 +684,72 @@
                 "psr-0": {
                     "Nelmio\\ApiDocBundle": ""
                 }
-            }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nelmio",
+                    "homepage": "http://nelm.io"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://github.com/nelmio/NelmioApiDocBundle/contributors"
+                }
+            ],
+            "description": "Generates documentation for your REST API from annotations",
+            "keywords": [
+                "documentation",
+                "rest",
+                "api",
+                "doc"
+            ]
+        },
+        {
+            "name": "oldsound/rabbitmq-bundle",
+            "version": "dev-master",
+            "target-dir": "OldSound/RabbitMqBundle",
+            "source": {
+                "type": "git",
+                "url": "git://github.com/videlalvaro/RabbitMqBundle.git",
+                "reference": "2e1e063016912c5c41091a46ee0f022652435da5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/videlalvaro/RabbitMqBundle/zipball/2e1e063016912c5c41091a46ee0f022652435da5",
+                "reference": "2e1e063016912c5c41091a46ee0f022652435da5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "symfony/framework-bundle": ">=2.0",
+                "videlalvaro/php-amqplib": "dev-master",
+                "symfony/yaml": ">=2.0"
+            },
+            "time": "1350265130",
+            "type": "symfony-bundle",
+            "installation-source": "source",
+            "autoload": {
+                "psr-0": {
+                    "OldSound\\RabbitMqBundle\\": ""
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alvaro Videla"
+                }
+            ],
+            "description": "Integrates php-amqplib with Symfony2 and RabbitMq",
+            "keywords": [
+                "queue",
+                "Symfony2",
+                "rabbitmq",
+                "message"
+            ]
         },
         {
             "name": "sensio/distribution-bundle",
@@ -686,14 +769,13 @@
             "require": {
                 "symfony/framework-bundle": "2.1.*"
             },
-            "time": "1347340208",
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.1.x-dev"
                 }
             },
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "Sensio\\Bundle\\DistributionBundle": ""
@@ -721,19 +803,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensio/SensioFrameworkExtraBundle",
-                "reference": "53a2a5e5ba052b2ae281f3b8bd9b530947a328b4"
+                "reference": "6a63ea91085be5073d8928fd48fa53734b3c2a57"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/sensio/SensioFrameworkExtraBundle/zipball/53a2a5e5ba052b2ae281f3b8bd9b530947a328b4",
-                "reference": "53a2a5e5ba052b2ae281f3b8bd9b530947a328b4",
+                "url": "https://github.com/sensio/SensioFrameworkExtraBundle/zipball/6a63ea91085be5073d8928fd48fa53734b3c2a57",
+                "reference": "6a63ea91085be5073d8928fd48fa53734b3c2a57",
                 "shasum": ""
             },
             "require": {
                 "symfony/framework-bundle": "2.1.*",
                 "doctrine/common": ">=2.1,<2.4-dev"
             },
-            "time": "1349786071",
+            "time": "1350448707",
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
@@ -785,14 +867,13 @@
                 "doctrine/orm": ">=2.1,<2.4-dev",
                 "twig/twig": ">=1.8,<2.0-dev"
             },
-            "time": "1348030981",
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.1.x-dev"
                 }
             },
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "Sensio\\Bundle\\GeneratorBundle": ""
@@ -811,22 +892,22 @@
         },
         {
             "name": "swiftmailer/swiftmailer",
-            "version": "dev-master",
+            "version": "v4.2.2",
             "source": {
                 "type": "git",
                 "url": "git://github.com/swiftmailer/swiftmailer.git",
-                "reference": "22731e907f5ca288c9bfde6b54f3611ace0a6c39"
+                "reference": "v4.2.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/swiftmailer/swiftmailer/zipball/22731e907f5ca288c9bfde6b54f3611ace0a6c39",
-                "reference": "22731e907f5ca288c9bfde6b54f3611ace0a6c39",
+                "url": "https://github.com/swiftmailer/swiftmailer/zipball/v4.2.2",
+                "reference": "v4.2.2",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.2.4"
             },
-            "time": "1349196829",
+            "time": "2012-10-25 01:30:40",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -865,12 +946,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/AsseticBundle",
-                "reference": "bc7cddba9b63ca47d3e1eba725cae1a52ec32897"
+                "reference": "4eea8571954132e4715a5e756fe6a90a7e2d90f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/AsseticBundle/zipball/bc7cddba9b63ca47d3e1eba725cae1a52ec32897",
-                "reference": "bc7cddba9b63ca47d3e1eba725cae1a52ec32897",
+                "url": "https://github.com/symfony/AsseticBundle/zipball/4eea8571954132e4715a5e756fe6a90a7e2d90f6",
+                "reference": "4eea8571954132e4715a5e756fe6a90a7e2d90f6",
                 "shasum": ""
             },
             "require": {
@@ -890,7 +971,7 @@
             "suggest": {
                 "symfony/twig-bundle": ">=2.1.0,<2.3-dev"
             },
-            "time": "1349897943",
+            "time": "1350864366",
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
@@ -947,14 +1028,13 @@
                 "symfony/yaml": ">=2.1.0,<2.3-dev",
                 "symfony/config": ">=2.1.0,<2.3-dev"
             },
-            "time": "1348137624",
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.1.x-dev"
                 }
             },
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Bundle\\MonologBundle": ""
@@ -983,12 +1063,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/SwiftmailerBundle",
-                "reference": "e055faf5d7279f3c01ffd58f1548e0fc524b71d1"
+                "reference": "2393ba6d4f1b544349123e24a16bbc749bef9e55"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/SwiftmailerBundle/zipball/e055faf5d7279f3c01ffd58f1548e0fc524b71d1",
-                "reference": "e055faf5d7279f3c01ffd58f1548e0fc524b71d1",
+                "url": "https://github.com/symfony/SwiftmailerBundle/zipball/2393ba6d4f1b544349123e24a16bbc749bef9e55",
+                "reference": "2393ba6d4f1b544349123e24a16bbc749bef9e55",
                 "shasum": ""
             },
             "require": {
@@ -1002,7 +1082,7 @@
                 "symfony/config": ">=2.1.0,<2.3-dev",
                 "symfony/yaml": ">=2.1.0,<2.3-dev"
             },
-            "time": "1348137776",
+            "time": "1350447491",
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
@@ -1033,26 +1113,28 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "dev-master",
+            "version": "2.1.x-dev",
             "source": {
                 "type": "git",
                 "url": "git://github.com/symfony/symfony.git",
-                "reference": "c0673d77d02e9955f9e80b82478d0b7259a3fc31"
+                "reference": "5155aecb3ac85597d7a70ac57899c860a6031501"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/symfony/zipball/c0673d77d02e9955f9e80b82478d0b7259a3fc31",
-                "reference": "c0673d77d02e9955f9e80b82478d0b7259a3fc31",
+                "url": "https://github.com/symfony/symfony/zipball/5155aecb3ac85597d7a70ac57899c860a6031501",
+                "reference": "5155aecb3ac85597d7a70ac57899c860a6031501",
                 "shasum": ""
             },
             "require": {
-                "doctrine/common": ">2.2,<2.4-dev",
                 "php": ">=5.3.3",
+                "doctrine/common": ">2.2,<2.4-dev",
                 "twig/twig": ">=1.9.1,<2.0-dev"
             },
             "replace": {
                 "symfony/doctrine-bridge": "self.version",
                 "symfony/monolog-bridge": "self.version",
+                "symfony/propel1-bridge": "self.version",
+                "symfony/swiftmailer-bridge": "self.version",
                 "symfony/twig-bridge": "self.version",
                 "symfony/framework-bundle": "self.version",
                 "symfony/security-bundle": "self.version",
@@ -1072,6 +1154,7 @@
                 "symfony/http-foundation": "self.version",
                 "symfony/http-kernel": "self.version",
                 "symfony/locale": "self.version",
+                "symfony/options-resolver": "self.version",
                 "symfony/process": "self.version",
                 "symfony/routing": "self.version",
                 "symfony/security": "self.version",
@@ -1079,22 +1162,16 @@
                 "symfony/templating": "self.version",
                 "symfony/translation": "self.version",
                 "symfony/validator": "self.version",
-                "symfony/yaml": "self.version",
-                "symfony/propel1-bridge": "self.version",
-                "symfony/options-resolver": "self.version",
-                "symfony/swiftmailer-bridge": "self.version"
+                "symfony/yaml": "self.version"
             },
             "require-dev": {
+                "doctrine/dbal": ">=2.2,<2.4-dev",
+                "doctrine/orm": ">=2.2.3,<2.4-dev",
                 "doctrine/data-fixtures": "1.0.*",
                 "propel/propel1": "dev-master",
-                "monolog/monolog": "dev-master",
-                "doctrine/dbal": ">=2.2,<2.4-dev",
-                "doctrine/orm": ">=2.2.3,<2.4-dev"
+                "monolog/monolog": "1.*"
             },
-            "suggest": {
-                "doctrine/data-fixtures": "1.0.*"
-            },
-            "time": "1346413296",
+            "time": "1351255755",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1107,7 +1184,25 @@
                     "Symfony": "src/",
                     "SessionHandlerInterface": "src/Symfony/Component/HttpFoundation/Resources/stubs"
                 }
-            }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                }
+            ],
+            "description": "The Symfony PHP framework",
+            "homepage": "http://symfony.com",
+            "keywords": [
+                "framework"
+            ]
         },
         {
             "name": "twig/extensions",
@@ -1126,14 +1221,13 @@
             "require": {
                 "twig/twig": "1.*"
             },
-            "time": "1349889206",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "1.0.x-dev"
                 }
             },
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "Twig_Extensions_": "lib/"
@@ -1162,22 +1256,22 @@
             "source": {
                 "type": "git",
                 "url": "git://github.com/fabpot/Twig.git",
-                "reference": "e1e9802c562aa4e8f8d5a8d3faaed6f235a38d2f"
+                "reference": "61393dc9fb8982110048624aa573aec4aee0b465"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/fabpot/Twig/zipball/e1e9802c562aa4e8f8d5a8d3faaed6f235a38d2f",
-                "reference": "e1e9802c562aa4e8f8d5a8d3faaed6f235a38d2f",
+                "url": "https://github.com/fabpot/Twig/zipball/61393dc9fb8982110048624aa573aec4aee0b465",
+                "reference": "61393dc9fb8982110048624aa573aec4aee0b465",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.2.4"
             },
-            "time": "1350053600",
+            "time": "1350737598",
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.10-dev"
+                    "dev-master": "1.11-dev"
                 }
             },
             "installation-source": "source",
@@ -1204,6 +1298,44 @@
             "keywords": [
                 "templating"
             ]
+        },
+        {
+            "name": "videlalvaro/php-amqplib",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "git://github.com/videlalvaro/php-amqplib.git",
+                "reference": "85ff1412152e2de8519dc75ffb741fe3adf89b9c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/videlalvaro/php-amqplib/zipball/85ff1412152e2de8519dc75ffb741fe3adf89b9c",
+                "reference": "85ff1412152e2de8519dc75ffb741fe3adf89b9c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "time": "1350881455",
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "psr-0": {
+                    "PhpAmqpLib": ""
+                }
+            },
+            "authors": [
+                {
+                    "name": "Alvaro Videla"
+                }
+            ],
+            "description": "This library is a pure PHP implementation of the AMQP protocol. It's been tested against RabbitMQ.",
+            "homepage": "https://github.com/videlalvaro/php-amqplib/",
+            "keywords": [
+                "queue",
+                "rabbitmq",
+                "message"
+            ]
         }
     ],
     "packages-dev": null,
@@ -1216,6 +1348,7 @@
         "twig/extensions": 20,
         "symfony/swiftmailer-bundle": 20,
         "ac/transcoding-bundle": 20,
+        "oldsound/rabbitmq-bundle": 20,
         "nelmio/api-doc-bundle": 20
     }
 }
