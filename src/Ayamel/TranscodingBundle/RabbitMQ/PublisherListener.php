@@ -1,21 +1,28 @@
 <?php
 
-namespace Ayamel\TranscodingBundle;
+namespace Ayamel\TranscodingBundle\RabbitMQ;
 
 use Ayamel\ApiBundle\Event\Events as ApiEvents;
 use Ayamel\ApiBundle\Event\ApiEvent;
 use Ayamel\ApiBundle\Event\HandleUploadedContentEvent;
+use Ayamel\ResourceBundle\Document\FileReference;
+use AC\WebServicesBundle\EventListener\RestServiceSubscriber;
+use AC\Component\Transcoding\Transcoder;
+use AC\Component\Transcoding\File;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 
 /**
  * Listens for upload events, and if it's of the proper type, registers a transcode job.
  *
- * @package TranscodingBundle
+ * @package AyamelTranscodingBundle
  * @author Evan Villemez
  */
-class TranscodingListener
+class PublisherListener
 {
     private $container;
     private $uploaded_file;
+    private $resource;
     
     public function __construct(ContainerInterface $container)
     {
@@ -30,7 +37,7 @@ class TranscodingListener
         if ('file_upload' !== $e->getContentType()) {
             return;
         }
-        
+
         //keep track of newly uploaded file reference
         $this->uploaded_file = $e->getContentData();
         
@@ -44,21 +51,32 @@ class TranscodingListener
      */
     public function onResourceModified(ApiEvent $e)
     {
-        $resource = $e->getResource();
-            
-        $uploadedFile = false;
-        foreach ($resource->content->getFiles() as $file) {
-            if ($file->getInternalUri() && $file->equals($this->uploaded_file)) {
-                $uploadedFile = $this->uploaded_file;
+        $this->resource = $e->getResource();
+        
+        $this->uploadedReference = false;
+        foreach ($this->resource->content->getFiles() as $file) {
+            if ('original' === $file->getRepresentation() && $file->getInternalUri()) {
+                $this->uploadedReference = $file;
                 break;
             }
         }
             
-        if (!$uploadedFile) {
+        if (!$this->uploadedReference) {
             return;
         }
-
-        //TODO: how to tell if I can/should schedule a transcode job?
-        throw new \RuntimeException("Cannot transcode files yet... some things need to be resolved.");
+        
+        $this->container->get('event_dispatcher')->addListener(RestServiceSubscriber::API_TERMINATE, array($this, 'onApiTerminate'));
+    }
+    
+    /**
+     * During API Terminate register job to transcode the modified resource
+     */
+    public function onApiTerminate(PostResponseEvent $e)
+    {
+        
+        $this->container->get('old_sound_rabbit_mq.transcoding_producer')->publish(serialize(array(
+            'id' => $this->resource->getId(),
+            'notifyClient' => true,
+        )));
     }
 }

@@ -43,7 +43,8 @@ class HttpProvider extends AbstractFilePathProvider {
         foreach($r->content->getFiles() as $file) {
             if($file->getOriginal()) {
                 //file references reporting as 'binary' are most likely webpages without an extension
-                $file->setRepresentation("original;0");
+                $file->setRepresentation("original");
+                $file->setQuality(1);
             }
         }
         
