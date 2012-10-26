@@ -14,6 +14,7 @@ use Ayamel\TranscodingBundle\Exception\ResourceDeletedException;
 use Ayamel\TranscodingBundle\Exception\ResourceNotFoundException;
 use Ayamel\TranscodingBundle\Exception\ResourceLockedException;
 use Ayamel\ApiBundle\Event\Events as ApiEvents;
+use Ayamel\ApiBundle\Event\ApiEvent;
 
 /**
  * This class transcodes original files in a resource into multiple files
