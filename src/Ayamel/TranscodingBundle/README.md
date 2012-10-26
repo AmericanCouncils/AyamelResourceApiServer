@@ -8,5 +8,5 @@ The bundle adds a subscriber that listens for new files uploaded via the Resourc
 
 ## TODO ##
 
-* activate publisher listener
-* implement resource_modified event
+* implement client notifications after a resource finishes transcode - maybe implement various TranscodingManager::EVENTs
+for future hooks

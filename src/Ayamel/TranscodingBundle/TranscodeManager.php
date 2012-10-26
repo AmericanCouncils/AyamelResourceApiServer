@@ -14,8 +14,6 @@ use Ayamel\TranscodingBundle\Exception\ResourceDeletedException;
 use Ayamel\TranscodingBundle\Exception\ResourceNotFoundException;
 use Ayamel\TranscodingBundle\Exception\ResourceLockedException;
 
-//TODO: Fire RESOURCE_MODIFIED event if everything goes correctly
-
 /**
  * This class transcodes original files in a resource into multiple files
  * depending on mappings from configuration.  This class uses various other
@@ -99,9 +97,9 @@ class TranscodeManager
         if (!$processed) {
             throw new NoRelevantPresetsException();
         }
-                
-        //TODO: MODIFY RESOURCE EVENT on success here
-        //$this->dispatcher->dispatch(ApiEvents::RESOURCE_MODIFIED, new ApiEvent($resource));
+        
+        //notify system that Resource was modified
+        $this->dispatcher->dispatch(ApiEvents::RESOURCE_MODIFIED, new ApiEvent($resource));
 
         return true;
 	}
