@@ -1,0 +1,2 @@
+#!/bin/bash
+sudo supervisord --configuration="app/config/supervisord.transcoding.conf" --logfile_maxbytes="50MB"

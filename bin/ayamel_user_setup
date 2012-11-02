@@ -1,0 +1,11 @@
+#!/bin/bash
+
+## These scripts work on Ubuntu, and probably most flavors of Linux
+
+# Create the ayamel user as a system user, should also create the ayamel system group
+useradd --system ayamel
+
+# Ask for the username of the web process owner
+
+
+# add the web process to the ayamel system group
