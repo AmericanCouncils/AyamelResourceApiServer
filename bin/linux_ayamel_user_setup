@@ -1,0 +1,21 @@
+#!/bin/bash
+
+## These scripts work on Ubuntu, and probably most flavors of Linux
+## This won't work on OS X dev machines or Windows
+
+if [ $# -lt 1 ];
+    then
+        echo "You must provide the user name of the web process, likely 'www-data'.";
+        status=0;
+    else
+        webuser=$1;
+        
+        ## create system user/group, and add web user to that group
+        sudo useradd --system ayamel
+        sudo usermod -a -G ayamel ${webuser}
+        
+        echo "Created system user 'ayamel' and group 'ayamel'.";
+        echo "Add web user (${webuser}) to 'ayamel' group.";
+        status=1;
+fi
+exit $exit;
