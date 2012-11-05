@@ -1,6 +1,8 @@
 # README #
 
-This contains installation instructions, and a brief explanation of how the project is structured.
+This is a Symfony2 application that serves a RESTful API for managing multimedia with the Ayamel Resource Library.
+
+This file contains installation instructions, and a brief explanation of how the project is structured.
 
 ## Installation ##
 
@@ -17,31 +19,70 @@ These are the packages I installed on a clean Ubuntu 10.04 dev machine for testi
     # php5-devel instead of php5 ??  Sometimes PEAR/PECL doesn't get installed...
     # install supervisor
 	
-### App Installation ###
+### App Installation/Deployment ###
 
-1. run `curl -s http://getcomposer.org/installer | php` to get composer
+1. Run `curl -s http://getcomposer.org/installer | php` to get composer, if your system doesn't already have it.  Try `which composer` to see if it does.
 	1. if that didn't work, install curl, or use `wget`
 	2. You may have to edit some settings in `php.ini` to allow execution of `.phar` files
-2. run `php composer.phar install` to have it install application dependencies
+2. Run `php composer.phar install` to have it install application dependencies. Some systems have a permanent copy of composer installed, so `composer install` should work fine.
 3. Symlink `app/console` into `/usr/local/bin/ayamel`
     1. This is for the `supervisor` scripts, which use `ayamel` as the command name
-4. Make sure values in `app/config/parameters.yml` are correct for your deployment environment.  This file **SHOULD NOT** be included in the repository, you may need to create it yourself.
-5. Run the `bin/ayamel_user_setup` script
-    1. If you are going to manually run commands via the `ayamel` program, also add yourself to the `ayamel` group
-! 6. Add the web server process owner to the `ayamel` group.  This user is most likely called `www-data` or `www`
-7. Make sure the web server is pointed to `web/`.
-8. Clear the Symfony caches for dev and prod environments:
+    2. And it's just a nice shortcut for running the commands in the app
+4. Make sure values in `app/config/parameters.yml` are correct for your deployment environment.  This file **SHOULD NOT** be included in the repository, you may need to create it yourself.  Check the subsection below for a default `parameters.yml`
+5. If this is a linux machine, run the `bin/linux_ayamel_user_setup` script to setup special application system users
+    1. If you are going to manually run commands via the `ayamel` program, also add yourself to the `ayamel` group to avoid causing file permission conflicts
+6. Make sure the web server is pointed to `web/` as the document root.
+7. Clear the Symfony caches for dev and prod environments:
 
         ayamel cache:clear
         ayamel cache:clear --env=prod
     
     > If you have problems in this stage, manually remove everything in `app/cache/` and retry the commands.  If you get real desperate just... use `sudo` ... :)
 
-9. Setup the local environment (if necessary):
+8. Setup the local environment (if necessary):
     1. Make sure `rabbitmq-server` is running (if connecting to `localhost`)
     2. Make sure `mongod` is running (if connecting to `localhost`)
     3. Start any asyncronous tasks needed by using the shell scripts in `bin/`
-10. That should be it.
+        1. For example, for asyncronous transcoding, run `bin/transcoding_start`
+        2. You can then run `bin/transcoding_manage` to see details for the processes started
+9. That should be it.
+
+#### Default `parameters.yml` ####
+
+If your installation is completely new, you'll need to provide the `parameters.yml` file, which contains configuration specific to your deployment environment.  If this file already exists, don't change it, and whatever you do - **DO NOT ADD IT TO YOUR REPOSITORY**.
+
+The specific values in this file should be changed to suit your needs.
+
+    #copy to `app/config/parameters.yml`
+    parameters:
+        database_driver: pdo_sqlite
+        database_path: %kernel.root_dir%/app/data/db.sqlite
+        database_host: localhost
+        database_port: '9999'
+        database_name: ayamel
+        database_user: root
+        database_password: null
+        mailer_transport: smtp
+        mailer_host: localhost
+        mailer_user: null
+        mailer_password: null
+        locale: en
+        secret: 1b577a9e247bf2c882bd861e1e825d83
+    
+        # Added by evan for local environment #
+    
+        ## File upload handling ##
+        ayamel.filesystem.local_filesystem.root_dir: %kernel.root_dir%/files/resource_uploads
+        ayamel.filesystem.local_filesystem.secret: 34565dfg897jksksk4wk4ksdfkj34                #WARNING: If you are adding a production machine, make sure this value is not changed from the other machines.
+        ayamel.filesystem.local_filesystem.base_uri: http://localhost/ayamel/web/files
+    
+        ## API Docs
+        nelmio_api_doc.sandbox.endpoint: http://localhost/ayamel/web/index_dev.php
+
+        ## Transcoding support
+        transcoding.ffmpeg.path: /usr/bin/ffmpeg
+        transcoding.handbrake.path: /usr/local/bin/HandBrakeCLI
+        ayamel.transcoding.temp_directory: %kernel.root_dir%/files/tmp
 
 ## App Architecture (for now) ##
 
