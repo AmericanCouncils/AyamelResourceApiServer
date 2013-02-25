@@ -220,7 +220,6 @@ class Resource
      * An array of Relation objects that describe the relationship between this Resource and
      * other Resources.  Relations are critical to the search indexing process.
      *
-     * @MongoDB\EmbedMany(targetDocument="Ayamel\ResourceBundle\Document\Relation")
      * @JMS\Type("array<Ayamel\ResourceBundle\Document\Relation>")
      * @JMS\ReadOnly
      */

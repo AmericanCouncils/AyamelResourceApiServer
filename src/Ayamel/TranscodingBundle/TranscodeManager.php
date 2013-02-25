@@ -2,7 +2,7 @@
 
 namespace Ayamel\TranscodingBundle;
 
-use Ayamel\ResourceBundle\Storage\StorageInterface;
+use Ayamel\ResourceBundle\Storage\ResourceStorageInterface;
 use Ayamel\ResourceBundle\Document\Resource;
 use Ayamel\ResourceBundle\Document\FileReference;
 use Ayamel\FilesystemBundle\Filesystem\FilesystemInterface;
@@ -58,7 +58,7 @@ class TranscodeManager
      * @param Transcoder               $t
      * @param $defaulMapperConfig
      */
-    public function __construct(FilesystemInterface $fs, StorageInterface $rm, Transcoder $t, $tmpDirectory, EventDispatcherInterface $dispatcher, $defaultMapperConfig = array())
+    public function __construct(FilesystemInterface $fs, ResourceStorageInterface $rm, Transcoder $t, $tmpDirectory, EventDispatcherInterface $dispatcher, $defaultMapperConfig = array())
     {
         $this->filesystem = $fs;
         $this->resourceManager = $rm;
@@ -67,7 +67,16 @@ class TranscodeManager
         $this->defaultMapperConfig = $defaultMapperConfig;
         $this->tmpDirectory = $tmpDirectory;
     }
-
+    
+    /**
+     * Transcode original files in a specific resource, given it's ID, and some configuration.
+     *
+     * @param string $id 
+     * @param boolean $appendFiles 
+     * @param array $presetFilter 
+     * @param array $mimeFilter 
+     * @return boolean
+     */
     public function transcodeResource($id, $appendFiles = false, $presetFilter = array(), $mimeFilter = array())
     {
         //get resource or fail with relevant exception

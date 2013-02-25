@@ -9,7 +9,7 @@ use Ayamel\ResourceBundle\Document\Resource;
  *
  * @author Evan Villemez
  */
-interface StorageInterface
+interface ResourceStorageInterface
 {
     /**
      * Persist a resource to some storage system.

@@ -1,18 +1,30 @@
 <?php
 
+//TODO: Need to track the owner of the relation as well, unfortunately - probably will just embed the entire client document
+
 namespace Ayamel\ResourceBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use JMS\SerializerBundle\Annotation as JMS;
 
 /**
- * Relation object
- *
- * @MongoDB\EmbeddedDocument
+ * Relation object that describes a type of relationship between two resource objects.
+ * 
+ * @package AyamelResourceBundle
+ * @MongoDB\Document(db="ayamel", collection="relations")
  *
  */
 class Relation
 {
+    /**
+     * The unique ID of the resource.
+     *
+     * @MongoDB\Id
+     * @JMS\Type("string")
+     * @JMS\ReadOnly
+     */
+    protected $id;
+
     /**
      * The ID of the subject Resource.
      *
@@ -30,7 +42,7 @@ class Relation
      * @JMS\Type("string")
      */
     protected $objectId;
-
+    
     /**
      * The type of the Relation.  Valid types include:
      *
@@ -50,7 +62,25 @@ class Relation
      * @JMS\Type("array")
      */
     protected $attributes = array();
+    
+    /**
+     * An object containing information about the API client that created the Resource.
+     *
+     * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\Client")
+     * @JMS\Type("Ayamel\ResourceBundle\Document\Client")
+     */    
+    protected $client;
 
+    /**
+     * Get unique id
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+    
     /**
      * Get subjectId
      *
@@ -187,8 +217,7 @@ class Relation
      * Return true if a given relation instance is the same as this relation instance
      *
      * @param  Relation $relation
-     * @return void
-     * @author Evan Villemez
+     * @return boolean
      */
     public function equals(Relation $relation)
     {
