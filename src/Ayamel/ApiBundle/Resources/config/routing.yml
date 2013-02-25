@@ -8,7 +8,7 @@ AyamelApiBundle_home:
     pattern:   /
     defaults:  { _controller: Ayamel\ApiBundle\Controller\Home::buildHomePage }
 
-#version 1 of the api routes    
+#version 1 of the api routes
 api_v1:
     resource: "@AyamelApiBundle/Resources/config/routing.api.v1.yml"
     prefix:   /api/v1

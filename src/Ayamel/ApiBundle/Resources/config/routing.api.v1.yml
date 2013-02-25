@@ -55,7 +55,7 @@ api_v1_create_resource:
     defaults: { _controller: Ayamel\ApiBundle\Controller\V1\CreateResource::executeAction }
     requirements:
         _method:  POST
-    
+
 #get a specific resource by id
 api_v1_get_resource:
     pattern:  /resources/{id}
@@ -90,7 +90,7 @@ api_v1_upload_content:
     defaults: { _controller: Ayamel\ApiBundle\Controller\V1\UploadContent::executeAction }
     requirements:
         _method:  POST
-        
+
 #build an embeddable player for a given resource
 api_v1_player:
     pattern: /resources/{id}/embed

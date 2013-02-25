@@ -11,23 +11,25 @@ use Symfony\Component\EventDispatcher\Event;
  * @package AyamelApiBundle
  * @author Evan Villemez
  */
-class ApiEvent extends Event {
-	
+class ApiEvent extends Event
+{
     protected $resource = false;
-    
-    public function __construct(Resource $resource = null) {
-        if($resource) {
+
+    public function __construct(Resource $resource = null)
+    {
+        if ($resource) {
             $this->resource = $resource;
         }
     }
-    
+
     /**
      * Get Resource associated with the API Event.
      *
      * @return Ayamel\ResourceBundle\Document\Resource;
      */
-    public function getResource() {
+    public function getResource()
+    {
         return $this->resource;
     }
-    
+
 }

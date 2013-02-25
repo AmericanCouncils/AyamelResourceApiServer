@@ -4,8 +4,6 @@ namespace Ayamel\TranscodingBundle\RabbitMQ;
 
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 use PhpAmqpLib\Message\AMQPMessage;
-use AC\Component\Transcoding\Transcoder;
-use Ayamel\FilesystemBundle\Filesystem\FilesystemInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -31,29 +29,29 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Consumer implements ConsumerInterface
 {
     private $container;
-    
+
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
-    
+
     /**
      * Process any applicable transcode jobs for a given resource.  Returning true
      * removes the job from the queue (what we do if there is no real work to be done)
      *
      * Returning false requeues the message to be processed again later
      *
-     * @param AMQPMessage $msg 
+     * @param AMQPMessage $msg
      */
-	public function execute(AMQPMessage $msg)
-	{
+    public function execute(AMQPMessage $msg)
+    {
         $body = unserialize($msg->body);
-		$id = $body['id'];
+        $id = $body['id'];
         $appendFiles = isset($body['appendFiles']) ? (bool) $body['appendFiles'] : false;
         $presetFilter = isset($body['presetFilter']) ? $body['presetFilter'] : array();
         $mimeFilter = isset($body['mimeFilter']) ? $body['mimeFilter'] : array();
         $notifyClient = isset($body['notifyClient']) ? $body['notifyClient'] : false;
-        
+
         //try the transcode, if it fails, depending on how, either remove the job from the queue
         //or requeue for later
         try {
@@ -75,19 +73,19 @@ class Consumer implements ConsumerInterface
                 //by publishing another rabbitMQ message to send an email
                 //saying there was a problem
             }
-            
+
             //throw $e;
 
             //and try handling the message again
             return true;
         }
-        
+
         //if we got this far we've transcoded everything cleanly
         if ($notifyClient) {
             //schedule success message
         }
-        
+
         return true;
-	}
-        
+    }
+
 }

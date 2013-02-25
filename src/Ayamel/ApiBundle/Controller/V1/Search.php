@@ -12,8 +12,8 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
  * @package AyamelApiBundle
  * @author Evan Villemez
  */
-class Search extends ApiController {
-    
+class Search extends ApiController
+{
     /**
      * Search for Resource objects based on many, potentially loosely-defined, criteria.
      *
@@ -26,8 +26,9 @@ class Search extends ApiController {
      *      }
      * )
      */
-    public function searchForResources() {
+    public function searchForResources()
+    {
         throw $this->createHttpException(501, sprintf("Not yet implemented [%s]", __METHOD__));
     }
-    
+
 }

@@ -14,63 +14,67 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  *
  * @author Evan Villemez
  */
-class ResourceManager implements StorageInterface {
-	
+class ResourceManager implements StorageInterface
+{
     /**
      * The actual storage instance used.
-     * 
+     *
      * @var object Ayamel\ResourceBundle\Storage\StorageInterface
      */
-	protected $storage;
-    
+    protected $storage;
+
     /**
      * A dispatcher for emitting storage events.
-     * 
+     *
      * @var object Symfony\Component\EventDispatcher\EventDispatcherInterface
      */
-	protected $dispatcher;
-	
-	/**
+    protected $dispatcher;
+
+    /**
      * Constructor requires a StorageInterface, and dispatcher for emitting events.
-	 *
-	 * @param StorageInterface $storage 
-	 * @param EventDispatcherInterface $dispatcher 
-	 */
-    public function __construct(StorageInterface $storage, EventDispatcherInterface $dispatcher) {
+     *
+     * @param StorageInterface         $storage
+     * @param EventDispatcherInterface $dispatcher
+     */
+    public function __construct(StorageInterface $storage, EventDispatcherInterface $dispatcher)
+    {
         $this->storage = $storage;
         $this->dispatcher = $dispatcher;
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    function persistResource(Resource $resource) {
+    public function persistResource(Resource $resource)
+    {
         $event = new ResourceEvent($resource);
         $this->dispatcher->dispatch(Events::PRE_PERSIST, $event);
         $resource = $this->storage->persistResource($event->getResource());
 
         return $this->dispatcher->dispatch(Events::POST_PERSIST, new ResourceEvent($resource))->getResource();
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    function deleteResource(Resource $resource) {
+    public function deleteResource(Resource $resource)
+    {
         $event = new ResourceEvent($resource);
         $this->dispatcher->dispatch(Events::PRE_DELETE, $event);
         $resource = $this->storage->deleteResource($event->getResource());
 
         return $this->dispatcher->dispatch(Events::POST_DELETE, new ResourceEvent($resource))->getResource();
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    function getResourceById($id) {
+    public function getResourceById($id)
+    {
         $event = new GetResourceEvent($id);
         $this->dispatcher->dispatch(Events::PRE_RETRIEVE, $event);
 
-        if(!$resource = $event->getResource()) {
+        if (!$resource = $event->getResource()) {
             $resource = $this->storage->getResourceById($id);
         }
 
