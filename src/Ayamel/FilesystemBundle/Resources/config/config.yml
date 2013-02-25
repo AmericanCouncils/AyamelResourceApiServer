@@ -11,10 +11,10 @@ services:
     ayamel.api.filesystem.dispatcher:
         class: Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher
         arguments: [@service_container]
-        
+
     ayamel.api.filesystem.backend:
         class: Ayamel\FilesystemBundle\Filesystem\LocalFilesystem
-        arguments: 
+        arguments:
             - %ayamel.filesystem.local_filesystem.root_dir%
             - %ayamel.filesystem.local_filesystem.secret%
             - %ayamel.filesystem.local_filesystem.base_uri%

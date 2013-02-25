@@ -9,30 +9,30 @@ use Ayamel\ResourceBundle\Document\Resource;
  *
  * @author Evan Villemez
  */
-interface StorageInterface {
-    
+interface StorageInterface
+{
     /**
      * Persist a resource to some storage system.
      *
-     * @param Resource $resource - the resource before it has saved.
+     * @param  Resource $resource - the resource before it has saved.
      * @return Resource - the resource after the save operation has completed
      */
-    function persistResource(Resource $resource);
-    
+    public function persistResource(Resource $resource);
+
     /**
      * Remove a resource from the storage system
      *
-     * @param Resource $resource 
+     * @param  Resource $resource
      * @return Resource
      */
-    function deleteResource(Resource $resource);
-        
+    public function deleteResource(Resource $resource);
+
     /**
      * Retrieve a resource by an id
      *
-     * @param string $id 
+     * @param  string   $id
      * @return Resource
      */
-    function getResourceById($id);
-    
+    public function getResourceById($id);
+
 }

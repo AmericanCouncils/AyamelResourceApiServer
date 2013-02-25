@@ -4,14 +4,12 @@ namespace AC\WebServicesBundle\EventListener;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-use AC\WebServicesBundle\EventListener\ApiWorkflowSubscriber;
 
 /**
  * A listener that monitors for incoming Api requests.  When detected, registers the RestWorkflowSubscriber to handle generic REST API functionality.
  */
-class ApiBootstrapListener {
-
+class ApiBootstrapListener
+{
     /**
      * @var Symfony\Component\DependencyInjection\ContainerInterface
      */
@@ -19,7 +17,8 @@ class ApiBootstrapListener {
 
     protected $paths;
 
-    public function __construct(ContainerInterface $container, $paths = array()) {
+    public function __construct(ContainerInterface $container, $paths = array())
+    {
         $this->container = $container;
         $this->paths = $paths;
     }
@@ -27,9 +26,10 @@ class ApiBootstrapListener {
     /**
      * Checks arrays of regex against requested route, and registers other listeners accordingly.
      *
-     * @param GetResponseEvent $e 
+     * @param GetResponseEvent $e
      */
-    public function onKernelRequest(GetResponseEvent $e) {
+    public function onKernelRequest(GetResponseEvent $e)
+    {
         $request = $e->getRequest();
 
         foreach ($this->paths as $regex) {
@@ -47,7 +47,7 @@ class ApiBootstrapListener {
                 $this->container->get('event_dispatcher')->addSubscriber($subscriber);
 
                 $subscriber->onApiRequest($e);
-                
+
                 return;
             }
         }

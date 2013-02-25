@@ -3,7 +3,6 @@
 namespace Ayamel\ApiBundle\EventListener;
 
 use Ayamel\ApiBundle\Event\Events;
-use Ayamel\ApiBundle\Event\ApiEvent;
 use Ayamel\ApiBundle\Event\ResolveUploadedContentEvent;
 use Ayamel\ApiBundle\Event\HandleUploadedContentEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -17,59 +16,64 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @author Evan Villemez
  */
-abstract class ContentSubscriber implements EventSubscriberInterface {
-	
+abstract class ContentSubscriber implements EventSubscriberInterface
+{
     /**
      * @var object Symfony\Component\DependencyInjection\ContainerInterface
      */
     protected $container;
-    
-    public function __construct(ContainerInterface $container) {
+
+    public function __construct(ContainerInterface $container)
+    {
         $this->container = $container;
     }
-    
+
     /**
      * Array of events subscribed to.
      *
      * @return array
      */
-    public static function getSubscribedEvents() {
+    public static function getSubscribedEvents()
+    {
         return array(
             Events::RESOLVE_UPLOADED_CONTENT => '_onResolveContent',
             Events::HANDLE_UPLOADED_CONTENT => '_onHandleContent',
         );
     }
-    
-    public function _onResolveContent(ResolveUploadedContentEvent $e) {
+
+    public function _onResolveContent(ResolveUploadedContentEvent $e)
+    {
         //TODO: general logic here
-        if($e->isResolved()) {
+        if ($e->isResolved()) {
             throw new \LogicException("Content has already been resolved...");
         }
-        
+
         return $this->onResolveContent($e);
     }
-    
-    public function _onHandleContent(HandleUploadedContentEvent $e) {
+
+    public function _onHandleContent(HandleUploadedContentEvent $e)
+    {
         //TODO: general logic here
-        
         return $this->onHandleContent($e);
     }
-    
+
     /**
      * Check incoming request for content.  Should be implemented by extending classes.
      *
-     * @param ResolveUploadedContentEvent $e 
+     * @param ResolveUploadedContentEvent $e
      */
-    protected function onResolveContent(ResolveUploadedContentEvent $e) {
+    protected function onResolveContent(ResolveUploadedContentEvent $e)
+    {
         throw new \RuntimeException(sprintf("%s not implemented.", __METHOD__));
     }
-    
+
     /**
      * Handle content from incoming request.  Should be implemented by extending classes.
      *
-     * @param HandleUploadedContentEvent $e 
+     * @param HandleUploadedContentEvent $e
      */
-    protected function onHandleContent(HandleUploadedContentEvent $e) {
+    protected function onHandleContent(HandleUploadedContentEvent $e)
+    {
         throw new \RuntimeException(sprintf("%s not implemented.", __METHOD__));
     }
 

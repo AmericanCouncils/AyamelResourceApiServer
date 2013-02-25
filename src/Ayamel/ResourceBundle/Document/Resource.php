@@ -12,8 +12,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @MongoDB\Document(db="ayamel", collection="resources")
  * @JMS\ExclusionPolicy("none")
  */
-class Resource {
-        
+class Resource
+{
     /**
      * Status when object has no content
      */
@@ -28,7 +28,7 @@ class Resource {
      * Status when content is currently being processed
      */
     const STATUS_PROCESSING = 'processing';
-    
+
     /**
      * Status when content is processed and ok
      */
@@ -43,7 +43,7 @@ class Resource {
      * Array of scalar property type validators, because PHP sucks and doesn't do scalar type hinting.  This is used in the `validate()` method.
      *
      * @JMS\Exclude
-     * 
+     *
      * @var array
      */
     protected $_validators = array(
@@ -55,55 +55,55 @@ class Resource {
         'license' => 'string',
         'status' => 'string',
     );
-    
+
     /**
      * The unique ID of the resource.
-     * 
+     *
      * @MongoDB\Id
      * @JMS\Type("string")
      * @JMS\ReadOnly
      */
     protected $id;
-    
+
     /**
      * The title.
-     * 
+     *
      * @MongoDB\String
      * @JMS\Type("string")
      */
     protected $title;
-    
+
     /**
      * A short description.
-     * 
+     *
      * @MongoDB\String
      * @JMS\Type("string")
      */
     protected $description;
-    
+
     /**
      * A string of keywords for search.
-     * 
+     *
      * @MongoDB\String
      * @JMS\Type("string")
      */
     protected $keywords;
-    
+
     /**
      * An array of categories that apply to this resource.  Categories here are vetted
      * against a list of accepted and documented categories. (TODO)
-     * 
+     *
      * @MongoDB\Hash
      * @JMS\Type("array<string>")
      */
     protected $categories;
-    
+
     /**
      * The generic type of resource.  Generic types are useful for sorting
      * search results into generally similar types of resources.
-     * 
-     * Currently accepted types include:  
-     * 
+     *
+     * Currently accepted types include:
+     *
      * - **video** - The primary content is video.
      * - **audio** - The primary content is audio.
      * - **image** - The primary content is a static image.
@@ -111,12 +111,12 @@ class Resource {
      * - **archive** - The primary content is a collection of content in some archival format.
      * - **collection** - The primary content is a collection of other resources, which you can derive from the relations array.
      * - **data** - The primary content is in a data format intended for primary use by a program.
-     * 
+     *
      * @MongoDB\String
      * @JMS\Type("string")
      */
     protected $type;
-        
+
     /**
      * An array of API Client IDs.  If present, only the specified clients will be allowed to view
      * the Resource object.
@@ -127,55 +127,55 @@ class Resource {
      * @JMS\Type("array<string>")
      */
     protected $visibility;
-        
+
     /**
      * The date the Resource was added into the database.
-     * 
+     *
      * @JMS\SerializedName("dateAdded")
      * @JMS\Type("DateTime")
      * @JMS\ReadOnly
      */
     protected $dateAdded;
-    
+
     /**
      * The last time the Resource was modified.
-     * 
+     *
      * @MongoDB\Date
      * @JMS\SerializedName("dateModified")
      * @JMS\Type("DateTime")
      * @JMS\ReadOnly
      */
     protected $dateModified;
-    
+
     /**
      * The date the Resource was deleted from the database, if applicable.
-     * 
+     *
      * @MongoDB\Date
      * @JMS\SerializedName("dateDeleted")
      * @JMS\Type("DateTime")
      * @JMS\ReadOnly
      */
     protected $dateDeleted;
-    
+
     /**
      * Copyright text associated with the resource.
-     * 
+     *
      * @MongoDB\String
      * @JMS\Type("string")
      */
     protected $copyright;
-    
+
     /**
      * License type assocated with the resource.
      *
      * This must be provided before the Resource will be added
      * into the search index.
-     * 
+     *
      * @MongoDB\String
      * @JMS\Type("string")
      */
     protected $license;
-    
+
     /**
      * The status of the Resource, potential values include:
      *
@@ -184,54 +184,54 @@ class Resource {
      * - **awaiting_content** - The resource has no content associated with it yet.  Note that if a Resource is "awaiting_content" for more than two weeks, it will be automatically deleted.
      * - **processing** - The Resource, or its content, is currently being processed.  In this state, the Resource is locked and cannot be modified.
      * - **deleted** - The Resource and its content has been removed.
-     * 
+     *
      * @MongoDB\String
      * @JMS\Type("string")
      * @JMS\ReadOnly
      */
     protected $status;
-    
+
     /**
      * An optional object containing information about the origin of the Resource.
-     * 
+     *
      * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\Origin")
      * @JMS\Type("Ayamel\ResourceBundle\Document\Origin")
      */
     public $origin;
-    
+
     /**
      * An object containing information about the API client that created the Resource.
-     * 
+     *
      * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\Client")
      * @JMS\Type("Ayamel\ResourceBundle\Document\Client")
-     */    
+     */
     public $client;
-    
+
     /**
      * An object containing information about the primary content of the resource.
-     * 
+     *
      * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\ContentCollection")
      * @JMS\Type("Ayamel\ResourceBundle\Document\ContentCollection")
      * @JMS\ReadOnly
      */
     public $content;
-    
+
     /**
      * An array of Relation objects that describe the relationship between this Resource and
      * other Resources.  Relations are critical to the search indexing process.
-     * 
+     *
      * @MongoDB\EmbedMany(targetDocument="Ayamel\ResourceBundle\Document\Relation")
      * @JMS\Type("array<Ayamel\ResourceBundle\Document\Relation>")
      * @JMS\ReadOnly
      */
     protected $relations;
-        
+
     public function __construct()
     {
         //TODO: stop setting this in the constructor, if it's empty it should be null
         $this->relations = new ArrayCollection();
     }
-    
+
     /**
      * Get id
      *
@@ -361,7 +361,7 @@ class Resource {
     {
         return $this->visibility;
     }
-    
+
     /**
      * Set dateAdded
      *
@@ -441,22 +441,24 @@ class Resource {
     {
         return $this->copyright;
     }
-    
+
     /**
      * Set license field
      *
-     * @param string $license 
+     * @param string $license
      */
-    public function setLicense($license) {
+    public function setLicense($license)
+    {
         $this->license = $license;
     }
-    
+
     /**
      * Get license
      *
      * @return string
      */
-    public function getLicense() {
+    public function getLicense()
+    {
         return $this->license;
     }
 
@@ -483,87 +485,94 @@ class Resource {
     /**
      * Set the origin
      *
-     * @param Origin $origin 
+     * @param Origin $origin
      */
-    public function setOrigin(Origin $origin = null) {
+    public function setOrigin(Origin $origin = null)
+    {
         $this->origin = $origin;
     }
-    
+
     /**
      * Get the origin
      *
      * @return Origin
      */
-    public function getOrigin() {
+    public function getOrigin()
+    {
         return $this->origin;
     }
-    
+
     /**
      * Set the client
      *
-     * @param Client $client 
+     * @param Client $client
      */
-    public function setClient(Client $client = null) {
+    public function setClient(Client $client = null)
+    {
         $this->client = $client;
     }
-    
+
     /**
      * Get the client
      *
      * @return Client
      */
-    public function getClient() {
+    public function getClient()
+    {
         return $this->client;
     }
 
     /**
      * Set relations
      *
-     * @param array Ayamel\ResourceBundle\Document\Relation $relations
+     * @param  array Ayamel\ResourceBundle\Document\Relation $relations
      * @return self
      */
     public function setRelations(array $relations = null)
     {
-        if($relations) {
+        if ($relations) {
             $this->relations = new ArrayCollection();
-            foreach($relations as $relation) {
+            foreach ($relations as $relation) {
                 $this->addRelation($relation);
             }
         } else {
             $this->relations = new ArrayCollection();
         }
-        
+
         return $this;
     }
-    
+
     /**
      * Add a relation
      *
-     * @param Ayamel\ResourceBundle\Document\Relation $relation
+     * @param  Ayamel\ResourceBundle\Document\Relation $relation
      * @return self
      */
     public function addRelation(Relation $relation)
     {
         $this->relations[] = $relation;
+
         return $this;
     }
-    
+
     /**
      * Remove an instance of a relation
      *
-     * @param Relation $relation 
+     * @param  Relation $relation
      * @return self
      */
-    public function removeRelation(Relation $relation) {
+    public function removeRelation(Relation $relation)
+    {
         $new = array();
-        
-        foreach($this->relations as $instance) {
-            if(!$instance->equals($relation)) {
+
+        foreach ($this->relations as $instance) {
+            if (!$instance->equals($relation)) {
                 $new[] = $instance;
             }
         }
 
         $this->setRelations($new);
+
         return $this;
     }
 
@@ -596,7 +605,7 @@ class Resource {
     {
         return $this->content;
     }
-    
+
     /**
      * Return whether or not the Resource is locked and should not be modified.
      *
@@ -609,40 +618,41 @@ class Resource {
 
     /**
      * Validation method, because PHP sucks and can't do scalar type hinting.  Called automatically by Mongodb ODM before create/update operations.
-     * 
+     *
      * Note that this validation is only for checking that values are of a certain type for a given field.  This validation has nothing to do with whether or not
      * a client has sent acceptable input via an api.
      *
      * @MongoDB\PrePersist
      * @MongoDB\PreUpdate
-     * 
+     *
      * @param $return - whether or not to return errors, or throw exception
      * @throws InvalidArgumentException if $return is false
-     * @return true on success or array if validation fails
+     * @return true                     on success or array if validation fails
      */
-    public function validate($return = false) {
+    public function validate($return = false)
+    {
         $errors = array();
-        
+
         //check scalar fields
-        foreach($this->_validators as $field => $type) {
+        foreach ($this->_validators as $field => $type) {
             //ignore null, that's how we unset/remove properties
-            if($this->$field !== null) {
-                if(function_exists($func = "is_".$type)) {
-                    if(!$func($this->$field)) {
+            if ($this->$field !== null) {
+                if (function_exists($func = "is_".$type)) {
+                    if (!$func($this->$field)) {
                         $errors[] = sprintf("Field '%s' must be of type '%s'", $field, $type);
                     }
                 }
             }
         }
-        
-        if(empty($errors)) {
+
+        if (empty($errors)) {
             return true;
         }
-        
-        if($return) {
+
+        if ($return) {
             return $errors;
         }
-        
+
         throw new \InvalidArgumentException(implode(". ", $errors));
     }
 

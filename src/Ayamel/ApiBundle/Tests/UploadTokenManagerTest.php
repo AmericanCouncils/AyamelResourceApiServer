@@ -5,19 +5,22 @@ namespace Ayamel\ApiBundle\Tests;
 use Ayamel\ApiBundle\Validation\UploadTokenManager;
 use Doctrine\Common\Cache\ArrayCache;
 
-class UploadTokenManagerTest extends \PHPUnit_Framework_TestCase {
-    
-    protected function getManager() {
+class UploadTokenManagerTest extends \PHPUnit_Framework_TestCase
+{
+    protected function getManager()
+    {
         return new UploadTokenManager(new ArrayCache());
     }
-    
-    public function testInstantiate() {
+
+    public function testInstantiate()
+    {
         $m = $this->getManager();
         $this->assertNotNull($m);
         $this->assertTrue($m instanceof UploadTokenManager);
     }
-    
-    public function testHasCreateGetRemoveTokenForId() {
+
+    public function testHasCreateGetRemoveTokenForId()
+    {
         $m = $this->getManager();
         $id = "test_id";
         $this->assertFalse($m->hasTokenforId($id));
@@ -32,16 +35,18 @@ class UploadTokenManagerTest extends \PHPUnit_Framework_TestCase {
         $this->assertFalse($m->hasTokenforId($id));
         $this->assertFalse($m->getTokenForId($id));
     }
-    
-    public function testUseToken1() {
+
+    public function testUseToken1()
+    {
         $m = $this->getManager();
         $token = "does_not_exist";
         $id = 'test_id';
         $this->setExpectedException('InvalidArgumentException');
         $m->useTokenForId($id, $token);
     }
-    
-    public function testUseToken2() {
+
+    public function testUseToken2()
+    {
         $m = $this->getManager();
         $id = 'test_id';
         $token = $m->createTokenForId("different_id");
@@ -49,7 +54,8 @@ class UploadTokenManagerTest extends \PHPUnit_Framework_TestCase {
         $m->useTokenForId($id, $token);
     }
 
-    public function testUseToken3() {
+    public function testUseToken3()
+    {
         $m = $this->getManager();
         $id = 'test_id';
         $token = $m->createTokenForId($id);
@@ -58,7 +64,8 @@ class UploadTokenManagerTest extends \PHPUnit_Framework_TestCase {
         $this->assertFalse($m->hasTokenForId($id));
     }
 
-    public function testClearTokens() {
+    public function testClearTokens()
+    {
         $m = $this->getManager();
         $m->createTokenForId('id1');
         $m->createTokenForId('id2');

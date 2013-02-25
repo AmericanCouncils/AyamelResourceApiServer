@@ -12,8 +12,8 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
  *
  * @author Evan Villemez
  */
-class DeleteResource extends ApiController {
-    
+class DeleteResource extends ApiController
+{
     /**
      * Removes a Resource object by it's ID.
      *
@@ -26,33 +26,33 @@ class DeleteResource extends ApiController {
      *      }
      * )
      *
-     * @param string $id 
+     * @param string $id
      */
-    public function executeAction($id) {
-        
+    public function executeAction($id)
+    {
         //get the resource
         $resource = $this->getRequestedResourceById($id);
-        
+
         //check for already deleted resource
-        if(null != $resource->getDateDeleted()) {
+        if (null != $resource->getDateDeleted()) {
             return $this->returnDeletedResource($resource);
         }
 
         //TODO: preserve some fields:
         // - client object
         // - date added
-        
+
         $apiDispatcher = $this->container->get('ayamel.api.dispatcher');
-        
+
         //notify system to remove content for resource
         $apiDispatcher->dispatch(Events::REMOVE_RESOURCE_CONTENT, new ApiEvent($resource));
-        
+
         //remove from storage (sort of)
         $resource = $this->container->get('ayamel.resource.manager')->deleteResource($resource);
-        
+
         //notify rest of system of deleted resource
         $apiDispatcher->dispatch(Events::RESOURCE_DELETED, new ApiEvent($resource));
-        
+
         //return ok
         return $this->createServiceResponse(array('resource' => $resource, 200));
     }

@@ -9,28 +9,28 @@ use Ayamel\ResourceBundle\Document\FileReference;
  *
  * @author Evan Villemez
  */
-interface AnalyzerInterface {
+interface AnalyzerInterface
+{
+    /**
+     * Return boolean whether or not the analyzer can analyze the given file
+     *
+     * @param  FileReference $ref
+     * @return boolean
+     */
+    public function acceptsFile(FileReference $ref);
 
-	/**
-	 * Return boolean whether or not the analyzer can analyze the given file
-	 *
-	 * @param FileReference $ref 
-	 * @return boolean
-	 */
-	function acceptsFile(FileReference $ref);
-	
-	/**
-	 * Analyze a FileReference to populate its attributes property.
-	 *
-	 * @return FileReference
-	 */
-	function analyzeFile(FileReference $ref);
-    
+    /**
+     * Analyze a FileReference to populate its attributes property.
+     *
+     * @return FileReference
+     */
+    public function analyzeFile(FileReference $ref);
+
     /**
      * Handles an event that fires when a resource is added to a filesystem.
      *
-     * @param ResourceFileReferenceEvent $e 
+     * @param ResourceFileReferenceEvent $e
      */
-    function handleDeriveResourcesFromFileEvent(DeriveResourcesFromFileEvent $e);
-	
+    public function handleDeriveResourcesFromFileEvent(DeriveResourcesFromFileEvent $e);
+
 }

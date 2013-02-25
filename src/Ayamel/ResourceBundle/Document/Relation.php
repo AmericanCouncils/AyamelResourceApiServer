@@ -9,43 +9,43 @@ use JMS\SerializerBundle\Annotation as JMS;
  * Relation object
  *
  * @MongoDB\EmbeddedDocument
- * 
+ *
  */
-class Relation {
-    
+class Relation
+{
     /**
      * The ID of the subject Resource.
-     * 
+     *
      * @MongoDB\String
      * @JMS\SerializedName("subjectId")
      * @JMS\Type("string")
      */
     protected $subjectId;
-    
+
     /**
      * The ID of the object Resource.
-     * 
+     *
      * @MongoDB\String
      * @JMS\SerializedName("objectId")
      * @JMS\Type("string")
      */
     protected $objectId;
-    
+
     /**
      * The type of the Relation.  Valid types include:
-     * 
+     *
      * - **part_of** - words here...
      * - **requires** - words here...
      * - **depends_on** - words here...
-     * 
+     *
      * @MongoDB\String
      * @JMS\Type("string")
      */
     protected $type;
-    
+
     /**
      * A key/val hash of properties relevant to the given "type".
-     * 
+     *
      * @MongoDB\Hash
      * @JMS\Type("array")
      */
@@ -130,62 +130,68 @@ class Relation {
     {
         return $this->attributes;
     }
-    
+
     /**
      * Set an individual attribute by key for the attributes propery.
      *
-     * @param string $key 
-     * @param mixed $val 
+     * @param  string $key
+     * @param  mixed  $val
      * @return self
      */
-    public function setAttribute($key, $val) {
+    public function setAttribute($key, $val)
+    {
         $this->attributes[$key] = $val;
+
         return $this;
     }
-    
+
     /**
      * Get an individual attribute by key, returns default value if not found
      *
-     * @param string $key
-     * @param mixed $default
+     * @param  string $key
+     * @param  mixed  $default
      * @return mixed
      */
-    public function getAttribute($key, $default = null) {
+    public function getAttribute($key, $default = null)
+    {
         return isset($this->attributes[$key]) ? $this->attributes[$key] : $default;
     }
-    
+
     /**
      * Remove an attribute by key if it exists.
      *
-     * @param string $key 
+     * @param  string $key
      * @return self
      */
-    public function removeAttribute($key) {
-        if(isset($this->attributes[$key])) {
+    public function removeAttribute($key)
+    {
+        if (isset($this->attributes[$key])) {
             unset($this->attributes[$key]);
         }
-        
+
         return $this;
     }
-    
+
     /**
      * Return boolean if attribute exists
      *
-     * @param string $key 
+     * @param  string  $key
      * @return boolean
      */
-    public function hasAttribute($key) {
+    public function hasAttribute($key)
+    {
         return isset($this->attributes[$key]);
     }
-    
+
     /**
      * Return true if a given relation instance is the same as this relation instance
      *
-     * @param Relation $relation 
+     * @param  Relation $relation
      * @return void
      * @author Evan Villemez
      */
-    public function equals(Relation $relation) {
+    public function equals(Relation $relation)
+    {
         return (
             ($this->subjectId === $relation->getSubjectId()) &&
             ($this->objectId === $relation->getObjectId()) &&

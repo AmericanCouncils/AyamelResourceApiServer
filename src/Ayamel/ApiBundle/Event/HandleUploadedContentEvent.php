@@ -9,33 +9,37 @@ use Ayamel\ResourceBundle\Document\Resource;
  *
  * @author Evan Villemez
  */
-class HandleUploadedContentEvent extends ApiEvent {
-	
+class HandleUploadedContentEvent extends ApiEvent
+{
     protected $content;
 
     protected $type;
-    
+
     protected $isResourceModified = false;
-    
-    public function __construct(Resource $resource, $contentType, $contentData) {
+
+    public function __construct(Resource $resource, $contentType, $contentData)
+    {
         parent::__construct($resource);
-        
+
         $this->type = $contentType;
         $this->content = $contentData;
     }
-    
-    public function getContentType() {
+
+    public function getContentType()
+    {
         return $this->type;
     }
-    
-    public function getContentData() {
+
+    public function getContentData()
+    {
         return $this->content;
     }
-    
-    public function getResource() {
+
+    public function getResource()
+    {
         return $this->resource;
     }
-    
+
     /**
      * Setting the resource will stop propagation, as the assumption is that
      * if you set a Resource, you are declaring that you have handled the content
@@ -44,21 +48,23 @@ class HandleUploadedContentEvent extends ApiEvent {
      * Calling this also sets `isResourceModified` to true, which tells the system
      * to persist the resource to storage if changes were made.
      *
-     * @param Resource $resource 
+     * @param Resource $resource
      */
-    public function setResource(Resource $resource) {
+    public function setResource(Resource $resource)
+    {
         $this->resource = $resource;
         $this->isResourceModified = true;
         $this->stopPropagation();
     }
-    
+
     /**
      * Return boolean whether or not the Resource object has been modified.
      *
      * @return boolean
      */
-    public function isResourceModified() {
+    public function isResourceModified()
+    {
         return $this->isResourceModified;
     }
-    
+
 }

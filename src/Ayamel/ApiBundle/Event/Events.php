@@ -7,29 +7,29 @@ namespace Ayamel\ApiBundle\Event;
  *
  * @author Evan Villemez
  */
-final class Events {
-	
+final class Events
+{
     /**
      * Event fires when a new resource is created via the api
      *
      * Listeners receive an instance of `ApiEvent`
      */
-	const RESOURCE_CREATED = "ayamel.api.resource_created";
-    
+    const RESOURCE_CREATED = "ayamel.api.resource_created";
+
     /**
      * Fires when a resource is modified via the api
      *
      * Listeners receive an instance of `ApiEvent`
      */
-	const RESOURCE_MODIFIED = "ayamel.api.resource_modified";
-    
+    const RESOURCE_MODIFIED = "ayamel.api.resource_modified";
+
     /**
      * Fires when a resource is deleted via the api
      *
      * Listeners receive an instance of `ApiEvent`
      */
-	const RESOURCE_DELETED = "ayamel.api.resource_deleted";
-        
+    const RESOURCE_DELETED = "ayamel.api.resource_deleted";
+
     /**
      * Fires when uploaded content needs to be resolved for a resource.
      *
@@ -43,7 +43,7 @@ final class Events {
      * Listeners receive an instance of `HandleUploadedContentEvent`
      */
     const HANDLE_UPLOADED_CONTENT = "ayamel.api.handle_uploaded_content";
-    
+
     /**
      * Fires when content should be permanentaly removed for a given resource.
      *

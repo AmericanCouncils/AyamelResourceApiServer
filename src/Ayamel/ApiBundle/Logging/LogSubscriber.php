@@ -2,8 +2,6 @@
 namespace Ayamel\ApiBundle\Logging;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\KernelEvents;
-use AC\WebServicesBundle\EventListener\RestServiceSubscriber;
 
 //TODO: abstract the logging mechanism properly using Monolog
 
@@ -13,32 +11,32 @@ use AC\WebServicesBundle\EventListener\RestServiceSubscriber;
  * @package AyamelApiBundle
  * @author Evan Villemez
  */
-class LogListener implements EventSubscriberInterface
+class LogSubscriber implements EventSubscriberInterface
 {
     private $container;
     private $logMessage = false;
-    
+
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
-    
-	public static function getSubscribedEvents()
-	{
-		return array(
-		    'ac.webservice.request' => array('onApiRequest'),
-		    'ac.webservice.exception' => array('onApiException'),
-		    'ac.webservice.response' => array('onApiResponse'),
-		    'ac.webservice.terminate' => array('onApiTerminate')
-		);
-	}
-    
+
+    public static function getSubscribedEvents()
+    {
+        return array(
+            'ac.webservice.request' => array('onApiRequest'),
+            'ac.webservice.exception' => array('onApiException'),
+            'ac.webservice.response' => array('onApiResponse'),
+            'ac.webservice.terminate' => array('onApiTerminate')
+        );
+    }
+
     public function onApiRequest($e)
     {
         $req = $e->getRequest();
-        
+
         $this->start = isset($GLOBALS['__start']) ? $GLOBALS['__start'] : microtime(true);
-        
+
         $this->logMessage = array(
             'time' => new \DateTime('now'),
             'request' => array(
@@ -47,17 +45,16 @@ class LogListener implements EventSubscriberInterface
                 'method' => $req->getMethod(),
             ),
         );
-        
+
         //set client
         if ($this->container->has('ayamel.api.client')) {
             $this->logMessage['client'] = $this->container->get('ayamel.api.client')->getId();
         } else {
             $this->logMessage['client'] = $req->getClientIp();
         }
-        
-        
+
     }
-    
+
     public function onApiException($e)
     {
         if ($this->logMessage) {
@@ -68,14 +65,14 @@ class LogListener implements EventSubscriberInterface
             );
         }
     }
-    
+
     public function onApiResponse($e)
     {
         if ($this->logMessage) {
-            
+
         }
     }
-    
+
     public function onApiTerminate($e)
     {
         if ($this->logMessage) {
@@ -87,7 +84,7 @@ class LogListener implements EventSubscriberInterface
             );
             $this->logMessage['memory'] = memory_get_peak_usage();
             $this->logMessage['duration'] = microtime(true) - $this->start;
-            
+
             $this->container->get('mongodb.odm.default_connection')->ayamel->logs->insert($this->logMessage);
         }
     }

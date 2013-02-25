@@ -8,29 +8,29 @@ namespace Ayamel\ResourceBundle\Provider;
  *
  * @author Evan Villemez
  */
-interface ProviderInterface {
-    
+interface ProviderInterface
+{
     /**
      * Return a unique string key to identify this provider
      *
      * @return string
      */
-    function getKey();
-    
+    public function getKey();
+
     /**
      * Return boolean whether or not the given scheme can be handled by this instance.
      *
-     * @param string $scheme 
+     * @param  string  $scheme
      * @return boolean
      */
-    function handlesScheme($scheme);
-    
+    public function handlesScheme($scheme);
+
     /**
      * Build a full Resource object structure, providing as many fields as possible, from a given string uri.
      *
-     * @param string $uri 
+     * @param  string                                  $uri
      * @return Ayamel\ResourceBundle\Document\Resource or false
      */
-    function createResourceFromUri($uri);
-    
+    public function createResourceFromUri($uri);
+
 }

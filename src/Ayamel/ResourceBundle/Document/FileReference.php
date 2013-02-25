@@ -10,19 +10,19 @@ use JMS\SerializerBundle\Annotation as JMS;
  *
  * @MongoDB\EmbeddedDocument
  * @JMS\ExclusionPolicy("none")
- * 
+ *
  */
-class FileReference {
-
+class FileReference
+{
     /**
      * A public URI where the file is accessible.
-     * 
+     *
      * @MongoDB\String
      * @JMS\SerializedName("downloadUri")
      * @JMS\Type("string")
      */
     protected $downloadUri;
-    
+
     /**
      * A public URI where the file can be streamed from.
      *
@@ -31,16 +31,16 @@ class FileReference {
      * @JMS\Type("string")
      */
     protected $streamUri;
-    
+
     /**
      * @MongoDB\String
      * @JMS\Exclude
      * @JMS\ReadOnly
      */
     protected $internalUri;
-    
+
     /**
-     * A string describing the representation.     
+     * A string describing the representation.
      *
      * Valid values include:
      *
@@ -49,12 +49,12 @@ class FileReference {
      * - **summary** - If this file is a partial transcoding of the original.
      *
      * Quality is an integer representing the relative quality.
-     * 
+     *
      * @MongoDB\String
      * @JMS\Type("string")
      */
     protected $representation;
-    
+
     /**
      * An integer describing the relative quality.  Higher means higher quality relative to others.
      * Default quality is `1`.
@@ -63,15 +63,15 @@ class FileReference {
      * @JMS\Type("integer")
      */
     protected $quality;
-    
+
     /**
      * The full mime string of the file, in as much detail as possible.
-     * 
+     *
      * @MongoDB\String
      * @JMS\Type("string")
      */
     protected $mime;
-    
+
     /**
      * The short mime type of the file
      *
@@ -81,17 +81,17 @@ class FileReference {
      */
     protected $mimeType;
 
-	/**
-	 * @MongoDB\Boolean
+    /**
+     * @MongoDB\Boolean
      * @JMS\Exclude
      * @JMS\ReadOnly
      * @JMS\Type("boolean")
-	 */
-	private $original;
+     */
+    private $original;
 
     /**
      * A key/val hash of attributes, relevant to the `mime` of the file.
-     * 
+     *
      * @MongoDB\Hash
      * @JMS\Type("array")
      */
@@ -100,63 +100,71 @@ class FileReference {
     /**
      * Create a reference from an internal file path
      *
-     * @param string $internalUri 
+     * @param  string        $internalUri
      * @return FileReference
      */
-    static public function createFromLocalPath($internalUri) {
+    public static function createFromLocalPath($internalUri)
+    {
         $ref = new static();
         $ref->setInternalUri($internalUri);
+
         return $ref;
     }
-    
+
     /**
      * Create a reference to a public uri
      *
-     * @param string $downloadUri 
+     * @param  string        $downloadUri
      * @return FileReference
      */
-    static public function createFromDownloadUri($downloadUri) {
+    public static function createFromDownloadUri($downloadUri)
+    {
         $ref = new static();
         $ref->setDownloadUri($downloadUri);
+
         return $ref;
     }
-    
-	/**
-	 * Set boolean if this file reference is the original file content added.
-	 *
-	 * @param boolean $bool 
-	 */
-	public function setOriginal($bool = true) {
-		$this->original = $bool;
-	}
-	
-	/**
-	 * Get whether or not this file reference was the original resource content.
-	 *
-	 * @return boolean
-	 */
-	public function getOriginal() {
-		return $this->original;
-	}
-	
+
+    /**
+     * Set boolean if this file reference is the original file content added.
+     *
+     * @param boolean $bool
+     */
+    public function setOriginal($bool = true)
+    {
+        $this->original = $bool;
+    }
+
+    /**
+     * Get whether or not this file reference was the original resource content.
+     *
+     * @return boolean
+     */
+    public function getOriginal()
+    {
+        return $this->original;
+    }
+
     /**
      * Get the string describing the files representation of the associated resource
      *
      * @return string
      */
-    public function getRepresentation() {
+    public function getRepresentation()
+    {
         return $this->representation;
     }
-    
+
     /**
      * Set the representation string, which can an be any of "original","summary", or "transcoding"
      *
-     * @param string $representation 
+     * @param string $representation
      */
-    public function setRepresentation($representation) {
+    public function setRepresentation($representation)
+    {
         $this->representation = $representation;
     }
-    
+
     /**
      * Get the relative quality
      *
@@ -166,11 +174,11 @@ class FileReference {
     {
         return $this->quality;
     }
-    
+
     /**
      * Set the relative quality
      *
-     * @param int $quality 
+     * @param int $quality
      */
     public function setQuality($quality)
     {
@@ -196,74 +204,80 @@ class FileReference {
     {
         return $this->attributes;
     }
-	
-	/**
-	 * Merge an array of attributes into the current set, this will overwrite conflicting keys
-	 * with the latest one received
-	 *
-	 * @param array $attrs 
-	 */
-	public function mergeAttributes(array $attrs) {
-		$this->attributes = array_merge($this->attributes, $attrs);
-	}
-    
+
+    /**
+     * Merge an array of attributes into the current set, this will overwrite conflicting keys
+     * with the latest one received
+     *
+     * @param array $attrs
+     */
+    public function mergeAttributes(array $attrs)
+    {
+        $this->attributes = array_merge($this->attributes, $attrs);
+    }
+
     /**
      * Set an individual attribute by key for the attributes propery.
      *
-     * @param string $key 
-     * @param mixed $val 
+     * @param  string $key
+     * @param  mixed  $val
      * @return self
      */
-    public function setAttribute($key, $val) {
+    public function setAttribute($key, $val)
+    {
         $this->attributes[$key] = $val;
+
         return $this;
     }
-    
+
     /**
      * Get an individual attribute by key, returns default value if not found
      *
-     * @param string $key
-     * @param mixed $default
+     * @param  string $key
+     * @param  mixed  $default
      * @return mixed
      */
-    public function getAttribute($key, $default = null) {
+    public function getAttribute($key, $default = null)
+    {
         return isset($this->attributes[$key]) ? $this->attributes[$key] : $default;
     }
-    
+
     /**
      * Remove an attribute by key if it exists.
      *
-     * @param string $key 
+     * @param  string $key
      * @return self
      */
-    public function removeAttribute($key) {
-        if(isset($this->attributes[$key])) {
+    public function removeAttribute($key)
+    {
+        if (isset($this->attributes[$key])) {
             unset($this->attributes[$key]);
         }
-        
+
         return $this;
     }
-    
+
     /**
      * Return boolean if attribute exists
      *
-     * @param string $key 
+     * @param  string  $key
      * @return boolean
      */
-    public function hasAttribute($key) {
+    public function hasAttribute($key)
+    {
         return isset($this->attributes[$key]);
     }
 
     /**
      * Set the mime string
      *
-     * @param string $mime 
+     * @param string $mime
      */
     public function setMime($mime)
     {
         $this->mime = $mime;
     }
-    
+
     /**
      * Returns mime string
      *
@@ -278,7 +292,7 @@ class FileReference {
     {
         $this->mimeType = $mimeType;
     }
-    
+
     public function getMimeType()
     {
         return $this->mimeType;
@@ -343,22 +357,23 @@ class FileReference {
     {
         return $this->internalUri;
     }
-    
+
     /**
      * Test if a given file reference instance is pointing to the same file as this file reference instance.
      *
-     * @param FileReference $file 
+     * @param  FileReference $file
      * @return boolean
      */
-    public function equals(FileReference $file) {
-        if(($file->getInternalUri() && $this->getInternalUri()) && ($file->getInternalUri() == $this->getInternalUri())) {
+    public function equals(FileReference $file)
+    {
+        if (($file->getInternalUri() && $this->getInternalUri()) && ($file->getInternalUri() == $this->getInternalUri())) {
             return true;
         }
-        
-        if(($file->getDownloadUri() && $this->getDownloadUri()) && ($file->getDownloadUri() == $this->getDownloadUri())) {
+
+        if (($file->getDownloadUri() && $this->getDownloadUri()) && ($file->getDownloadUri() == $this->getDownloadUri())) {
             return true;
         }
-        
+
         return false;
     }
 }

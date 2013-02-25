@@ -1,11 +1,11 @@
 parameters:
     ayamel.getid3.cache_dir: %kernel.cache_dir%/getid3
-    
+
 services:
 	ayamel.getid3.filesystem_subscriber:
 		class: Ayamel\GetID3Bundle\FilesystemSubscriber
 		arguments: [@service_container, @ayamel.getid3.cache]
-		tags: 
+		tags:
 			- {name: ayamel.api.filesystem_subscriber}
 
     ayamel.getid3.cache:
