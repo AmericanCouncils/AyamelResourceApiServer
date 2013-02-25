@@ -14,37 +14,39 @@ use Doctrine\Common\Cache\CacheProvider;
 class FileCache extends CacheProvider
 {
     protected $dir;
-    
+
     /**
      * Must receive a root directory to use for file storage.
-	 * Will attempt to create the given directory if it doesn't exist.
+     * Will attempt to create the given directory if it doesn't exist.
      *
-     * @param string $dir 
+     * @param string $dir
      */
-    public function __construct($dir) {
+    public function __construct($dir)
+    {
         $this->dir = $dir;
-		if(!is_dir($dir)) {
-			mkdir($dir, 0755, true);
-		}
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
     }
-    
+
     /**
      * {@inheritdoc}
      */
     protected function doFetch($id)
     {
         $file = $this->getFileForId($id);
-        if(!file_exists($file)) {
+        if (!file_exists($file)) {
             return false;
         }
-        
+
         $contents = unserialize(file_get_contents($file));
 
-        if($contents['expires'] !== 0 && time() > $contents['expires']) {
+        if ($contents['expires'] !== 0 && time() > $contents['expires']) {
             $this->delete($id);
+
             return false;
         }
-        
+
         return $contents['data'];
     }
 
@@ -62,7 +64,7 @@ class FileCache extends CacheProvider
     protected function doSave($id, $data, $lifeTime = 0)
     {
         $expires = ($lifeTime === 0) ? 0 : time() + $lifeTime;
-        
+
         $contents = array(
             'data' => $data,
             'expires' => $expires
@@ -85,7 +87,7 @@ class FileCache extends CacheProvider
     protected function doFlush()
     {
         $match = $this->dir.DIRECTORY_SEPARATOR."*.cache";
-        foreach(glob($match) as $path) {
+        foreach (glob($match) as $path) {
             unlink($path);
         }
 
@@ -99,9 +101,10 @@ class FileCache extends CacheProvider
     {
         return null;
     }
-    
-    protected function getFileForId($id) {
+
+    protected function getFileForId($id)
+    {
         return $this->dir.DIRECTORY_SEPARATOR.$id.".cache";
     }
-    
+
 }

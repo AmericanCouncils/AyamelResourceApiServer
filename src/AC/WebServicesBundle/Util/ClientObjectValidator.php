@@ -5,7 +5,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use JMS\SerializerBundle\Serializer\SerializerInterface;
 use Metadata\MetadataFactoryInterface;
-use Metadata\ClassMetadata;
 
 //TODO: Take into account JMS Exclusion Policies / Groups
 //TODO: Take into account JMS getter/setter annotation
@@ -15,22 +14,22 @@ use Metadata\ClassMetadata;
  *
  * @author Evan Villemez
  */
-class ClientObjectValidator {
-
+class ClientObjectValidator
+{
     private $factory;
-    
+
     private $serializer;
-    
+
     private $typeParser;
-    
+
     private $graph = array();
-    
+
     /**
      * Constructor needs dependency JMS related objects.
      *
-     * @param MetadataFactoryInterface $factory 
-     * @param Serializer $serializer 
-     * @param JmsDataTypeParser $typeParser
+     * @param MetadataFactoryInterface $factory
+     * @param Serializer               $serializer
+     * @param JmsDataTypeParser        $typeParser
      */
     public function __construct(MetadataFactoryInterface $factory, SerializerInterface $serializer, JmsDataTypeParser $typeParser)
     {
@@ -38,7 +37,7 @@ class ClientObjectValidator {
         $this->serializer = $serializer;
         $this->typeParser = $typeParser;
     }
-    
+
     /**
      * Deserialize a new object from a client request.
      *
@@ -49,10 +48,10 @@ class ClientObjectValidator {
     public function createObjectFromRequest($className, Request $request)
     {
         $this->validateObjectData($this->normalizeRequestData($request), $className);
-        
+
         return $this->serializer->deserialize($this->getJsonFromClient($request), $className, 'json');
     }
-    
+
     /**
      * Modify an object based on data in the incoming request.
      *
@@ -66,31 +65,31 @@ class ClientObjectValidator {
         if ($className !== get_class($originalObject)) {
             throw new \LogicException(sprintf("Cannot compare [%s] to [%s] in order to modify.", $className, get_class($originalObject)));
         }
-        
+
         $this->graph($className);
-        
+
         $normalizedData = $this->normalizeRequestData($request);
-        
+
         $this->validateObjectData($normalizedData, $className, $originalObject);
-        
+
         return $originalObject;
     }
-    
+
     protected function graph($className)
     {
         if (!isset($this->graph[$className])) {
             try {
                 if (!$meta = $this->factory->getMetadataForClass($className)) {
                     throw new \RuntimeException(sprintf("Could not validate class [%s] - no JMS metadata found."));
-                }                
+                }
             } catch (\ReflectionException $e) {
                 return;
             }
-            
+
             //check each property for the class
             foreach ($meta->propertyMetadata as $property) {
                 $name = isset($property->serializedName) ? $property->serializedName : $property->name;
-                
+
                 //this property could be some type of array of nested classes
                 if (0 === strpos($property->type, "array<")) {
                     $nested = $this->typeParser->getNestedTypeInArray($property->type);
@@ -98,34 +97,35 @@ class ClientObjectValidator {
                         'class' => $nested['value'],
                         'array' => true
                     );
-                    
+
                     //recurse and graph this nested class
                     $this->graph($nested['value']);
                 }
-                
+
                 //or it could be a reglar class name
                 elseif (!$this->typeParser->isPrimitive($property->type)) {
                     $this->graph[sprintf("%s.%s", $className, $name)] = array(
                         'class' => $property->type,
                         'array' => false
                     );
-                    
+
                     //graph the nested object
                     $this->graph($property->type);
                 }
             }
         }
     }
-    
+
     /**
      * For now we only handle post fields or JSON request bodies
      *
-     * @param Request $request 
+     * @param  Request $request
      * @return array
      */
     protected function normalizeRequestData(Request $request)
     {
         $json = $this->getJsonFromClient($request);
+
         return json_decode($json, true);
     }
 
@@ -138,13 +138,13 @@ class ClientObjectValidator {
     protected function validateObjectData($clientData, $className, $objectToModify = null)
     {
         try {
-            if(!$jmsMetadata = $this->factory->getMetadataForClass($className)) {
+            if (!$jmsMetadata = $this->factory->getMetadataForClass($className)) {
                 return;
             }
         } catch (\ReflectionException $e) {
             return;
         }
-        
+
         $invalidFields = array();
         foreach ($jmsMetadata->propertyMetadata as $property) {
             $name = isset($property->serializedName) ? $property->serializedName : $property->name;
@@ -152,30 +152,30 @@ class ClientObjectValidator {
             if (!isset($clientData[$name])) {
                 continue;
             }
-            
+
             //read only check
             if ($property->readOnly && isset($clientData[$name])) {
                 $invalidFields[] = $name;
                 continue;
             }
-            
+
             //check for object
             $nestedObjectPropertyName = $jmsMetadata->name.".".$name;
-            
+
             if (isset($this->graph[$nestedObjectPropertyName])) {
 //                die($nestedObjectPropertyName);
                 //the property could be an array of objects
-                if($this->graph[$nestedObjectPropertyName]['array']) {
+                if ($this->graph[$nestedObjectPropertyName]['array']) {
                     $getter = 'get'.ucfirst($name);
                     $setter = 'set'.ucfirst($name);
                     $newArray = array();
                     $previous = array();
-                    
+
                     //check for previous array of objects
                     if ($objectToModify && method_exists($objectToModify, $getter) && $original = $objectToModify->$getter()) {
                         $previous = $original;
                     }
-                    
+
                     //validate data
                     $i = 0;
                     foreach ($clientData[$name] as $item) {
@@ -183,21 +183,21 @@ class ClientObjectValidator {
                         $newArray[] = $this->validateObjectData($item, $this->graph[$nestedObjectPropertyName]['class'], $prevObj);
                         $i++;
                     }
-                    
+
                     //set new array if applicable
                     if ($objectToModify && method_exists($objectToModify, $setter)) {
                         $objectToModify->$setter($newArray);
                     }
-                    
+
                 } else {
                     $getter = 'get'.ucfirst($name);
                     $setter = 'set'.ucfirst($name);
                     $prevObj = null;
-                    
+
                     if ($objectToModify && method_exists($objectToModify, $getter)) {
                         $prevObj = $objectToModify->$getter();
                     }
-                    
+
                     $newObj = $this->validateObjectData($clientData[$name], $this->graph[$nestedObjectPropertyName]['class'], $prevObj);
 
                     if ($objectToModify && method_exists($objectToModify, $setter)) {
@@ -212,19 +212,19 @@ class ClientObjectValidator {
                 }
             }
         }
-        
+
         if (!empty($invalidFields)) {
             throw new HttpException(400, sprintf("The following fields cannot be set by the client: %s", implode(", ", $invalidFields)));
         }
-        
+
         //return the modified object if present, otherwise return new one
         return ($objectToModify) ? $objectToModify : $this->serializer->deserialize(json_encode($clientData), $className, 'json');
     }
-    
+
     /**
      * Normalize incoming content into a JSON string for decoding.
      *
-     * @param Request $request 
+     * @param  Request $request
      * @return string
      */
     protected function getJsonFromClient(Request $request)
@@ -232,40 +232,41 @@ class ClientObjectValidator {
         if ('application/json' === $request->headers->get('Content-Type', false)) {
             return $request->getContent();
         }
-                
+
         //perhaps generic post body
         parse_str($request->getContent(), $postBody);
         if ($json = json_encode($postBody)) {
             return $json;
         }
-        
+
         throw new HttpException(400, "Could not reliably decode data.");
     }
-    
+
     /**
      * Call setters on an object given a hash of fields/values.  Setter methods are derived from field names.
      *
-     * @param object $object 
-     * @param array $data 
+     * @param  object $object
+     * @param  array  $data
      * @return void
      */
-    protected function callSetters($object, array $data) {
+    protected function callSetters($object, array $data)
+    {
         //assign received data
-        foreach($data as $key => $val) {
-            
+        foreach ($data as $key => $val) {
+
             //HACK: ignore fields prepended with underscores
             if (0 !== strpos($key, "_")) {
-                //derive setter method name            
+                //derive setter method name
                 $method = 'set'.ucfirst($key);
-                
+
                 //call if it exists, if not, invalid argument
-                if(method_exists($object, $method)) {
+                if (method_exists($object, $method)) {
                     $object->$method($val);
                 } else {
                     throw new \InvalidArgumentException("Tried setting a non-existing field [$key]");
                 }
-            }            
+            }
         }
     }
-    
+
 }

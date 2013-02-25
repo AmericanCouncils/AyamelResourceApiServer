@@ -11,73 +11,76 @@ use Doctrine\ODM\MongoDB\DocumentManager;
  *
  * @author Evan Villemez
  */
-class MongoResourceStorage implements StorageInterface {
-    
+class MongoResourceStorage implements StorageInterface
+{
     /**
      * @var object Doctrine\ODM\MongoDB\DocumentManager
      */
     protected $manager;
-    
+
     /**
      * Constructor requires a Doctrine Mongo DocumentRepository instance.
      *
-     * @param DocumentRepository $manager 
+     * @param DocumentRepository $manager
      */
-    public function __construct(DocumentManager $manager) {
+    public function __construct(DocumentManager $manager)
+    {
         $this->manager = $manager;
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    public function persistResource(Resource $resource) {
+    public function persistResource(Resource $resource)
+    {
         $date = new \DateTime();
-        if(!$resource->getId()) {
-    		$resource->setDateAdded($date);
+        if (!$resource->getId()) {
+            $resource->setDateAdded($date);
         }
-    	$resource->setDateModified($date);
-                
+        $resource->setDateModified($date);
+
         $this->manager->persist($resource);
         $this->manager->flush();
 
         return $resource;
     }
-    
+
     /**
      * {@inheritdoc}
      *
      * Note:  The API's Mongo implementation will never actually delete a resource from storage, rather it
      * will mark a resource as having been deleted, noting the date, thus preserving it's unique id and allowing
      * handling of future errors properly.
-     * 
+     *
      */
-    public function deleteResource(Resource $resource) {
-
+    public function deleteResource(Resource $resource)
+    {
         //unset all fields (for now)
         //TODO: preserve certain fields
-        foreach(get_class_methods($resource) as $method) {
-            if(0 === strpos($method, 'set')) {
+        foreach (get_class_methods($resource) as $method) {
+            if (0 === strpos($method, 'set')) {
                 $resource->$method(null);
             }
         }
-        
+
         //set delete date and status
         $resource->setDateDeleted(new \DateTime());
         $resource->setStatus(Resource::STATUS_DELETED);
-        
+
         $this->manager->persist($resource);
         $this->manager->flush();
-        
+
         return $resource;
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    public function getResourceById($id) {
+    public function getResourceById($id)
+    {
         return $this->manager->getRepository('AyamelResourceBundle:Resource')->find($id);
     }
-    
+
     public function getResourcesByIds(array $ids)
     {
         throw new \RuntimeException(sprintf("Method [%s] not yet implemented.", __METHOD__));

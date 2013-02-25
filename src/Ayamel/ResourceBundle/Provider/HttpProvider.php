@@ -9,28 +9,31 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  *
  * @author Evan Villemez
  */
-class HttpProvider extends AbstractFilePathProvider {
-    
+class HttpProvider extends AbstractFilePathProvider
+{
     /**
      * {@inheritdoc}
      */
-    function getKey() {
+    public function getKey()
+    {
         return 'http';
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    function handlesScheme($scheme) {
+    public function handlesScheme($scheme)
+    {
         return in_array(strtolower($scheme), array('http','https'));
     }
-    
+
     /**
      * Do some special checks for file types.
      *
      * {@inheritdoc}
      */
-    public function createResourceFromUri($uri) {
+    public function createResourceFromUri($uri)
+    {
         //TODO: use HEAD request to get mime/size
 
         try {
@@ -38,16 +41,16 @@ class HttpProvider extends AbstractFilePathProvider {
         } catch (\InvalidArgumentException $e) {
             throw new HttpException(424, $e->getMessage());
         }
-        
+
         //if file type is original, mark it as such
-        foreach($r->content->getFiles() as $file) {
-            if($file->getOriginal()) {
+        foreach ($r->content->getFiles() as $file) {
+            if ($file->getOriginal()) {
                 //file references reporting as 'binary' are most likely webpages without an extension
                 $file->setRepresentation("original");
                 $file->setQuality(1);
             }
         }
-        
+
         return $r;
     }
 

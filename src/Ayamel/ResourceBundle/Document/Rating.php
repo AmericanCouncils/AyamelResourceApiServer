@@ -4,7 +4,6 @@ namespace Ayamel\ResourceBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use JMS\SerializerBundle\Annotation as JMS;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Base Resource persistence class
@@ -14,7 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Rating
 {
-    
+
     /**
      * An optional weight for this Rating.
      *
@@ -22,7 +21,7 @@ class Rating
      * @MongoDB\Int
      */
     public $weight;
-    
+
     /**
      * The type of rater.
      *
@@ -30,7 +29,7 @@ class Rating
      * @MongoDB\String
      */
     public $raterType;
-    
+
     /**
      * A difficulty rating on a scale of 1-100.
      *
@@ -38,23 +37,23 @@ class Rating
      * @MongoDB\Int
      */
     public $difficulty;
-    
-	/**
-	 * Unique ID for Mongo
-	 *
-	 * @JMS\ReadOnly
+
+    /**
+     * Unique ID for Mongo
+     *
+     * @JMS\ReadOnly
      * @JMS\Type("string")
-	 * @MongoDB\Id
-	 */
+     * @MongoDB\Id
+     */
     protected $id;
-    
+
     /**
      * ID of Resource the rating is for
      *
-	 * @JMS\ReadOnly
-	 * @JMS\Type("string")
-	 * @MongoDB\String
+     * @JMS\ReadOnly
+     * @JMS\Type("string")
+     * @MongoDB\String
      */
     protected $resourceId;
-    
+
 }

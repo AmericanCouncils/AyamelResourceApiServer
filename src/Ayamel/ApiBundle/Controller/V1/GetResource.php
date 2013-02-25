@@ -5,9 +5,9 @@ use Ayamel\ApiBundle\Controller\ApiController;
 use Symfony\Component\HttpFoundation\Response;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
+class GetResource extends ApiController
+{
 
-class GetResource extends ApiController {
-    
     /**
      * Returns a resources object structure by its ID.
      *
@@ -23,16 +23,16 @@ class GetResource extends ApiController {
      * );
      *
      */
-    public function executeAction($id) {
-        
+    public function executeAction($id)
+    {
         //get the resource
         $resource = $this->getRequestedResourceById($id);
-                
+
         //check for deleted resource
-        if(null != $resource->getDateDeleted()) {
+        if (null != $resource->getDateDeleted()) {
             return $this->returnDeletedResource($resource);
         }
-        
+
         //return service response
         return $this->createServiceResponse(array('resource' => $resource), 200);
     }

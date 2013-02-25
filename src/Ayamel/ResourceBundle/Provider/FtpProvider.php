@@ -7,19 +7,21 @@ namespace Ayamel\ResourceBundle\Provider;
  *
  * @author Evan Villemez
  */
-class FtpProvider extends AbstractFilePathProvider {
-    
+class FtpProvider extends AbstractFilePathProvider
+{
     /**
      * {@inheritdoc}
      */
-    function getKey() {
+    public function getKey()
+    {
         return 'ftp';
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    function handlesScheme($scheme) {
+    public function handlesScheme($scheme)
+    {
         return in_array(strtolower($scheme), array('ftp','sftp'));
     }
 

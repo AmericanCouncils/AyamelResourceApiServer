@@ -6,7 +6,7 @@ old_sound_rabbit_mq:
             user:      'guest'
             password:  'guest'
             vhost:     '/'
-    
+
     producers:
         transcoding:
             connection: default

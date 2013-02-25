@@ -7,24 +7,26 @@ namespace Ayamel\ResourceBundle\Provider;
  *
  * @author Evan Villemez
  */
-class LocalFilepathProvider extends AbstractFilePathProvider {
-    
+class LocalFilepathProvider extends AbstractFilePathProvider
+{
     /**
      * {@inheritdoc}
      */
-    function getKey() {
+    public function getKey()
+    {
         return 'local';
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    function handlesScheme($scheme) {
-        if(0 === strpos($scheme, "/")) {
+    public function handlesScheme($scheme)
+    {
+        if (0 === strpos($scheme, "/")) {
             return true;
         }
-        
+
         return ("file" === strtolower($scheme));
     }
-    
+
 }

@@ -12,12 +12,12 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
  *
  * @author Evan Villemez
  */
-class ScanResourceUri extends ApiController {
-    
+class ScanResourceUri extends ApiController
+{
     /**
      * Derive as much of a full resource object as possible from a given uri.  Note that custom resource providers can be specified
      * in URI format, for example YouTube:  `youtube://txqiwrbYGrs`.
-     * 
+     *
      * @ApiDoc(
      *      resource=true,
      *      description="Derive resource from a URI.",
@@ -28,40 +28,40 @@ class ScanResourceUri extends ApiController {
      *      }
      * )
      *
-     * @param Request $request 
+     * @param Request $request
      */
-    public function executeAction(Request $request) {
-        
+    public function executeAction(Request $request)
+    {
         //get the uri
         $uri = urldecode($request->query->get('uri', false));
 
-        if(!$uri) {
+        if (!$uri) {
             throw $this->createHttpException("400", "The [uri] query parameter was not provided.");
         }
-        
+
         //general format check
         $exp = explode("://", $uri);
-        if(2 !== count($exp)) {
+        if (2 !== count($exp)) {
             throw $this->createHttpException(400, "The uri was not in the expected [scheme://path] format.");
         }
-        
+
         $scheme = $exp[0];
         $path = $exp[1];
         $provider = $this->container->get('ayamel.resource.provider');
-        
+
         //check scheme
-        if(!$provider->handlesScheme($scheme)) {
+        if (!$provider->handlesScheme($scheme)) {
             throw $this->createHttpException(422, sprintf("Cannot interpret resources via scheme [%s]", $scheme));
         }
-        
+
         //create a resource
         $resource = $provider->createResourceFromUri($uri);
-        
+
         //or not
-        if(!$resource instanceof Resource) {
+        if (!$resource instanceof Resource) {
             throw $this->createHttpException(422, "Could not derive a valid resource from the given uri.");
         }
-        
+
         return $this->createServiceResponse(array('resource' => $resource), 203);
     }
 
