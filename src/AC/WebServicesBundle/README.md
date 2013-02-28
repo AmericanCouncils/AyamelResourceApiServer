@@ -144,5 +144,6 @@ objects from a client's incoming request.
 
 ## Todo list ##
 
+* add CORS support - or NelmioCorsBundle
 * Test client object validator
 * Real format negotiation where applicable

@@ -81,8 +81,6 @@ class RelationsController extends ApiController
      *
      * @param  string $resourceId
      * @param  string $relationId
-     * @return void
-     * @author Evan Villemez
      */
     public function deleteResourceRelation($resourceId, $relationId)
     {

@@ -3,7 +3,7 @@ namespace AC\WebServicesBundle\Util;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use JMS\SerializerBundle\Serializer\SerializerInterface;
+use JMS\Serializer\SerializerInterface;
 use Metadata\MetadataFactoryInterface;
 
 //TODO: Take into account JMS Exclusion Policies / Groups
@@ -89,6 +89,8 @@ class ClientObjectValidator
             //check each property for the class
             foreach ($meta->propertyMetadata as $property) {
                 $name = isset($property->serializedName) ? $property->serializedName : $property->name;
+                
+//TODO: parse new type format
 
                 //this property could be some type of array of nested classes
                 if (0 === strpos($property->type, "array<")) {
