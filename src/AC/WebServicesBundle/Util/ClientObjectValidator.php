@@ -90,11 +90,12 @@ class ClientObjectValidator
             foreach ($meta->propertyMetadata as $property) {
                 $name = isset($property->serializedName) ? $property->serializedName : $property->name;
                 
-//TODO: parse new type format
+                //HACK: to support JMS SerializerBunder PRE 1.0 split into separate library
+                $type = is_string($property->type) ? $property->type : $property->type['name'];
 
                 //this property could be some type of array of nested classes
-                if (0 === strpos($property->type, "array<")) {
-                    $nested = $this->typeParser->getNestedTypeInArray($property->type);
+                if (0 === strpos($type, "array<")) {
+                    $nested = $this->typeParser->getNestedTypeInArray($type);
                     $this->graph[sprintf("%s.%s", $className, $name)] = array(
                         'class' => $nested['value'],
                         'array' => true
@@ -105,14 +106,14 @@ class ClientObjectValidator
                 }
 
                 //or it could be a reglar class name
-                elseif (!$this->typeParser->isPrimitive($property->type)) {
+                elseif (!$this->typeParser->isPrimitive($type)) {
                     $this->graph[sprintf("%s.%s", $className, $name)] = array(
-                        'class' => $property->type,
+                        'class' => $type,
                         'array' => false
                     );
 
                     //graph the nested object
-                    $this->graph($property->type);
+                    $this->graph($type);
                 }
             }
         }
