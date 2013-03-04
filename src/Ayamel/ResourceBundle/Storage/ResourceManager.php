@@ -2,7 +2,7 @@
 
 namespace Ayamel\ResourceBundle\Storage;
 
-use Ayamel\ResourceBundle\Storage\StorageInterface;
+use Ayamel\ResourceBundle\Storage\ResourceStorageInterface;
 use Ayamel\ResourceBundle\Document\Resource;
 use Ayamel\ResourceBundle\Event\Events;
 use Ayamel\ResourceBundle\Event\ResourceEvent;
@@ -14,12 +14,12 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  *
  * @author Evan Villemez
  */
-class ResourceManager implements StorageInterface
+class ResourceManager implements ResourceStorageInterface
 {
     /**
      * The actual storage instance used.
      *
-     * @var object Ayamel\ResourceBundle\Storage\StorageInterface
+     * @var object Ayamel\ResourceBundle\Storage\ResourceStorageInterface
      */
     protected $storage;
 
@@ -31,12 +31,12 @@ class ResourceManager implements StorageInterface
     protected $dispatcher;
 
     /**
-     * Constructor requires a StorageInterface, and dispatcher for emitting events.
+     * Constructor requires a ResourceStorageInterface, and dispatcher for emitting events.
      *
      * @param StorageInterface         $storage
      * @param EventDispatcherInterface $dispatcher
      */
-    public function __construct(StorageInterface $storage, EventDispatcherInterface $dispatcher)
+    public function __construct(ResourceStorageInterface $storage, EventDispatcherInterface $dispatcher)
     {
         $this->storage = $storage;
         $this->dispatcher = $dispatcher;

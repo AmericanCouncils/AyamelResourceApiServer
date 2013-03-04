@@ -3,7 +3,7 @@
 namespace Ayamel\ApiBundle\Storage;
 
 use Ayamel\ResourceBundle\Document\Resource;
-use Ayamel\ResourceBundle\Storage\StorageInterface;
+use Ayamel\ResourceBundle\Storage\ResourceStorageInterface;
 use Doctrine\ODM\MongoDB\DocumentManager;
 
 /**
@@ -11,7 +11,7 @@ use Doctrine\ODM\MongoDB\DocumentManager;
  *
  * @author Evan Villemez
  */
-class MongoResourceStorage implements StorageInterface
+class MongoResourceStorage implements ResourceStorageInterface
 {
     /**
      * @var object Doctrine\ODM\MongoDB\DocumentManager

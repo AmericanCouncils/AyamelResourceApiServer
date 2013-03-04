@@ -3,7 +3,7 @@
 namespace Ayamel\ResourceBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
-use JMS\SerializerBundle\Annotation as JMS;
+use JMS\Serializer\Annotation as JMS;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -220,7 +220,6 @@ class Resource
      * An array of Relation objects that describe the relationship between this Resource and
      * other Resources.  Relations are critical to the search indexing process.
      *
-     * @MongoDB\EmbedMany(targetDocument="Ayamel\ResourceBundle\Document\Relation")
      * @JMS\Type("array<Ayamel\ResourceBundle\Document\Relation>")
      * @JMS\ReadOnly
      */

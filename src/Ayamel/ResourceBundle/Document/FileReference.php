@@ -3,7 +3,7 @@
 namespace Ayamel\ResourceBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
-use JMS\SerializerBundle\Annotation as JMS;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * File reference object
