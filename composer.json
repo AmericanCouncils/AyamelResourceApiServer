@@ -23,7 +23,8 @@
 		"getid3/getid3": "1.9.3",
         "ac/transcoding-bundle": "dev-master",
         "oldsound/rabbitmq-bundle": "dev-master",
-        "nelmio/api-doc-bundle": "dev-master"
+        "nelmio/api-doc-bundle": "dev-master",
+        "nelmio/cors-bundle": "*"
     },
     "scripts": {
         "post-install-cmd": [
