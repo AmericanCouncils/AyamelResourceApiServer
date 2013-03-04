@@ -54,15 +54,12 @@ doctrine_mongodb:
         default:
             auto_mapping: true
 
+## JMS Serializer, note that the actual serializer is a separate library finally
 jms_serializer:
     handlers:
-        object_based: false
         datetime:
-            format: "Y-m-dTH:i:s" # ISO8601
+            default_format: "Y-m-dTH:i:s" # ISO8601
             default_timezone: "UTC" # defaults to whatever timezone set in php.ini or via date_default_timezone_set
-        array_collection: true
-        form_error: true
-        constraint_violation: true
     property_naming:
         separator:  
         lower_case: true
@@ -72,7 +69,7 @@ jms_serializer:
         file_cache:
             dir: "%kernel.cache_dir%/serializer"
         auto_detection: true
-        
+
 nelmio_api_doc:
     name:   Ayamel Resource Library API
     sandbox:

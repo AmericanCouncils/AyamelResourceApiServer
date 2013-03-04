@@ -2,18 +2,20 @@
 namespace Ayamel\ResourceBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
-use JMS\SerializerBundle\Annotation as JMS;
+use JMS\Serializer\Annotation as JMS;
 
 /**
- * API Client object, which can contain optional user-specific data
+ * API Client object, which can contain optional user-specific data.
  *
  * @MongoDB\EmbeddedDocument
  *
+ * @package AyamelResourceBundle
  */
 class Client
 {
     /**
-     * The ID of the API client which created the Resource.
+     * The ID of the API client which created the Resource.  Ids in this case
+     * are unique string representations, not database-assigned values.
      *
      * @MongoDB\String
      * @JMS\SerializedName("id")
@@ -41,27 +43,15 @@ class Client
      * @JMS\ReadOnly
      */
     protected $uri;
-
+    
     /**
-     * An optional reference to an internal user of API client
-     * system who uploaded the resource.  This would most likely
-     * be a unique ID from the client system.
+     * An optional reference to a specific user in a remote system.
      *
-     * @MongoDB\String
-     * @JMS\SerializedName("user")
-     * @JMS\Type("string")
+     * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\ClientUser")
+     * @JMS\Type("Ayamel\ResourceBundle\Document\ClientUser")
      */
     protected $user;
 
-    /**
-     * An optional URI referencing the internal user of the API
-     * client who created the Resource.
-     *
-     * @MongoDB\String
-     * @JMS\SerializedName("userUri")
-     * @JMS\Type("string")
-     */
-    protected $userUri;
 
     /**
      * Set id
@@ -126,11 +116,11 @@ class Client
     /**
      * Set user
      *
-     * @param string $user
+     * @param ClientUser $user
      */
-    public function setUser($user)
+    public function setUser(ClientUser $user)
     {
-        $this->user = (string) $user;
+        $this->user = $user;
     }
 
     /**
@@ -141,25 +131,5 @@ class Client
     public function getUser()
     {
         return $this->user;
-    }
-
-    /**
-     * Set userUri
-     *
-     * @param string $userUri
-     */
-    public function setUserUri($userUri)
-    {
-        $this->userUri = $userUri;
-    }
-
-    /**
-     * Get userUri
-     *
-     * @return string $userUri
-     */
-    public function getUserUri()
-    {
-        return $this->userUri;
     }
 }
