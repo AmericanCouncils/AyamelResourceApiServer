@@ -1,5 +1,5 @@
 {
-    "hash": "75403e8b8a3e4791045d77e5c7d0bfb5",
+    "hash": "70198e4879355dedb9dbd2c103900471",
     "packages": [
         {
             "name": "ac/transcoding",
@@ -540,16 +540,16 @@
         },
         {
             "name": "doctrine/mongodb",
-            "version": "1.0.1",
+            "version": "1.0.x-dev",
             "source": {
                 "type": "git",
-                "url": "https://github.com/doctrine/mongodb",
-                "reference": "1.0.1"
+                "url": "https://github.com/doctrine/mongodb.git",
+                "reference": "1.0.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/doctrine/mongodb/archive/1.0.1.zip",
-                "reference": "1.0.1",
+                "url": "https://api.github.com/repos/doctrine/mongodb/zipball/1.0.2",
+                "reference": "1.0.2",
                 "shasum": ""
             },
             "require": {
@@ -574,7 +574,7 @@
                     "homepage": "http://avalanche123.com"
                 },
                 {
-                    "name": "Jonathan Wage",
+                    "name": "Jonathan H. Wage",
                     "email": "jonwage@gmail.com",
                     "homepage": "http://www.jwage.com/"
                 },
@@ -596,7 +596,7 @@
                 "mongodb",
                 "persistence"
             ],
-            "time": "2013-01-10 20:57:52"
+            "time": "2013-01-16 19:54:24"
         },
         {
             "name": "doctrine/mongodb-odm",
@@ -604,12 +604,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/mongodb-odm.git",
-                "reference": "2e45d398fa68f89e9b8a439f796f0955d6461f5a"
+                "reference": "1.0.0-BETA8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/mongodb-odm/zipball/2e45d398fa68f89e9b8a439f796f0955d6461f5a",
-                "reference": "2e45d398fa68f89e9b8a439f796f0955d6461f5a",
+                "url": "https://api.github.com/repos/doctrine/mongodb-odm/zipball/1.0.0-BETA8",
+                "reference": "1.0.0-BETA8",
                 "shasum": ""
             },
             "require": {
@@ -1341,6 +1341,52 @@
             "time": "2013-03-01 21:04:51"
         },
         {
+            "name": "nelmio/cors-bundle",
+            "version": "dev-master",
+            "target-dir": "Nelmio/CorsBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nelmio/NelmioCorsBundle.git",
+                "reference": "48fc678a545ab087d3ad959b862f759e870dc140"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nelmio/NelmioCorsBundle/zipball/48fc678a545ab087d3ad959b862f759e870dc140",
+                "reference": "48fc678a545ab087d3ad959b862f759e870dc140",
+                "shasum": ""
+            },
+            "require": {
+                "symfony/framework-bundle": ">=2.0,<3.0"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-0": {
+                    "Nelmio\\CorsBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nelmio",
+                    "homepage": "http://nelm.io"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://github.com/nelmio/NelmioCorsBundle/contributors"
+                }
+            ],
+            "description": "Adds CORS (Cross-Origin Resource Sharing) headers support in your Symfony2 application",
+            "keywords": [
+                "api",
+                "cors",
+                "crossdomain"
+            ],
+            "time": "2013-01-07 09:45:57"
+        },
+        {
             "name": "oldsound/rabbitmq-bundle",
             "version": "dev-master",
             "target-dir": "OldSound/RabbitMqBundle",
@@ -2034,9 +2080,7 @@
             "time": "2013-02-13 19:43:51"
         }
     ],
-    "packages-dev": [
-
-    ],
+    "packages-dev": null,
     "aliases": [
 
     ],

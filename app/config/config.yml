@@ -78,3 +78,17 @@ nelmio_api_doc:
 #        authentication: # default null, if set, the value of the api key is read from the query string and appended to every sandbox api call
 #            name: access_token
 #            delivery: query # only query delivery is supported for now
+
+nelmio_cors:
+    defaults:
+        allow_credentials: false
+        allow_origin: []
+        allow_headers: []
+        allow_methods: []
+        expose_headers: []
+        max_age: 0
+    paths:
+        '^/api/':
+            allow_origin: ['*']
+            allow_methods: ['POST', 'PUT', 'GET', 'DELETE']
+            max_age: 3600
