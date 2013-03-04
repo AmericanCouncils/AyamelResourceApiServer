@@ -8,7 +8,7 @@ class AppKernel extends Kernel
     public function registerBundles()
     {
         $bundles = array(
-			//taken from standard edition
+            //taken from standard edition
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
 //            new Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new Symfony\Bundle\TwigBundle\TwigBundle(),
@@ -16,12 +16,12 @@ class AppKernel extends Kernel
 //            new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
 //            new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
-			
-			//added by Evan
-			new Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle(),
-			new JMS\SerializerBundle\JMSSerializerBundle($this),
-			
-			//custom
+            
+            //added by Evan
+            new Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle(),
+            new JMS\SerializerBundle\JMSSerializerBundle($this),
+            
+            //custom
             new AC\WebServicesBundle\ACWebServicesBundle(),
             new Ayamel\ResourceBundle\AyamelResourceBundle(),
             new Ayamel\ApiBundle\AyamelApiBundle(),
@@ -32,6 +32,7 @@ class AppKernel extends Kernel
             new OldSound\RabbitMqBundle\OldSoundRabbitMqBundle(),
             new Ayamel\TranscodingBundle\AyamelTranscodingBundle(),
             new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
+            new Nelmio\CorsBundle\NelmioCorsBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
