@@ -19,6 +19,7 @@ class GetResource extends ApiController
      *      return="Ayamel\ResourceBundle\Document\Resource",
      *      filters={
      *          {"name"="_format", "default"="json", "description"="Return format, can be one of xml, yml or json"},
+     *          {"name"="relations", "default"="true", "description"="Whether or not to return relations created by the owner and requesting client."},
      *      }
      * );
      *
@@ -27,10 +28,18 @@ class GetResource extends ApiController
     {
         //get the resource
         $resource = $this->getRequestedResourceById($id);
+        $request = $this->get('request');
 
         //check for deleted resource
         if (null != $resource->getDateDeleted()) {
             return $this->returnDeletedResource($resource);
+        }
+        
+        if (!$request->get('relations', false)) {
+            //TODO: get relevant relations
+
+            //by default limited to the relations created by the requesting client, and the owner
+            //of the original resource
         }
 
         //return service response

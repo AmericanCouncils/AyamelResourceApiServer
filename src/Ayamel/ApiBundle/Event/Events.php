@@ -30,6 +30,8 @@ final class Events
      */
     const RESOURCE_DELETED = "ayamel.api.resource_deleted";
 
+//TODO: implement relation events
+
     /**
      * Fires when uploaded content needs to be resolved for a resource.
      *

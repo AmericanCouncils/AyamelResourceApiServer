@@ -14,6 +14,5 @@ class AyamelResourceBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(new RegisterProviderDelegatesPass());
-        $container->addCompilerPass(new RegisterManagerEventListenersPass());
     }
 }

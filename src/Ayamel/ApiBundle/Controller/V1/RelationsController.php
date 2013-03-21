@@ -34,9 +34,18 @@ class RelationsController extends ApiController
      */
     public function getResourceRelations($id)
     {
-        throw $this->createHttpException(501, sprintf("Not yet implemented [%s]", __METHOD__));
-
         $resource = $this->getRequestedResourceById($id);
+        
+        //TODO: check for deleted resource
+
+        $repo = $this->get('doctrine_mongodb')->getManager()->getRepository('AyamelResourceBundle:Relation');
+        
+        //TODO: only get the relations the requesting client is allowed to see
+        $relations = $repo->getRelationsForResource($resource->getId());
+                
+        return array(
+            'relations' => $relations
+        );
     }
 
     /**
@@ -69,6 +78,10 @@ class RelationsController extends ApiController
         throw $this->createHttpException(501, sprintf("Not yet implemented [%s]", __METHOD__));
 
         $resource = $this->getRequestResourceById($id);
+        
+        //create client from request
+        
+        //trigger 'modified' in resource
     }
 
     /**

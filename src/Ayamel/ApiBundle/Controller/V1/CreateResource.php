@@ -33,17 +33,6 @@ class CreateResource extends ApiController
      */
     public function executeAction(Request $request)
     {
-        /*
-        //get validator
-        $validator = $this->container->get('ayamel.api.client_data_validator');
-
-        //decode incoming data
-        $data = $validator->decodeIncomingResourceDataByRequest($request);
-
-        //build a new resource instance based on received data
-        $resource = $validator->createAndValidateNewResource($data);
-        */
-
         //create object from client request
         $resource = $this->container->get('ac.webservices.object_validator')->createObjectFromRequest('Ayamel\ResourceBundle\Document\Resource', $this->getRequest());
 
@@ -61,7 +50,9 @@ class CreateResource extends ApiController
 
         //attempt to persisting the object, most likely to mongo
         try {
-            $this->container->get('ayamel.resource.manager')->persistResource($resource);
+            $manager = $this->get('doctrine_mongodb')->getManager();
+            $manager->persist($resource);
+            $manager->flush();
         } catch (\Exception $e) {
             throw $this->createHttpException(400, $e->getMessage());
         }

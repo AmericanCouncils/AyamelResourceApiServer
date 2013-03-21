@@ -47,7 +47,9 @@ $modifiedResource = $this->container->get('ac.webservices.object_validator')->mo
 
         //save it
         try {
-            $this->container->get('ayamel.resource.manager')->persistResource($modifiedResource);
+            $manager = $this->get('doctrine_mongodb')->getManager();
+            $manager->persist($modifiedResource);
+            $manager->flush();
         } catch (\Exception $e) {
             throw $this->createHttpException(400, $e->getMessage());
         }

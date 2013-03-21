@@ -13,6 +13,13 @@ use AC\WebServicesBundle\Response\ServiceResponse;
  */
 abstract class ApiController extends Controller
 {
+    protected function getRequestingClientIp()
+    {
+        $req = $this->get('request');
+        $req::trustProxyData();
+        return $req->getClientIp();
+    }
+    
     /**
      * Get the client system for the current api request.
      *
@@ -69,7 +76,7 @@ abstract class ApiController extends Controller
     protected function getRequestedResourceById($id)
     {
         //get repository and find requested object
-        $resource = $this->container->get('ayamel.resource.manager')->getResourceById($id);
+        $resource = $this->get('doctrine_mongodb')->getManager()->getRepository('AyamelResourceBundle:Resource')->find($id);
 
         //throw not found exception if necessary
         if (!$resource) {
@@ -85,18 +92,6 @@ abstract class ApiController extends Controller
         }
 
         return $resource;
-    }
-
-    /**
-     * Get an array of Resources by their ids.  Needs to handle authentication for multiple objects.  Error on one forces error on all.
-     *
-     * @param  array                                                     $ids
-     * @return array
-     * @throws Symfony\Component\HttpKernel\Exception\HttpException(403) if resource is private and requesting client is not the owner.
-     */
-    protected function getRequestedResourcesByIds(array $ids)
-    {
-        //TODO:
     }
 
     protected function returnDeletedResource(Resource $resource)

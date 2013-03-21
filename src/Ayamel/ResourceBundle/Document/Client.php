@@ -52,7 +52,6 @@ class Client
      */
     protected $user;
 
-
     /**
      * Set id
      *

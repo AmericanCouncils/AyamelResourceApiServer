@@ -174,8 +174,10 @@ class UploadContent extends ApiController
             try {
                 //persist it
                 $resource = $handleEvent->getResource();
-                $this->container->get('ayamel.resource.manager')->persistResource($resource);
-
+                $manager = $this->get('doctrine_mongodb')->getManager();
+                $manager->persist($resource);
+                $manager->flush();
+                
                 //notify system
                 $apiDispatcher->dispatch(Events::RESOURCE_MODIFIED, new ApiEvent($resource));
             } catch (\Exception $e) {

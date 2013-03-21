@@ -631,7 +631,17 @@ class Resource
     public function validate($return = false)
     {
         $errors = array();
-
+        
+        //enforce proper dates, unless this is being deleted
+        if (Resource::STATUS_DELETED !== $this->getStatus()) {
+            $date = new \DateTime();
+            if (!$this->getId()) {
+                $this->setDateAdded($date);
+            }
+        
+            $this->setDateModified($date);
+        }
+        
         //check scalar fields
         foreach ($this->_validators as $field => $type) {
             //ignore null, that's how we unset/remove properties

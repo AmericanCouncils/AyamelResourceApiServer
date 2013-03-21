@@ -1,3 +1,4 @@
 # TODO #
 
-* Make `supervisord` work with the asynchronous commands
+* simplify storage stuff
+    * replace interfaces with custom doctrine mongo repositories

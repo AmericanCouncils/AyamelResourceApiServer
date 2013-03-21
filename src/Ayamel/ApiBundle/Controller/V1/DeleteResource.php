@@ -38,17 +38,18 @@ class DeleteResource extends ApiController
             return $this->returnDeletedResource($resource);
         }
 
-        //TODO: preserve some fields:
-        // - client object
-        // - date added
-
         $apiDispatcher = $this->container->get('ayamel.api.dispatcher');
 
         //notify system to remove content for resource
         $apiDispatcher->dispatch(Events::REMOVE_RESOURCE_CONTENT, new ApiEvent($resource));
 
-        //remove from storage (sort of)
-        $resource = $this->container->get('ayamel.resource.manager')->deleteResource($resource);
+        //remove from storage (sort of), just clears data and marks as deleted
+        $manager = $this->get('doctrine_mongodb')->getManager();
+        $resource = $manager->getRepository('AyamelResourceBundle:Resource')->deleteResource($resource);
+        
+        //do this here or in a listener?
+        $manager->getRepository('AyamelResourceBundle:Relation')->deleteRelationsForResource($resource->getId());        
+        $manager->flush();
 
         //notify rest of system of deleted resource
         $apiDispatcher->dispatch(Events::RESOURCE_DELETED, new ApiEvent($resource));

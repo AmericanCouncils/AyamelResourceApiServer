@@ -1,7 +1,5 @@
 <?php
 
-//TODO: Need to track the owner of the relation as well, unfortunately - probably will just embed the entire client document
-
 namespace Ayamel\ResourceBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
@@ -11,7 +9,7 @@ use JMS\Serializer\Annotation as JMS;
  * Relation object that describes a type of relationship between two resource objects.
  * 
  * @package AyamelResourceBundle
- * @MongoDB\Document(db="ayamel", collection="relations")
+ * @MongoDB\Document(db="ayamel", collection="relations", repositoryClass="Ayamel\ResourceBundle\Repository\RelationRepository")
  *
  */
 class Relation
