@@ -5,6 +5,7 @@ namespace Ayamel\ApiBundle\Event;
 /**
  * Defines core events that occur within the Resource API.
  *
+ * @package AyamelApiBundle
  * @author Evan Villemez
  */
 final class Events

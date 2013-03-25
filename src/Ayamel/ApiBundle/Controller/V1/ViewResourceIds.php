@@ -28,20 +28,17 @@ class ViewResourceIds extends ApiController
     public function executeAction()
     {
         $request = $this->getRequest();
-        $mongo = $this->container->get('doctrine_mongodb.odm.default_connection');
+        $db = $this->container->get('doctrine_mongodb.odm.default_connection')->ayamel->resources;
 
         $limit = $request->query->get('limit', 50);
         $order = $request->query->get('order', -1);
         $skip = $request->query->get('skip', 0);
 
         $ids = array();
-        $results = $mongo->ayamel->resources->find(array(), array('id' => 1))->limit($limit)->sort(array("_id" => $order))->skip($skip);
-
-        /*
-        foreach ($results as $key => $val) {
-            $ids[] = $key;
-        }
-        */
+        $results = $db->find(array(), array('id' => 1))
+                        ->limit($limit)
+                        ->sort(array("_id" => $order))
+                        ->skip($skip);
 
         //assemble final content structure
         return $this->createServiceResponse(array('ids' => array_keys(iterator_to_array($results))), 200);

@@ -31,7 +31,7 @@ class GetResource extends ApiController
         $request = $this->get('request');
 
         //check for deleted resource
-        if (null != $resource->getDateDeleted()) {
+        if ($resource->isDeleted()) {
             return $this->returnDeletedResource($resource);
         }
         

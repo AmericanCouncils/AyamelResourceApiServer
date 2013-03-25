@@ -10,5 +10,16 @@ web_profiler:
     toolbar: false
     intercept_redirects: false
 
+doctrine_mongodb:
+    connections:
+        default:
+            server: mongodb://localhost:27017
+            options:
+                connect: true
+    default_database: ayamel_test
+    document_managers:
+        default:
+            auto_mapping: true
+
 #swiftmailer:
 #    disable_delivery: true

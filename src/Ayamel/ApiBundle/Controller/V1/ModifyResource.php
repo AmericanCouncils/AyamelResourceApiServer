@@ -31,7 +31,7 @@ class ModifyResource extends ApiController
         $resource = $this->getRequestedResourceById($id);
 
         //check for deleted resource
-        if (null != $resource->getDateDeleted()) {
+        if ($resource->isDeleted()) {
             return $this->returnDeletedResource($resource);
         }
 

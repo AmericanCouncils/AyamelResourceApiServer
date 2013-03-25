@@ -8,9 +8,12 @@ use JMS\Serializer\Annotation as JMS;
 /**
  * Relation object that describes a type of relationship between two resource objects.
  * 
+ * @MongoDB\Document(
+ *      collection="relations",
+ *      repositoryClass="Ayamel\ResourceBundle\Repository\RelationRepository"
+ * )
  * @package AyamelResourceBundle
- * @MongoDB\Document(db="ayamel", collection="relations", repositoryClass="Ayamel\ResourceBundle\Repository\RelationRepository")
- *
+ * @author Evan Villemez
  */
 class Relation
 {

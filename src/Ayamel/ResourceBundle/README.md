@@ -8,4 +8,4 @@ It also provides a pluggable mechanism for deriving resource documents from exte
 ## Todo list ##
 
 * Make HEAD requests on http/https URI/files to get mime/bytes info
-* Test Providers and DelegatingProvider
+* Test Providers (where possible) and DelegatingProvider

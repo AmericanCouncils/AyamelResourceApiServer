@@ -34,7 +34,7 @@ class DeleteResource extends ApiController
         $resource = $this->getRequestedResourceById($id);
 
         //check for already deleted resource
-        if (null != $resource->getDateDeleted()) {
+        if ($resource->isDeleted()) {
             return $this->returnDeletedResource($resource);
         }
 

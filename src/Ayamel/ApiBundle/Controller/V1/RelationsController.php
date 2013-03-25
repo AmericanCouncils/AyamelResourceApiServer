@@ -36,7 +36,9 @@ class RelationsController extends ApiController
     {
         $resource = $this->getRequestedResourceById($id);
         
-        //TODO: check for deleted resource
+        if ($resource->isDeleted()) {
+            return $this->returnDeletedResource($resource);
+        }
 
         $repo = $this->get('doctrine_mongodb')->getManager()->getRepository('AyamelResourceBundle:Relation');
         

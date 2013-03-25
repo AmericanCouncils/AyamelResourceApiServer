@@ -9,8 +9,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Base Resource persistence class
  *
- * @MongoDB\Document(db="ayamel", collection="resources")
+ * @MongoDB\Document(
+ *      collection="resources",
+ *      repositoryClass="Ayamel\ResourceBundle\Repository\ResourceRepository"
+ * )
  * @JMS\ExclusionPolicy("none")
+ * @package AyamelResourceBundle
+ * @author Evan Villemez
  */
 class Resource
 {
@@ -616,6 +621,16 @@ class Resource
     }
 
     /**
+     * Return whether or not the resource has been deleted
+     *
+     * @return boolean
+     */
+    public function isDeleted()
+    {
+        return (self::STATUS_DELETED === $this->status);
+    }
+
+    /**
      * Validation method, because PHP sucks and can't do scalar type hinting.  Called automatically by Mongodb ODM before create/update operations.
      *
      * Note that this validation is only for checking that values are of a certain type for a given field.  This validation has nothing to do with whether or not
@@ -633,7 +648,7 @@ class Resource
         $errors = array();
         
         //enforce proper dates, unless this is being deleted
-        if (Resource::STATUS_DELETED !== $this->getStatus()) {
+        if (!$this->isDeleted()) {
             $date = new \DateTime();
             if (!$this->getId()) {
                 $this->setDateAdded($date);
