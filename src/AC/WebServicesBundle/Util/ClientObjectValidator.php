@@ -232,7 +232,7 @@ class ClientObjectValidator
      */
     protected function getJsonFromClient(Request $request)
     {
-        if ('application/json' === $request->headers->get('Content-Type', false)) {
+        if (false !== strpos($request->headers->get('Content-Type', ''), 'application/json')) {
             return $request->getContent();
         }
 
