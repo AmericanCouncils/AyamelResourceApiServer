@@ -41,7 +41,7 @@ class CreateResource extends ApiController
 
         //fill in client info
         if (!isset($resource->client)) {
-            $resource->setClient(new Client);
+            $resource->setClient(new Client());
         }
         if (!$resource->client->getId()) {
             $request::trustProxyData();

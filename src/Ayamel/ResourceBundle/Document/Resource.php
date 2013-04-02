@@ -660,7 +660,7 @@ class Resource
         //check scalar fields
         foreach ($this->_validators as $field => $type) {
             //ignore null, that's how we unset/remove properties
-            if ($this->$field !== null) {
+            if (null !== $this->$field) {
                 if (function_exists($func = "is_".$type)) {
                     if (!$func($this->$field)) {
                         $errors[] = sprintf("Field '%s' must be of type '%s'", $field, $type);
