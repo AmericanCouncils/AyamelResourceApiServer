@@ -149,14 +149,19 @@ class ClientObjectValidator
             return;
         }
         
+        if (!$clientData) {
+            return;
+        }
+
         $invalidFields = array();
         foreach ($jmsMetadata->propertyMetadata as $property) {
             $name = isset($property->serializedName) ? $property->serializedName : $property->name;
-
-            if (!isset($clientData[$name])) {
+            
+            //check if not exists
+            if (!array_key_exists($name, $clientData)) {
                 continue;
             }
-
+            
             //read only check
             if ($property->readOnly && isset($clientData[$name])) {
                 $invalidFields[] = $name;
@@ -272,5 +277,5 @@ class ClientObjectValidator
 
         throw new HttpException(400, "Could not reliably decode data.");
     }
-
+    
 }

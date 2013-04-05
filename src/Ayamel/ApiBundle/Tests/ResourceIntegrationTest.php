@@ -195,36 +195,88 @@ class ResourceIntegrationTest extends TestCase
         $this->assertFalse(isset($json['resource']['relations']));
         $this->assertTrue(isset($json['content_upload_url']));
         
-        //now modify the resource
+        //use these in subsequent tests
+        $dateAdded = $json['resource']['dateAdded'];
         $resourceId = $json['resource']['id'];
+        
+        //now modify the resource
+
+        sleep(1);       //sleeping one second to force dateModified to be different
+        $changes = array(
+            'title' => "I CHANGED YOU!",
+            'categories' => array('food','bard'),
+            'client' => array(
+                'user' => array(
+                    'id' => 'transferred',
+                    'url' => 'http://foo.bar'
+                )
+            )
+        );
+        $expectedClient = array(
+            'id' => '127.0.0.1',
+            'user' => array(
+                'id' => 'transferred',
+                'url' => 'http://foo.bar'
+            )
+        );
+            
         $modified = $this->getJson("PUT", '/api/v1/resources/'.$resourceId, array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
-        ), json_encode(array(
-            'title' => "I CHANGED YOU!"
-        )));
+        ), json_encode($changes));
         
         $this->assertSame(200, $modified['response']['code']);
         $this->assertSame($resourceId, $modified['resource']['id']);
-        $this->assertSame('I CHANGED YOU!', $modified['resource']['title']);
+        $this->assertSame($changes['title'], $modified['resource']['title']);
         $this->assertSame($data['type'], $modified['resource']['type']);
         $this->assertSame($data['description'], $modified['resource']['description']);
         $this->assertSame($data['keywords'], $modified['resource']['keywords']);
-        $this->assertSame($data['categories'], $modified['resource']['categories']);
+        $this->assertSame($changes['categories'], $modified['resource']['categories']);
         $this->assertSame($data['visibility'], $modified['resource']['visibility']);
         $this->assertSame($data['copyright'], $modified['resource']['copyright']);
         $this->assertSame($data['license'], $modified['resource']['license']);
         $this->assertSame($data['origin'], $modified['resource']['origin']);
         $this->assertSame($expectedClient, $modified['resource']['client']);
         $this->assertTrue(isset($modified['resource']['dateAdded']));
+        $this->assertSame($dateAdded, $modified['resource']['dateAdded']);
         $this->assertTrue(isset($modified['resource']['dateModified']));
         //now modified and added times should differ
         $this->assertFalse($modified['resource']['dateModified'] === $modified['resource']['dateAdded']);
         $this->assertFalse(isset($modified['resource']['content']));
         $this->assertFalse(isset($modified['resource']['relations']));
-        $this->assertTrue(isset($modified['content_upload_url']));
+        $this->assertFalse(isset($modified['content_upload_url']));
         
         //setting a field to null should remove it
-        //TODO
+        sleep(1);   //sleeping one second to force dateModified to be different
+        $prevDateModified = $modified['resource']['dateModified'];
+        $changes = array(
+            'title' => 'changed again',
+            'categories' => null,
+            'description' => null,
+        );
+        $modified = $this->getJson("PUT", '/api/v1/resources/'.$resourceId, array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), json_encode($changes));
+
+        $this->assertSame(200, $modified['response']['code']);
+        $this->assertSame($resourceId, $modified['resource']['id']);
+        $this->assertSame($changes['title'], $modified['resource']['title']);
+        $this->assertSame($data['type'], $modified['resource']['type']);
+        $this->assertFalse(isset($modified['resource']['description']));
+        $this->assertSame($data['keywords'], $modified['resource']['keywords']);
+        $this->assertFalse(isset($modified['resource']['categories']));
+        $this->assertSame($data['visibility'], $modified['resource']['visibility']);
+        $this->assertSame($data['copyright'], $modified['resource']['copyright']);
+        $this->assertSame($data['license'], $modified['resource']['license']);
+        $this->assertSame($data['origin'], $modified['resource']['origin']);
+        $this->assertSame($expectedClient, $modified['resource']['client']);
+        $this->assertTrue(isset($modified['resource']['dateAdded']));
+        $this->assertSame($dateAdded, $modified['resource']['dateAdded']);
+        $this->assertTrue(isset($modified['resource']['dateModified']));
+        //now modified and added times should differ
+        $this->assertFalse($prevDateModified === $modified['resource']['dateModified']);
+        $this->assertFalse(isset($modified['resource']['content']));
+        $this->assertFalse(isset($modified['resource']['relations']));
+        $this->assertFalse(isset($modified['content_upload_url']));
     }
     
     public function testDeleteResource()

@@ -14,6 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  *      repositoryClass="Ayamel\ResourceBundle\Repository\ResourceRepository"
  * )
  * @JMS\ExclusionPolicy("none")
+ * 
  * @package AyamelResourceBundle
  * @author Evan Villemez
  */
@@ -136,6 +137,7 @@ class Resource
     /**
      * The date the Resource was added into the database.
      *
+     * @MongoDB\Date
      * @JMS\SerializedName("dateAdded")
      * @JMS\Type("DateTime")
      * @JMS\ReadOnly
@@ -638,7 +640,7 @@ class Resource
      *
      * @MongoDB\PrePersist
      * @MongoDB\PreUpdate
-     *
+     * 
      * @param $return - whether or not to return errors, or throw exception
      * @throws InvalidArgumentException if $return is false
      * @return true                     on success or array if validation fails
@@ -653,7 +655,7 @@ class Resource
             if (!$this->getId()) {
                 $this->setDateAdded($date);
             }
-        
+            
             $this->setDateModified($date);
         }
         
@@ -679,5 +681,5 @@ class Resource
 
         throw new \InvalidArgumentException(implode(". ", $errors));
     }
-
+    
 }

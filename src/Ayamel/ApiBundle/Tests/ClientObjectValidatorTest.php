@@ -74,6 +74,7 @@ class ClientObjectValidatorTest extends TestCase
             'title' => 'Fooooooooo',
             'keywords' => 'hi, there and, some stuff, hah',
             'categories' => array('foo','bar','baz'),
+            'description' => null,
             'type' => 'document',
             'client' => array(
                 'user' => array(
@@ -89,11 +90,29 @@ class ClientObjectValidatorTest extends TestCase
 
         $this->assertTrue($resource instanceof Resource);
         $this->assertSame($resource->getTitle(), $requestData['title']);
-        $this->assertSame($resource->getDescription(), 'bar');
+        $this->assertNull($resource->getDescription());
         $this->assertSame($resource->getKeywords(), $requestData['keywords']);
         $this->assertSame($resource->getCategories(), $requestData['categories']);
         $this->assertSame($resource->getType(), $requestData['type']);
         $this->assertSame($resource->getClient()->getUser()->getId(), $requestData['client']['user']['id']);
+        
+        //modify again
+        $changes = array(
+            'client' => null
+        );
+        
+        $request = Request::create('/foo/bar', 'POST', array(), array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), json_encode($changes));
+        $validator->modifyObjectFromRequest('Ayamel\ResourceBundle\Document\Resource', $request, $resource);
+
+        $this->assertTrue($resource instanceof Resource);
+        $this->assertSame($resource->getTitle(), $requestData['title']);
+        $this->assertNull($resource->getDescription());
+        $this->assertSame($resource->getKeywords(), $requestData['keywords']);
+        $this->assertSame($resource->getCategories(), $requestData['categories']);
+        $this->assertSame($resource->getType(), $requestData['type']);
+        $this->assertNull($resource->getClient());
     }
     
     public function testThrowExceptionReadOnlyFields()
@@ -146,5 +165,16 @@ class ClientObjectValidatorTest extends TestCase
         
         $this->setExpectedException('Exception');
         $resource = $validator->createObjectFromRequest('Ayamel\ResourceBundle\Document\Resource', $request);
+    }
+    
+    public function testIsset()
+    {
+        $test = array(
+            'foo' => 23,
+            'bar' => 'baz',
+            'baz' => null,
+            'qux' => 'chickens'
+        );
+        $this->assertTrue(array_key_exists('qux', $test));
     }
 }

@@ -29,7 +29,7 @@ class GetResource extends ApiController
         //get the resource
         $resource = $this->getRequestedResourceById($id);
         $request = $this->get('request');
-
+        
         //check for deleted resource
         if ($resource->isDeleted()) {
             return $this->returnDeletedResource($resource);
