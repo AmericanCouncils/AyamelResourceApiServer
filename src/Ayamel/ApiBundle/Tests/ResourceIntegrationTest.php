@@ -281,17 +281,138 @@ class ResourceIntegrationTest extends TestCase
     
     public function testDeleteResource()
     {
+        $data = array(
+            'title' => 'A test to remember',
+            'description' => 'An amazing description',
+            'type' => 'data',
+            'keywords' => 'foo, bar, baz',
+            'categories' => array('food', 'culture', 'history'),
+            'visibility' => array('client1', 'client2'),
+            'copyright' => "Copyright text 2013",
+            'license' => 'Public Domain',
+            'origin' => array(
+                'creator' => 'Leonardo da Vinci',
+                'location' => 'Italy',
+                'date' => 'Late 2039',
+                'format' => 'Oil on circuit board',
+                'note' => '... you never know.',
+                'uri' => 'http://thefuture.com/'
+            ),
+            'client' => array(
+                'user' => array(
+                    'id' => 'theTester',
+                    'url' => 'http://example.com/users/theTester'
+                )
+            ),
+        );
         
+        //api automatically injects the client id, and it can't be set by the caller
+        $expectedClient = array(
+            'id' => '127.0.0.1',
+            'user' => array(
+                'id' => 'theTester',
+                'url' => 'http://example.com/users/theTester'
+            )
+        );
+        
+        $body = json_encode($data);
+        $json = $this->getJson("POST", '/api/v1/resources', array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), $body);
+        
+        $this->assertSame(201, $json['response']['code']);
+        $this->assertTrue(is_string($json['resource']['id']));
+        $this->assertSame($data['title'], $json['resource']['title']);
+        $this->assertSame($data['type'], $json['resource']['type']);
+        $this->assertSame($data['description'], $json['resource']['description']);
+        $this->assertSame($data['keywords'], $json['resource']['keywords']);
+        $this->assertSame($data['categories'], $json['resource']['categories']);
+        $this->assertSame($data['visibility'], $json['resource']['visibility']);
+        $this->assertSame($data['copyright'], $json['resource']['copyright']);
+        $this->assertSame($data['license'], $json['resource']['license']);
+        $this->assertSame($data['origin'], $json['resource']['origin']);
+        $this->assertSame($expectedClient, $json['resource']['client']);
+        $this->assertTrue(isset($json['resource']['dateAdded']));
+        $this->assertTrue(isset($json['resource']['dateModified']));
+        $this->assertSame($json['resource']['dateModified'], $json['resource']['dateAdded']);
+        $this->assertFalse(isset($json['resource']['content']));
+        $this->assertFalse(isset($json['resource']['relations']));
+        $this->assertTrue(isset($json['content_upload_url']));
+        
+        $resourceId = $json['resource']['id'];
+        
+        $modified = $this->getJson("DELETE", '/api/v1/resources/'.$resourceId, array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), null);
+        
+        $this->assertSame(200, $modified['response']['code']);
+        $this->assertSame($resourceId, $modified['resource']['id']);
+        $this->assertTrue(isset($modified['resource']['dateDeleted']));
+        $this->assertFalse(isset($modified['resource']['title']));
+        $this->assertFalse(isset($modified['resource']['description']));
+        $this->assertFalse(isset($modified['resource']['type']));
+        $this->assertFalse(isset($modified['resource']['keywords']));
+        $this->assertFalse(isset($modified['resource']['categories']));
+        $this->assertFalse(isset($modified['resource']['visibility']));
+        $this->assertFalse(isset($modified['resource']['copyright']));
+        $this->assertFalse(isset($modified['resource']['license']));
+        $this->assertFalse(isset($modified['resource']['origin']));
+        $this->assertFalse(isset($modified['resource']['client']));
+        $this->assertFalse(isset($modified['resource']['dateModified']));
+        $this->assertFalse(isset($modified['resource']['content']));
+        $this->assertFalse(isset($modified['resource']['relations']));
     }
     
     public function testGetDeletedResource()
     {
+        $data = array(
+            'title' => 'A test to remember',
+            'description' => 'An amazing description'
+        );
         
+        $body = json_encode($data);
+        $json = $this->getJson("POST", '/api/v1/resources', array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), $body);
+        
+        $resourceId = $json['resource']['id'];
+        $this->assertSame(201, $json['response']['code']);
+        $this->assertSame($data['title'], $json['resource']['title']);
+        $this->assertSame($data['description'], $json['resource']['description']);
+        
+        //delete it
+        $modified = $this->getJson("DELETE", '/api/v1/resources/'.$resourceId, array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ));
+        
+        $this->assertTrue(isset($modified['resource']['dateDeleted']));
+        $this->assertFalse(isset($modified['resource']['title']));
+        $this->assertFalse(isset($modified['resource']['description']));
+        
+        //try to get/put/delete again - expect a 410 and deleted resource object
+
+        $response = $this->getResponse('GET', '/api/v1/resources/'.$resourceId);
+        $this->assertSame(410, $response->getStatusCode());
+        $content = json_decode($response->getContent(), true);
+        $this->assertSame(410, $content['response']['code']);
+        $this->assertTrue(isset($content['resource']['dateDeleted']));
+
+        $response = $this->getResponse('PUT', '/api/v1/resources/'.$resourceId);
+        $this->assertSame(410, $response->getStatusCode());
+        $content = json_decode($response->getContent(), true);
+        $this->assertSame(410, $content['response']['code']);
+        $this->assertTrue(isset($content['resource']['dateDeleted']));
+
+        $response = $this->getResponse('DELETE', '/api/v1/resources/'.$resourceId);
+        $this->assertSame(410, $response->getStatusCode());
+        $content = json_decode($response->getContent(), true);
+        $this->assertSame(410, $content['response']['code']);
+        $this->assertTrue(isset($content['resource']['dateDeleted']));
     }
     
     public function testDenyAccessToResource()
     {
-        
+        $this->markTestSkipped('API authentication not yet implemented.  All resources are public for now.');
     }
 
 }

@@ -42,5 +42,10 @@ class RelationRepository extends DocumentRepository
         
         return $qb->getQuery()->execute();
     }
+    
+    public function deleteRelationsForResource($resourceId)
+    {
+        //TODO
+    }
 
 }

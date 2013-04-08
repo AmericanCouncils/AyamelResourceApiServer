@@ -285,7 +285,7 @@ class FileReference
      */
     public function getMime()
     {
-        return $this->mime ? $this->mime : $this->mimeType;
+        return $this->mime;
     }
 
     public function setMimeType($mimeType)

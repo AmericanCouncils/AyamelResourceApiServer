@@ -542,7 +542,7 @@ class Resource
                 $this->addRelation($relation);
             }
         } else {
-            $this->relations = new ArrayCollection();
+            $this->relations = null;
         }
 
         return $this;

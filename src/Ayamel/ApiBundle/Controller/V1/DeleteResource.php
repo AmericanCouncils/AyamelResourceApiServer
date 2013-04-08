@@ -30,6 +30,7 @@ class DeleteResource extends ApiController
      */
     public function executeAction($id)
     {
+            
         //get the resource
         $resource = $this->getRequestedResourceById($id);
 
@@ -47,15 +48,14 @@ class DeleteResource extends ApiController
         $manager = $this->get('doctrine_mongodb')->getManager();
         $resource = $manager->getRepository('AyamelResourceBundle:Resource')->deleteResource($resource);
         
-        //do this here or in a listener?
-        $manager->getRepository('AyamelResourceBundle:Relation')->deleteRelationsForResource($resource->getId());        
+        $manager->getRepository('AyamelResourceBundle:Relation')->deleteRelationsForResource($resource->getId());
         $manager->flush();
 
         //notify rest of system of deleted resource
         $apiDispatcher->dispatch(Events::RESOURCE_DELETED, new ApiEvent($resource));
 
         //return ok
-        return $this->createServiceResponse(array('resource' => $resource, 200));
+        return $this->createServiceResponse(array('resource' => $resource), 200);
     }
 
 }
