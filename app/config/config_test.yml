@@ -21,5 +21,21 @@ doctrine_mongodb:
         default:
             auto_mapping: true
 
-#swiftmailer:
-#    disable_delivery: true
+services:
+    ayamel.test.transcoding_adapter:
+        class: AC\Component\Transcoding\Tests\Mock\PhpTextAdapter
+        tags:
+            - { name: transcoding.adapter }
+        
+    ayamel.test.transcoding_preset:
+        class: AC\Component\Transcoding\Tests\Mock\TextToLowerCasePreset
+        tags:
+            - { name: transcoding.preset }
+
+parameters:        
+    ayamel.transcoding.preset_map:
+        text/plain:
+            - { preset: text_to_lower, tag: low, extension: txt, representation: transcoding, quality: 0 }
+
+##TODO: custom rabbitmq settings (?)
+##TODO: custom ayamel filesystem settings

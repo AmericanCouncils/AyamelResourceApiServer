@@ -155,7 +155,12 @@ class TranscodeManager
 
                 //add file into filesystem (will move it to final location)
                 $finalReference = $this->filesystem->addFileForId($resource->getId(), $newFileReference, $newBaseName, false, FilesystemInterface::CONFLICT_OVERWRITE);
-
+                
+                //check for full-mime string, add it if not set
+                if (!$finalReference->getMime()) {
+                    $finalReference->setMime($finalReference->getMimeType());
+                }
+                
                 //store good file reference in array
                 $newFiles[] = $finalReference;
             }

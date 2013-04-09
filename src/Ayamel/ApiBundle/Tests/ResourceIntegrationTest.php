@@ -81,6 +81,7 @@ class ResourceIntegrationTest extends TestCase
         
         $this->assertSame(201, $json['response']['code']);
         $this->assertTrue(is_string($json['resource']['id']));
+        $this->assertSame('awaiting_content', $json['resource']['status']);
         $this->assertSame($data['title'], $json['resource']['title']);
         $this->assertSame($data['type'], $json['resource']['type']);
         $this->assertSame($data['description'], $json['resource']['description']);
@@ -178,6 +179,7 @@ class ResourceIntegrationTest extends TestCase
         
         $this->assertSame(201, $json['response']['code']);
         $this->assertTrue(is_string($json['resource']['id']));
+        $this->assertSame('awaiting_content', $json['resource']['status']);
         $this->assertSame($data['title'], $json['resource']['title']);
         $this->assertSame($data['type'], $json['resource']['type']);
         $this->assertSame($data['description'], $json['resource']['description']);
@@ -225,6 +227,7 @@ class ResourceIntegrationTest extends TestCase
         ), json_encode($changes));
         
         $this->assertSame(200, $modified['response']['code']);
+        $this->assertSame('awaiting_content', $modified['resource']['status']);
         $this->assertSame($resourceId, $modified['resource']['id']);
         $this->assertSame($changes['title'], $modified['resource']['title']);
         $this->assertSame($data['type'], $modified['resource']['type']);
@@ -258,6 +261,7 @@ class ResourceIntegrationTest extends TestCase
         ), json_encode($changes));
 
         $this->assertSame(200, $modified['response']['code']);
+        $this->assertSame('awaiting_content', $modified['resource']['status']);
         $this->assertSame($resourceId, $modified['resource']['id']);
         $this->assertSame($changes['title'], $modified['resource']['title']);
         $this->assertSame($data['type'], $modified['resource']['type']);
@@ -322,6 +326,7 @@ class ResourceIntegrationTest extends TestCase
         
         $this->assertSame(201, $json['response']['code']);
         $this->assertTrue(is_string($json['resource']['id']));
+        $this->assertSame('awaiting_content', $json['resource']['status']);
         $this->assertSame($data['title'], $json['resource']['title']);
         $this->assertSame($data['type'], $json['resource']['type']);
         $this->assertSame($data['description'], $json['resource']['description']);
@@ -347,6 +352,7 @@ class ResourceIntegrationTest extends TestCase
         
         $this->assertSame(200, $modified['response']['code']);
         $this->assertSame($resourceId, $modified['resource']['id']);
+        $this->assertSame('deleted', $modified['resource']['status']);
         $this->assertTrue(isset($modified['resource']['dateDeleted']));
         $this->assertFalse(isset($modified['resource']['title']));
         $this->assertFalse(isset($modified['resource']['description']));
@@ -396,18 +402,21 @@ class ResourceIntegrationTest extends TestCase
         $content = json_decode($response->getContent(), true);
         $this->assertSame(410, $content['response']['code']);
         $this->assertTrue(isset($content['resource']['dateDeleted']));
+        $this->assertSame('deleted', $content['resource']['status']);
 
         $response = $this->getResponse('PUT', '/api/v1/resources/'.$resourceId);
         $this->assertSame(410, $response->getStatusCode());
         $content = json_decode($response->getContent(), true);
         $this->assertSame(410, $content['response']['code']);
         $this->assertTrue(isset($content['resource']['dateDeleted']));
+        $this->assertSame('deleted', $content['resource']['status']);
 
         $response = $this->getResponse('DELETE', '/api/v1/resources/'.$resourceId);
         $this->assertSame(410, $response->getStatusCode());
         $content = json_decode($response->getContent(), true);
         $this->assertSame(410, $content['response']['code']);
         $this->assertTrue(isset($content['resource']['dateDeleted']));
+        $this->assertSame('deleted', $content['resource']['status']);
     }
     
     public function testDenyAccessToResource()
