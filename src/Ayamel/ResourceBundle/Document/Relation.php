@@ -32,6 +32,7 @@ class Relation
      * @MongoDB\String
      * @JMS\SerializedName("subjectId")
      * @JMS\Type("string")
+     * @JMS\ReadOnly
      */
     protected $subjectId;
 
@@ -212,6 +213,26 @@ class Relation
     public function hasAttribute($key)
     {
         return isset($this->attributes[$key]);
+    }
+    
+    /**
+     * Get client
+     *
+     * @return Client
+     */
+    public function getClient()
+    {
+        return $this->client;
+    }
+    
+    /**
+     * Set the client
+     *
+     * @param Client $client 
+     */
+    public function setClient(Client $client)
+    {
+        $this->client = $client;
     }
 
     /**

@@ -32,10 +32,14 @@ services:
         tags:
             - { name: transcoding.preset }
 
-parameters:        
+parameters:
+    #transcode mapping for test
     ayamel.transcoding.preset_map:
         text/plain:
             - { preset: text_to_lower, tag: low, extension: txt, representation: transcoding, quality: 0 }
 
-##TODO: custom rabbitmq settings (?)
-##TODO: custom ayamel filesystem settings
+    #filesytem settings
+    ayamel.filesystem.local_filesystem.root_dir: /tmp
+    ayamel.filesystem.local_filesystem.secret: zeroisnotanumber
+    
+    #TODO: custom rabbitmq settings (?)

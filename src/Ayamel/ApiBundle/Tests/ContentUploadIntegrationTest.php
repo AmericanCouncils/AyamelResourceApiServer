@@ -180,7 +180,7 @@ class ContentUploadIntegrationTest extends TestCase
         $this->assertSame('text/plain', $data['mimeType']);
         $this->assertSame(filesize($testFilePath), $data['attributes']['bytes']);
         
-        //now run transcode command
+        //now run transcode command directly
         $this->runCommand(sprintf('api:resource:transcode %s --force', $resourceId));
         
         //now get resource - expect 2 files and changed status
@@ -204,8 +204,14 @@ class ContentUploadIntegrationTest extends TestCase
         $transcoded = $json['resource']['content']['files'][1];
         $this->assertSame($expected['mime'], $transcoded['mime']);
         $this->assertSame($expected['mimeType'], $transcoded['mimeType']);
+        $this->assertSame($expected['representation'], $transcoded['representation']);
+        $this->assertSame($expected['quality'], $transcoded['quality']);
         $this->assertSame($expected['attributes']['bytes'], $transcoded['attributes']['bytes']);
         $this->assertTrue(isset($transcoded['downloadUri']));
+        
+        //hit one-time url again to make sure it expired
+        $response = $this->getResponse('POST', $uploadUrl, array(), array('file' => $uploadedFile));
+        $this->assertSame(401, $response->getStatusCode());
     }
     
 }
