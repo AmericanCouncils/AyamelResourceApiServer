@@ -86,7 +86,7 @@ abstract class ApiController extends Controller
         //throw access denied exception if resource has visibility restrictions
         $visibility = $resource->getVisibility();
         if (!empty($visibility)) {
-            //get access restrictions
+            //TODO: get access restrictions
 //          if (!in_array($this->getApiClient()->getKey(), $restrictions)) {
                 //throw $this->createHttpException(403, "Not authorized.");
 //          }
