@@ -5,6 +5,7 @@ namespace Ayamel\ResourceBundle\Document;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use JMS\Serializer\Annotation as JMS;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Base Resource persistence class
@@ -97,7 +98,9 @@ class Resource
 
     /**
      * An array of categories that apply to this resource.  Categories here are vetted
-     * against a list of accepted and documented categories. (TODO)
+     * against a list of accepted and documented categories.
+     * 
+     *  //TODO: implement proper validation for whitelist of approved categories
      *
      * @MongoDB\Hash
      * @JMS\Type("array<string>")
@@ -120,6 +123,7 @@ class Resource
      *
      * @MongoDB\String
      * @JMS\Type("string")
+     * @Assert\Choice(choices = {"video", "audio", "image", "document", "archive", "collection", "data"}, message = "A valid resource type must be specified.")
      */
     protected $type;
 
@@ -231,12 +235,6 @@ class Resource
      * @JMS\ReadOnly
      */
     protected $relations;
-
-    public function __construct()
-    {
-        //TODO: stop setting this in the constructor, if it's empty it should be null
-        $this->relations = new ArrayCollection();
-    }
 
     /**
      * Get id
