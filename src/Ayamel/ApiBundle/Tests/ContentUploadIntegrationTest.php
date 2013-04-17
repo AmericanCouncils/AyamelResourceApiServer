@@ -1,10 +1,10 @@
 <?php
 
 namespace Ayamel\ApiBundle\Tests;
-use Ayamel\ApiBundle\TestCase;
+use Ayamel\ApiBundle\ApiTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class ContentUploadIntegrationTest extends TestCase
+class ContentUploadIntegrationTest extends ApiTestCase
 {
     
     //a series of test as this is a one-time-use url

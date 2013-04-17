@@ -1,9 +1,9 @@
 <?php
 
 namespace Ayamel\ApiBundle\Tests;
-use Ayamel\ApiBundle\TestCase;
+use Ayamel\ApiBundle\ApiTestCase;
 
-class ResourceIntegrationTest extends TestCase
+class ResourceIntegrationTest extends ApiTestCase
 {
 	
 	public function testAccessNonExistingResource()

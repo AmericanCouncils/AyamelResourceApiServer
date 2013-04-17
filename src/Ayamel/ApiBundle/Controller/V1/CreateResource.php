@@ -40,7 +40,7 @@ class CreateResource extends ApiController
         $resource->setStatus(Resource::STATUS_AWAITING_CONTENT);
 
         //fill in client info
-        if (!isset($resource->client)) {
+        if (!$resource->getClient()) {
             $resource->setClient(new Client());
         }
         if (!$resource->client->getId()) {
@@ -49,8 +49,8 @@ class CreateResource extends ApiController
         }
 
         //attempt to persisting the object, most likely to mongo
+        $manager = $this->get('doctrine_mongodb')->getManager();
         try {
-            $manager = $this->get('doctrine_mongodb')->getManager();
             $manager->persist($resource);
             $manager->flush();
         } catch (\Exception $e) {

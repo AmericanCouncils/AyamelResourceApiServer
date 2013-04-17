@@ -24,12 +24,12 @@ class RelationRepository extends DocumentRepository
      */
     public function getRelationsForResource($resourceId, $filters = array())
     {
-        $qb = $this->createQueryBuilder();
+        $qb = $this->createQueryBuilder('Relation');
         
         //Relations are always bi-directional, so get where the $resourceId is EITHER
         //the subject or the object
-        $qb->addOr($qb->expr()->field('subjectId', $resourceId));
-        $qb->addOr($qb->expr()->field('objectId', $resourceId));
+        $qb->addOr($qb->expr()->field('subjectId')->equals($resourceId));
+        $qb->addOr($qb->expr()->field('objectId')->equals($resourceId));
         
         //and optionally other fields
         foreach ($filters as $field => $val) {
@@ -39,7 +39,7 @@ class RelationRepository extends DocumentRepository
                 $qb->field($field)->equals($val);
             }
         }
-        
+                
         return $qb->getQuery()->execute();
     }
     

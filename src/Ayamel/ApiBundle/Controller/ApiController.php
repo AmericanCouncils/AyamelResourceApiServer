@@ -13,6 +13,16 @@ use AC\WebServicesBundle\Response\ServiceResponse;
  */
 abstract class ApiController extends Controller
 {
+    protected function getRepo($class)
+    {
+        return $this->container->get('doctrine_mongodb')->getManager()->getRepository($class);
+    }
+    
+    protected function getDocManager()
+    {
+        return $this->container->get('doctrine_mongodb')->getManager();
+    }
+    
     protected function getRequestingClientIp()
     {
         $req = $this->get('request');
@@ -76,7 +86,7 @@ abstract class ApiController extends Controller
     protected function getRequestedResourceById($id)
     {
         //get repository and find requested object
-        $resource = $this->get('doctrine_mongodb')->getManager()->getRepository('AyamelResourceBundle:Resource')->find($id);
+        $resource = $this->getRepo('AyamelResourceBundle:Resource')->find($id);
 
         //throw not found exception if necessary
         if (!$resource) {

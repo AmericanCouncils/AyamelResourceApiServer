@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\Console\Output\NullOutput;
 
-abstract class TestCase extends WebTestCase
+abstract class ApiTestCase extends WebTestCase
 {
     /**
      * Shortcut to get client

@@ -2,7 +2,7 @@
 
 namespace Ayamel\ApiBundle\Tests;
 
-use Ayamel\ApiBundle\TestCase;
+use Ayamel\ApiBundle\ApiTestCase;
 use AC\WebServicesBundle\Util\ClientObjectValidator;
 use Symfony\Component\DependencyInjection\Container;
 use Ayamel\ResourceBundle\Document\Resource;
@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
  * ACWebServicesBundle.  As that would require significant setup, and it needs to be tested now, I'm
  * cheating and writing an application specific test by pulling the service from the container.
  */
-class ClientObjectValidatorTest extends TestCase
+class ClientObjectValidatorTest extends ApiTestCase
 {
 	public function testGetService()
     {

@@ -6,6 +6,8 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
+//TODO: dateAdded field?
+
 /**
  * Relation object that describes a type of relationship between two resource objects.
  * 
