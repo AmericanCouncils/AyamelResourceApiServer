@@ -311,10 +311,8 @@ class RelationsIntegrationTest extends ApiTestCase
         $data = $this->getJson('GET', '/api/v1/resources/'.$subjectId.'/relations', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ));
-        $this->assertSame(200, $data['response']['code']);
-        $this->assertTrue(isset($data['relations']));
-        $this->assertTrue(is_array($data['relations']));
-        $this->assertTrue(empty($data['relations']));
+        $this->assertSame(410, $data['response']['code']);
+        $this->assertFalse(isset($data['relations']));
         
         $data = $this->getJson('GET', '/api/v1/resources/'.$objectId.'/relations', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
