@@ -5,6 +5,7 @@ namespace Ayamel\ApiBundle\Event;
 /**
  * Defines core events that occur within the Resource API.
  *
+ * @package AyamelApiBundle
  * @author Evan Villemez
  */
 final class Events
@@ -29,6 +30,8 @@ final class Events
      * Listeners receive an instance of `ApiEvent`
      */
     const RESOURCE_DELETED = "ayamel.api.resource_deleted";
+
+//TODO: implement relation events
 
     /**
      * Fires when uploaded content needs to be resolved for a resource.

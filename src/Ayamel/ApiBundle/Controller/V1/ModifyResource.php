@@ -31,23 +31,17 @@ class ModifyResource extends ApiController
         $resource = $this->getRequestedResourceById($id);
 
         //check for deleted resource
-        if (null != $resource->getDateDeleted()) {
+        if ($resource->isDeleted()) {
             return $this->returnDeletedResource($resource);
         }
-
-//HACK TESTING
-$modifiedResource = $this->container->get('ac.webservices.object_validator')->modifyObjectFromRequest('Ayamel\ResourceBundle\Document\Resource', $this->getRequest(), $resource);
-
-        //get the resource validator
-//        $validator = $this->container->get('ayamel.api.client_data_validator');
-        //decode incoming data
-//        $data = $validator->decodeIncomingResourceDataByRequest($this->getRequest());
-        //validate incoming fields and modify resource
-//        $resource = $validator->modifyAndValidateExistingResource($resource, $data);
+        
+        //use object validation service to modify the existing object
+        $modifiedResource = $this->container->get('ac.webservices.object_validator')->modifyObjectFromRequest('Ayamel\ResourceBundle\Document\Resource', $this->getRequest(), $resource);
 
         //save it
         try {
-            $this->container->get('ayamel.resource.manager')->persistResource($modifiedResource);
+            $manager = $this->get('doctrine_mongodb')->getManager();
+            $manager->flush();
         } catch (\Exception $e) {
             throw $this->createHttpException(400, $e->getMessage());
         }

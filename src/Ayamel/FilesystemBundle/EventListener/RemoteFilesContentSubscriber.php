@@ -69,7 +69,8 @@ class RemoteFilesContentSubscriber implements EventSubscriberInterface
             foreach ($body['remoteFiles'] as $fileData) {
 
                 //TODO: need some type of validation on this, as clients can put anything into the `attributes` field
-
+                
+                //TODO: remove references to ResourceDocumentsFactory, replace with object validator
                 $remoteFiles[] = ResourceDocumentsFactory::createFileReferenceFromArray($fileData);
             }
         } catch (\Exception $e) {

@@ -5,12 +5,19 @@ namespace Ayamel\ResourceBundle\Document;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use JMS\Serializer\Annotation as JMS;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Base Resource persistence class
  *
- * @MongoDB\Document(db="ayamel", collection="resources")
+ * @MongoDB\Document(
+ *      collection="resources",
+ *      repositoryClass="Ayamel\ResourceBundle\Repository\ResourceRepository"
+ * )
  * @JMS\ExclusionPolicy("none")
+ * 
+ * @package AyamelResourceBundle
+ * @author Evan Villemez
  */
 class Resource
 {
@@ -91,7 +98,9 @@ class Resource
 
     /**
      * An array of categories that apply to this resource.  Categories here are vetted
-     * against a list of accepted and documented categories. (TODO)
+     * against a list of accepted and documented categories.
+     * 
+     *  //TODO: implement proper validation for whitelist of approved categories
      *
      * @MongoDB\Hash
      * @JMS\Type("array<string>")
@@ -114,6 +123,7 @@ class Resource
      *
      * @MongoDB\String
      * @JMS\Type("string")
+     * @Assert\Choice(choices = {"video", "audio", "image", "document", "archive", "collection", "data"}, message = "A valid resource type must be specified.")
      */
     protected $type;
 
@@ -131,6 +141,7 @@ class Resource
     /**
      * The date the Resource was added into the database.
      *
+     * @MongoDB\Date
      * @JMS\SerializedName("dateAdded")
      * @JMS\Type("DateTime")
      * @JMS\ReadOnly
@@ -224,12 +235,6 @@ class Resource
      * @JMS\ReadOnly
      */
     protected $relations;
-
-    public function __construct()
-    {
-        //TODO: stop setting this in the constructor, if it's empty it should be null
-        $this->relations = new ArrayCollection();
-    }
 
     /**
      * Get id
@@ -535,7 +540,7 @@ class Resource
                 $this->addRelation($relation);
             }
         } else {
-            $this->relations = new ArrayCollection();
+            $this->relations = null;
         }
 
         return $this;
@@ -616,6 +621,16 @@ class Resource
     }
 
     /**
+     * Return whether or not the resource has been deleted
+     *
+     * @return boolean
+     */
+    public function isDeleted()
+    {
+        return (self::STATUS_DELETED === $this->status);
+    }
+
+    /**
      * Validation method, because PHP sucks and can't do scalar type hinting.  Called automatically by Mongodb ODM before create/update operations.
      *
      * Note that this validation is only for checking that values are of a certain type for a given field.  This validation has nothing to do with whether or not
@@ -623,7 +638,7 @@ class Resource
      *
      * @MongoDB\PrePersist
      * @MongoDB\PreUpdate
-     *
+     * 
      * @param $return - whether or not to return errors, or throw exception
      * @throws InvalidArgumentException if $return is false
      * @return true                     on success or array if validation fails
@@ -631,11 +646,21 @@ class Resource
     public function validate($return = false)
     {
         $errors = array();
-
+        
+        //enforce proper dates, unless this is being deleted
+        if (!$this->isDeleted()) {
+            $date = new \DateTime();
+            if (!$this->getId()) {
+                $this->setDateAdded($date);
+            }
+            
+            $this->setDateModified($date);
+        }
+        
         //check scalar fields
         foreach ($this->_validators as $field => $type) {
             //ignore null, that's how we unset/remove properties
-            if ($this->$field !== null) {
+            if (null !== $this->$field) {
                 if (function_exists($func = "is_".$type)) {
                     if (!$func($this->$field)) {
                         $errors[] = sprintf("Field '%s' must be of type '%s'", $field, $type);
@@ -654,5 +679,5 @@ class Resource
 
         throw new \InvalidArgumentException(implode(". ", $errors));
     }
-
+    
 }

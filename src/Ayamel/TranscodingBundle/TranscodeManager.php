@@ -2,7 +2,6 @@
 
 namespace Ayamel\TranscodingBundle;
 
-use Ayamel\ResourceBundle\Storage\ResourceStorageInterface;
 use Ayamel\ResourceBundle\Document\Resource;
 use Ayamel\ResourceBundle\Document\FileReference;
 use Ayamel\FilesystemBundle\Filesystem\FilesystemInterface;
@@ -15,6 +14,7 @@ use Ayamel\TranscodingBundle\Exception\ResourceNotFoundException;
 use Ayamel\TranscodingBundle\Exception\ResourceLockedException;
 use Ayamel\ApiBundle\Event\Events as ApiEvents;
 use Ayamel\ApiBundle\Event\ApiEvent;
+use Doctrine\ODM\MongoDB\DocumentManager;
 
 /**
  * This class transcodes original files in a resource into multiple files
@@ -42,7 +42,7 @@ class TranscodeManager
 {
 
     private $filesystem;
-    private $resourceManager;
+    private $docManager;
     private $transcoder;
     private $defaultMapperConfig;
     private $tmpDirectory;
@@ -58,10 +58,10 @@ class TranscodeManager
      * @param Transcoder               $t
      * @param $defaulMapperConfig
      */
-    public function __construct(FilesystemInterface $fs, ResourceStorageInterface $rm, Transcoder $t, $tmpDirectory, EventDispatcherInterface $dispatcher, $defaultMapperConfig = array())
+    public function __construct(FilesystemInterface $fs, DocumentManager $dm, Transcoder $t, $tmpDirectory, EventDispatcherInterface $dispatcher, $defaultMapperConfig = array())
     {
         $this->filesystem = $fs;
-        $this->resourceManager = $rm;
+        $this->docManager = $dm;
         $this->transcoder = $t;
         $this->dispatcher = $dispatcher;
         $this->defaultMapperConfig = $defaultMapperConfig;
@@ -155,7 +155,12 @@ class TranscodeManager
 
                 //add file into filesystem (will move it to final location)
                 $finalReference = $this->filesystem->addFileForId($resource->getId(), $newFileReference, $newBaseName, false, FilesystemInterface::CONFLICT_OVERWRITE);
-
+                
+                //check for full-mime string, add it if not set
+                if (!$finalReference->getMime()) {
+                    $finalReference->setMime($finalReference->getMimeType());
+                }
+                
                 //store good file reference in array
                 $newFiles[] = $finalReference;
             }
@@ -196,7 +201,7 @@ class TranscodeManager
         }
 
         //save the resource, and then unlock it
-        $this->resourceManager->persistResource($resource);
+        $this->docManager->flush();
         $this->unlockResource($resource);
 
         //clean up the filesystem
@@ -228,13 +233,13 @@ class TranscodeManager
     protected function lockResource(Resource $resource)
     {
         $resource->setStatus(Resource::STATUS_PROCESSING);
-        $this->resourceManager->persistResource($resource);
+        $this->docManager->flush();
     }
 
     protected function unlockResource(Resource $resource)
     {
         $resource->setStatus(Resource::STATUS_NORMAL);
-        $this->resourceManager->persistResource($resource);
+        $this->docManager->flush();
     }
 
     protected function cleanupFilesystem(Resource $resource)
@@ -273,7 +278,7 @@ class TranscodeManager
      */
     protected function getResource($id)
     {
-        $resource = $this->resourceManager->getResourceById($id);
+        $resource = $this->docManager->getRepository('AyamelResourceBundle:Resource')->find($id);
 
         if (!$resource) {
             throw new ResourceNotFoundException(sprintf("Resource [%s] could not be found.", $id));

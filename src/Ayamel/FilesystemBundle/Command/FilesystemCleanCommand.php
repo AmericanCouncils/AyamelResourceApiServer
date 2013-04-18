@@ -66,8 +66,8 @@ class FilesystemCleanCommand extends ContainerAwareCommand
 
     protected function removeFileReference($id, $path)
     {
-        $manager = $this->getContainer()->get('ayamel.resource.manager');
-        $resource = $manager->getResourceById($id);
+        $manager = $this->getContainer()->get('doctrine_mongodb')->getManager();
+        $resource = $manager->getRepository('AyamelResourceBundle:Resource')->find($id);
 
         $newFiles = array();
         foreach ($resource->content->getFiles() as $file) {
@@ -76,7 +76,7 @@ class FilesystemCleanCommand extends ContainerAwareCommand
             }
         }
         $resource->content->setFiles($newFiles);
-        $manager->persistResource($resource);
+        $manager->flush();
 
         return true;
     }

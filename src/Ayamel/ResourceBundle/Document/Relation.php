@@ -1,18 +1,22 @@
 <?php
 
-//TODO: Need to track the owner of the relation as well, unfortunately - probably will just embed the entire client document
-
 namespace Ayamel\ResourceBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
+
+//TODO: dateAdded field?
 
 /**
  * Relation object that describes a type of relationship between two resource objects.
  * 
+ * @MongoDB\Document(
+ *      collection="relations",
+ *      repositoryClass="Ayamel\ResourceBundle\Repository\RelationRepository"
+ * )
  * @package AyamelResourceBundle
- * @MongoDB\Document(db="ayamel", collection="relations")
- *
+ * @author Evan Villemez
  */
 class Relation
 {
@@ -31,6 +35,7 @@ class Relation
      * @MongoDB\String
      * @JMS\SerializedName("subjectId")
      * @JMS\Type("string")
+     * @JMS\ReadOnly
      */
     protected $subjectId;
 
@@ -40,6 +45,7 @@ class Relation
      * @MongoDB\String
      * @JMS\SerializedName("objectId")
      * @JMS\Type("string")
+     * @Assert\NotBlank
      */
     protected $objectId;
     
@@ -52,6 +58,7 @@ class Relation
      *
      * @MongoDB\String
      * @JMS\Type("string")
+     * @Assert\NotBlank
      */
     protected $type;
 
@@ -211,6 +218,26 @@ class Relation
     public function hasAttribute($key)
     {
         return isset($this->attributes[$key]);
+    }
+    
+    /**
+     * Get client
+     *
+     * @return Client
+     */
+    public function getClient()
+    {
+        return $this->client;
+    }
+    
+    /**
+     * Set the client
+     *
+     * @param Client $client 
+     */
+    public function setClient(Client $client)
+    {
+        $this->client = $client;
     }
 
     /**

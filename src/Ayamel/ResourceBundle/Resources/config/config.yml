@@ -42,18 +42,6 @@ services:
     ayamel.resource.provider:
         class: Ayamel\ResourceBundle\Provider\DelegatingProvider
 
-    # Note that in order to load this service, a service for 'ayamel.resource.manager.backend' must be
-    # configured.  This bundle does NOT provide that, it's up to your app, or another bundle to provide
-    # the backend storage mechanism
-    ayamel.resource.manager:
-        class: Ayamel\ResourceBundle\Storage\ResourceManager
-        arguments: [@ayamel.resource.manager.backend, @ayamel.resource.manager.dispatcher]
-
-    ayamel.resource.manager.dispatcher:
-        class: Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher
-        arguments: [@service_container]
-        public: false
-
     ayamel.resource.local_provider:
         class: Ayamel\ResourceBundle\Provider\LocalFilepathProvider
         arguments: [%ayamel.resource.types%, %ayamel.resource.null_extension_type%]

@@ -56,8 +56,9 @@ class UploadContent extends ApiController
      *                  {
      *                      "downloadUri": "http://example.com/files/some_video_original.wmv",
      *                      "mime": "video/x-ms-wmv",
+     *                      "mimeType": "video/x-ms-wmv",
      *                      "representation": "original",
-     *                      "quality": "1",
+     *                      "quality": 1,
      *                      "attributes": {
      *                          "bytes": 14658,
      *                          "duration": 300,
@@ -69,8 +70,9 @@ class UploadContent extends ApiController
      *                   {
      *                      "downloadUri": "http://example.com/files/transcoded.mp4",
      *                      "mime": "video/mp4",
+     *                      "mimeType": "video/mp4",
      *                      "representation": "transcoded",
-     *                      "quality": "1",
+     *                      "quality": 1,
      *                      "attributes": {
      *                          "bytes": 9600,
      *                          "duration": 300,
@@ -102,7 +104,7 @@ class UploadContent extends ApiController
         $resource = $this->getRequestedResourceById($id);
 
         //check for deleted resource
-        if (null != $resource->getDateDeleted()) {
+        if ($resource->isDeleted()) {
             return $this->returnDeletedResource($resource);
         }
 
@@ -174,8 +176,10 @@ class UploadContent extends ApiController
             try {
                 //persist it
                 $resource = $handleEvent->getResource();
-                $this->container->get('ayamel.resource.manager')->persistResource($resource);
-
+                $manager = $this->get('doctrine_mongodb')->getManager();
+                $manager->persist($resource);
+                $manager->flush();
+                
                 //notify system
                 $apiDispatcher->dispatch(Events::RESOURCE_MODIFIED, new ApiEvent($resource));
             } catch (\Exception $e) {

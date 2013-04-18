@@ -12,9 +12,11 @@
          bootstrap="vendor/autoload.php"
 >
     <testsuites>
-        <testsuite name="Ayamel Resource Api Tests">
+        <testsuite name="Ayamel Resource Api Test Suite">
             <directory>./src/</directory>
         </testsuite>
     </testsuites>
-
+    <php>
+        <server name="KERNEL_DIR" value="app/" />
+    </php>
 </phpunit>
