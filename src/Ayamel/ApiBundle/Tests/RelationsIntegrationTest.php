@@ -190,7 +190,21 @@ class RelationsIntegrationTest extends ApiTestCase
 
 	public function testFilterRelationsByType()
 	{
-        $this->markTestSkipped('TODO');
+        $stubs = $this->createTestResourcesWithRelations();
+        $subjectId = $stubs['subject']['id'];
+        $objectId = $stubs['object']['id'];
+        
+        //filter by type on subject
+        $data = $this->getJson('GET', '/api/v1/resources/'.$subjectId.'/relations?type=nonexisting,part_of', array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ));
+        $this->assertSame(1, count($data['relations']));
+
+        //filter by type on object
+        $data = $this->getJson('GET', '/api/v1/resources/'.$objectId.'/relations?type=requires,nonexisting', array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ));
+        $this->assertSame(1, count($data['relations']));
 	}
     
     public function testGetRelationsForAuthorizedObjects()
@@ -279,6 +293,43 @@ class RelationsIntegrationTest extends ApiTestCase
         $this->assertSame($rel1Id, $data['relations'][0]['id']);
         $this->assertSame($rel2Id, $data['relations'][1]['id']);
         
-        $this->markTestIncomplete("Must delete resource, and see that relations are deleted as well.");
+        //get raw object field, assert relations field
+        $data = $this->getJson('GET', '/api/v1/resources/'.$objectId, array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ));
+        $this->assertSame(200, $data['response']['code']);
+        $this->assertTrue(isset($data['resource']['relations']));
+        $this->assertSame(2, count($data['resource']['relations']));
+        
+        //delete the subject resource
+        $data = $this->getJson('DELETE', '/api/v1/resources/'.$subjectId, array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ));
+        $this->assertSame(200, $data['response']['code']);
+        
+        //check the relations for both subject and object
+        $data = $this->getJson('GET', '/api/v1/resources/'.$subjectId.'/relations', array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ));
+        $this->assertSame(200, $data['response']['code']);
+        $this->assertTrue(isset($data['relations']));
+        $this->assertTrue(is_array($data['relations']));
+        $this->assertTrue(empty($data['relations']));
+        
+        $data = $this->getJson('GET', '/api/v1/resources/'.$objectId.'/relations', array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ));
+        $this->assertSame(200, $data['response']['code']);
+        $this->assertTrue(isset($data['relations']));
+        $this->assertTrue(is_array($data['relations']));
+        $this->assertTrue(empty($data['relations']));
+        
+        //get raw object, assert no relations field
+        //get raw object field, assert relations field
+        $data = $this->getJson('GET', '/api/v1/resources/'.$objectId, array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ));
+        $this->assertSame(200, $data['response']['code']);
+        $this->assertFalse(isset($data['resource']['relations']));        
     }
 }

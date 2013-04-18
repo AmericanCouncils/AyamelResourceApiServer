@@ -37,16 +37,24 @@ class RelationsController extends ApiController
     public function getResourceRelations($id)
     {
         $resource = $this->getRequestedResourceById($id);
+        $request = $this->getRequest();
         
         if ($resource->isDeleted()) {
             return $this->returnDeletedResource($resource);
         }
-
-        $repo = $this->getRepo('AyamelResourceBundle:Relation');
+        
+        $filters = array();
         
         //TODO: only get the relations the requesting client is allowed to see
-
-        $relations = $repo->getRelationsForResource($resource->getId());
+        
+        //check for type filter
+        if ($types = $request->query->get('type', false)) {
+            $filters['type'] = explode(',', $types);
+        }
+        
+        //get the relations into an array
+        $repo = $this->getRepo('AyamelResourceBundle:Relation');
+        $relations = $repo->getRelationsForResource($resource->getId(), $filters);
         $rels = array();
         if ($relations) {
             foreach (iterator_to_array($relations) as $rel) {
@@ -54,9 +62,9 @@ class RelationsController extends ApiController
             }
         }
         
-        return array(
+        return $this->createServiceResponse(array(
             'relations' => $rels
-        );
+        ), 200);
     }
 
     /**
@@ -160,6 +168,7 @@ class RelationsController extends ApiController
             throw $this->createHttpRequest(400, "The specified Resource must be the subject of this Relation.");
         }
         
+        //remove the specific relation
         $manager = $this->getDocManager();
         $manager->remove($relation);
         $manager->flush();

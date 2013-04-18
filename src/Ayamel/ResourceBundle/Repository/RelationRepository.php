@@ -6,7 +6,7 @@ use Ayamel\ResourceBundle\Document\Relation;
 use Doctrine\ODM\MongoDB\DocumentRepository;
 
 /**
- * Custom query methods for retrieving Relation documents.
+ * Custom query methods for manipulating Relation documents.
  *
  * @package AyamelResourceBundle
  * @author Evan Villemez
@@ -19,10 +19,26 @@ class RelationRepository extends DocumentRepository
      * or the object.
      *
      * @param string $resourceId 
-     * @param array $filters 
+     * @param array|null $filters 
      * @return array
      */
     public function getRelationsForResource($resourceId, $filters = array())
+    {                
+        return $this->getQBForResource($resourceId, $filters)->getQuery()->execute();
+    }
+    
+    /**
+     * Remove relations for a resource, optionally restricting to other fields.
+     *
+     * @param string $resourceId 
+     * @param array|null $filters 
+     */
+    public function deleteRelationsForResource($resourceId, $filters = array())
+    {
+        return $this->getQBForResource($resourceId, $filters)->remove()->getQuery()->execute();
+    }
+    
+    protected function getQBForResource($resourceId, $filters = array())
     {
         $qb = $this->createQueryBuilder('Relation');
         
@@ -33,19 +49,13 @@ class RelationRepository extends DocumentRepository
         
         //and optionally other fields
         foreach ($filters as $field => $val) {
-            if (is_array($value)) {
+            if (is_array($val)) {
                 $qb->field($field)->in($val);
             } else {
                 $qb->field($field)->equals($val);
             }
         }
-                
-        return $qb->getQuery()->execute();
+        
+        return $qb;
     }
-    
-    public function deleteRelationsForResource($resourceId)
-    {
-        //TODO
-    }
-
 }
