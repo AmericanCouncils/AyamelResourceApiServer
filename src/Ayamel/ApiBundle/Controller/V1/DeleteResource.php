@@ -46,6 +46,7 @@ class DeleteResource extends ApiController
         //remove from storage (sort of), just clears data and marks as deleted
         $manager = $this->getDocManager();
         $resource = $manager->getRepository('AyamelResourceBundle:Resource')->deleteResource($resource);
+        $manager->flush();
 
         //delete all relations for this resource
         $this->getRepo('AyamelResourceBundle:Relation')->deleteRelationsForResource($resource->getId());
