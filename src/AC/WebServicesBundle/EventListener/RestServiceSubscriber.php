@@ -159,7 +159,7 @@ class RestServiceSubscriber implements EventSubscriberInterface
         );
 
         //inject exception data if we're in dev mode and enabled
-        if ($this->includeDevExceptions && 'dev' === $this->container->get('kernel')->getEnvironment()) {
+        if ($this->includeDevExceptions && in_array($this->container->get('kernel')->getEnvironment(), array('dev','test'))) {
             $errorData['exception'] = array(
                 'class' => get_class($exception),
                 'message' => $exception->getMessage(),

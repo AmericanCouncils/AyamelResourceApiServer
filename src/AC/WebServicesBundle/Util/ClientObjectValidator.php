@@ -47,6 +47,7 @@ class ClientObjectValidator
      */
     public function createObjectFromRequest($className, Request $request)
     {
+        $this->graph($className);
         $this->validateObjectData($this->normalizeRequestData($request), $className);
 
         return $this->serializer->deserialize($this->getJsonFromClient($request), $className, 'json');
@@ -147,15 +148,20 @@ class ClientObjectValidator
         } catch (\ReflectionException $e) {
             return;
         }
+        
+        if (!$clientData) {
+            return;
+        }
 
         $invalidFields = array();
         foreach ($jmsMetadata->propertyMetadata as $property) {
             $name = isset($property->serializedName) ? $property->serializedName : $property->name;
-
-            if (!isset($clientData[$name])) {
+            
+            //check if not exists
+            if (!array_key_exists($name, $clientData)) {
                 continue;
             }
-
+            
             //read only check
             if ($property->readOnly && isset($clientData[$name])) {
                 $invalidFields[] = $name;
@@ -166,7 +172,7 @@ class ClientObjectValidator
             $nestedObjectPropertyName = $jmsMetadata->name.".".$name;
 
             if (isset($this->graph[$nestedObjectPropertyName])) {
-//                die($nestedObjectPropertyName);
+
                 //the property could be an array of objects
                 if ($this->graph[$nestedObjectPropertyName]['array']) {
                     $getter = 'get'.ucfirst($name);
@@ -188,8 +194,12 @@ class ClientObjectValidator
                     }
 
                     //set new array if applicable
-                    if ($objectToModify && method_exists($objectToModify, $setter)) {
-                        $objectToModify->$setter($newArray);
+                    if ($objectToModify) {
+                        if (method_exists($objectToModify, $setter)) {
+                            $objectToModify->$setter($newArray);
+                        } else {
+                            $invalidFields[] = $name;
+                        }
                     }
 
                 } else {
@@ -203,8 +213,12 @@ class ClientObjectValidator
 
                     $newObj = $this->validateObjectData($clientData[$name], $this->graph[$nestedObjectPropertyName]['class'], $prevObj);
 
-                    if ($objectToModify && method_exists($objectToModify, $setter)) {
-                        $objectToModify->$setter($newObj);
+                    if ($objectToModify) {
+                        if (method_exists($objectToModify, $setter)) {
+                            $objectToModify->$setter($newObj);
+                        } else {
+                            $invalidFields[] = $name;
+                        }
                     }
                 }
             } elseif ($objectToModify) {
@@ -212,7 +226,26 @@ class ClientObjectValidator
                 $setter = 'set'.ucfirst($name);
                 if (method_exists($objectToModify, $setter)) {
                     $objectToModify->$setter($clientData[$name]);
+                } else {
+                    $invalidFields[] = $name;
                 }
+            }
+
+        }
+
+        //now check for data submitted by client, but not present in jms metadata
+        foreach ($clientData as $key => $val) {
+            $found = false;
+            foreach ($jmsMetadata->propertyMetadata as $property) {
+                $name = isset($property->serializedName) ? $property->serializedName : $property->name;
+                if ($name === $key) {
+                    $found = true;
+                    break;
+                }
+            }
+        
+            if (!$found) {
+                $invalidFields[] = $name;
             }
         }
 
@@ -244,32 +277,5 @@ class ClientObjectValidator
 
         throw new HttpException(400, "Could not reliably decode data.");
     }
-
-    /**
-     * Call setters on an object given a hash of fields/values.  Setter methods are derived from field names.
-     *
-     * @param  object $object
-     * @param  array  $data
-     * @return void
-     */
-    protected function callSetters($object, array $data)
-    {
-        //assign received data
-        foreach ($data as $key => $val) {
-
-            //HACK: ignore fields prepended with underscores
-            if (0 !== strpos($key, "_")) {
-                //derive setter method name
-                $method = 'set'.ucfirst($key);
-
-                //call if it exists, if not, invalid argument
-                if (method_exists($object, $method)) {
-                    $object->$method($val);
-                } else {
-                    throw new \InvalidArgumentException("Tried setting a non-existing field [$key]");
-                }
-            }
-        }
-    }
-
+    
 }

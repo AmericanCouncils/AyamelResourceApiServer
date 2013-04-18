@@ -1,27 +1,11 @@
 # AyamelResourceBundle #
 
-This bundle defines the base Resource objects and provides MongoDB mappings for data persistence.
+This bundle defines the base Resource objects and provides MongoDB mappings for data persistence, as well as custom repository classes
+for common operations.
 
-## Installation ##
-
-0. You may need to run `php composer.phar update` from your project root to force dependencies to be downloaded.
-1. Copy/paste this into your `app/config/routing.yml`:
-
-		AyamelApiBundle:
-		    resource: "@AyamelApiBundle/Resources/config/routing.yml"
-
-2. Copy/paste this into your `app/config/config.yml`:
-
-		imports:  
-		    - { resource: '@AyamelApiBundle/Resources/config/config.yml' }
-	
-3. Modify your `AppKernel.php` to initialize this bundle:
-
-		new Ayamel\ApiBundle\AyamelApiBundle(),
-		
-4. Clear and regenerate your app caches with the `app/console cache:clear` command.
+It also provides a pluggable mechanism for deriving resource documents from external sources.
 	
 ## Todo list ##
 
 * Make HEAD requests on http/https URI/files to get mime/bytes info
-* Test Providers and DelegatingProvider
+* Test Providers (where possible) and DelegatingProvider

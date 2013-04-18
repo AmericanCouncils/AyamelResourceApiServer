@@ -12,7 +12,7 @@ services:
         class: Ayamel\TranscodingBundle\TranscodeManager
         arguments:
             - @ayamel.api.filesystem
-            - @ayamel.resource.manager
+            - @doctrine.odm.mongodb.document_manager
             - @transcoder
             - %ayamel.transcoding.temp_directory%
             - @event_dispatcher

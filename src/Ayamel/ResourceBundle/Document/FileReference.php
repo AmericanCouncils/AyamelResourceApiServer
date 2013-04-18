@@ -4,6 +4,7 @@ namespace Ayamel\ResourceBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * File reference object
@@ -35,7 +36,6 @@ class FileReference
     /**
      * @MongoDB\String
      * @JMS\Exclude
-     * @JMS\ReadOnly
      */
     protected $internalUri;
 
@@ -52,6 +52,7 @@ class FileReference
      *
      * @MongoDB\String
      * @JMS\Type("string")
+     * @Assert\Choice(choices = {"original", "transcoding", "summary"}, message = "A valid representation must be specified.")
      */
     protected $representation;
 
@@ -65,7 +66,8 @@ class FileReference
     protected $quality;
 
     /**
-     * The full mime string of the file, in as much detail as possible.
+     * The full mime string of the file, in as much detail as possible.  If not set, it will be set automatically
+     * to the value of `mimeType`.
      *
      * @MongoDB\String
      * @JMS\Type("string")
@@ -73,24 +75,25 @@ class FileReference
     protected $mime;
 
     /**
-     * The short mime type of the file
+     * The short mime type of the file, no extra information.
      *
      * @MongoDB\String
      * @JMS\Type("string")
      * @JMS\SerializedName("mimeType")
+     * @Assert\NotBlank
      */
     protected $mimeType;
 
     /**
      * @MongoDB\Boolean
      * @JMS\Exclude
-     * @JMS\ReadOnly
-     * @JMS\Type("boolean")
      */
     private $original;
 
     /**
-     * A key/val hash of attributes, relevant to the `mime` of the file.
+     * A key/val hash of attributes, relevant to the `mimeType` of the file.
+     * 
+     *  //TODO: Needs to be clearly document what valid values are per type
      *
      * @MongoDB\Hash
      * @JMS\Type("array")
@@ -285,7 +288,7 @@ class FileReference
      */
     public function getMime()
     {
-        return $this->mime ? $this->mime : $this->mimeType;
+        return $this->mime;
     }
 
     public function setMimeType($mimeType)

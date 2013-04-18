@@ -144,6 +144,7 @@ objects from a client's incoming request.
 
 ## Todo list ##
 
-* add CORS support - or NelmioCorsBundle
-* Test client object validator
-* Real format negotiation where applicable
+* Properly unit test client object validator, tests are currently done via integration tests in the AyamelApiBundle
+    * Take into account JMS Exclusion Policies / Groups
+    * Take into account JMS getter/setter annotation
+

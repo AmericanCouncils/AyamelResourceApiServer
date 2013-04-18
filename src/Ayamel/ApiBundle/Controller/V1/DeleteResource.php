@@ -34,27 +34,27 @@ class DeleteResource extends ApiController
         $resource = $this->getRequestedResourceById($id);
 
         //check for already deleted resource
-        if (null != $resource->getDateDeleted()) {
+        if ($resource->isDeleted()) {
             return $this->returnDeletedResource($resource);
         }
-
-        //TODO: preserve some fields:
-        // - client object
-        // - date added
 
         $apiDispatcher = $this->container->get('ayamel.api.dispatcher');
 
         //notify system to remove content for resource
         $apiDispatcher->dispatch(Events::REMOVE_RESOURCE_CONTENT, new ApiEvent($resource));
 
-        //remove from storage (sort of)
-        $resource = $this->container->get('ayamel.resource.manager')->deleteResource($resource);
+        //remove from storage (sort of), just clears data and marks as deleted
+        $manager = $this->getDocManager();
+        $resource = $manager->getRepository('AyamelResourceBundle:Resource')->deleteResource($resource);
+
+        //delete all relations for this resource
+        $this->getRepo('AyamelResourceBundle:Relation')->deleteRelationsForResource($resource->getId());
 
         //notify rest of system of deleted resource
         $apiDispatcher->dispatch(Events::RESOURCE_DELETED, new ApiEvent($resource));
 
         //return ok
-        return $this->createServiceResponse(array('resource' => $resource, 200));
+        return $this->createServiceResponse(array('resource' => $resource), 200);
     }
 
 }

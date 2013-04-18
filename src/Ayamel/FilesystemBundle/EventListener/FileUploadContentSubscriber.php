@@ -135,6 +135,9 @@ class FileUploadContentSubscriber implements EventSubscriberInterface
             $mime = ($uploadedFile->getClientMimeType()) ? $uploadedFile->getClientMimeType() : $uploadedFile->getMimeType();
             $newRef->setMimeType($mime);
         }
+        if (!$newRef->getMime()) {
+            $newRef->setMime($newRef->getMimeType());
+        }
         if (!$newRef->getAttribute('bytes', false)) {
             $newRef->setAttribute('bytes', $uploadedFile->getClientSize());
         }
