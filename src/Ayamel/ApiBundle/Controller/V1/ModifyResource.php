@@ -16,7 +16,7 @@ class ModifyResource extends ApiController
      * @ApiDoc(
      *      resource=true,
      *      description="Modify a resource",
-     *      return="Ayamel\ResourceBundle\Document\Resource",
+     *      output="Ayamel\ResourceBundle\Document\Resource",
      *      input="Ayamel\ResourceBundle\Document\Resource",
      *      filters={
      *          {"name"="_format", "dataType"="string", "default"="json", "description"="Return format, can be one of xml, yml or json"}

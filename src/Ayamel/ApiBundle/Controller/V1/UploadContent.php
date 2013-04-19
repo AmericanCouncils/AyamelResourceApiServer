@@ -88,7 +88,7 @@ class UploadContent extends ApiController
      * @ApiDoc(
      *      resource=true,
      *      description="Upload resource content.",
-     *      return="Ayamel\ResourceBundle\Document\Resource",
+     *      output="Ayamel\ResourceBundle\Document\Resource",
      *      filters={
      *          {"name"="_format", "default"="json", "description"="Return format, can be one of xml, yml or json"},
      *          {"name"="replace", "dataType"="boolean", "description"="If true, will delete any previous content associated with the resource before adding new content.", "default"=true}

@@ -15,7 +15,7 @@ class GetResource extends ApiController
      * @ApiDoc(
      *      resource=true,
      *      description="Return a resource",
-     *      return="Ayamel\ResourceBundle\Document\Resource",
+     *      output="Ayamel\ResourceBundle\Document\Resource",
      *      filters={
      *          {"name"="_format", "default"="json", "description"="Return format, can be one of yml or json"},
      *          {"name"="relations", "default"="true", "description"="Whether or not to return relations created by the owner and requesting client."}
