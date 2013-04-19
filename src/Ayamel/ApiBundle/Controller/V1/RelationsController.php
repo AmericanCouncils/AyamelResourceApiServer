@@ -28,7 +28,7 @@ class RelationsController extends ApiController
      *
      * @ApiDoc(
      *      resource=true,
-     *      return="Ayamel\ResourceBundle\Document\Relation",
+     *      output="Ayamel\ResourceBundle\Document\Relation",
      *      description="Get/filter Relations for Resource"
      * )
      *
@@ -85,7 +85,7 @@ class RelationsController extends ApiController
      * @ApiDoc(
      *      resource=true,
      *      input="Ayamel\ResourceBundle\Document\Relation",
-     *      return="Ayamel\ResourceBundle\Document\Relation",
+     *      output="Ayamel\ResourceBundle\Document\Relation",
      *      description="Add a Relation between two Resources"
      * )
      *

@@ -20,7 +20,7 @@ class DeleteResource extends ApiController
      * @ApiDoc(
      *      resource=true,
      *      description="Remove resource.",
-     *      return="Ayamel\ResourceBundle\Document\Resource",
+     *      output="Ayamel\ResourceBundle\Document\Resource",
      *      filters={
      *          {"name"="_format", "default"="json", "description"="Return format, can be one of xml, yml or json"},
      *      }
