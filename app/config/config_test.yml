@@ -42,4 +42,5 @@ parameters:
     ayamel.filesystem.local_filesystem.root_dir: /tmp
     ayamel.filesystem.local_filesystem.secret: zeroisnotanumber
     
-    #TODO: custom rabbitmq settings (?)
+
+#TODO: custom rabbitmq settings (?)

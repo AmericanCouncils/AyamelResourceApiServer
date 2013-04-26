@@ -1,4 +1,0 @@
-#!/bin/bash
-
-## start supervisorctl to monitor individual transcode processes
-supervisorctl --configuration="app/config/supervisord.transcoding.conf"
