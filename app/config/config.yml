@@ -46,7 +46,7 @@ assetic:
 doctrine_mongodb:
     connections:
         default:
-            server: mongodb://localhost:27017
+            server: mongodb://%mongodb_host%:%mongodb_port%
             options:
                 connect: true
     default_database: ayamel

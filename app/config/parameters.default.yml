@@ -6,10 +6,15 @@ parameters:
     database_name: ayamel
     database_user: root
     database_password: null
+
+    mongodb_host: localhost
+    mongodb_port: 27017
+
     mailer_transport: smtp
     mailer_host: localhost
     mailer_user: null
     mailer_password: null
+
     locale: en
     secret: 1b577a9e247bf2c882bd861e1e825d83
     
