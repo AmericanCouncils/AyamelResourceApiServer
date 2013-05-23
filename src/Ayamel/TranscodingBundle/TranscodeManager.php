@@ -92,6 +92,9 @@ class TranscodeManager
         foreach ($refsToTranscode as $ref) {
             $append = ($i < 1) ? $appendFiles : true;
             $mappings = $mapper->getPresetMappingsForFileReference($ref);
+            if (!$mappings) {
+                $mappings = array();
+            }
             $mappings = $this->filterPresetMappings($mappings, $ref, $presetFilter, $mimeFilter);
             if (empty($mappings)) {
                 continue;

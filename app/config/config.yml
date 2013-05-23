@@ -71,7 +71,7 @@ jms_serializer:
         auto_detection: true
 
 nelmio_api_doc:
-    name:   Ayamel Resource Library API
+    name:   Ayamel Media API Documentation
     sandbox:
         enabled:  true
         endpoint: /AyamelResourceApiServer/web/index_dev.php
