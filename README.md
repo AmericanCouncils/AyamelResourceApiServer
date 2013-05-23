@@ -1,56 +1,74 @@
-# README #
+# Ayamel Media API #
 
-This is a Symfony2 application that serves a RESTful API for managing multimedia with the Ayamel Resource Library.
+This project is an API server for managing multimedia resources.  The primary focus of the project is to provide a 
+mechanism for institutions to host and search multimedia resources that are useful for language learners. The API served
+by this application can be used by other applications to simplify managing multimedia, and also to facilitate
+sharing resources accross institutions and applications.  The project includes several major features:
 
-This file contains installation instructions, and a brief explanation of how the project is structured.
+* hosting of multimedia
+* normalization of existing multimedia resources on the web
+* searchability of multimedia
+* transcoding of hosted multimedia files into multiple formats
 
-## Installation ##
+The project is hosted at [https://api.ayamel.org](https://api.ayamel.org), but as it is open source, it can be deployed
+and implemented elsewhere.
 
-Brief instructions for both setting up a new server, and setting up the application.
+The project is still in the relatively early stages of development, so there are key features which have not yet been implemented.  We plan to have the core feature set implemented and stable by Winter 2013.
 
-### System Dependencies ###
+## Concepts ##
 
-These are the packages I installed on a clean Ubuntu 10.04 dev machine for testing, not all of them are actually being used at the moment, though.
+The API makes use of certain key concepts that you must understand in order to use it effectively.
 
-	sudo apt-get install curl apache2 mysql-common mysql-admin mysql-server mysql-client sqlite3 php5 php5-common php5-gd php5-memcached php5-suhosin php5-imagick php5-curl php5-cli php5-common php5-mcrypt php5-intl php-pear php-soap php5-dev php5-sqlite php-apc phpmyadmin sqlite mongodb git-core python-software-properties
+* *Resource* - A Resource is basically a metadata container that references actual multimedia content.  Actual content could be a series of files on a server, or links to other resources on the web, such as YouTube videos.
+* *Relation* - A Relation is a metadata structure that defines how one resource relates to another.  Relations are critical because search relies on them.  For example, if you want to search for a video, and there is a transcript of that video, then search will return hits on both the transcript and the video.  This works because of relations - the video is a resource, and the transcript is also a resource, the relation lets the search indexer know that these two resources should reference each other during search.  Relations are also used to define certain types of resources that don't contain actual content.  For example a collection of videos about a particular theme may just contain relations that reference other individual resources.
 
-	sudo pecl install mongo
-    
-    # php5-devel instead of php5 ??  Sometimes PEAR/PECL doesn't get installed...
-    # install supervisor
-	
+## Technologies ##
+
+Broadly speaking, the project is implemented in PHP using the [Symfony2](http://symfony.com/) framework.  Underlyingly it relies on several
+key technologies:
+dd
+* [MongoDB](http://www.mongodb.org/) for data persistenece
+* [RabbitMQ](http://www.rabbitmq.com/) for communication with asynchronous processes
+* [ElasticSearch](http://www.elasticsearch.org/) for indexed search (*not yet implemented*)
+
+## Contributing ##
+
+Contributors are certainly welcome, please start discussions in the issue queue for bugs/feature discussion.
+
+If you will contribute, please follow the [PSR coding standards](), and make sure that new features are covered by thorough unit and/or functional tests.
+
+## Tests ##
+
+The test suite requires a bit of set up to run.  As many of the tests are full integration tests, running them requires a
+more-or-less functioning environment - meaning you must have MongoDB and RabbitMQ properly installed, configured and running.
+
+Tests are run with `phpunit`, and you'll need to clear the test cache before running them for the first time.
+
+    app/console cache:clear --env=test
+    phpunit
+
 ### App Installation/Deployment ###
 
-1. Run `curl -s http://getcomposer.org/installer | php` to get composer, if your system doesn't already have it.  Try `which composer` to see if it does.
-	1. if that didn't work, install curl, or use `wget`
-	2. You may have to edit some settings in `php.ini` to allow execution of `.phar` files
-2. Run `php composer.phar install` to have it install application dependencies. Some systems have a permanent copy of composer installed, so `composer install` should work fine.
-3. Symlink `app/console` into `/usr/local/bin/ayamel`
-    1. This is for the `supervisor` scripts, which use `ayamel` as the command name
-    2. And it's just a nice shortcut for running the commands in the app
-4. Make sure values in `app/config/parameters.yml` are correct for your deployment environment.  This file **SHOULD NOT** be included in the repository, you may need to create it yourself.  Check the subsection below for a default `parameters.yml`.  There is a `parameters.default.yml` included - copy that to `parameters.yml` to get started.  That file lists the configs that need to be modified on a per-deployment basis.
-5. If this is a linux machine, run the `bin/linux_ayamel_user_setup` script to setup special application system users
-    1. If you are going to manually run commands via the `ayamel` program, also add yourself to the `ayamel` group to avoid causing file permission conflicts
-6. Make sure the web server is pointed to `web/` as the document root.
-7. Clear the Symfony caches for dev and prod environments:
+Your server or series of servers will need:
 
-        ayamel cache:clear
-        ayamel cache:clear --env=prod
-    
-    > If you have problems in this stage, manually remove everything in `app/cache/` and retry the commands.  If you get real desperate just... use `sudo` ... :)
+* PHP 5.3.8+
+* MongoDB
+* RabbitMQ
+* git
+* composer
 
-8. Setup the local environment (if necessary):
-    1. Make sure `rabbitmq-server` is running (if connecting to `localhost`)
-    2. Make sure `mongod` is running (if connecting to `localhost`)
-    3. Start any asyncronous tasks needed by using the shell scripts in `bin/`
-        1. For example, for asyncronous transcoding, run `bin/transcoding_start`
-        2. You can then run `bin/transcoding_manage` to see details for the processes started
-9. That should be it.
+In order for the transcoding commands to work, you'll also need to install and configure `HandBrakeCLI` and `ffmpeg`.  The list of requirements for transcoding will evolve as support for more file formats is added.
+
+To install and run the API on your own servers you'll need to configure a proper `parameters.yml` file in `app/config/`.  You may copy `parameters.default.yml` as a starting point - most of the config in that file will be specific to your deployment environment.
+
+Once that is installed, use [composer](getcomposer.org) to install the necessary PHP dependencies.
+
+    php composer.phar install
 
 ## Deployment ##
 
-If you plan on using running the API server in a production deployment - we highly recommend.
+If you plan on using running the API server in a production deployment - we highly recommend using [ansible](http://ansible.cc/), as keeping the various technologies required properly configured can become cumbersome.
 
 ## Roadmap ##
 
-See `TODO.md`.
+See `ROADMAP.md` for general tasks that we're currently working, or plan to start soon.  For anything more specific, browse the issue queue.

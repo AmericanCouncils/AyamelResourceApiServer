@@ -1,7 +1,15 @@
 {% extends "::base.html.twig" %}
 
+{% block page_title %}
+<div class="page-title">
+  <h1>Welcome</h1>
+  <hr />
+</div>
+{% endblock %}
+
 {% block body %}
 <p>Welcome to the Ayamel Resource Library API - a system for sharing multimedia resources among language learning applications.</p>
-<p>This API is meant to be used by many language learning applications, in order to make multimedia resources sharable, and discoverable in ways that are most useful for language learners and teachers.</p>
-<p>To get started with the API, check out the <a href='{{app.request.baseurl}}/api/v1/docs'>documentation</a>.</p>
+<p>The API is currently a work in progress, core features are intended to be complete and stable by Winter 2013. To get involved with the development, please collaborate with us on <a href='https://github.com/AmericanCouncils/AyamelResourceApiServer'>Github</a>!</p>
+<p>Access to the API is currently only available by contacting the developers directly.  Once more key features are implemented, access will be opened to a broader audience. Visit <a href='http://www.ayamel.org/about.html'>www.ayamel.org</a> for more information.</p>
+<p>To browse the API documentation, check out the <a href='{{app.request.baseurl}}/api/v1/docs'>documentation</a>.</p>
 {% endblock %}
