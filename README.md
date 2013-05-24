@@ -10,7 +10,7 @@ sharing resources accross institutions and applications.  The project includes s
 * searchability of multimedia
 * transcoding of hosted multimedia files into multiple formats
 
-The project is hosted at [https://api.ayamel.org](https://api.ayamel.org), but as it is open source, it can be deployed
+The project is hosted at [api.ayamel.org](http://api.ayamel.org), but as it is open source, it can be deployed
 and implemented elsewhere.
 
 The project is still in the relatively early stages of development, so there are key features which have not yet been implemented.  We plan to have the core feature set implemented and stable by Winter 2013.
