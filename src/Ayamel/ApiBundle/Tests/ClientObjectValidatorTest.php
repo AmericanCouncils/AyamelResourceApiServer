@@ -35,7 +35,8 @@ class ClientObjectValidatorTest extends ApiTestCase
             'title' => 'Fooooooooo',
             'description' => 'yayayaasd asd fadsf s',
             'keywords' => 'hi, there and, some stuff, hah',
-            'categories' => array('foo','bar','baz'),
+            'subjectDomains' => array('foo','bar','baz'),
+            'functionalDomains' => array('foo','bar','baz','qux'),
             'type' => 'document',
             'client' => array(
                 'user' => array(
@@ -53,7 +54,8 @@ class ClientObjectValidatorTest extends ApiTestCase
         $this->assertSame($resource->getTitle(), $requestData['title']);
         $this->assertSame($resource->getDescription(), $requestData['description']);
         $this->assertSame($resource->getKeywords(), $requestData['keywords']);
-        $this->assertSame($resource->getCategories(), $requestData['categories']);
+        $this->assertSame($resource->getSubjectDomains(), $requestData['subjectDomains']);
+        $this->assertSame($resource->getFunctionalDomains(), $requestData['functionalDomains']);
         $this->assertSame($resource->getType(), $requestData['type']);
         $this->assertSame($resource->getClient()->getUser()->getId(), $requestData['client']['user']['id']);
     }
@@ -63,7 +65,7 @@ class ClientObjectValidatorTest extends ApiTestCase
         $resource = new Resource;
         $resource->setTitle('foo');
         $resource->setDescription('bar');
-        $resource->setCategories(array('bar','baz'));
+        $resource->setSubjectDomains(array('bar','baz'));
         $resource->setClient(new Client);
         $resource->getClient()->setUser(new ClientUser);
         $resource->getClient()->getUser()->setId('baz');
@@ -73,7 +75,8 @@ class ClientObjectValidatorTest extends ApiTestCase
         $requestData = array(
             'title' => 'Fooooooooo',
             'keywords' => 'hi, there and, some stuff, hah',
-            'categories' => array('foo','bar','baz'),
+            'subjectDomains' => array('foo','bar','baz'),
+            'functionalDomains' => array('foo','bar','baz'),
             'description' => null,
             'type' => 'document',
             'client' => array(
@@ -92,7 +95,8 @@ class ClientObjectValidatorTest extends ApiTestCase
         $this->assertSame($resource->getTitle(), $requestData['title']);
         $this->assertNull($resource->getDescription());
         $this->assertSame($resource->getKeywords(), $requestData['keywords']);
-        $this->assertSame($resource->getCategories(), $requestData['categories']);
+        $this->assertSame($resource->getSubjectDomains(), $requestData['subjectDomains']);
+        $this->assertSame($resource->getFunctionalDomains(), $requestData['functionalDomains']);
         $this->assertSame($resource->getType(), $requestData['type']);
         $this->assertSame($resource->getClient()->getUser()->getId(), $requestData['client']['user']['id']);
         
@@ -110,7 +114,8 @@ class ClientObjectValidatorTest extends ApiTestCase
         $this->assertSame($resource->getTitle(), $requestData['title']);
         $this->assertNull($resource->getDescription());
         $this->assertSame($resource->getKeywords(), $requestData['keywords']);
-        $this->assertSame($resource->getCategories(), $requestData['categories']);
+        $this->assertSame($resource->getSubjectDomains(), $requestData['subjectDomains']);
+        $this->assertSame($resource->getFunctionalDomains(), $requestData['functionalDomains']);
         $this->assertSame($resource->getType(), $requestData['type']);
         $this->assertNull($resource->getClient());
     }
@@ -124,7 +129,7 @@ class ClientObjectValidatorTest extends ApiTestCase
             'title' => 'Fooooooooo',
             'description' => 'yayayaasd asd fadsf s',
             'keywords' => 'hi, there and, some stuff, hah',
-            'categories' => array('foo','bar','baz'),
+            'subjectDomains' => array('foo','bar','baz'),
             'type' => 'document',
             'client' => array(
                 'user' => array(
@@ -149,7 +154,7 @@ class ClientObjectValidatorTest extends ApiTestCase
             'title' => 'Fooooooooo',
             'description' => 'yayayaasd asd fadsf s',
             'keywords' => 'hi, there and, some stuff, hah',
-            'categories' => array('foo','bar','baz'),
+            'subjectDomains' => array('foo','bar','baz'),
             'type' => 'document',
             'client' => array(
                 'user' => array(
