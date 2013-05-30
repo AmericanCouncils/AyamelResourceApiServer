@@ -97,15 +97,28 @@ class Resource
     protected $keywords;
 
     /**
-     * An array of categories that apply to this resource.  Categories here are vetted
+     * An array of categories that apply to the content of the Resource.  Categories here are vetted
      * against a list of accepted and documented categories.
      * 
      *  //TODO: implement proper validation for whitelist of approved categories
      *
      * @MongoDB\Hash
+     * @JMS\SerializedName("subjectDomains")
      * @JMS\Type("array<string>")
      */
-    protected $categories;
+    protected $subjectDomains;
+        
+    /**
+     * An array of categories that apply to the linguistic properties of the Resource.  Categories here are vetted
+     * against a list of accepted and documented categories.
+     * 
+     *  //TODO: implement proper validation for whitelist of approved categories
+     *
+     * @MongoDB\Hash
+     * @JMS\SerializedName("functionalDomains")
+     * @JMS\Type("array<string>")
+     */
+    protected $functionalDomains;
 
     /**
      * The generic type of resource.  Generic types are useful for sorting
@@ -307,23 +320,43 @@ class Resource
     }
 
     /**
-     * Set categories
+     * Set subject domain categories
      *
      * @param array $categories
      */
-    public function setCategories(array $categories = null)
+    public function setSubjectDomains(array $categories = null)
     {
-        $this->categories = $categories;
+        $this->subjectDomains = $categories;
     }
 
     /**
-     * Get categories
+     * Get subject domain categories
      *
      * @return string $categories
      */
-    public function getCategories()
+    public function getSubjectDomains()
     {
-        return $this->categories;
+        return $this->subjectDomains;
+    }
+
+    /**
+     * Set functional domain categories
+     *
+     * @param array $categories
+     */
+    public function setFunctionalDomains(array $categories = null)
+    {
+        $this->functionalDomains = $categories;
+    }
+
+    /**
+     * Get functional domain categories
+     *
+     * @return string $categories
+     */
+    public function getFunctionalDomains()
+    {
+        return $this->functionalDomains;
     }
 
     /**
