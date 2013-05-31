@@ -5,7 +5,6 @@ namespace Ayamel\ResourceBundle\Document;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use JMS\Serializer\Annotation as JMS;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Base Resource persistence class
@@ -89,7 +88,7 @@ class Resource
     protected $description;
 
     /**
-     * A string of keywords for search.
+     * A comma-delimited string of keywords for search.
      *
      * @MongoDB\String
      * @JMS\Type("string")
@@ -136,7 +135,6 @@ class Resource
      *
      * @MongoDB\String
      * @JMS\Type("string")
-     * @Assert\Choice(choices = {"video", "audio", "image", "document", "archive", "collection", "data"}, message = "A valid resource type must be specified.")
      */
     protected $type;
 

@@ -15,7 +15,7 @@ services:
     # from an incoming request
     ac.webservices.object_validator:
         class:      AC\WebServicesBundle\Util\ClientObjectValidator
-        arguments:  [@jms_serializer.metadata_factory, @serializer, @ac.webservices.jms_parser]
+        arguments:  [@jms_serializer.metadata_factory, @serializer, @ac.webservices.jms_parser, @validator]
 
     # responsible for instantiating the API request listeners for matching paths
     ac.webservices.request_listener:

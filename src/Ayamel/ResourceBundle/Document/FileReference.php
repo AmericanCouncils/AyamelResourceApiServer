@@ -4,7 +4,6 @@ namespace Ayamel\ResourceBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use JMS\Serializer\Annotation as JMS;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * File reference object
@@ -52,7 +51,6 @@ class FileReference
      *
      * @MongoDB\String
      * @JMS\Type("string")
-     * @Assert\Choice(choices = {"original", "transcoding", "summary"}, message = "A valid representation must be specified.")
      */
     protected $representation;
 
@@ -80,7 +78,6 @@ class FileReference
      * @MongoDB\String
      * @JMS\Type("string")
      * @JMS\SerializedName("mimeType")
-     * @Assert\NotBlank
      */
     protected $mimeType;
 

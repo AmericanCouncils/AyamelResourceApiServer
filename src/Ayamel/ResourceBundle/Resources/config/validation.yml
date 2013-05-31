@@ -1,0 +1,257 @@
+# This is the validation mapping for all Resource documents - only values that can be set by API clients are validated
+
+Ayamel\ResourceBundle\Document\Resource:
+    properties:
+        title:
+            - NotBlank: ~
+            - Type: 
+                type: string
+            - Length: 
+                max: 200
+        type:
+            - NotBlank: ~
+            - Type: 
+                type: string
+            - Choice:
+                choices: [video, audio, image, document, archive, collection, data]
+        description:
+            - Type: 
+                type: string
+            - Length:
+                max: 500
+        keywords:
+            - Type:
+                type: string
+            - Length:
+                max: 500
+        subjectDomains:
+            - All:
+                - Type:
+                    type: string
+#                - Choice:
+#                    choices: []
+        functionalDomains:
+            - All:
+                - Type:
+                    type: string
+#                - Choice:
+#                    choices: []
+        visibility:
+            - All:
+                - Type:
+                    type: string
+                - Length:
+                    max: 50
+        copyright:
+            - Type:
+                type: string
+            - Length:
+                max: 100
+        license:
+            - Type:
+                type: string
+            - Length: 
+                max: 100
+        origin:
+            - Valid: ~
+        client:
+            - Valid: ~
+        content:
+            - Valid: ~
+        
+Ayamel\ResourceBundle\Document\Origin:
+    properties:
+        creator:
+            - Type: 
+                type: string
+            - Length:
+                max: 100
+        location:
+            - Type: 
+                type: string
+            - Length:
+                max: 100
+        date:
+            - Type: 
+                type: string
+            - Length:
+                max: 100
+        format:
+            - Type: 
+                type: string
+            - Length:
+                max: 100
+        note:
+            - Type: 
+                type: string
+            - Length:
+                max: 500
+        uri:
+            - Type: 
+                type: string
+            - Length:
+                max: 2000
+
+Ayamel\ResourceBundle\Document\Client:
+    properties:
+        user:
+            - Valid: ~
+            
+Ayamel\ResourceBundle\Document\ClientUser:
+    properties:
+        id:
+            - Type: 
+                type: string
+            - Length:
+                max: 250
+        url:
+            - Type: 
+                type: string
+            - Length:
+                max: 2000
+
+Ayamel\ResourceBundle\Document\ContentCollection:
+    properties:
+        canonicalUri:
+            - Type: 
+                type: string
+            - Length:
+                max: 2500
+        oembed:
+            - Valid: ~
+        files:
+            - All:
+                - Valid: ~
+            
+Ayamel\ResourceBundle\Document\OEmbed:
+    properties:
+        type:
+            - NotBlank: ~
+            - Choice:
+                choices: [video, photo, link, rich]
+        version:
+            - Type:
+                type: string
+            - Length:
+                max: 20
+        title:
+            - Type:
+                type: string
+            - Length:
+                max: 1000
+        author_name:
+            - Type:
+                type: string
+            - Length:
+                max: 1000
+        author_url:
+            - Type:
+                type: string
+            - Length:
+                max: 2000
+        provider_name:
+            - Type:
+                type: string
+            - Length:
+                max: 1000
+        provider_url:
+            - Type:
+                type: string
+            - Length:
+                max: 2000
+        cache_age:
+            - Type:
+                type: integer
+            - Range:
+                min: 0
+        thumbnail_url: 
+            - Type:
+                type: string
+            - Length:
+                max: 2000
+        thumbnail_width: 
+            - Type:
+                type: integer
+            - Range:
+                min: 0
+        thumbnail_height: 
+            - Type:
+                type: integer
+            - Range:
+                min: 0
+        url:
+            - Type:
+                type: string
+            - Length:
+                max: 2000
+        width:
+            - Type:
+                type: integer
+            - Range:
+                min: 0
+        height:
+            - Type:
+                type: integer
+            - Range:
+                min: 0
+
+Ayamel\ResourceBundle\Document\FileReference:
+    constraits:
+        - Ayamel\ResourceBundle\Validation\FileAttributesConstraint: ~
+    properties:
+        downloadUri:
+            - NotBlank: ~
+            - Type: 
+                type: string
+            - Length:
+                max: 2000
+        streamUri:
+            - Type: 
+                type: string
+            - Length:
+                max: 2000
+        mime:
+            - NotBlank: ~
+            - Type:
+                type: string
+            - Length: 
+                max: 500
+        mimeType:
+            - NotBlank: ~
+            - Type:
+                type: string
+            - Length: 
+                max: 50
+        bytes:
+            - NotBlank: ~
+            - Type:
+                type: integer
+        representation:
+            - NotBlank: ~
+            - Type:
+                type: string
+            - Choice:
+                choices: [original, transcoding, summary]
+        quality:
+            - Type:
+                type: integer
+            - Range:
+                min: 0
+
+Ayamel\ResourceBundle\Validation\File\VideoAttributes:
+    properties:
+        frameX:
+            - Type: 
+                type: integer
+            - Range:
+                min: 0
+        frameY: 
+            - Type: 
+                type: integer
+            - Range:
+                min: 0
+        duration: 
+            - Type: 
+                type: integer
+            - Range:
+                min: 0
