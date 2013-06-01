@@ -662,23 +662,13 @@ class Resource
     }
 
     /**
-     * Validation method, because PHP sucks and can't do scalar type hinting.  Called automatically by Mongodb ODM before create/update operations.
-     *
-     * Note that this validation is only for checking that values are of a certain type for a given field.  This validation has nothing to do with whether or not
-     * a client has sent acceptable input via an api.
+     * Validation method ensure that date fields are set properly.
      *
      * @MongoDB\PrePersist
      * @MongoDB\PreUpdate
-     * 
-     * @param $return - whether or not to return errors, or throw exception
-     * @throws InvalidArgumentException if $return is false
-     * @return true                     on success or array if validation fails
      */
-    public function validate($return = false)
+    public function validate()
     {
-        $errors = array();
-        
-        //enforce proper dates, unless this is being deleted
         if (!$this->isDeleted()) {
             $date = new \DateTime();
             if (!$this->getId()) {
@@ -687,30 +677,6 @@ class Resource
             
             $this->setDateModified($date);
         }
-        
-//TODO: remove this custom validation stuff
-        
-        //check scalar fields
-        foreach ($this->_validators as $field => $type) {
-            //ignore null, that's how we unset/remove properties
-            if (null !== $this->$field) {
-                if (function_exists($func = "is_".$type)) {
-                    if (!$func($this->$field)) {
-                        $errors[] = sprintf("Field '%s' must be of type '%s'", $field, $type);
-                    }
-                }
-            }
-        }
-
-        if (empty($errors)) {
-            return true;
-        }
-
-        if ($return) {
-            return $errors;
-        }
-
-        throw new \InvalidArgumentException(implode(". ", $errors));
     }
     
 }

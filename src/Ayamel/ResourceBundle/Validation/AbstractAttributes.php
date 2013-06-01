@@ -11,15 +11,24 @@ namespace Ayamel\ResourceBundle\Validation;
  */
 abstract class AbstractAttributes
 {
+    protected $extraFields = array();
+    
     public static function createFromArray(array $data)
     {
         $obj = new static();
         foreach ($data as $key => $val) {
             if (property_exists($obj, $key)) {
                 $obj->$key = $val;
+            } else {
+                $extraFields[] = $key;
             }
         }
         
         return $obj;
+    }
+    
+    public function getExtraFields()
+    {
+        return $this->extraFields;
     }
 }

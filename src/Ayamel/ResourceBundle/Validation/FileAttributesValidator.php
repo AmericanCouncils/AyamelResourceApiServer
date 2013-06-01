@@ -37,6 +37,13 @@ class FileAttributesValidator extends ConstraintValidator
                 $this->context->addViolationAt('attributes', $error);
             }
         }
+        
+        //check for extra fields
+        if (count($attrs->getExtraFields()) > 0) {
+            foreach ($attrs->getExtraFields() as $field) {
+                $this->context->addViolationAt('attributes', $field." is not a valid field.");
+            }
+        }
     }
     
     protected function createAttributesClass($mime, $data)

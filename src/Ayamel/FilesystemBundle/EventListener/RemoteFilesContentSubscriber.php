@@ -4,7 +4,6 @@ namespace Ayamel\FilesystemBundle\EventListener;
 
 use Ayamel\ResourceBundle\Document\Resource;
 use Ayamel\ResourceBundle\Document\FileReference;
-use Ayamel\ResourceBundle\ResourceDocumentsFactory;
 use Ayamel\ApiBundle\Event\Events;
 use Ayamel\ApiBundle\Event\ResolveUploadedContentEvent;
 use Ayamel\ApiBundle\Event\HandleUploadedContentEvent;
@@ -13,7 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
- * Handles recording content as a remote files array.  The validity of the actual file locations are not checked (currently).
+ * Handles recording content as a remote files array.
  *
  * @author Evan Villemez
  */
@@ -68,10 +67,13 @@ class RemoteFilesContentSubscriber implements EventSubscriberInterface
         try {
             foreach ($body['remoteFiles'] as $fileData) {
 
-                //TODO: need some type of validation on this, as clients can put anything into the `attributes` field
+                $newFileRef = $this->container->get('serializer')->deserialize(json_encode($fileData), 'Ayamel\ResourceBundle\Document\FileReference', 'json');
+                $errors = $this->container->get('validator')->validate($newFileRef);
+                if (count($errors) > 0) {
+                    throw new \InvalidArgumentException(implode("; ", iterator_to_array($errors)));
+                }
                 
-                //TODO: remove references to ResourceDocumentsFactory, replace with object validator
-                $remoteFiles[] = ResourceDocumentsFactory::createFileReferenceFromArray($fileData);
+                $remoteFiles[] = $newFileRef;
             }
         } catch (\Exception $e) {
             throw new HttpException(400, $e->getMessage());
@@ -82,7 +84,7 @@ class RemoteFilesContentSubscriber implements EventSubscriberInterface
             return;
         }
 
-        //TODO: consider validating the remote files to disallow non-existant files.  Could make a HEAD request to avoid pulling lots of data.
+        //TODO: make HEAD requests to ensure remote files actually exist.
 
         //notify the event as having been handled
         $e->setContentType('remote_files');
