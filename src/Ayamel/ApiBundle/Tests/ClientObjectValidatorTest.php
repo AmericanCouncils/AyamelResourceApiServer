@@ -142,7 +142,7 @@ class ClientObjectValidatorTest extends ApiTestCase
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($requestData));
         
-        $this->setExpectedException('Exception');
+        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\HttpException');
         $resource = $validator->createObjectFromRequest('Ayamel\ResourceBundle\Document\Resource', $request);
     }
     
@@ -168,18 +168,7 @@ class ClientObjectValidatorTest extends ApiTestCase
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($requestData));
         
-        $this->setExpectedException('Exception');
+        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\HttpException');
         $resource = $validator->createObjectFromRequest('Ayamel\ResourceBundle\Document\Resource', $request);
-    }
-    
-    public function testIsset()
-    {
-        $test = array(
-            'foo' => 23,
-            'bar' => 'baz',
-            'baz' => null,
-            'qux' => 'chickens'
-        );
-        $this->assertTrue(array_key_exists('qux', $test));
     }
 }

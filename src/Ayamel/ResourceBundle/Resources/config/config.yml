@@ -38,7 +38,30 @@ parameters:
         csv: data
     ayamel.resource.null_extension_type: binary
 
+    ayamel.resource.file_attribute_validation_map:
+        Ayamel\ResourceBundle\Validation\File\VideoAttributes: 
+            - video/mp4
+            - video/x-ms-wmv
+            - video/avi
+        Ayamel\ResourceBundle\Validation\File\AudioAttributes: 
+            - audio/mp3
+            - audio/aac
+        Ayamel\ResourceBundle\Validation\File\ImageAttributes: []
+        Ayamel\ResourceBundle\Validation\File\DocumentAttributes: []
+        Ayamel\ResourceBundle\Validation\File\DataAttributes: []
+
+    ayamel.resource.relation_attribute_validation_map:
+        PART_OF: Ayamel\ResourceBundle\Validation\Relation\PartOf
+        REQUIRES: Ayamel\ResourceBundle\Validation\Relation\Requires
+        DERIVED_FROM: Ayamel\ResourceBundle\Validation\Relation\DerivedFrom
+
 services:
+    ayamel.resource.file_attributes_validator:
+        class: Ayamel\ResourceBundle\Validation\FileAttributesValidator
+        arguments: [@validator, %ayamel.resource.file_attribute_validation_map%]
+        tags:
+          - { name: validator.constraint_validator, alias: file_attributes_validator }
+          
     ayamel.resource.provider:
         class: Ayamel\ResourceBundle\Provider\DelegatingProvider
 
