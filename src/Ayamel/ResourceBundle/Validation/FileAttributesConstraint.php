@@ -14,8 +14,13 @@ class FileAttributesConstraint extends Constraint
 {
     public $message = "The attributes are not appropriate for the file's mime type.";
     
+    public function getTargets()
+    {
+        return self::CLASS_CONSTRAINT;
+    }
+    
     public function validatedBy()
     {
-        return 'file_attributes';
+        return 'file_attributes_validator';
     }
 }

@@ -196,7 +196,7 @@ Ayamel\ResourceBundle\Document\OEmbed:
                 min: 0
 
 Ayamel\ResourceBundle\Document\FileReference:
-    constraits:
+    constraints:
         - Ayamel\ResourceBundle\Validation\FileAttributesConstraint: ~
     properties:
         downloadUri:
@@ -211,7 +211,6 @@ Ayamel\ResourceBundle\Document\FileReference:
             - Length:
                 max: 2000
         mime:
-            - NotBlank: ~
             - Type:
                 type: string
             - Length: 
@@ -240,18 +239,36 @@ Ayamel\ResourceBundle\Document\FileReference:
 
 Ayamel\ResourceBundle\Validation\File\VideoAttributes:
     properties:
-        frameX:
+        resolutionX:
             - Type: 
                 type: integer
             - Range:
                 min: 0
-        frameY: 
+        resolutionY: 
             - Type: 
                 type: integer
             - Range:
                 min: 0
         duration: 
             - Type: 
+                type: integer
+            - Range:
+                min: 0
+        averageBitrate:
+            - Type:
+                type: integer
+            - Range:
+                min: 0
+
+Ayamel\ResourceBundle\Validation\File\AudioAttributes:
+    properties:
+        duration: 
+            - Type: 
+                type: integer
+            - Range:
+                min: 0
+        averageBitrate:
+            - Type:
                 type: integer
             - Range:
                 min: 0

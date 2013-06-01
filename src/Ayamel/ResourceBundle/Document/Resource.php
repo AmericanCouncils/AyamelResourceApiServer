@@ -688,6 +688,8 @@ class Resource
             $this->setDateModified($date);
         }
         
+//TODO: remove this custom validation stuff
+        
         //check scalar fields
         foreach ($this->_validators as $field => $type) {
             //ignore null, that's how we unset/remove properties

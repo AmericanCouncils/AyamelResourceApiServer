@@ -15,9 +15,11 @@ abstract class AbstractAttributes
     {
         $obj = new static();
         foreach ($data as $key => $val) {
-            if (property_exists(array($obj, $key))) {
+            if (property_exists($obj, $key)) {
                 $obj->$key = $val;
             }
         }
+        
+        return $obj;
     }
 }

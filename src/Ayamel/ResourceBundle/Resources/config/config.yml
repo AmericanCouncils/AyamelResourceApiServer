@@ -56,18 +56,12 @@ parameters:
         DERIVED_FROM: Ayamel\ResourceBundle\Validation\Relation\DerivedFrom
 
 services:
-    ayamel.resource.file_validator:
-        class: Ayamel\ResourceBundle\Validation\FileAttributes
+    ayamel.resource.file_attributes_validator:
+        class: Ayamel\ResourceBundle\Validation\FileAttributesValidator
         arguments: [@validator, %ayamel.resource.file_attribute_validation_map%]
         tags:
-          - { name: validator.constraint_validator, alias: file_attributes }
+          - { name: validator.constraint_validator, alias: file_attributes_validator }
           
-    ayamel.resource.file_validator:
-        class: Ayamel\ResourceBundle\Validation\FileAttributes
-        arguments: [@validator, "getType", %ayamel.resource.file_attribute_validation_map%]
-        tags:
-          - { name: validator.constraint_validator, alias: file_attributes }
-
     ayamel.resource.provider:
         class: Ayamel\ResourceBundle\Provider\DelegatingProvider
 

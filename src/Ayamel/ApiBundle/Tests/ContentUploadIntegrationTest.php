@@ -11,7 +11,8 @@ class ContentUploadIntegrationTest extends ApiTestCase
     public function testGetUploadUrl()
     {
         $data = array(
-            'title' => 'test'
+            'title' => 'test',
+            'type' => 'data'
         );
         
         $response = $this->getJson('POST', '/api/v1/resources', array(), array(), array(
@@ -49,13 +50,14 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $response = $this->getResponse('POST', $uploadUrl);
         $this->assertSame(401, $response->getStatusCode());
         $content = json_decode($response->getContent(), true);
-        $this->assertSame(401, $content['response']['code']);        
+        $this->assertSame(401, $content['response']['code']);
     }
 
     public function testUploadContentAsRemoteFilesArray()
     {
         $data = array(
-            'title' => 'test'
+            'title' => 'test',
+            'type' => 'data'
         );
         
         $response = $this->getJson('POST', '/api/v1/resources', array(), array(), array(
@@ -110,7 +112,8 @@ class ContentUploadIntegrationTest extends ApiTestCase
     {
         //get content upload url
         $data = array(
-            'title' => 'test'
+            'title' => 'test',
+            'type' => 'data'
         );
         
         $response = $this->getJson('POST', '/api/v1/resources', array(), array(), array(
@@ -146,7 +149,8 @@ class ContentUploadIntegrationTest extends ApiTestCase
     public function testUploadAndTranscodeFile()
     {
         $data = array(
-            'title' => 'test'
+            'title' => 'test',
+            'type' => 'data'
         );
         
         $response = $this->getJson('POST', '/api/v1/resources', array(), array(), array(
