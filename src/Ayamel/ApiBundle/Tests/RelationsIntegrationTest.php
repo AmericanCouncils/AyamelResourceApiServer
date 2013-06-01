@@ -13,6 +13,7 @@ class RelationsIntegrationTest extends ApiTestCase
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array(
             'title' => 'testing',
+            'type' => 'data',
             'description' => '...and more testing'
         )));
     }

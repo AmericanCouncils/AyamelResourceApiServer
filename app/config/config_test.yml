@@ -10,17 +10,6 @@ web_profiler:
     toolbar: false
     intercept_redirects: false
 
-doctrine_mongodb:
-    connections:
-        default:
-            server: mongodb://localhost:27017
-            options:
-                connect: true
-    default_database: ayamel_test
-    document_managers:
-        default:
-            auto_mapping: true
-
 services:
     ayamel.test.transcoding_adapter:
         class: AC\Component\Transcoding\Tests\Mock\PhpTextAdapter
@@ -42,5 +31,3 @@ parameters:
     ayamel.filesystem.local_filesystem.root_dir: /tmp
     ayamel.filesystem.local_filesystem.secret: zeroisnotanumber
     
-
-#TODO: custom rabbitmq settings (?)

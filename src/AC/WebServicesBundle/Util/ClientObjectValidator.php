@@ -5,6 +5,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use JMS\Serializer\SerializerInterface;
 use Metadata\MetadataFactoryInterface;
+use Symfony\Component\Validator\ValidatorInterface;
 
 //TODO: Take into account JMS Exclusion Policies / Groups
 //TODO: Take into account JMS getter/setter annotation
@@ -22,7 +23,9 @@ class ClientObjectValidator
 
     private $typeParser;
 
-    private $graph = array();
+    private $validator;
+
+    private $graph = array();    
 
     /**
      * Constructor needs dependency JMS related objects.
@@ -31,11 +34,12 @@ class ClientObjectValidator
      * @param Serializer               $serializer
      * @param JmsDataTypeParser        $typeParser
      */
-    public function __construct(MetadataFactoryInterface $factory, SerializerInterface $serializer, JmsDataTypeParser $typeParser)
+    public function __construct(MetadataFactoryInterface $factory, SerializerInterface $serializer, JmsDataTypeParser $typeParser, ValidatorInterface $validator = null)
     {
         $this->factory = $factory;
         $this->serializer = $serializer;
         $this->typeParser = $typeParser;
+        $this->validator = $validator;
     }
 
     /**
@@ -49,8 +53,18 @@ class ClientObjectValidator
     {
         $this->graph($className);
         $this->validateObjectData($this->normalizeRequestData($request), $className);
+        
+        $object = $this->serializer->deserialize($this->getJsonFromClient($request), $className, 'json');
+        
+        if ($this->validator) {
+            $errors = $this->validator->validate($object);
+            if (count($errors) > 0) {
+                $msg = implode("; ", iterator_to_array($errors));
+                throw new HttpException(400, $msg);
+            }
+        }
 
-        return $this->serializer->deserialize($this->getJsonFromClient($request), $className, 'json');
+        return $object;
     }
 
     /**
@@ -73,6 +87,14 @@ class ClientObjectValidator
 
         $this->validateObjectData($normalizedData, $className, $originalObject);
 
+        if ($this->validator) {
+            $errors = $this->validator->validate($originalObject);
+            if (count($errors) > 0) {
+                $msg = implode("; ", iterator_to_array($errors));
+                throw new HttpException(400, $msg);
+            }
+        }
+        
         return $originalObject;
     }
 

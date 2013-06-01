@@ -4,7 +4,6 @@ namespace Ayamel\ResourceBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use JMS\Serializer\Annotation as JMS;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * File reference object
@@ -38,6 +37,14 @@ class FileReference
      * @JMS\Exclude
      */
     protected $internalUri;
+    
+    /**
+     * Size of the file in bytes
+     *
+     * @MongoDB\Int
+     * @JMS\Type("integer")
+     */
+    protected $bytes;
 
     /**
      * A string describing the representation.
@@ -52,7 +59,6 @@ class FileReference
      *
      * @MongoDB\String
      * @JMS\Type("string")
-     * @Assert\Choice(choices = {"original", "transcoding", "summary"}, message = "A valid representation must be specified.")
      */
     protected $representation;
 
@@ -80,7 +86,6 @@ class FileReference
      * @MongoDB\String
      * @JMS\Type("string")
      * @JMS\SerializedName("mimeType")
-     * @Assert\NotBlank
      */
     protected $mimeType;
 
@@ -270,6 +275,26 @@ class FileReference
     {
         return isset($this->attributes[$key]);
     }
+    
+    /**
+     * Set file size in bytes
+     *
+     * @param integer $bytes 
+     */
+    public function setBytes($bytes)
+    {
+        $this->bytes = $bytes;
+    }
+    
+    /**
+     * Get file size in bytes
+     *
+     * @return integer
+     */
+    public function getBytes()
+    {
+        return $this->bytes;
+    }
 
     /**
      * Set the mime string
@@ -359,6 +384,23 @@ class FileReference
     public function getInternalUri()
     {
         return $this->internalUri;
+    }
+
+    /**
+     * Enforces certain values before persisting to the database
+     *
+     * @MongoDB\PrePersist
+     * @MongoDB\PreUpdate
+     */
+    public function validate()
+    {
+        if (null === $this->quality) {
+            $this->quality = 0;
+        }
+        
+        if (null === $this->mime) {
+            $this->mime = $this->mimeType;
+        }
     }
 
     /**

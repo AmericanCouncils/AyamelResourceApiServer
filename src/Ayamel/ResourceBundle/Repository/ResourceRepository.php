@@ -38,7 +38,7 @@ class ResourceRepository extends DocumentRepository
         $resource->setDateDeleted(new \DateTime());
         $resource->setStatus(Resource::STATUS_DELETED);
 
-        return $resource;		
+        return $resource;
 	}
 
 }

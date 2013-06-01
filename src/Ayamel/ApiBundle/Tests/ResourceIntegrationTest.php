@@ -384,6 +384,7 @@ class ResourceIntegrationTest extends ApiTestCase
     {
         $data = array(
             'title' => 'A test to remember',
+            'type' => 'data',
             'description' => 'An amazing description'
         );
         
@@ -392,8 +393,8 @@ class ResourceIntegrationTest extends ApiTestCase
             'CONTENT_TYPE' => 'application/json'
         ), $body);
         
-        $resourceId = $json['resource']['id'];
         $this->assertSame(201, $json['response']['code']);
+        $resourceId = $json['resource']['id'];
         $this->assertSame($data['title'], $json['resource']['title']);
         $this->assertSame($data['description'], $json['resource']['description']);
         

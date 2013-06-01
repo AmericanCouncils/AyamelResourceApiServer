@@ -10,7 +10,8 @@ imports:
     - { resource: '@AyamelTranscodingBundle/Resources/config/config.yml' }
     - { resource: '@AyamelTranscodingBundle/Resources/config/config.preset_map.yml' }
     - { resource: '@AyamelTranscodingBundle/Resources/config/config.rabbitmq.yml' }
-    # include parameters.yml last, git ignores it, so location specific overrides can go there safely
+
+    # include parameters.yml last, git ignores it, so deployment specific overrides can go there safely
     - { resource: parameters.yml }
 
 framework:
@@ -20,7 +21,7 @@ framework:
     router:          { resource: "%kernel.root_dir%/config/routing.yml" }
     form:            true
     csrf_protection: true
-    validation:      { enable_annotations: true }
+    validation:      { enabled: true, enable_annotations: true }
     templating:      { engines: ['twig'] } #assets_version: SomeVersionScheme
     default_locale:  %locale%
     session:
@@ -42,17 +43,6 @@ assetic:
         #    jar: %kernel.root_dir%/Resources/java/compiler.jar
         #yui_css:
         #    jar: %kernel.root_dir%/Resources/java/yuicompressor-2.4.7.jar
-
-doctrine_mongodb:
-    connections:
-        default:
-            server: mongodb://%mongodb_host%:%mongodb_port%
-            options:
-                connect: true
-    default_database: ayamel
-    document_managers:
-        default:
-            auto_mapping: true
 
 ## JMS Serializer, note that the actual serializer is a separate library finally
 jms_serializer:

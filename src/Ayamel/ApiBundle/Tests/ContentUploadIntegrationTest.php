@@ -11,7 +11,8 @@ class ContentUploadIntegrationTest extends ApiTestCase
     public function testGetUploadUrl()
     {
         $data = array(
-            'title' => 'test'
+            'title' => 'test',
+            'type' => 'data'
         );
         
         $response = $this->getJson('POST', '/api/v1/resources', array(), array(), array(
@@ -49,13 +50,14 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $response = $this->getResponse('POST', $uploadUrl);
         $this->assertSame(401, $response->getStatusCode());
         $content = json_decode($response->getContent(), true);
-        $this->assertSame(401, $content['response']['code']);        
+        $this->assertSame(401, $content['response']['code']);
     }
 
     public function testUploadContentAsRemoteFilesArray()
     {
         $data = array(
-            'title' => 'test'
+            'title' => 'test',
+            'type' => 'data'
         );
         
         $response = $this->getJson('POST', '/api/v1/resources', array(), array(), array(
@@ -67,17 +69,16 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $resourceId = $response['resource']['id'];
         $apiPath = substr($response['content_upload_url'], strlen('http://localhost'));
         
-        //TODO: make sure these are validated properly w/ object validator
-        //TODO: there really needs to be validation on the attribute fields as well
         $data = array(
             'remoteFiles' => array(
                 array(
                     'downloadUri' => 'http://example.com/files/test.mp4',
                     'streamUri' => 'http://streaming.example.com/test',
+                    'bytes' => 23456,
                     'representation' => 'original',
                     'quality' => 1,
-                    'mime' => 'video/mp4',
-                    'mimeType' => 'video/mp4; encoding=binary',
+                    'mime' => 'video/mp4; encoding=binary',
+                    'mimeType' => 'video/mp4',
                     'attributes' => array(
                         'key' => 'val',
                         'foo' => 'bar'
@@ -86,10 +87,11 @@ class ContentUploadIntegrationTest extends ApiTestCase
                 array(
                     'downloadUri' => 'http://example.com/files/test.low.mp4',
                     'streamUri' => 'http://streaming.example.com/test.low',
+                    'bytes' => 23456,
                     'representation' => 'transcoding',
                     'quality' => 0,
-                    'mime' => 'video/mp4',
-                    'mimeType' => 'video/mp4; encoding=binary',
+                    'mime' => 'video/mp4; encoding=binary',
+                    'mimeType' => 'video/mp4',
                     'attributes' => array(
                         'key' => 'val',
                         'foo' => 'bar'
@@ -110,7 +112,8 @@ class ContentUploadIntegrationTest extends ApiTestCase
     {
         //get content upload url
         $data = array(
-            'title' => 'test'
+            'title' => 'test',
+            'type' => 'data'
         );
         
         $response = $this->getJson('POST', '/api/v1/resources', array(), array(), array(
@@ -146,7 +149,8 @@ class ContentUploadIntegrationTest extends ApiTestCase
     public function testUploadAndTranscodeFile()
     {
         $data = array(
-            'title' => 'test'
+            'title' => 'test',
+            'type' => 'data'
         );
         
         $response = $this->getJson('POST', '/api/v1/resources', array(), array(), array(
