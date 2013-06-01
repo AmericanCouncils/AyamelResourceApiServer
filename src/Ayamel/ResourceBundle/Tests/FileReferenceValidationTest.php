@@ -1,6 +1,6 @@
 <?php
 
-namespace Ayamel\ApiBundle\Tests;
+namespace Ayamel\ResourceBundle\Tests;
 
 use Ayamel\ApiBundle\ApiTestCase;
 use Symfony\Component\DependencyInjection\Container;
@@ -29,6 +29,5 @@ class FileReferenceValidationTest extends ApiTestCase
         //TODO: set expected exception
         $v->validate($resource);
     }
-    
     
 }

@@ -40,3 +40,14 @@ parameters:
     transcoding.handbrake.path: /usr/local/bin/HandBrakeCLI
     ayamel.transcoding.temp_directory: %kernel.root_dir%/files/tmp
     
+    
+doctrine_mongodb:
+    connections:
+        default:
+            server: mongodb://localhost:27017
+            options:
+                connect: true
+    default_database: ayamel_test
+    document_managers:
+        default:
+            auto_mapping: true
