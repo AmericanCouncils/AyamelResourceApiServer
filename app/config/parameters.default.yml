@@ -1,3 +1,6 @@
+## Note that this parameters.yml file includes configuration for a test/dev environment.  For an
+## actual production configuration, change this file accordingly.
+
 parameters:
     database_driver: pdo_sqlite
     database_path: %kernel.root_dir%/app/data/db.sqlite
@@ -26,7 +29,7 @@ parameters:
     
     ## File upload handling ##
     ayamel.filesystem.local_filesystem.root_dir: %kernel.root_dir%/files/resource_uploads
-    ayamel.filesystem.local_filesystem.secret: 34565dfg897jksksk4wk4ksdfkj34
+    ayamel.filesystem.local_filesystem.secret: zeroisnotanumber
     ayamel.filesystem.local_filesystem.base_uri: http://localhost/ayamel/web/files
     
     ## API Docs
