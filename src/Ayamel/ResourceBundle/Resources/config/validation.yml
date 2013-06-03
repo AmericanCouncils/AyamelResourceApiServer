@@ -7,7 +7,7 @@ Ayamel\ResourceBundle\Document\Resource:
             - Type: 
                 type: string
             - Length: 
-                max: 200
+                max: 1000
         type:
             - NotBlank: ~
             - Type: 
@@ -18,12 +18,12 @@ Ayamel\ResourceBundle\Document\Resource:
             - Type: 
                 type: string
             - Length:
-                max: 500
+                max: 10000
         keywords:
             - Type:
                 type: string
             - Length:
-                max: 500
+                max: 2000
         subjectDomains:
             - All:
                 - Type:
@@ -41,17 +41,17 @@ Ayamel\ResourceBundle\Document\Resource:
                 - Type:
                     type: string
                 - Length:
-                    max: 50
+                    max: 100
         copyright:
             - Type:
                 type: string
             - Length:
-                max: 100
+                max: 1000
         license:
             - Type:
                 type: string
             - Length: 
-                max: 100
+                max: 500
         origin:
             - Valid: ~
         client:
@@ -65,32 +65,34 @@ Ayamel\ResourceBundle\Document\Origin:
             - Type: 
                 type: string
             - Length:
-                max: 100
+                max: 1000
         location:
             - Type: 
                 type: string
             - Length:
-                max: 100
+                max: 1000
         date:
             - Type: 
                 type: string
             - Length:
-                max: 100
+                max: 1000
         format:
             - Type: 
                 type: string
             - Length:
-                max: 100
+                max: 1000
         note:
             - Type: 
                 type: string
             - Length:
-                max: 500
+                max: 10000
         uri:
+            - Url:
+                - protocols: [http, https, ftp, git, geo, nfs, irc, ircs, rtmp, svn, ws, wss]
             - Type: 
                 type: string
             - Length:
-                max: 2000
+                max: 2500
 
 Ayamel\ResourceBundle\Document\Client:
     properties:
@@ -103,12 +105,13 @@ Ayamel\ResourceBundle\Document\ClientUser:
             - Type: 
                 type: string
             - Length:
-                max: 250
+                max: 1000
         url:
+            - Url: ~
             - Type: 
                 type: string
             - Length:
-                max: 2000
+                max: 2500
 
 Ayamel\ResourceBundle\Document\ContentCollection:
     properties:
@@ -145,26 +148,29 @@ Ayamel\ResourceBundle\Document\OEmbed:
             - Length:
                 max: 1000
         author_url:
+            - Url: ~
             - Type:
                 type: string
             - Length:
-                max: 2000
+                max: 2500
         provider_name:
             - Type:
                 type: string
             - Length:
                 max: 1000
         provider_url:
+            - Url: ~
             - Type:
                 type: string
             - Length:
-                max: 2000
+                max: 2500
         cache_age:
             - Type:
                 type: integer
             - Range:
                 min: 0
         thumbnail_url: 
+            - Url: ~
             - Type:
                 type: string
             - Length:
@@ -180,10 +186,16 @@ Ayamel\ResourceBundle\Document\OEmbed:
             - Range:
                 min: 0
         url:
+            - Url: ~
             - Type:
                 type: string
             - Length:
                 max: 2000
+        html: 
+            - Type:
+                type: string
+            - Length:
+                max: 10000
         width:
             - Type:
                 type: integer
@@ -201,30 +213,33 @@ Ayamel\ResourceBundle\Document\FileReference:
     properties:
         downloadUri:
             - NotBlank: ~
+            - Url: ~
             - Type: 
                 type: string
             - Length:
-                max: 2000
+                max: 2500
         streamUri:
             - Type: 
                 type: string
             - Length:
-                max: 2000
+                max: 2500
         mime:
             - Type:
                 type: string
             - Length: 
-                max: 500
+                max: 2000
         mimeType:
             - NotBlank: ~
             - Type:
                 type: string
             - Length: 
-                max: 50
+                max: 100
         bytes:
             - NotBlank: ~
             - Type:
                 type: integer
+            - Range:
+                min: 0
         representation:
             - NotBlank: ~
             - Type:
@@ -236,6 +251,23 @@ Ayamel\ResourceBundle\Document\FileReference:
                 type: integer
             - Range:
                 min: 0
+
+Ayamel\ResourceBundle\Document\Relation:
+    constraints:
+        Ayamel\ResourceBundle\Validation\RelationAttributesConstraint: ~
+    properties:
+        objectId:
+            - NotBlank: ~
+            - Type:
+                type: string
+        type:
+            - NotBlank: ~
+            - Choice:
+                choices: [part_of, requires, depends_on]
+
+##
+## FILE ATTRIBUTES
+##
 
 Ayamel\ResourceBundle\Validation\File\VideoAttributes:
     properties:
@@ -272,3 +304,16 @@ Ayamel\ResourceBundle\Validation\File\AudioAttributes:
                 type: integer
             - Range:
                 min: 0
+
+##
+## RELATION ATTRIBUTES
+##
+
+Ayamel\ResourceBundle\Validation\Relation\PartOfAttributes:
+    properties:
+        index: 
+            - Type:
+                type: integer
+            - Range:
+                min: 0
+        

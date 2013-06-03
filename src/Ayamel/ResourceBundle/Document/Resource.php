@@ -99,7 +99,7 @@ class Resource
      * An array of categories that apply to the content of the Resource.  Categories here are vetted
      * against a list of accepted and documented categories.
      * 
-     *  //TODO: implement proper validation for whitelist of approved categories
+     *  //TODO: document valid values
      *
      * @MongoDB\Hash
      * @JMS\SerializedName("subjectDomains")
@@ -111,7 +111,7 @@ class Resource
      * An array of categories that apply to the linguistic properties of the Resource.  Categories here are vetted
      * against a list of accepted and documented categories.
      * 
-     *  //TODO: implement proper validation for whitelist of approved categories
+     *  //TODO: document valid values
      *
      * @MongoDB\Hash
      * @JMS\SerializedName("functionalDomains")
