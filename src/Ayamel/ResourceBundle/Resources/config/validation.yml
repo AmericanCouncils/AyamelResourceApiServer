@@ -24,6 +24,15 @@ Ayamel\ResourceBundle\Document\Resource:
                 type: string
             - Length:
                 max: 2000
+                
+        # Note that we're not actually checking for a valid code - the potential list of codes is enormous
+        languages:
+            - All:
+                - Type:
+                    type: string
+                - Length:
+                    min: 3
+                    max: 3
         subjectDomains:
             - All:
                 - Type:
