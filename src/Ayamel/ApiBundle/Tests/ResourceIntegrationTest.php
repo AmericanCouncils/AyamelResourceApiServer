@@ -45,6 +45,7 @@ class ResourceIntegrationTest extends ApiTestCase
             'description' => 'An amazing description',
             'type' => 'data',
             'keywords' => 'foo, bar, baz',
+            'languages' => array('eng', 'zho'),
             'subjectDomains' => array('food', 'culture', 'history'),
             'functionalDomains' => array('verbs', 'adjectives', 'conjugation'),
             'visibility' => array('client1', 'client2'),
@@ -87,6 +88,7 @@ class ResourceIntegrationTest extends ApiTestCase
         $this->assertSame($data['type'], $json['resource']['type']);
         $this->assertSame($data['description'], $json['resource']['description']);
         $this->assertSame($data['keywords'], $json['resource']['keywords']);
+        $this->assertSame($data['languages'], $json['resource']['languages']);
         $this->assertSame($data['subjectDomains'], $json['resource']['subjectDomains']);
         $this->assertSame($data['functionalDomains'], $json['resource']['functionalDomains']);
         $this->assertSame($data['visibility'], $json['resource']['visibility']);
