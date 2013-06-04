@@ -143,7 +143,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $this->assertTrue(isset($data['downloadUri']));
         $this->assertSame('text/plain', $data['mime']);
         $this->assertSame('text/plain', $data['mimeType']);
-        $this->assertSame(filesize($testFilePath), $data['attributes']['bytes']);
+        $this->assertSame(filesize($testFilePath), $data['bytes']);
     }
     
     public function testUploadAndTranscodeFile()
@@ -182,7 +182,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $this->assertTrue(isset($data['downloadUri']));
         $this->assertSame('text/plain', $data['mime']);
         $this->assertSame('text/plain', $data['mimeType']);
-        $this->assertSame(filesize($testFilePath), $data['attributes']['bytes']);
+        $this->assertSame(filesize($testFilePath), $data['bytes']);
         
         //now run transcode command directly
         $this->runCommand(sprintf('api:resource:transcode %s --force', $resourceId));
@@ -197,9 +197,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
             'mimeType' => 'text/plain',
             'representation' => 'transcoding',
             'quality' => 0,
-            'attributes' => array(
-                'bytes' => filesize($testFilePath)
-            )
+            'bytes' => filesize($testFilePath)
         );
 
         $this->assertSame(200, $json['response']['code']);
@@ -210,7 +208,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $this->assertSame($expected['mimeType'], $transcoded['mimeType']);
         $this->assertSame($expected['representation'], $transcoded['representation']);
         $this->assertSame($expected['quality'], $transcoded['quality']);
-        $this->assertSame($expected['attributes']['bytes'], $transcoded['attributes']['bytes']);
+        $this->assertSame($expected['bytes'], $transcoded['bytes']);
         $this->assertTrue(isset($transcoded['downloadUri']));
         
         //hit one-time url again to make sure it expired
