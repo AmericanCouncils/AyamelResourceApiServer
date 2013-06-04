@@ -94,6 +94,14 @@ class Resource
      * @JMS\Type("string")
      */
     protected $keywords;
+    
+    /**
+     * An array of ISO 639-3 language codes. For more on ISO 639-3, see (http://www-01.sil.org/iso639-3/)[http://www-01.sil.org/iso639-3/].
+     *
+     * @MongoDB\Hash
+     * @JMS\Type("array<string>")
+     */
+    protected $languages;
 
     /**
      * An array of categories that apply to the content of the Resource.  Categories here are vetted
