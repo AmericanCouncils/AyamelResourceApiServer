@@ -151,7 +151,7 @@ class TranscodeManager
                 $newFileReference->setMimeType($transcodedFile->getMimeType());
                 $newFileReference->setQuality($def['quality']);
                 $newFileReference->setRepresentation($def['representation']);
-                $newFileReference->setAttribute('bytes', $transcodedFile->getSize());
+                $newFileReference->setBytes($transcodedFile->getSize());
 
                 //new base name for file with tag + output extension
                 $newBaseName = $def['tag'].".".$def['extension'];
@@ -203,8 +203,7 @@ class TranscodeManager
             $resource->content->addFile($newRef);
         }
 
-        //save the resource, and then unlock it
-        $this->docManager->flush();
+        //unlock & save
         $this->unlockResource($resource);
 
         //clean up the filesystem

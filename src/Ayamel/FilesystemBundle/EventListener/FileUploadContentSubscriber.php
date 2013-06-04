@@ -10,6 +10,7 @@ use Ayamel\ApiBundle\Event\ResolveUploadedContentEvent;
 use Ayamel\ApiBundle\Event\HandleUploadedContentEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 //TODO: a little more care in when the original flag and mime is set - transcoding needs
 //a reliable place to listen for when to schedule new transcoding jobs
@@ -90,7 +91,7 @@ class FileUploadContentSubscriber implements EventSubscriberInterface
             $e->setContentData($file);
 
             //TODO: optionally allow the client to ALSO specify the
-            //representation, for example "transcoding;3"
+            //representation & quality, and whether or not the file is the original
 
         }
     }
@@ -113,7 +114,7 @@ class FileUploadContentSubscriber implements EventSubscriberInterface
         //check if valid
         if (!$uploadedFile->isValid()) {
             $msg = isset($this->uploadErrorTexts[$uploadedFile->getError()]) ? $this->uploadErrorTexts[$uploadedFile->getError()] : "Generic file upload error.";
-            throw new \RuntimeException($msg);
+            throw new HttpException(400, $msg);
         }
 
         //get filesystem
@@ -138,22 +139,22 @@ class FileUploadContentSubscriber implements EventSubscriberInterface
         if (!$newRef->getMime()) {
             $newRef->setMime($newRef->getMimeType());
         }
-        if (!$newRef->getAttribute('bytes', false)) {
-            $newRef->setAttribute('bytes', $uploadedFile->getClientSize());
+        if (!$newRef->getBytes()) {
+            $newRef->setBytes($uploadedFile->getClientSize());
         }
 
         //the newly uploaded file is now the original reference
         //TODO: make this optional, there may already be an original
         //update this to allow the client to specify
         $newRef->setOriginal(true);
-        $newRef->setRepresentation("original");
+        $newRef->setRepresentation('original');
         $newRef->setQuality(1);
 
         //set new content
         $resource->content->addFile($newRef);
 
         //if this is the original reference, set the status properly
-        if ("original" === $newRef->getRepresentation()) {
+        if ('original' === $newRef->getRepresentation()) {
             $resource->setStatus(Resource::STATUS_AWAITING_PROCESSING);
         } else {
             $resource->setStatus(Resource::STATUS_NORMAL);
@@ -172,14 +173,14 @@ class FileUploadContentSubscriber implements EventSubscriberInterface
     protected function cleanUploadedFilename($name)
     {
         //if there's an extension, save it, and call it "original"
-        $exp = explode(".", $name);
+        $exp = explode('.', $name);
         if (count($exp > 1)) {
             $ext = end($exp);
 
             return 'original.' . $ext;
         }
 
-        return "original";
+        return 'original';
     }
 
 }
