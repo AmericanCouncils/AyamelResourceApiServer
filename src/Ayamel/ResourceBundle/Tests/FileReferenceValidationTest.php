@@ -4,8 +4,6 @@ namespace Ayamel\ResourceBundle\Tests;
 
 use Ayamel\ApiBundle\ApiTestCase;
 use Symfony\Component\DependencyInjection\Container;
-use Ayamel\ResourceBundle\Document\Resource;
-use Ayamel\ResourceBundle\Document\ContentCollection;
 use Ayamel\ResourceBundle\Document\FileReference;
 
 /**
@@ -27,7 +25,6 @@ class FileReferenceValidationTest extends ApiTestCase
             'foo' => 3,
             'bar' => 4
         ));
-        
         
         $errors = $v->validate($ref);
         $this->assertSame(1, count($errors));

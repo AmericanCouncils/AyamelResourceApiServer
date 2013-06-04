@@ -109,6 +109,14 @@ class OEmbed
      * @JMS\Type("string")
      */
     public $html;
+    
+    /**
+     * The source URL of the image, if the embedded content is an image.
+     *
+     * @MongoDB\String
+     * @JMS\Type("string")
+     */
+    public $url;
 
     /**
      * The height in pixels required to display the HTML.
