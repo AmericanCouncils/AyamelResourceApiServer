@@ -38,5 +38,5 @@ class RelationAttributesValidator extends ConstraintValidator
                 $this->context->addViolationAt('attributes', $error->getMessage());
             }
         }
-    }   
+    }
 }

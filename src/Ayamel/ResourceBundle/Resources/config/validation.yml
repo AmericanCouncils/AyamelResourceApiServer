@@ -88,7 +88,7 @@ Ayamel\ResourceBundle\Document\Origin:
                 max: 10000
         uri:
             - Url:
-                - protocols: [http, https, ftp, git, geo, nfs, irc, ircs, rtmp, svn, ws, wss]
+                protocols: [http, https, ftp, git, geo, nfs, irc, ircs, rtmp, svn, ws, wss]
             - Type: 
                 type: string
             - Length:
@@ -254,7 +254,7 @@ Ayamel\ResourceBundle\Document\FileReference:
 
 Ayamel\ResourceBundle\Document\Relation:
     constraints:
-        Ayamel\ResourceBundle\Validation\RelationAttributesConstraint: ~
+        - Ayamel\ResourceBundle\Validation\RelationAttributesConstraint: ~
     properties:
         objectId:
             - NotBlank: ~
