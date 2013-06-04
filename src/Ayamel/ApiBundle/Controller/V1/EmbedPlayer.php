@@ -6,7 +6,17 @@ use Ayamel\ApiBundle\Controller\ApiController;
 
 class EmbedPlayer extends ApiController
 {
-    public function executeAction($id, $token)
+    /**
+     * Should return an iframe-embeddable media player appropriate to the type of Resource.
+     *
+     * @ApiDoc(
+     *      resource=true,
+     *      description="Embed media player."
+     * );
+     * 
+     * @param string $id The id of the Resource to view.
+     */
+    public function executeAction($id)
     {
         throw $this->createHttpException(501);
     }

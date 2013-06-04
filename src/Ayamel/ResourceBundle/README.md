@@ -1,13 +1,7 @@
 # AyamelResourceBundle #
 
 This bundle defines the base Resource objects and provides MongoDB mappings for data persistence, as well as custom repository classes
-for common operations.
+for common operations.  It also maps the models for JMS Serialization, and validation.  There is some custom validation implemented for `FileReference` and `Relation` documents.
 
-It also provides a pluggable mechanism for deriving resource documents from external sources.
+It also provides a pluggable mechanism for deriving resource documents from URIs.
 	
-## Todo list ##
-
-* Remove references to old validation stuff
-* implement bytes property of FileReference in API logic properly
-* Make HEAD requests on http/https URI/files to get mime/bytes info
-* Test Providers (where possible) and DelegatingProvider

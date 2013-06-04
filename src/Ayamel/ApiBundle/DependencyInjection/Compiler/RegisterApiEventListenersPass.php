@@ -1,14 +1,16 @@
 <?php
 
-/*
- * This... totally copy/pasted from Symfony/Bundle/FrameworkBundle/DependencyInjection/Compiler/RegisterKernelListenersPass.php
- */
-
 namespace Ayamel\ApiBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 
+/**
+ * Registers listeners for Ayamel API events.
+ *
+ * @package AyamelApiBundle
+ * @author Evan Villemez
+ */
 class RegisterApiEventListenersPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
