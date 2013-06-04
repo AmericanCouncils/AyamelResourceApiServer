@@ -51,11 +51,18 @@ parameters:
         Ayamel\ResourceBundle\Validation\File\DataAttributes: []
 
     ayamel.resource.relation_attribute_validation_map:
-        PART_OF: Ayamel\ResourceBundle\Validation\Relation\PartOf
-        REQUIRES: Ayamel\ResourceBundle\Validation\Relation\Requires
-        DERIVED_FROM: Ayamel\ResourceBundle\Validation\Relation\DerivedFrom
+        depends_on: ~
+        requires: ~
+        derived_from: ~
+        part_of: Ayamel\ResourceBundle\Validation\Relation\PartOfAttributes
 
 services:
+    ayamel.resource.relation_attributes_validator:
+        class: Ayamel\ResourceBundle\Validation\RelationAttributesValidator
+        arguments: [@validator, %ayamel.resource.relation_attribute_validation_map%]
+        tags:
+            - { name: validator.constraint_validator, alias: relation_attributes_validator }
+    
     ayamel.resource.file_attributes_validator:
         class: Ayamel\ResourceBundle\Validation\FileAttributesValidator
         arguments: [@validator, %ayamel.resource.file_attribute_validation_map%]

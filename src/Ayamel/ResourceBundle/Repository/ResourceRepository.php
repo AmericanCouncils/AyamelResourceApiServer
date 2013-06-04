@@ -24,10 +24,6 @@ class ResourceRepository extends DocumentRepository
 	public function deleteResource(Resource $resource) {
         //unset all fields (for now)
 
-        //TODO: preserve some fields ?
-        // - client object
-        // - date added
-
         foreach (get_class_methods($resource) as $method) {
             if (0 === strpos($method, 'set')) {
                 $resource->$method(null);

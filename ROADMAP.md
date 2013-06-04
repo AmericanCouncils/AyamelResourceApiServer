@@ -4,6 +4,7 @@ This is for general direction only - anything specific should be discussed, and 
 
 ## near term ##
 
+* relation attributes validation
 * document `parameters.default.yml` properly
 * review docs for API routes
 * integrate with travis-ci
