@@ -25,7 +25,7 @@ class ClientObjectValidator
 
     private $validator;
 
-    private $graph = array();    
+    private $graph = array();
 
     /**
      * Constructor needs dependency JMS related objects.
@@ -53,9 +53,9 @@ class ClientObjectValidator
     {
         $this->graph($className);
         $this->validateObjectData($this->normalizeRequestData($request), $className);
-        
+
         $object = $this->serializer->deserialize($this->getJsonFromClient($request), $className, 'json');
-        
+
         if ($this->validator) {
             $errors = $this->validator->validate($object);
             if (count($errors) > 0) {
@@ -94,7 +94,7 @@ class ClientObjectValidator
                 throw new HttpException(400, $msg);
             }
         }
-        
+
         return $originalObject;
     }
 
@@ -112,7 +112,7 @@ class ClientObjectValidator
             //check each property for the class
             foreach ($meta->propertyMetadata as $property) {
                 $name = isset($property->serializedName) ? $property->serializedName : $property->name;
-                
+
                 //HACK: to support JMS SerializerBunder PRE 1.0 split into separate library
                 $type = is_string($property->type) ? $property->type : $property->type['name'];
 
@@ -170,7 +170,7 @@ class ClientObjectValidator
         } catch (\ReflectionException $e) {
             return;
         }
-        
+
         if (!$clientData) {
             return;
         }
@@ -178,12 +178,12 @@ class ClientObjectValidator
         $invalidFields = array();
         foreach ($jmsMetadata->propertyMetadata as $property) {
             $name = isset($property->serializedName) ? $property->serializedName : $property->name;
-            
+
             //check if not exists
             if (!array_key_exists($name, $clientData)) {
                 continue;
             }
-            
+
             //read only check
             if ($property->readOnly && isset($clientData[$name])) {
                 $invalidFields[] = $name;
@@ -265,7 +265,7 @@ class ClientObjectValidator
                     break;
                 }
             }
-        
+
             if (!$found) {
                 $invalidFields[] = $name;
             }
@@ -299,5 +299,5 @@ class ClientObjectValidator
 
         throw new HttpException(400, "Could not reliably decode data.");
     }
-    
+
 }

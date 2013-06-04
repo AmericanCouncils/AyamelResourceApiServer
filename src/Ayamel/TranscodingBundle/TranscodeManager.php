@@ -67,14 +67,14 @@ class TranscodeManager
         $this->defaultMapperConfig = $defaultMapperConfig;
         $this->tmpDirectory = $tmpDirectory;
     }
-    
+
     /**
      * Transcode original files in a specific resource, given it's ID, and some configuration.
      *
-     * @param string $id 
-     * @param boolean $appendFiles 
-     * @param array $presetFilter 
-     * @param array $mimeFilter 
+     * @param  string  $id
+     * @param  boolean $appendFiles
+     * @param  array   $presetFilter
+     * @param  array   $mimeFilter
      * @return boolean
      */
     public function transcodeResource($id, $appendFiles = false, $presetFilter = array(), $mimeFilter = array())
@@ -158,12 +158,12 @@ class TranscodeManager
 
                 //add file into filesystem (will move it to final location)
                 $finalReference = $this->filesystem->addFileForId($resource->getId(), $newFileReference, $newBaseName, false, FilesystemInterface::CONFLICT_OVERWRITE);
-                
+
                 //check for full-mime string, add it if not set
                 if (!$finalReference->getMime()) {
                     $finalReference->setMime($finalReference->getMimeType());
                 }
-                
+
                 //store good file reference in array
                 $newFiles[] = $finalReference;
             }

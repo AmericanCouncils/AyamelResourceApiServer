@@ -43,7 +43,7 @@ class Client
      * @JMS\ReadOnly
      */
     protected $uri;
-    
+
     /**
      * An optional reference to a specific user in a remote system.
      *

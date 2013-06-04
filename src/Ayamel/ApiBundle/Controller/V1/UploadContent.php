@@ -179,7 +179,7 @@ class UploadContent extends ApiController
                 $manager = $this->get('doctrine_mongodb')->getManager();
                 $manager->persist($resource);
                 $manager->flush();
-                
+
                 //notify system
                 $apiDispatcher->dispatch(Events::RESOURCE_MODIFIED, new ApiEvent($resource));
             } catch (\Exception $e) {

@@ -5,7 +5,6 @@ namespace Ayamel\ResourceBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Ayamel\ResourceBundle\DependencyInjection\Compiler\RegisterProviderDelegatesPass;
-use Ayamel\ResourceBundle\DependencyInjection\Compiler\RegisterManagerEventListenersPass;
 
 class AyamelResourceBundle extends Bundle
 {

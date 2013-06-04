@@ -3,7 +3,6 @@
 namespace Ayamel\ResourceBundle\Tests;
 
 use Ayamel\ApiBundle\ApiTestCase;
-use Symfony\Component\DependencyInjection\Container;
 use Ayamel\ResourceBundle\Document\FileReference;
 
 /**
@@ -14,7 +13,7 @@ class FileReferenceValidationTest extends ApiTestCase
     public function testThrowExceptionValidatingUnknownMime()
     {
         $v = $this->getContainer()->get('validator');
-        
+
         $ref = new FileReference();
         $ref->setDownloadUri("http://example.org/foo.mp3");
         $ref->setBytes(100);
@@ -25,12 +24,12 @@ class FileReferenceValidationTest extends ApiTestCase
             'foo' => 3,
             'bar' => 4
         ));
-        
+
         $errors = $v->validate($ref);
         $this->assertSame(1, count($errors));
         $this->assertSame('mimeType', $errors[0]->getPropertyPath());
     }
-    
+
     public function testValidateVideoAttributes()
     {
         $v = $this->getContainer()->get('validator');
@@ -47,21 +46,21 @@ class FileReferenceValidationTest extends ApiTestCase
             'resolutionY' => 400,
             'averageBitrate' => 44000
         ));
-        
+
         $errors = $v->validate($ref);
         $this->assertSame(0, count($errors));
-        
+
         $ref->setAttributes(array(
             'duration' => 3.14159,
             'resolutionX' => 600,
             'resolutionY' => 400,
             'averageBitrate' => 44000
         ));
-            
+
         $errors = $v->validate($ref);
         $this->assertSame(1, count($errors));
     }
-    
+
     public function testValidateAudioAttributes()
     {
         $v = $this->getContainer()->get('validator');
@@ -76,15 +75,15 @@ class FileReferenceValidationTest extends ApiTestCase
             'duration' => 1000,
             'averageBitrate' => 44000
         ));
-        
+
         $errors = $v->validate($ref);
         $this->assertSame(0, count($errors));
-        
+
         $ref->setAttributes(array(
             'duration' => 3.14159,
             'averageBitrate' => 44000
         ));
-            
+
         $errors = $v->validate($ref);
         $this->assertSame(1, count($errors));
     }

@@ -12,7 +12,7 @@ namespace Ayamel\ResourceBundle\Validation;
 abstract class AbstractAttributes
 {
     protected $extraFields = array();
-    
+
     public static function createFromArray(array $data)
     {
         $obj = new static();
@@ -23,10 +23,10 @@ abstract class AbstractAttributes
                 $extraFields[] = $key;
             }
         }
-        
+
         return $obj;
     }
-    
+
     public function getExtraFields()
     {
         return $this->extraFields;

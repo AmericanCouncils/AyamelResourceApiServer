@@ -34,7 +34,7 @@ class ModifyResource extends ApiController
         if ($resource->isDeleted()) {
             return $this->returnDeletedResource($resource);
         }
-        
+
         //use object validation service to modify the existing object
         $modifiedResource = $this->container->get('ac.webservices.object_validator')->modifyObjectFromRequest('Ayamel\ResourceBundle\Document\Resource', $this->getRequest(), $resource);
 

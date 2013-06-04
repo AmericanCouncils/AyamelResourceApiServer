@@ -9,7 +9,7 @@ class GetResource extends ApiController
 {
 
     /**
-     * Returns a resources object structure by its ID. By default this will also return Relations created by the Resource owner and 
+     * Returns a resources object structure by its ID. By default this will also return Relations created by the Resource owner and
      * requesting client.
      *
      * @ApiDoc(
@@ -29,12 +29,12 @@ class GetResource extends ApiController
         //get the resource
         $resource = $this->getRequestedResourceById($id);
         $request = $this->getRequest();
-        
+
         //check for deleted resource
         if ($resource->isDeleted()) {
             return $this->returnDeletedResource($resource);
         }
-        
+
         //add relations default relations, unless told not to
         if ($request->get('relations', null) !== 'false') {
 
