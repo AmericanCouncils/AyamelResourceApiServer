@@ -1,10 +1,10 @@
 <?php
 
-namespace Ayamel\ClientBundle;
+namespace Ayamel\ClientBundle\Loader;
 
 use Symfony\Component\HttpFoundation\Request;
 
-class ClientLoader
+class ConfigClientLoader implements ClientLoaderInterface
 {
     protected $data;
     
