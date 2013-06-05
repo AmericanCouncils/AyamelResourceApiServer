@@ -4,14 +4,6 @@ This bundle provides generic api workflow tools for developing RESTful apis.  Pr
 
 *Warning:*  This bundle may be removed in the future, and replaced with `FOSRestBundle`.  This may or may not be done, depending on where development with bundle that is heading.
 
-## Installation ##
-
-0. Add `ac/web-services-bundle` to your `composer.json`
-1. Run `composer install`
-2. Register `AC\WebServicesBundle\ACWebServicesBundle()` in your app kernel
-3. Import `@ACWebServiceBundle/Resources/config/config.yml` in your app config
-4. Clear caches
-	
 ## Usage ##
 
 To activate the event listeners that handle API requests, provide the `ac.webservices.api_paths` config to specify an array of API routes you want to be handled.  If it matches, event listeners will be added to invoke content format negotiation, error handling, and view handling, which will allow you to return raw data structures and objects that will automatically be encoded into the requested format.
@@ -96,7 +88,7 @@ If an HTTP exception is thrown from the controllers, the messages and codes are 
 the bundle will convert it into an `HttpException` with a `500` response code and default *"Internal Server Error"* message.
 
 This behavior is also configurable - you can specify a map of other exception classes, and the http code and message that should
-be returned in their stead.
+be returned instead.
 
 Exceptions return the response data structure described above, for example:
 
@@ -141,10 +133,3 @@ objects from a client's incoming request.
         $this->container->get('ac.webservices.object_validator')->modifyObjectFromRequest($this->getRequest(), 'MyBundle\Namespaced\Class', $previousObject);
         
         // ... $previousObject now contains the modifications from the incoming data
-
-## Todo list ##
-
-* Properly unit test client object validator, tests are currently done via integration tests in the AyamelApiBundle
-    * Take into account JMS Exclusion Policies / Groups
-    * Take into account JMS getter/setter annotation
-

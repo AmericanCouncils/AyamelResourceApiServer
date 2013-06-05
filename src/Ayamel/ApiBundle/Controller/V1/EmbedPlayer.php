@@ -3,6 +3,7 @@
 namespace Ayamel\ApiBundle\Controller\V1;
 
 use Ayamel\ApiBundle\Controller\ApiController;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 class EmbedPlayer extends ApiController
 {

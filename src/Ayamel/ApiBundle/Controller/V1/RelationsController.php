@@ -23,7 +23,7 @@ class RelationsController extends ApiController
      * @ApiDoc(
      *      resource=true,
      *      output="Ayamel\ResourceBundle\Document\Relation",
-     *      description="Get/filter Relations for Resource"
+     *      description="Get/filter Relations for Resource",
      *      filters={
      *          {"name"="_format", "default"="json", "description"="Return format, can be one of xml, yml or json"},
      *          {"name"="type", "description"="Limit returned Resources to a certain type."},
@@ -31,7 +31,7 @@ class RelationsController extends ApiController
      *          {"name"="client", "description"="Limit returned Relations to those owned by a specific user an API client."},
      *          {"name"="client_user", "description"="Limit returned Relations to those owned by a specific user an API client."},
      *          {"name"="limit", "default"=50, "description"="Limit the number of ids to return."},
-     *          {"name"="skip", "default"=0, "description"="Number of results to skip. Use this for paginating results."}
+     *          {"name"="skip", "default"=0, "description"="Number of results to skip. Use this for paginating results."},
      *          {"name"="order", "default"=-1, "description"="Set to '1' for ascending, or '-1' for descending"},
      *      }
      * );
