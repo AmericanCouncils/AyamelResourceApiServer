@@ -7,7 +7,7 @@ use JMS\Serializer\Annotation as JMS;
 
 /**
  * Relation object that describes a type of relationship between two resource objects.
- * 
+ *
  * @MongoDB\Document(
  *      collection="relations",
  *      repositoryClass="Ayamel\ResourceBundle\Repository\RelationRepository"
@@ -44,7 +44,7 @@ class Relation
      * @JMS\Type("string")
      */
     protected $objectId;
-    
+
     /**
      * The type of the Relation.  Valid types include:
      *
@@ -64,13 +64,13 @@ class Relation
      * @JMS\Type("array")
      */
     protected $attributes = array();
-    
+
     /**
      * An object containing information about the API client that created the Resource.
      *
      * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\Client")
      * @JMS\Type("Ayamel\ResourceBundle\Document\Client")
-     */    
+     */
     protected $client;
 
     /**
@@ -82,7 +82,7 @@ class Relation
     {
         return $this->id;
     }
-    
+
     /**
      * Get subjectId
      *
@@ -214,7 +214,7 @@ class Relation
     {
         return isset($this->attributes[$key]);
     }
-    
+
     /**
      * Get client
      *
@@ -224,11 +224,11 @@ class Relation
     {
         return $this->client;
     }
-    
+
     /**
      * Set the client
      *
-     * @param Client $client 
+     * @param Client $client
      */
     public function setClient(Client $client)
     {

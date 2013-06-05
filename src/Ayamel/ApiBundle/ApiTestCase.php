@@ -5,7 +5,6 @@ namespace Ayamel\ApiBundle;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\StringInput;
-use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\Console\Output\NullOutput;
 
 abstract class ApiTestCase extends WebTestCase
@@ -13,16 +12,16 @@ abstract class ApiTestCase extends WebTestCase
     /**
      * Shortcut to get client
      */
-	protected function getClient()
+    protected function getClient()
     {
         $client = static::createClient(array(
             'environment' => 'test',
             'debug' => true
         ));
-            
+
         return $client;
     }
-    
+
     /**
      * Shortcut to run a CLI command - returns a... ?
      */
@@ -32,9 +31,10 @@ abstract class ApiTestCase extends WebTestCase
         $k = $this->createKernel();
         $app = new Application($k);
         $app->setAutoExit(false);
+
         return $app->run(new StringInput($string), new NullOutput());
     }
-    
+
     /**
      * Shortcut to get the Container
      */
@@ -42,9 +42,10 @@ abstract class ApiTestCase extends WebTestCase
     {
         $k = $this->createKernel();
         $k->boot();
+
         return $k->getContainer();
     }
-    
+
     /**
      * Shortcut to make a request and get the returned Response instance.
      */
@@ -54,12 +55,12 @@ abstract class ApiTestCase extends WebTestCase
             'environment' => 'test',
             'debug' => true
         ));
-        
+
         $client->request($method, $uri, $params, $files, $server, $content, $changehistory);
-        
+
         return $client->getResponse();
     }
-    
+
     /**
      * Shortcut to make a request and get the json_decoded response content
      */
@@ -67,5 +68,5 @@ abstract class ApiTestCase extends WebTestCase
     {
         return json_decode($this->getResponse($method, $uri, $params, $files, $server, $content, $changehistory)->getContent(), true);
     }
-    
+
 }

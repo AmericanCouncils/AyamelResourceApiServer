@@ -6,6 +6,12 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 
+/**
+ * Registers services for deriving Resources from arbitrary URIs
+ *
+ * @package AyamelResourceBundle
+ * @author Evan Villemez
+ */
 class RegisterProviderDelegatesPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)

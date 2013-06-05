@@ -4,11 +4,10 @@ namespace Ayamel\ResourceBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use JMS\Serializer\Annotation as JMS;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * This is a reference to a specific user in a client system (optional).
- * 
+ *
  * @MongoDB\EmbeddedDocument
  *
  * @package AyamelResourceBundle

@@ -72,7 +72,7 @@ class RemoteFilesContentSubscriber implements EventSubscriberInterface
                 if (count($errors) > 0) {
                     throw new \InvalidArgumentException(implode("; ", iterator_to_array($errors)));
                 }
-                
+
                 $remoteFiles[] = $newFileRef;
             }
         } catch (\Exception $e) {

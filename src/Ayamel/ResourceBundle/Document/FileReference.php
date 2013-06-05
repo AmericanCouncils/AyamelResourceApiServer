@@ -37,7 +37,7 @@ class FileReference
      * @JMS\Exclude
      */
     protected $internalUri;
-    
+
     /**
      * Size of the file in bytes
      *
@@ -97,7 +97,7 @@ class FileReference
 
     /**
      * A key/val hash of attributes, relevant to the `mimeType` of the file.
-     * 
+     *
      *  //TODO: Needs to be clearly document what valid values are per type
      *
      * @MongoDB\Hash
@@ -275,17 +275,17 @@ class FileReference
     {
         return isset($this->attributes[$key]);
     }
-    
+
     /**
      * Set file size in bytes
      *
-     * @param integer $bytes 
+     * @param integer $bytes
      */
     public function setBytes($bytes)
     {
         $this->bytes = $bytes;
     }
-    
+
     /**
      * Get file size in bytes
      *
@@ -397,7 +397,7 @@ class FileReference
         if (null === $this->quality) {
             $this->quality = 0;
         }
-        
+
         if (null === $this->mime) {
             $this->mime = $this->mimeType;
         }

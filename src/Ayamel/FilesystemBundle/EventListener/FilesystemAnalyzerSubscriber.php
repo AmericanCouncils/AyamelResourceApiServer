@@ -1,6 +1,6 @@
 <?php
 
-namespace Ayamel\FilesystemBundle\EventListenener;
+namespace Ayamel\FilesystemBundle\EventListener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Ayamel\FilesystemBundle\Event\Events;

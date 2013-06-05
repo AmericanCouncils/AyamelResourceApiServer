@@ -8,12 +8,6 @@ use Ayamel\ResourceBundle\Document\Client;
 use Ayamel\ApiBundle\Controller\ApiController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
-/**
- * Resource Relations CRUD controller.
- *
- * @package AyamelApiBundle
- * @author Evan Villemez
- */
 class RelationsController extends ApiController
 {
     /**
@@ -29,29 +23,39 @@ class RelationsController extends ApiController
      * @ApiDoc(
      *      resource=true,
      *      output="Ayamel\ResourceBundle\Document\Relation",
-     *      description="Get/filter Relations for Resource"
-     * )
+     *      description="Get/filter Relations for Resource",
+     *      filters={
+     *          {"name"="_format", "default"="json", "description"="Return format, can be one of xml, yml or json"},
+     *          {"name"="type", "description"="Limit returned Resources to a certain type."},
+     *          {"name"="object", "description"="Limit returned Relations to ones with a specific `objectId`."},
+     *          {"name"="client", "description"="Limit returned Relations to those owned by a specific user an API client."},
+     *          {"name"="client_user", "description"="Limit returned Relations to those owned by a specific user an API client."},
+     *          {"name"="limit", "default"=50, "description"="Limit the number of ids to return."},
+     *          {"name"="skip", "default"=0, "description"="Number of results to skip. Use this for paginating results."},
+     *          {"name"="order", "default"=-1, "description"="Set to '1' for ascending, or '-1' for descending"},
+     *      }
+     * );
      *
-     * @param  string $id
+     * @param string $id
      */
     public function getResourceRelations($id)
     {
         $resource = $this->getRequestedResourceById($id);
         $request = $this->getRequest();
-        
+
         if ($resource->isDeleted()) {
             return $this->returnDeletedResource($resource);
         }
-        
+
         $filters = array();
-        
+
         //TODO: only get the relations the requesting client is allowed to see
-        
+
         //check for type filter
         if ($types = $request->query->get('type', false)) {
             $filters['type'] = explode(',', $types);
         }
-        
+
         //get the relations into an array
         $repo = $this->getRepo('AyamelResourceBundle:Relation');
         $relations = $repo->getRelationsForResource($resource->getId(), $filters);
@@ -61,7 +65,7 @@ class RelationsController extends ApiController
                 $rels[] = $rel;
             }
         }
-        
+
         return $this->createServiceResponse(array(
             'relations' => $rels
         ), 200);
@@ -89,31 +93,31 @@ class RelationsController extends ApiController
      *      description="Add a Relation between two Resources"
      * )
      *
-     * @param  string $id
+     * @param string $id
      */
     public function createResourceRelation($id)
     {
         $request = $this->getRequest();
-        
+
         //get the resource
         $resource = $this->getRequestedResourceById($id);
         if ($resource->isDeleted()) {
             return $this->returnDeletedResource($resource);
         }
-        
+
         //create the relation submitted by the client
         $relation = $this->container->get('ac.webservices.object_validator')->createObjectFromRequest('Ayamel\ResourceBundle\Document\Relation', $this->getRequest());
-        
+
         //check if the object resource is actually valid
         try {
             $object = $this->getRequestedResourceById($relation->getObjectId());
         } catch (\Exception $e) {
             throw $this->createHttpException(400, "Invalid object id.");
-        }        
+        }
         if ($object->isDeleted()) {
             throw $this->createHttpException(400, "Invalid object id.");
         }
-        
+
         //fill in the other info
         $relation->setSubjectId($resource->getId());
         if (!$relation->getClient()) {
@@ -123,14 +127,13 @@ class RelationsController extends ApiController
             $request::trustProxyData();
             $relation->getClient()->setId($request->getClientIp());
         }
-        
+
         //actually save the relation in storage
         $manager = $this->get('doctrine_mongodb')->getManager();
         $manager->persist($relation);
         $manager->flush();
 
         //TODO: trigger 'modified' in resource - depending on what the relation is (search?)
-        
         return $this->createServiceResponse(array('relation' => $relation), 201);
     }
 
@@ -142,8 +145,8 @@ class RelationsController extends ApiController
      *      description="Delete a Resource Relation"
      * )
      *
-     * @param  string $resourceId
-     * @param  string $relationId
+     * @param string $resourceId
+     * @param string $relationId
      */
     public function deleteResourceRelation($resourceId, $relationId)
     {
@@ -152,27 +155,27 @@ class RelationsController extends ApiController
         if ($resource->isDeleted()) {
             return $this->returnDeletedResource($resource);
         }
-        
+
         //TODO: validate that api client can view the resource
         if (false) {
             throw $this->createHttpException(403, "Not authorized to delete this Relation.");
         }
-        
+
         $repo = $this->getRepo('AyamelResourceBundle:Relation');
         $relation = $repo->find($relationId);
-        
+
         //TODO: verify that the API client owns the Relation
-                
+
         //subjectId and resourceId must match
         if ($relation->getSubjectId() !== $resource->getId()) {
             throw $this->createHttpRequest(400, "The specified Resource must be the subject of this Relation.");
         }
-        
+
         //remove the specific relation
         $manager = $this->getDocManager();
         $manager->remove($relation);
         $manager->flush();
-        
+
         return $this->createServiceResponse(null, 200);
     }
 

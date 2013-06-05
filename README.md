@@ -19,8 +19,8 @@ The project is still in the relatively early stages of development, so there are
 
 The API makes use of certain key concepts that you must understand in order to use it effectively.
 
-* *Resource* - A Resource is basically a metadata container that references actual multimedia content.  Actual content could be a series of files on a server, or links to other resources on the web, such as YouTube videos.
-* *Relation* - A Relation is a metadata structure that defines how one resource relates to another.  Relations are critical because search relies on them.  For example, if you want to search for a video, and there is a transcript of that video, then search will return hits on both the transcript and the video.  This works because of relations - the video is a resource, and the transcript is also a resource, the relation lets the search indexer know that these two resources should reference each other during search.  Relations are also used to define certain types of resources that don't contain actual content.  For example a collection of videos about a particular theme may just contain relations that reference other individual resources.
+* **Resource** - A Resource is basically a metadata container that references actual multimedia content.  Actual content could be a series of files on a server, or links to other resources on the web, such as YouTube videos.
+* **Relation** - A Relation is a metadata structure that defines how one resource relates to another.  Relations are critical because search relies on them.  For example, if you want to search for a video, and there is a transcript of that video, then search will return hits on both the transcript and the video.  This works because of relations - the video is a resource, and the transcript is also a resource, the relation lets the search indexer know that these two resources should reference each other during search.  Relations are also used to define certain types of resources that don't contain actual content.  For example a collection of videos about a particular theme may just contain relations that reference other individual resources.
 
 ## Technologies ##
 
@@ -35,7 +35,7 @@ dd
 
 Contributors are certainly welcome, please start discussions in the issue queue for bugs/feature discussion.
 
-If you will contribute, please follow the [PSR coding standards](), and make sure that new features are covered by thorough unit and/or functional tests.
+If you will contribute, please follow the [PSR coding standards](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md), and make sure that new features are covered by thorough unit and/or functional tests.
 
 ## Tests ##
 
@@ -71,4 +71,4 @@ If you plan on using running the API server in a production deployment - we high
 
 ## Roadmap ##
 
-See `ROADMAP.md` for general tasks that we're currently working, or plan to start soon.  For anything more specific, browse the issue queue.
+See the [issue queue](https://github.com/AmericanCouncils/AyamelResourceApiServer/issues).

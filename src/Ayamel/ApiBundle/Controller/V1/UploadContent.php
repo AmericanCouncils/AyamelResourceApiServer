@@ -12,11 +12,6 @@ use Ayamel\ApiBundle\Event\HandleUploadedContentEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
-/**
- * Receives, validates and process content uploads for a resource object.
- *
- * @author Evan Villemez
- */
 class UploadContent extends ApiController
 {
     /**
@@ -31,7 +26,7 @@ class UploadContent extends ApiController
      *
      * -    Upload a file to be stored by the Ayamel server by providing a file upload via the `file` post field.
      *      Files uploaded in this manner will be automatically scheduled to be transcoded into other web-accessible
-     *      formats, if applicable. (Not implemented yet)
+     *      formats, if applicable.
      *
      * -    Specify a reference to an original file via a public URI, this can be done via the `uri` post field, or
      *      by passing a JSON object with the `uri` key.  The specified uri will be processed to check for availability.
@@ -49,7 +44,9 @@ class UploadContent extends ApiController
      *          }
      *
      * -    Specify an array of file references on a remote file server by passing a JSON object with the `remoteFiles` key
-     *      containing an array of file objects.  These references are stored exactly as received.
+     *      containing an array of file objects.  These references are stored exactly as received.  Note that the content of 
+     *      the `attributes` key is validated depending on the file's `mimeType` property.  TODO: determine proper place to
+     *      document file attributes.
      *
      *          {
      *              "remoteFiles": [
@@ -59,8 +56,8 @@ class UploadContent extends ApiController
      *                      "mimeType": "video/x-ms-wmv",
      *                      "representation": "original",
      *                      "quality": 1,
+     *                      "bytes": 14658,
      *                      "attributes": {
-     *                          "bytes": 14658,
      *                          "duration": 300,
      *                          "frameSize": {"width":720,"height":480},
      *                          "frameRate": 48,
@@ -73,8 +70,8 @@ class UploadContent extends ApiController
      *                      "mimeType": "video/mp4",
      *                      "representation": "transcoded",
      *                      "quality": 1,
+     *                      "bytes": 9600,
      *                      "attributes": {
-     *                          "bytes": 9600,
      *                          "duration": 300,
      *                          "frameSize": {"width":720,"height":480},
      *                          "frameRate": 48,
@@ -179,7 +176,7 @@ class UploadContent extends ApiController
                 $manager = $this->get('doctrine_mongodb')->getManager();
                 $manager->persist($resource);
                 $manager->flush();
-                
+
                 //notify system
                 $apiDispatcher->dispatch(Events::RESOURCE_MODIFIED, new ApiEvent($resource));
             } catch (\Exception $e) {

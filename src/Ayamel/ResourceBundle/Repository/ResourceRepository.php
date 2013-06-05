@@ -13,15 +13,16 @@ use Doctrine\ODM\MongoDB\DocumentRepository;
  */
 class ResourceRepository extends DocumentRepository
 {
-	
+
     /**
      * Deleting a resource does not actually remove it from storage, instead
      * it clears most fields, and stores the date on which it was deleted.
      *
-     * @param Resource $resource 
+     * @param  Resource $resource
      * @return Resource
      */
-	public function deleteResource(Resource $resource) {
+    public function deleteResource(Resource $resource)
+    {
         //unset all fields (for now)
 
         foreach (get_class_methods($resource) as $method) {
@@ -35,6 +36,6 @@ class ResourceRepository extends DocumentRepository
         $resource->setStatus(Resource::STATUS_DELETED);
 
         return $resource;
-	}
+    }
 
 }

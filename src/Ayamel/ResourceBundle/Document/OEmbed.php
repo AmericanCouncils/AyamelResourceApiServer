@@ -20,7 +20,7 @@ class OEmbed
      * @JMS\Type("string")
      */
     public $type;
-    
+
     /**
      * The oEmbed version number. This must be 1.0.
      *
@@ -102,14 +102,14 @@ class OEmbed
     public $cache_age;
 
     /**
-     * The HTML required to embed a media player. The HTML should have no padding or margins. Consumers may wish 
+     * The HTML required to embed a media player. The HTML should have no padding or margins. Consumers may wish
      * to load the HTML in an off-domain iframe to avoid XSS vulnerabilities.
      *
      * @MongoDB\String
      * @JMS\Type("string")
      */
     public $html;
-    
+
     /**
      * The source URL of the image, if the embedded content is an image.
      *

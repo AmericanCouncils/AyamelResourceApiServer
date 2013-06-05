@@ -1,1 +1,0 @@
-Add custom presets for Resource library formats in here, register them as services with `transcoding.preset` tags

@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ContentUploadIntegrationTest extends ApiTestCase
 {
-    
+
     //a series of test as this is a one-time-use url
     public function testGetUploadUrl()
     {
@@ -14,26 +14,26 @@ class ContentUploadIntegrationTest extends ApiTestCase
             'title' => 'test',
             'type' => 'data'
         );
-        
+
         $response = $this->getJson('POST', '/api/v1/resources', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($data));
         $this->assertFalse(isset($response['resource']['content']));
-        
+
         $resourceId = $response['resource']['id'];
         $apiPath = substr($response['content_upload_url'], strlen('http://localhost'));
-        
+
         //hit the path with empty request, expect 422 (unprocessable) - then 401 on subsequent requests
         $response = $this->getResponse('POST', $apiPath);
         $this->assertSame(422, $response->getStatusCode());
         $content = json_decode($response->getContent(), true);
         $this->assertSame(422, $content['response']['code']);
-        
+
         $response = $this->getResponse('POST', $apiPath);
         $this->assertSame(401, $response->getStatusCode());
         $content = json_decode($response->getContent(), true);
         $this->assertSame(401, $content['response']['code']);
-        
+
         //now get a new one-time url
         $response = $this->getResponse('GET', '/api/v1/resources/'.$resourceId."/request-upload-url");
         $this->assertSame(200, $response->getStatusCode());
@@ -41,12 +41,12 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $this->assertSame(200, $content['response']['code']);
         $this->assertTrue(isset($content['content_upload_url']));
         $uploadUrl = substr($content['content_upload_url'], strlen('http://localhost'));
-        
+
         $response = $this->getResponse('POST', $uploadUrl);
         $this->assertSame(422, $response->getStatusCode());
         $content = json_decode($response->getContent(), true);
         $this->assertSame(422, $content['response']['code']);
-        
+
         $response = $this->getResponse('POST', $uploadUrl);
         $this->assertSame(401, $response->getStatusCode());
         $content = json_decode($response->getContent(), true);
@@ -59,16 +59,16 @@ class ContentUploadIntegrationTest extends ApiTestCase
             'title' => 'test',
             'type' => 'data'
         );
-        
+
         $response = $this->getJson('POST', '/api/v1/resources', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($data));
         $this->assertFalse(isset($response['resource']['content']));
         $this->assertSame('awaiting_content', $response['resource']['status']);
-        
+
         $resourceId = $response['resource']['id'];
         $apiPath = substr($response['content_upload_url'], strlen('http://localhost'));
-        
+
         $data = array(
             'remoteFiles' => array(
                 array(
@@ -102,12 +102,12 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $response = $this->getJson('POST', $apiPath, array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($data));
-        
+
         $this->assertSame(200, $response['response']['code']);
         $this->assertSame($data['remoteFiles'], $response['resource']['content']['files']);
         $this->assertSame('normal', $response['resource']['status']);
     }
-    
+
     public function testUploadContentAsFile()
     {
         //get content upload url
@@ -115,14 +115,14 @@ class ContentUploadIntegrationTest extends ApiTestCase
             'title' => 'test',
             'type' => 'data'
         );
-        
+
         $response = $this->getJson('POST', '/api/v1/resources', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($data));
         $this->assertFalse(isset($response['resource']['content']));
         $resourceId = $response['resource']['id'];
         $uploadUrl = substr($response['content_upload_url'], strlen('http://localhost'));
-        
+
         //create uploaded file
         $testFilePath = __DIR__."/files/resource_test_files/lorem.txt";
         $uploadedFile = new UploadedFile(
@@ -131,9 +131,9 @@ class ContentUploadIntegrationTest extends ApiTestCase
             'text/plain',
             filesize($testFilePath)
         );
-        
+
         $content = $this->getJson('POST', $uploadUrl, array(), array('file' => $uploadedFile));
-        
+
         $this->assertSame(202, $content['response']['code']);
         $this->assertSame('awaiting_processing', $content['resource']['status']);
         $this->assertSame($data['title'], $content['resource']['title']);
@@ -145,14 +145,14 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $this->assertSame('text/plain', $data['mimeType']);
         $this->assertSame(filesize($testFilePath), $data['bytes']);
     }
-    
+
     public function testUploadAndTranscodeFile()
     {
         $data = array(
             'title' => 'test',
             'type' => 'data'
         );
-        
+
         $response = $this->getJson('POST', '/api/v1/resources', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($data));
@@ -160,7 +160,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $this->assertSame('awaiting_content', $response['resource']['status']);
         $resourceId = $response['resource']['id'];
         $uploadUrl = substr($response['content_upload_url'], strlen('http://localhost'));
-        
+
         //create uploaded file
         $testFilePath = __DIR__."/files/resource_test_files/lorem.txt";
         $uploadedFile = new UploadedFile(
@@ -169,9 +169,9 @@ class ContentUploadIntegrationTest extends ApiTestCase
             'text/plain',
             filesize($testFilePath)
         );
-        
+
         $content = $this->getJson('POST', $uploadUrl, array(), array('file' => $uploadedFile));
-        
+
         $this->assertSame(202, $content['response']['code']);
         $this->assertSame('awaiting_processing', $content['resource']['status']);
         $this->assertSame($data['title'], $content['resource']['title']);
@@ -183,15 +183,15 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $this->assertSame('text/plain', $data['mime']);
         $this->assertSame('text/plain', $data['mimeType']);
         $this->assertSame(filesize($testFilePath), $data['bytes']);
-        
+
         //now run transcode command directly
         $this->runCommand(sprintf('api:resource:transcode %s --force', $resourceId));
-        
+
         //now get resource - expect 2 files and changed status
         $json = $this->getJson('GET', '/api/v1/resources/'.$resourceId, array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ));
-        
+
         $expected = array(
             'mime' => 'text/plain',
             'mimeType' => 'text/plain',
@@ -210,10 +210,10 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $this->assertSame($expected['quality'], $transcoded['quality']);
         $this->assertSame($expected['bytes'], $transcoded['bytes']);
         $this->assertTrue(isset($transcoded['downloadUri']));
-        
+
         //hit one-time url again to make sure it expired
         $response = $this->getResponse('POST', $uploadUrl, array(), array('file' => $uploadedFile));
         $this->assertSame(401, $response->getStatusCode());
     }
-    
+
 }

@@ -11,22 +11,22 @@ use Ayamel\ResourceBundle\Document\ClientUser;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * WARNING: This isn't the best way to test this - ideally it should be done via unit tests in the 
+ * WARNING: This isn't the best way to test this - ideally it should be done via unit tests in the
  * ACWebServicesBundle.  As that would require significant setup, and it needs to be tested now, I'm
  * cheating and writing an application specific test by pulling the service from the container.
  */
 class ClientObjectValidatorTest extends ApiTestCase
 {
-	public function testGetService()
+    public function testGetService()
     {
         $c = $this->getContainer();
-        
+
         $this->assertTrue($c instanceof Container);
         $validator = $c->get('ac.webservices.object_validator');
         $this->assertNotNull($validator);
         $this->assertTrue($validator instanceof ClientObjectValidator);
     }
-    
+
     public function testCreateObjectFromRequest()
     {
         $c = $this->getContainer();
@@ -48,7 +48,7 @@ class ClientObjectValidatorTest extends ApiTestCase
         $request = Request::create('/foo/bar', 'POST', array(), array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($requestData));
-        
+
         $resource = $validator->createObjectFromRequest('Ayamel\ResourceBundle\Document\Resource', $request);
         $this->assertTrue($resource instanceof Resource);
         $this->assertSame($resource->getTitle(), $requestData['title']);
@@ -59,7 +59,7 @@ class ClientObjectValidatorTest extends ApiTestCase
         $this->assertSame($resource->getType(), $requestData['type']);
         $this->assertSame($resource->getClient()->getUser()->getId(), $requestData['client']['user']['id']);
     }
-    
+
     public function testModifyObjectFromRequest()
     {
         $resource = new Resource;
@@ -69,7 +69,7 @@ class ClientObjectValidatorTest extends ApiTestCase
         $resource->setClient(new Client);
         $resource->getClient()->setUser(new ClientUser);
         $resource->getClient()->getUser()->setId('baz');
-        
+
         $c = $this->getContainer();
         $validator = $c->get('ac.webservices.object_validator');
         $requestData = array(
@@ -85,7 +85,7 @@ class ClientObjectValidatorTest extends ApiTestCase
                 )
             )
         );
-        
+
         $request = Request::create('/foo/bar', 'POST', array(), array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($requestData));
@@ -99,12 +99,12 @@ class ClientObjectValidatorTest extends ApiTestCase
         $this->assertSame($resource->getFunctionalDomains(), $requestData['functionalDomains']);
         $this->assertSame($resource->getType(), $requestData['type']);
         $this->assertSame($resource->getClient()->getUser()->getId(), $requestData['client']['user']['id']);
-        
+
         //modify again
         $changes = array(
             'client' => null
         );
-        
+
         $request = Request::create('/foo/bar', 'POST', array(), array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($changes));
@@ -119,7 +119,7 @@ class ClientObjectValidatorTest extends ApiTestCase
         $this->assertSame($resource->getType(), $requestData['type']);
         $this->assertNull($resource->getClient());
     }
-    
+
     public function testThrowExceptionReadOnlyFields()
     {
         $c = $this->getContainer();
@@ -141,11 +141,11 @@ class ClientObjectValidatorTest extends ApiTestCase
         $request = Request::create('/foo/bar', 'POST', array(), array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($requestData));
-        
+
         $this->setExpectedException('Symfony\Component\HttpKernel\Exception\HttpException');
         $resource = $validator->createObjectFromRequest('Ayamel\ResourceBundle\Document\Resource', $request);
     }
-    
+
     public function testThrowExceptionOnInvalidFieldName()
     {
         $c = $this->getContainer();
@@ -167,7 +167,7 @@ class ClientObjectValidatorTest extends ApiTestCase
         $request = Request::create('/foo/bar', 'POST', array(), array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($requestData));
-        
+
         $this->setExpectedException('Symfony\Component\HttpKernel\Exception\HttpException');
         $resource = $validator->createObjectFromRequest('Ayamel\ResourceBundle\Document\Resource', $request);
     }
