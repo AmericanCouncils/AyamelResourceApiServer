@@ -26,25 +26,6 @@ to have it install the library properly.
         }
     ]
 
-After you've added the custom repository, run composer, which should download and register the `getid3` library:
-
-    php composer.phar update
-
-Then, instantiate this bundle in your `AppKernel.php` to register the cli command:
-    
-    <?php
-    
-    public function registerBundles()
-    {
-        return array(
-            /* ... */
-            
-            new AC\GetID3Bundle\ACGetID3Bundle(),
-
-            /* ... */
-        );
-    }
-
 ## Usage ##
 
 Getid3 should be manually instantiated, as it has no dependencies.

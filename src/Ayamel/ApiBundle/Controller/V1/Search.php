@@ -4,18 +4,13 @@ namespace Ayamel\ApiBundle\Controller\V1;
 
 use Ayamel\ApiBundle\Controller\ApiController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Symfony\Component\HttpFoundation\Request;
 
-/**
- * Search controller for searching ElasticSearch index for
- * Resource objects.
- *
- * @package AyamelApiBundle
- * @author Evan Villemez
- */
 class Search extends ApiController
 {
     /**
-     * Search for Resource objects based on many, potentially loosely-defined, criteria.
+     * Search for Resource objects based on many, potentially loosely-defined, criteria.  By default searches include
+     * all publicly available resources, including resources visible to the requesting client.
      *
      * @ApiDoc(
      *      resource=true,
@@ -26,7 +21,7 @@ class Search extends ApiController
      *      }
      * )
      */
-    public function searchForResources()
+    public function searchForResources(Request $request)
     {
         throw $this->createHttpException(501, sprintf("Not yet implemented [%s]", __METHOD__));
     }

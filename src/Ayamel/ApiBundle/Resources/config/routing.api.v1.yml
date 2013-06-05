@@ -1,11 +1,17 @@
 ## Note that the order in which these routes are defined matters, don't rearrange them unless you know what you're doing ##
 
-api_v1_get_resource_ids:
+api_v1_get_resources:
     pattern: /resources
-    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\ViewResourceIds::executeAction }
+    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\GetResources::executeAction }
     requirements:
         _method:  GET
 
+#creates a new resource
+api_v1_create_resource:
+    pattern: /resources
+    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\CreateResource::executeAction }
+    requirements:
+        _method:  POST
 
 #browse the search index for resources, note this doesn't returns summary resources, not full resource structures
 api_v1_search:
@@ -20,41 +26,6 @@ api_v1_scan_resource_uri:
     defaults: { _controller: Ayamel\ApiBundle\Controller\V1\ScanResourceUri::executeAction }
     requirements:
         _method:  GET
-
-#gets multiple resources
-api_v1_get_resource_multiple:
-    pattern: /resources/multi
-    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\GetResources::executeAction }
-    requirements:
-        _method:  GET
-
-#creates multiple resources
-api_v1_create_resource_multiple:
-    pattern: /resources/multi
-    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\CreateResources::executeAction }
-    requirements:
-        _method:  POST
-
-#modifies multiple resources
-api_v1_modify_resource_multiple:
-    pattern: /resources/multi
-    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\ModifyResources::executeAction }
-    requirements:
-        _method:  PUT
-
-#deletes multiple resources
-api_v1_delete_resource_multiple:
-    pattern: /resources/multi
-    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\DeleteResources::executeAction }
-    requirements:
-        _method:  DELETE
-
-#creates a new resource
-api_v1_create_resource:
-    pattern: /resources
-    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\CreateResource::executeAction }
-    requirements:
-        _method:  POST
 
 #get a specific resource by id
 api_v1_get_resource:
@@ -118,10 +89,3 @@ api_v1_delete_resource_relation:
     defaults: { _controller: Ayamel\ApiBundle\Controller\V1\RelationsController::deleteResourceRelation }
     requirements:
         _method:  DELETE
-
-#send a rating, these are agregated and used for the search index
-api_v1_add_resource_rating:
-    pattern: /resources/{id}/ratings
-    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\RatingsController::addResourceRating }
-    requirements:
-        _method:  POST

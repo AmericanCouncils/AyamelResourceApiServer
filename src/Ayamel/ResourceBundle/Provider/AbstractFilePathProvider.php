@@ -92,7 +92,7 @@ abstract class AbstractFilePathProvider implements ProviderInterface
         //create original file reference
         $file = ($scheme === 'file') ? FileReference::createFromLocalPath($uri) : FileReference::createFromDownloadUri($uri);
         $file->setOriginal(true);
-        
+
         //TODO: populate mime and mimeType
 
         //build new resource

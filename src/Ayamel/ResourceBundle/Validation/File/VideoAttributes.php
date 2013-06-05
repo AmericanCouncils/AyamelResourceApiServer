@@ -11,7 +11,7 @@ use Ayamel\ResourceBundle\Validation\AbstractAttributes;
  * @author Evan Villemez
  */
 class VideoAttributes extends AbstractAttributes
-{    
+{
     public $resolutionX;
     public $resolutionY;
     public $duration;

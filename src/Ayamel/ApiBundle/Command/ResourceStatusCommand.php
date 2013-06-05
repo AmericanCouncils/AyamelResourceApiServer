@@ -28,13 +28,13 @@ class ResourceStatusCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $manager = $this->getContainer()->get('doctrine_mongodb')->getManager();
-        
+
         $resource = $manager->getRepository('AyamelResourceBundle:Resource')->find($input->getArgument('id'));
-        
+
         if (!$resource) {
             throw new \InvalidArgumentException("Requested Resource not found.");
         }
-        
+
         $resource->setStatus($input->getArgument('status'));
         $manager->flush();
 

@@ -7,15 +7,10 @@ use Ayamel\ApiBundle\Controller\ApiController;
 use Symfony\Component\HttpFoundation\Request;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
-/**
- * Receives a query parameter for 'uri', and tries to derive a full resource structure from it.
- *
- * @author Evan Villemez
- */
 class ScanResourceUri extends ApiController
 {
     /**
-     * Derive as much of a full resource object as possible from a given uri.  Note that custom resource providers can be specified
+     * Derive as much of a full resource object as possible from a given URI.  Note that custom resource providers can be specified
      * in URI format, for example YouTube:  `youtube://txqiwrbYGrs`.
      *
      * @ApiDoc(
@@ -24,7 +19,7 @@ class ScanResourceUri extends ApiController
      *      output="Ayamel\ResourceBundle\Document\Resource",
      *      filters={
      *          {"name"="_format", "default"="json", "description"="Return format, can be one of xml, yml or json"},
-     *          {"name"="uri", "required"=true, "dataType"="urlencoded string", "description"="If true, will delete any previous content associated with the resource before adding new content."}
+     *          {"name"="uri", "required"=true, "dataType"="urlencoded string", "description"="The URI you want to scan as a Resource."}
      *      }
      * )
      *
@@ -42,7 +37,7 @@ class ScanResourceUri extends ApiController
         //general format check
         $exp = explode("://", $uri);
         if (2 !== count($exp)) {
-            throw $this->createHttpException(400, "The uri was not in the expected [scheme://path] format.");
+            throw $this->createHttpException(400, "The URI was not in the expected [scheme://path] format.");
         }
 
         $scheme = $exp[0];

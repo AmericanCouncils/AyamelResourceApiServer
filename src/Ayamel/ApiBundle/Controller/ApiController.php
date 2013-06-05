@@ -17,19 +17,20 @@ abstract class ApiController extends Controller
     {
         return $this->container->get('doctrine_mongodb')->getManager()->getRepository($class);
     }
-    
+
     protected function getDocManager()
     {
         return $this->container->get('doctrine_mongodb')->getManager();
     }
-    
+
     protected function getRequestingClientIp()
     {
         $req = $this->get('request');
         $req::trustProxyData();
+
         return $req->getClientIp();
     }
-    
+
     /**
      * Get the client system for the current api request.
      *

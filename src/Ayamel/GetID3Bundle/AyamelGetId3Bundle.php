@@ -1,6 +1,6 @@
 <?php
 
-namespace AC\WebServicesBundle;
+namespace Ayamel\GetID3Bundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

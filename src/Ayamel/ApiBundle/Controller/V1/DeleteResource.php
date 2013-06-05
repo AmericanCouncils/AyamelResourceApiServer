@@ -7,11 +7,6 @@ use Ayamel\ApiBundle\Event\ApiEvent;
 use Ayamel\ApiBundle\Controller\ApiController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
-/**
- * Removes a Resource object by it's ID.
- *
- * @author Evan Villemez
- */
 class DeleteResource extends ApiController
 {
     /**

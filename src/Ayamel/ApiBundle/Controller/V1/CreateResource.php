@@ -9,11 +9,6 @@ use Ayamel\ResourceBundle\Document\Resource;
 use Ayamel\ResourceBundle\Document\Client;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
-/**
- * Accepts data from a request object, attempting to build and save a new resource object.
- *
- * @author Evan Villemez
- */
 class CreateResource extends ApiController
 {
     /**
@@ -48,7 +43,7 @@ class CreateResource extends ApiController
             $resource->client->setId($request->getClientIp());
         }
 
-        //attempt to persisting the object, most likely to mongo
+        //attempt to persist the object
         $manager = $this->get('doctrine_mongodb')->getManager();
         try {
             $manager->persist($resource);

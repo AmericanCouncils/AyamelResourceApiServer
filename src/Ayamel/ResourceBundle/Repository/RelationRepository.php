@@ -13,40 +13,40 @@ use Doctrine\ODM\MongoDB\DocumentRepository;
  */
 class RelationRepository extends DocumentRepository
 {
-    
+
     /**
      * Get all relation documents where the given Resource is either subject
      * or the object.
      *
-     * @param string $resourceId 
-     * @param array|null $filters 
+     * @param  string     $resourceId
+     * @param  array|null $filters
      * @return array
      */
     public function getRelationsForResource($resourceId, $filters = array())
-    {                
+    {
         return $this->getQBForResource($resourceId, $filters)->getQuery()->execute();
     }
-    
+
     /**
      * Remove relations for a resource, optionally restricting to other fields.
      *
-     * @param string $resourceId 
-     * @param array|null $filters 
+     * @param string     $resourceId
+     * @param array|null $filters
      */
     public function deleteRelationsForResource($resourceId, $filters = array())
     {
         return $this->getQBForResource($resourceId, $filters)->remove()->getQuery()->execute();
     }
-    
+
     protected function getQBForResource($resourceId, $filters = array())
     {
         $qb = $this->createQueryBuilder('Relation');
-        
+
         //Relations are always bi-directional, so get where the $resourceId is EITHER
         //the subject or the object
         $qb->addOr($qb->expr()->field('subjectId')->equals($resourceId));
         $qb->addOr($qb->expr()->field('objectId')->equals($resourceId));
-        
+
         //and optionally other fields
         foreach ($filters as $field => $val) {
             if (is_array($val)) {
@@ -55,7 +55,7 @@ class RelationRepository extends DocumentRepository
                 $qb->field($field)->equals($val);
             }
         }
-        
+
         return $qb;
     }
 }

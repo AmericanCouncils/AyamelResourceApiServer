@@ -186,7 +186,7 @@ class LocalFilesystem implements FilesystemInterface
             if (@copy($file->getInternalUri(), $filename)) {
                 $file->setInternalUri($filename);
                 chmod($filename, 0664);
-                
+
                 return $this->ensurePaths($file);
             } else {
                 throw new \RuntimeException(sprintf("Could not copy file [%s] to [%s].", $file->getInternalUri(), $filename));
