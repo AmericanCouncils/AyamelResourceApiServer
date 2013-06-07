@@ -27,6 +27,8 @@ class ModifyResource extends ApiController
      */
     public function executeAction($id)
     {
+        $this->secureRoute();
+        
         //get the resource
         $resource = $this->getRequestedResourceById($id);
 

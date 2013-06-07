@@ -33,6 +33,7 @@ class AppKernel extends Kernel
             new Ayamel\TranscodingBundle\AyamelTranscodingBundle(),
             new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
             new Nelmio\CorsBundle\NelmioCorsBundle(),
+            new Ayamel\ClientBundle\AyamelClientBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

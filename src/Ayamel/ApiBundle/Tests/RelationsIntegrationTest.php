@@ -9,13 +9,17 @@ class RelationsIntegrationTest extends ApiTestCase
 
     protected function createTestResource()
     {
-        return $this->getJson('POST', '/api/v1/resources', array(), array(), array(
+        $json = $this->getJson('POST', '/api/v1/resources', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array(
             'title' => 'testing',
             'type' => 'data',
             'description' => '...and more testing'
         )));
+            
+        if (!isset($json['resource'])) {
+            throw new \RuntimeException("Failed creating test Resource.");
+        }
     }
 
     protected function createTestRelation($subjectId, $relationData)
@@ -29,7 +33,7 @@ class RelationsIntegrationTest extends ApiTestCase
     {
         $res1 = $this->createTestResource();
         $res2 = $this->createTestResource();
-
+        
         $rel1 = array(
             'objectId' => $res1['resource']['id'],
             'type' => 'requires'

@@ -18,6 +18,8 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $response = $this->getJson('POST', '/api/v1/resources', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($data));
+        
+        $this->assertSame(201, $response['response']['code']);
         $this->assertFalse(isset($response['resource']['content']));
 
         $resourceId = $response['resource']['id'];
@@ -63,6 +65,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $response = $this->getJson('POST', '/api/v1/resources', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($data));
+        $this->assertSame(201, $response['response']['code']);
         $this->assertFalse(isset($response['resource']['content']));
         $this->assertSame('awaiting_content', $response['resource']['status']);
 
@@ -119,6 +122,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $response = $this->getJson('POST', '/api/v1/resources', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($data));
+        $this->assertSame(201, $response['response']['code']);
         $this->assertFalse(isset($response['resource']['content']));
         $resourceId = $response['resource']['id'];
         $uploadUrl = substr($response['content_upload_url'], strlen('http://localhost'));
@@ -156,6 +160,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $response = $this->getJson('POST', '/api/v1/resources', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($data));
+        $this->assertSame(201, $response['response']['code']);
         $this->assertFalse(isset($response['resource']['content']));
         $this->assertSame('awaiting_content', $response['resource']['status']);
         $resourceId = $response['resource']['id'];

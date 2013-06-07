@@ -97,6 +97,8 @@ class RelationsController extends ApiController
      */
     public function createResourceRelation($id)
     {
+        $this->secureRoute();
+        
         $request = $this->getRequest();
 
         //get the resource
@@ -150,6 +152,8 @@ class RelationsController extends ApiController
      */
     public function deleteResourceRelation($resourceId, $relationId)
     {
+        $this->secureRoute();
+        
         //get the resource
         $resource = $this->getRequestedResourceById($resourceId);
         if ($resource->isDeleted()) {

@@ -97,6 +97,8 @@ class UploadContent extends ApiController
      */
     public function executeAction($id, $token)
     {
+        $this->secureRoute();
+        
         //get the resource
         $resource = $this->getRequestedResourceById($id);
 

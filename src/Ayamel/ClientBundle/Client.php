@@ -4,11 +4,9 @@ namespace Ayamel\ClientBundle;
 
 class Client
 {
-    public $key;
+    public $id;
     
     public $name;
     
-    public $apiKeys;
-    
-    
+    public $apiKey;
 }

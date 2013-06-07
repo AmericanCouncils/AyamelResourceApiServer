@@ -48,7 +48,7 @@ class ResourceIntegrationTest extends ApiTestCase
             'languages' => array('eng', 'zho'),
             'subjectDomains' => array('food', 'culture', 'history'),
             'functionalDomains' => array('verbs', 'adjectives', 'conjugation'),
-            'visibility' => array('client1', 'client2'),
+            'visibility' => array('test_client', 'client1', 'client2'),
             'copyright' => "Copyright text 2013",
             'license' => 'Public Domain',
             'origin' => array(
@@ -69,7 +69,8 @@ class ResourceIntegrationTest extends ApiTestCase
 
         //api automatically injects the client id, and it can't be set by the caller
         $expectedClient = array(
-            'id' => '127.0.0.1',
+            'id' => 'test_client',
+            'name' => "The Test Client",
             'user' => array(
                 'id' => 'theTester',
                 'url' => 'http://example.com/users/theTester'

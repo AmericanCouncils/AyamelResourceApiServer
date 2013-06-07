@@ -1,6 +1,6 @@
 <?php
 
-namespace Ayamel\ClientBundle;
+namespace Ayamel\ClientBundle\Loader;
 
 use Symfony\Component\HttpFoundation\Request;
 
@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @package AyamelClientBundle
  * @author Evan Villemez
  */
-class ClientLoaderInterface
+interface ClientLoaderInterface
 {
     public function getClients();
     

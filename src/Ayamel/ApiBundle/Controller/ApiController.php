@@ -5,7 +5,7 @@ namespace Ayamel\ApiBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Ayamel\ResourceBundle\Document\Resource;
 use AC\WebServicesBundle\Response\ServiceResponse;
-
+use Symfony\Component\HttpKernel\Exception\HttpException;
 /**
  * A base API Controller to provide convenience methods for actions commonly performed in various places in the Ayamel Resource API.
  *
@@ -23,33 +23,30 @@ abstract class ApiController extends Controller
         return $this->container->get('doctrine_mongodb')->getManager();
     }
 
-    protected function getRequestingClientIp()
+    protected function secureRoute()
     {
-        $req = $this->get('request');
-        $req::trustProxyData();
-
-        return $req->getClientIp();
+        if (!$key = $this->request->get('_key', false)) {
+            throw new HttpException(401, "Valid API key required.");
+        }
+        
+        if (!$client = $this->container->get('ayamel.client_loader')->getClientByApiKey($key)) {
+            throw new HttpException(401, "Valid API key required.");
+        }
     }
 
     /**
-     * Get the client system for the current api request.
+     * Get the client system based on the API key passed in the current
+     * request.
      *
-     * @return TBD //TODO
+     * @return Client|false
      */
     protected function getApiClient()
     {
-        throw new \Exception(__METHOD__." not yet implemented.");
-
-        //if it's already built, get it
-        if ($this->container->has('ayamel.api.client')) {
-            return $this->container->get('ayamel.api.client');
+        if (!$key = $this->container->get('request')->get('_key', false)) {
+            return false;
         }
-
-        //otherwise build the client, and set
-        $client = null;
-        $this->container->set('ayamel.api.client', $client);
-
-        return $client;
+        
+        return $this->container->get('ayamel.client_loader')->getClientByApiKey($key);
     }
 
     /**
@@ -59,7 +56,7 @@ abstract class ApiController extends Controller
      */
     protected function createHttpException($code = 500, $message = null)
     {
-        return new \Symfony\Component\HttpKernel\Exception\HttpException($code, $message);
+        return new HttpException($code, $message);
     }
 
     /**
@@ -81,6 +78,7 @@ abstract class ApiController extends Controller
      *
      * @param  string                                                    $id id of requested resource
      * @throws Symfony\Component\HttpKernel\Exception\HttpException(404) if resource is not found.
+     * @throws Symfony\Component\HttpKernel\Exception\HttpException(401) if resource is private and no client API key was provided.
      * @throws Symfony\Component\HttpKernel\Exception\HttpException(403) if resource is private and requesting client is not the owner.
      * @return Ayamel\ResourceBundle\Document\Resource
      */
@@ -97,13 +95,40 @@ abstract class ApiController extends Controller
         //throw access denied exception if resource has visibility restrictions
         $visibility = $resource->getVisibility();
         if (!empty($visibility)) {
-            //TODO: get access restrictions
-//          if (!in_array($this->getApiClient()->getKey(), $restrictions)) {
-                //throw $this->createHttpException(403, "Not authorized.");
-//          }
+            if (!$client = $this->getApiClient()) {
+                throw new HttpException(401, "Valid API key required.");
+            }
+            
+            if (!in_array($client->id, $visibility)) {
+                throw new HttpException(403, "Not authorized.");
+            }
         }
 
         return $resource;
+    }
+    
+    /**
+     * Filter an array of Resources to exclude Resources not visible to the requesting client.
+     *
+     * @param array Array of Resources
+     * @return array Array of Resources
+     */
+    protected function filterVisibleResources(array $resources)
+    {
+        $visibleResources = array();
+        $client = $this->getApiClient();
+        
+        foreach ($resources as $resource) {
+            if (!$client && null === $resource->getVisibility()) {
+                $visibleResources[] = $resource;
+            } else {
+                if (in_array($client->id, $resource->getVisibility())) {
+                    $visibleResources[] = $resource;
+                }
+            }
+        }
+        
+        return $visibleResources;
     }
 
     protected function returnDeletedResource(Resource $resource)
