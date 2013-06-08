@@ -9,6 +9,7 @@ use Ayamel\ApiBundle\Event\ResolveUploadedContentEvent;
 use Ayamel\ApiBundle\Event\HandleUploadedContentEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Registers API event listeners for handling special URI uploads.
@@ -62,6 +63,8 @@ class UriContentSubscriber implements EventSubscriberInterface
             if ($this->container->get('ayamel.resource.provider')->handlesScheme($exp[0])) {
                 $e->setContentType('uri');
                 $e->setContentData($uri);
+            } else {
+                throw new HttpException(400, "Does not support scheme [".$exp[0]."]");
             }
         }
     }
@@ -80,30 +83,43 @@ class UriContentSubscriber implements EventSubscriberInterface
         //try to derive a resource from the received uri
         $uri = $e->getContentData();
         if (!$derivedResource = $this->container->get('ayamel.resource.provider')->createResourceFromUri($uri)) {
-            return;
+            throw new \RuntimeException(sprintf("Could not derive resource from [%s]", $uri));
         }
 
-        $resource = $e->getResource();
+        $oldResource = $e->getResource();
 
-        //set content properly
-        $resource->content = $derivedResource->content;
-        $originalRef = FileReference::createFromDownloadUri($uri);
-        if (!$resource->content->hasFile($originalRef)) {
-            $originalRef->setOriginal(true);
-            $resource->content->addFile($originalRef);
-        }
-
-        //TODO: implement origin
-        //persist origin field not specified by client, and available in derived resource
-        /*
-        if (!$resource->getOrigin() && $derivedResource->getOrigin()) {
-            $resource->origin = $derivedResource->origin;
-        }
-        */
-
-        //set the modified resource and stop propagation of this event
-        $resource->setStatus(Resource::STATUS_NORMAL);
+        $newResource = $this->mergeResources($oldResource, $derivedResource);
+        $newResource->setStatus(Resource::STATUS_NORMAL);
+        
         $e->setResource($resource);
     }
-
+    
+    protected function mergeResources($old, $new)
+    {
+        $this->mergeDocumentProperties($old, $new, array('title', 'type', 'functionalDomains', 'subjectDomains', 'license', 'copyright', 'description', 'keywords', 'languages'));
+        
+        $old->content = $new->content;
+        $old->origin = $this->mergeDocumentProperties($old->origin, $new->origin, array('creator', 'location', 'date', 'format', 'note', 'uri'));
+        
+        return $old;
+    }
+    
+    protected function mergeDocumentProperties($old, $new, $properties = array())
+    {
+        foreach ($properties as $prop) {
+            $setter = 'set'.ucfirst($prop);
+            $getter = 'get'.ucfirst($prop);
+            if (method_exists($old, $getter) && method_exists($old, $setter) && method_exists($new, $getter)) {
+                if (!$old->$getter()) {
+                    $old->$setter($new->$getter());
+                }
+            } else {
+                if (property_exists($old, $prop) && property_exists($new, $prop)) {
+                    if (!$old->$prop) {
+                        $old->$prop = $new->$prop;
+                    }
+                }
+            }
+        }
+    }
 }
