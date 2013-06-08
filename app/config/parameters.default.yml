@@ -1,6 +1,9 @@
 ## Note that this parameters.yml file includes configuration for a test/dev environment.  For an
 ## actual production configuration, change this file accordingly.
 
+imports:
+    - { resource: '@AyamelApiBundle/Resources/config/test_clients.yml' }
+
 parameters:
     database_driver: pdo_sqlite
     database_path: %kernel.root_dir%/app/data/db.sqlite

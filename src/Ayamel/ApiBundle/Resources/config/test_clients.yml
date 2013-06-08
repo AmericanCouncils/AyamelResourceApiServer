@@ -1,0 +1,18 @@
+services:
+    ayamel.client_loader:
+        class: Ayamel\ApiBundle\Client\ConfigClientLoader
+        arguments: [%ayamel.clients%]
+
+parameters:
+    ##client properties will be added to this over time
+    ayamel.clients:
+        test_client:
+            name: The Test Client
+            apiKey: 45678isafgd56789asfgdhf4567
+            #customPresets: {mime to preset map}
+            #public: true/false
+            #resourceDefaults: default license/copyright, etc...
+        test_client2:
+            name: Another Test Client
+            apiKey: 55678isafgd56789asfgdhf4568
+        
