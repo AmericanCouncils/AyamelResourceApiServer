@@ -30,6 +30,8 @@ class RequestContentUpload extends ApiController
         if ($resource->isDeleted()) {
             return $this->returnDeletedResource($resource);
         }
+        
+        $this->requireResourceOwner($resource);
 
         $uploadToken = $this->container->get('ayamel.api.upload_token_manager')->createTokenForId($resource->getId());
 

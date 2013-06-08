@@ -28,6 +28,8 @@ class CreateResource extends ApiController
      */
     public function executeAction(Request $request)
     {
+        $this->requireAuthentication();
+        
         //create object from client request
         $resource = $this->container->get('ac.webservices.object_validator')->createObjectFromRequest('Ayamel\ResourceBundle\Document\Resource', $this->getRequest());
 
@@ -35,13 +37,12 @@ class CreateResource extends ApiController
         $resource->setStatus(Resource::STATUS_AWAITING_CONTENT);
 
         //fill in client info
-        if (!$resource->getClient()) {
-            $resource->setClient(new Client());
+        $clientDoc = $this->getApiClient()->createClientDocument();
+        if ($resource->getClient() && $resource->getClient()->getUser()) {
+            $clientUser = $resource->getClient()->getUser();
+            $clientDoc->setUser($clientUser);
         }
-        if (!$resource->client->getId()) {
-            $request::trustProxyData();
-            $resource->client->setId($request->getClientIp());
-        }
+        $resource->setClient($clientDoc);
 
         //attempt to persist the object
         $manager = $this->get('doctrine_mongodb')->getManager();

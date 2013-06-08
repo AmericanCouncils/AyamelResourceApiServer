@@ -3,8 +3,6 @@ namespace Ayamel\ApiBundle\Logging;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-//TODO: abstract the logging mechanism properly using Monolog
-
 /**
  * Log all API requests to Mongo AFTER the response has been sent.
  *
@@ -77,6 +75,8 @@ class LogSubscriber implements EventSubscriberInterface
     {
         if ($this->logMessage) {
             $response = $e->getResponse();
+            $request = $e->getRequest();
+            
             $this->logMessage['response'] = array(
                 'status' => $response->getStatusCode(),
                 'type' => $response->headers->get('Content-Type'),
