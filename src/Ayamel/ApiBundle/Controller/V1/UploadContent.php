@@ -97,7 +97,7 @@ class UploadContent extends ApiController
      */
     public function executeAction($id, $token)
     {
-        $this->secureRoute();
+        $this->requireAuthentication();
         
         //get the resource
         $resource = $this->getRequestedResourceById($id);
@@ -106,6 +106,8 @@ class UploadContent extends ApiController
         if ($resource->isDeleted()) {
             return $this->returnDeletedResource($resource);
         }
+
+        $this->requireResourceOwner($resource);
 
         //get the upload token manager
         $tm = $this->container->get('ayamel.api.upload_token_manager');

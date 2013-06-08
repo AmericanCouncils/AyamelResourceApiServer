@@ -2,7 +2,7 @@
 ## actual production configuration, change this file accordingly.
 
 imports:
-    - { resource: '@AyamelClientBundle/Resources/config/test_clients.yml' }    
+    - { resource: '@AyamelApiBundle/Resources/config/test_clients.yml' }
 
 parameters:
     database_driver: pdo_sqlite

@@ -1,8 +1,6 @@
 <?php
 
-namespace Ayamel\ClientBundle\Loader;
-
-use Ayamel\ClientBundle\Client;
+namespace Ayamel\ApiBundle\Client;
 
 class ConfigClientLoader implements ClientLoaderInterface
 {
@@ -10,14 +8,14 @@ class ConfigClientLoader implements ClientLoaderInterface
     
     public function __construct($data = array())
     {
-        foreach ($data as $item)
+        foreach ($data as $id => $item)
         {
             $c = new Client();
-            $c->id = $item['id'] ?: null;
+            $c->id = $id;
             $c->name = $item['name'] ?: null;
             $c->apiKey = $item['apiKey'] ?: null;
             
-            $this->clients[] = $c;
+            $this->clients[$id] = $c;
         }
     }
     
@@ -28,13 +26,7 @@ class ConfigClientLoader implements ClientLoaderInterface
     
     public function getClient($id)
     {
-        foreach ($this->clients as $client) {
-            if ($id === $client->id) {
-                return $client;
-            }
-        }
-        
-        return false;
+        return isset($this->clients[$id]) ? $this->clients[$id] : false;
     }
     
     public function getClientByApiKey($key)

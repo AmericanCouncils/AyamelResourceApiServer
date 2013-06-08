@@ -7,6 +7,7 @@ use Ayamel\ResourceBundle\Document\Relation;
 use Ayamel\ResourceBundle\Document\Client;
 use Ayamel\ApiBundle\Controller\ApiController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class RelationsController extends ApiController
 {
@@ -97,38 +98,42 @@ class RelationsController extends ApiController
      */
     public function createResourceRelation($id)
     {
-        $this->secureRoute();
+        $this->requireAuthentication();
         
         $request = $this->getRequest();
 
         //get the resource
-        $resource = $this->getRequestedResourceById($id);
-        if ($resource->isDeleted()) {
-            return $this->returnDeletedResource($resource);
+        $subject = $this->getRequestedResourceById($id);
+        if ($subject->isDeleted()) {
+            return $this->returnDeletedResource($subject);
         }
 
         //create the relation submitted by the client
         $relation = $this->container->get('ac.webservices.object_validator')->createObjectFromRequest('Ayamel\ResourceBundle\Document\Relation', $this->getRequest());
 
-        //check if the object resource is actually valid
         try {
             $object = $this->getRequestedResourceById($relation->getObjectId());
-        } catch (\Exception $e) {
-            throw $this->createHttpException(400, "Invalid object id.");
+        } catch (HttpException $e) {
+            if (404 === $e->getStatusCode()) {
+                throw new HttpException(400, "Invalid object id.");
+            } else {
+                throw $e;
+            }
         }
+        
+
         if ($object->isDeleted()) {
             throw $this->createHttpException(400, "Invalid object id.");
         }
 
         //fill in the other info
-        $relation->setSubjectId($resource->getId());
-        if (!$relation->getClient()) {
-            $relation->setClient(new Client());
+        $relation->setSubjectId($subject->getId());
+        $clientDoc = $this->getApiClient()->createClientDocument();
+        if ($relation->getClient() && $relation->getClient()->getUser()) {
+            $clientUser = $relation->getClient()->getUser();
+            $clientDoc->setUser($clientUser);
         }
-        if (!$relation->getClient()->getId()) {
-            $request::trustProxyData();
-            $relation->getClient()->setId($request->getClientIp());
-        }
+        $relation->setClient($clientDoc);
 
         //actually save the relation in storage
         $manager = $this->get('doctrine_mongodb')->getManager();
@@ -152,23 +157,22 @@ class RelationsController extends ApiController
      */
     public function deleteResourceRelation($resourceId, $relationId)
     {
-        $this->secureRoute();
+        $this->requireAuthentication();
         
         //get the resource
         $resource = $this->getRequestedResourceById($resourceId);
         if ($resource->isDeleted()) {
             return $this->returnDeletedResource($resource);
         }
-
-        //TODO: validate that api client can view the resource
-        if (false) {
-            throw $this->createHttpException(403, "Not authorized to delete this Relation.");
-        }
-
+        
+        //get the relation
         $repo = $this->getRepo('AyamelResourceBundle:Relation');
         $relation = $repo->find($relationId);
-
-        //TODO: verify that the API client owns the Relation
+        
+        //only owners may delete the relation
+        if ($this->getApiClient()->id !== $relation->getClient()->getId()) {
+            throw $this->createHttpException(403, "You are not the owner of this Relation.");
+        }
 
         //subjectId and resourceId must match
         if ($relation->getSubjectId() !== $resource->getId()) {

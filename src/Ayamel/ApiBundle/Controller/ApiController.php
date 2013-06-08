@@ -23,14 +23,21 @@ abstract class ApiController extends Controller
         return $this->container->get('doctrine_mongodb')->getManager();
     }
 
-    protected function secureRoute()
+    protected function requireAuthentication()
     {
-        if (!$key = $this->request->get('_key', false)) {
+        if (!$key = $this->getRequest()->get('_key', false)) {
             throw new HttpException(401, "Valid API key required.");
         }
         
         if (!$client = $this->container->get('ayamel.client_loader')->getClientByApiKey($key)) {
             throw new HttpException(401, "Valid API key required.");
+        }
+    }
+
+    protected function requireResourceOwner(Resource $resource)
+    {
+        if ($this->getApiClient()->id !== $resource->getClient()->getId()) {
+            throw new HttpException(403, "You do not own the requested Resource.");
         }
     }
 
@@ -89,7 +96,7 @@ abstract class ApiController extends Controller
 
         //throw not found exception if necessary
         if (!$resource) {
-            throw $this->createHttpException(404, "The requested resource does not exist.");
+            throw new HttpException(404, "The requested resource does not exist.");
         }
 
         //throw access denied exception if resource has visibility restrictions
@@ -99,7 +106,7 @@ abstract class ApiController extends Controller
                 throw new HttpException(401, "Valid API key required.");
             }
             
-            if (!in_array($client->id, $visibility)) {
+            if (($client->id !== $resource->getClient()->getId()) || !in_array($client->id, $visibility)) {
                 throw new HttpException(403, "Not authorized.");
             }
         }

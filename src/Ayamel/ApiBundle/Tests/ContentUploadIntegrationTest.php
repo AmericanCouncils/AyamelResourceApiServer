@@ -15,7 +15,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
             'type' => 'data'
         );
 
-        $response = $this->getJson('POST', '/api/v1/resources', array(), array(), array(
+        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($data));
         
@@ -26,7 +26,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $apiPath = substr($response['content_upload_url'], strlen('http://localhost'));
 
         //hit the path with empty request, expect 422 (unprocessable) - then 401 on subsequent requests
-        $response = $this->getResponse('POST', $apiPath);
+        $response = $this->getResponse('POST', $apiPath.'?_key=45678isafgd56789asfgdhf4567');
         $this->assertSame(422, $response->getStatusCode());
         $content = json_decode($response->getContent(), true);
         $this->assertSame(422, $content['response']['code']);
@@ -37,22 +37,39 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $this->assertSame(401, $content['response']['code']);
 
         //now get a new one-time url
-        $response = $this->getResponse('GET', '/api/v1/resources/'.$resourceId."/request-upload-url");
+        $response = $this->getResponse('GET', '/api/v1/resources/'.$resourceId."/request-upload-url?_key=45678isafgd56789asfgdhf4567");
         $this->assertSame(200, $response->getStatusCode());
         $content = json_decode($response->getContent(), true);
         $this->assertSame(200, $content['response']['code']);
         $this->assertTrue(isset($content['content_upload_url']));
         $uploadUrl = substr($content['content_upload_url'], strlen('http://localhost'));
 
-        $response = $this->getResponse('POST', $uploadUrl);
+        $response = $this->getResponse('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567');
         $this->assertSame(422, $response->getStatusCode());
         $content = json_decode($response->getContent(), true);
         $this->assertSame(422, $content['response']['code']);
 
-        $response = $this->getResponse('POST', $uploadUrl);
+        $response = $this->getResponse('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567');
         $this->assertSame(401, $response->getStatusCode());
         $content = json_decode($response->getContent(), true);
         $this->assertSame(401, $content['response']['code']);
+        
+        //deny access
+        $response = $this->getResponse('GET', '/api/v1/resources/'.$resourceId."/request-upload-url?_key=45678isafgd56789asfgdhf4567");
+        $this->assertSame(200, $response->getStatusCode());
+        $content = json_decode($response->getContent(), true);
+        $this->assertSame(200, $content['response']['code']);
+        $this->assertTrue(isset($content['content_upload_url']));
+        $uploadUrl = substr($content['content_upload_url'], strlen('http://localhost'));
+        
+        //no apikey
+        $response = $this->getResponse('POST', $uploadUrl);
+        $this->assertSame(401, $response->getStatusCode());
+        
+        //invalid key
+        $response = $this->getResponse('POST', $uploadUrl.'?_key=55678isafgd56789asfgdhf4568');
+        $this->assertSame(403, $response->getStatusCode());
+        
     }
 
     public function testUploadContentAsRemoteFilesArray()
@@ -62,7 +79,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
             'type' => 'data'
         );
 
-        $response = $this->getJson('POST', '/api/v1/resources', array(), array(), array(
+        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($data));
         $this->assertSame(201, $response['response']['code']);
@@ -102,7 +119,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
                 )
             )
         );
-        $response = $this->getJson('POST', $apiPath, array(), array(), array(
+        $response = $this->getJson('POST', $apiPath.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($data));
 
@@ -119,7 +136,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
             'type' => 'data'
         );
 
-        $response = $this->getJson('POST', '/api/v1/resources', array(), array(), array(
+        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($data));
         $this->assertSame(201, $response['response']['code']);
@@ -136,7 +153,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
             filesize($testFilePath)
         );
 
-        $content = $this->getJson('POST', $uploadUrl, array(), array('file' => $uploadedFile));
+        $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', array(), array('file' => $uploadedFile));
 
         $this->assertSame(202, $content['response']['code']);
         $this->assertSame('awaiting_processing', $content['resource']['status']);
@@ -157,7 +174,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
             'type' => 'data'
         );
 
-        $response = $this->getJson('POST', '/api/v1/resources', array(), array(), array(
+        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($data));
         $this->assertSame(201, $response['response']['code']);
@@ -175,7 +192,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
             filesize($testFilePath)
         );
 
-        $content = $this->getJson('POST', $uploadUrl, array(), array('file' => $uploadedFile));
+        $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', array(), array('file' => $uploadedFile));
 
         $this->assertSame(202, $content['response']['code']);
         $this->assertSame('awaiting_processing', $content['resource']['status']);
@@ -193,7 +210,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $this->runCommand(sprintf('api:resource:transcode %s --force', $resourceId));
 
         //now get resource - expect 2 files and changed status
-        $json = $this->getJson('GET', '/api/v1/resources/'.$resourceId, array(), array(), array(
+        $json = $this->getJson('GET', '/api/v1/resources/'.$resourceId.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ));
 
@@ -217,7 +234,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $this->assertTrue(isset($transcoded['downloadUri']));
 
         //hit one-time url again to make sure it expired
-        $response = $this->getResponse('POST', $uploadUrl, array(), array('file' => $uploadedFile));
+        $response = $this->getResponse('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', array(), array('file' => $uploadedFile));
         $this->assertSame(401, $response->getStatusCode());
     }
 

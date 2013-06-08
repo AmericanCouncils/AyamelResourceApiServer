@@ -1,6 +1,6 @@
 <?php
 
-namespace Ayamel\ClientBundle\Loader;
+namespace Ayamel\ApiBundle\Client;
 
 use Symfony\Component\HttpFoundation\Request;
 

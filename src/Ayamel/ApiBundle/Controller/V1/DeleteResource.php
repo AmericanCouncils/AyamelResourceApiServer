@@ -25,7 +25,7 @@ class DeleteResource extends ApiController
      */
     public function executeAction($id)
     {
-        $this->secureRoute();
+        $this->requireAuthentication();
         
         //get the resource
         $resource = $this->getRequestedResourceById($id);
@@ -34,6 +34,8 @@ class DeleteResource extends ApiController
         if ($resource->isDeleted()) {
             return $this->returnDeletedResource($resource);
         }
+        
+        $this->requireResourceOwner($resource);
 
         $apiDispatcher = $this->container->get('ayamel.api.dispatcher');
 

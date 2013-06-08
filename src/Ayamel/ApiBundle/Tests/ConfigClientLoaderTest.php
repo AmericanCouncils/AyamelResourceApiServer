@@ -1,10 +1,10 @@
 <?php
 
-namespace Ayamel\ClientBundle\Tests;
+namespace Ayamel\ApiBundle\Tests;
 
-use Ayamel\ClientBundle\Loader\ClientLoaderInterface;
-use Ayamel\ClientBundle\Loader\ConfigClientLoader;
-use Ayamel\ClientBundle\Client;
+use Ayamel\ApiBundle\Client\ClientLoaderInterface;
+use Ayamel\ApiBundle\Client\ConfigClientLoader;
+use Ayamel\ApiBundle\Client\Client;
 
 class ConfigClientLoaderTest extends \PHPUnit_Framework_TestCase
 {
@@ -12,13 +12,11 @@ class ConfigClientLoaderTest extends \PHPUnit_Framework_TestCase
     protected function getLoader()
     {
         return new ConfigClientLoader(array(
-            array(
-                'id' => 'test_client',
+            'test_client' => array(
                 'name' => "Test name",
                 'apiKey' => "dddddddddddddd"
             ),
-            array(
-                'id' => 'test_client2',
+            'test_client2' => array(
                 'name' => "Test name",
                 'apiKey' => "ffffffffffffffff"
             )

@@ -16,13 +16,18 @@ class ResourceIntegrationTest extends ApiTestCase
 
         $response = $this->getResponse('PUT', '/api/v1/resources/5');
         $json = json_decode($response->getContent(), true);
+        $this->assertSame(401, $response->getStatusCode());
+        $this->assertSame(401, $json['response']['code']);
+
+        $response = $this->getResponse('PUT', '/api/v1/resources/5?_key=45678isafgd56789asfgdhf4567');
+        $json = json_decode($response->getContent(), true);
         $this->assertSame(404, $response->getStatusCode());
         $this->assertSame(404, $json['response']['code']);
 
         $response = $this->getResponse('DELETE', '/api/v1/resources/5');
         $json = json_decode($response->getContent(), true);
-        $this->assertSame(404, $response->getStatusCode());
-        $this->assertSame(404, $json['response']['code']);
+        $this->assertSame(401, $response->getStatusCode());
+        $this->assertSame(401, $json['response']['code']);
     }
 
     public function testSupressCodes()
@@ -78,7 +83,7 @@ class ResourceIntegrationTest extends ApiTestCase
         );
 
         $body = json_encode($data);
-        $json = $this->getJson("POST", '/api/v1/resources', array(), array(), array(
+        $json = $this->getJson("POST", '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), $body);
 
@@ -135,7 +140,7 @@ class ResourceIntegrationTest extends ApiTestCase
         );
 
         $body = json_encode($data);
-        $response = $this->getResponse("POST", '/api/v1/resources', array(), array(), array(
+        $response = $this->getResponse("POST", '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), $body);
 
@@ -151,7 +156,7 @@ class ResourceIntegrationTest extends ApiTestCase
             'keywords' => 'foo, bar, baz',
             'subjectDomains' => array('food', 'culture', 'history'),
             'functionalDomains' => array('verbs', 'adjectives', 'conjugation'),
-            'visibility' => array('client1', 'client2'),
+            'visibility' => array('test_client', 'client2'),
             'copyright' => "Copyright text 2013",
             'license' => 'Public Domain',
             'origin' => array(
@@ -172,7 +177,8 @@ class ResourceIntegrationTest extends ApiTestCase
 
         //api automatically injects the client id, and it can't be set by the caller
         $expectedClient = array(
-            'id' => '127.0.0.1',
+            'id' => 'test_client',
+            'name' => "The Test Client",
             'user' => array(
                 'id' => 'theTester',
                 'url' => 'http://example.com/users/theTester'
@@ -180,7 +186,7 @@ class ResourceIntegrationTest extends ApiTestCase
         );
 
         $body = json_encode($data);
-        $json = $this->getJson("POST", '/api/v1/resources', array(), array(), array(
+        $json = $this->getJson("POST", '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), $body);
 
@@ -224,14 +230,15 @@ class ResourceIntegrationTest extends ApiTestCase
             )
         );
         $expectedClient = array(
-            'id' => '127.0.0.1',
+            'id' => 'test_client',
+            'name' => "The Test Client",
             'user' => array(
                 'id' => 'transferred',
                 'url' => 'http://foo.bar'
             )
         );
 
-        $modified = $this->getJson("PUT", '/api/v1/resources/'.$resourceId, array(), array(), array(
+        $modified = $this->getJson("PUT", '/api/v1/resources/'.$resourceId."?_key=45678isafgd56789asfgdhf4567", array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($changes));
 
@@ -266,7 +273,7 @@ class ResourceIntegrationTest extends ApiTestCase
             'subjectDomains' => null,
             'description' => null,
         );
-        $modified = $this->getJson("PUT", '/api/v1/resources/'.$resourceId, array(), array(), array(
+        $modified = $this->getJson("PUT", '/api/v1/resources/'.$resourceId."?_key=45678isafgd56789asfgdhf4567", array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($changes2));
 
@@ -303,7 +310,7 @@ class ResourceIntegrationTest extends ApiTestCase
             'keywords' => 'foo, bar, baz',
             'subjectDomains' => array('food', 'culture', 'history'),
             'functionalDomains' => array('verbs', 'adjectives', 'conjugation'),
-            'visibility' => array('client1', 'client2'),
+            'visibility' => array('test_client', 'client2'),
             'copyright' => "Copyright text 2013",
             'license' => 'Public Domain',
             'origin' => array(
@@ -324,7 +331,8 @@ class ResourceIntegrationTest extends ApiTestCase
 
         //api automatically injects the client id, and it can't be set by the caller
         $expectedClient = array(
-            'id' => '127.0.0.1',
+            'id' => 'test_client',
+            'name' => "The Test Client",
             'user' => array(
                 'id' => 'theTester',
                 'url' => 'http://example.com/users/theTester'
@@ -332,7 +340,7 @@ class ResourceIntegrationTest extends ApiTestCase
         );
 
         $body = json_encode($data);
-        $json = $this->getJson("POST", '/api/v1/resources', array(), array(), array(
+        $json = $this->getJson("POST", '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), $body);
 
@@ -359,7 +367,7 @@ class ResourceIntegrationTest extends ApiTestCase
 
         $resourceId = $json['resource']['id'];
 
-        $modified = $this->getJson("DELETE", '/api/v1/resources/'.$resourceId, array(), array(), array(
+        $modified = $this->getJson("DELETE", '/api/v1/resources/'.$resourceId."?_key=45678isafgd56789asfgdhf4567", array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), null);
 
@@ -392,7 +400,7 @@ class ResourceIntegrationTest extends ApiTestCase
         );
 
         $body = json_encode($data);
-        $json = $this->getJson("POST", '/api/v1/resources', array(), array(), array(
+        $json = $this->getJson("POST", '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), $body);
 
@@ -402,7 +410,7 @@ class ResourceIntegrationTest extends ApiTestCase
         $this->assertSame($data['description'], $json['resource']['description']);
 
         //delete it
-        $modified = $this->getJson("DELETE", '/api/v1/resources/'.$resourceId, array(), array(), array(
+        $modified = $this->getJson("DELETE", '/api/v1/resources/'.$resourceId."?_key=45678isafgd56789asfgdhf4567", array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ));
 
@@ -419,14 +427,14 @@ class ResourceIntegrationTest extends ApiTestCase
         $this->assertTrue(isset($content['resource']['dateDeleted']));
         $this->assertSame('deleted', $content['resource']['status']);
 
-        $response = $this->getResponse('PUT', '/api/v1/resources/'.$resourceId);
+        $response = $this->getResponse('PUT', '/api/v1/resources/'.$resourceId."?_key=45678isafgd56789asfgdhf4567");
         $this->assertSame(410, $response->getStatusCode());
         $content = json_decode($response->getContent(), true);
         $this->assertSame(410, $content['response']['code']);
         $this->assertTrue(isset($content['resource']['dateDeleted']));
         $this->assertSame('deleted', $content['resource']['status']);
 
-        $response = $this->getResponse('DELETE', '/api/v1/resources/'.$resourceId);
+        $response = $this->getResponse('DELETE', '/api/v1/resources/'.$resourceId."?_key=45678isafgd56789asfgdhf4567");
         $this->assertSame(410, $response->getStatusCode());
         $content = json_decode($response->getContent(), true);
         $this->assertSame(410, $content['response']['code']);
@@ -434,9 +442,88 @@ class ResourceIntegrationTest extends ApiTestCase
         $this->assertSame('deleted', $content['resource']['status']);
     }
 
-    public function testDenyAccessToResource()
+    public function testResourceVisibility()
     {
-        $this->markTestSkipped('API authentication not yet implemented.  All resources are public for now.');
+        $json = $this->getJson("POST", '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), json_encode(array('title'=>'foo', 'type'=>'data', 'visibility' => array('test_client2'))));
+        $this->assertSame(201, $json['response']['code']);
+        
+        $json = $this->getJson("POST", '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ));
+    }
+    
+    //ensure authenticated client
+    public function testRequireApiKeyAuthentication()
+    {
+        $json = $this->getJson("POST", '/api/v1/resources', array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), json_encode(array('title'=>'foo', 'type'=>'data')));
+        $this->assertSame(401, $json['response']['code']);
+        
+        //create w/ invalid key
+        $json = $this->getJson("POST", '/api/v1/resources?_key=fakekey', array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), json_encode(array('title'=>'foo', 'type'=>'data')));
+        $this->assertSame(401, $json['response']['code']);
+        
+        //no key
+        $json = $this->getJson("PUT", '/api/v1/resources/5', array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), json_encode(array('title'=>'foo', 'type'=>'data')));
+        $this->assertSame(401, $json['response']['code']);        
+        $json = $this->getJson("DELETE", '/api/v1/resources/5', array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), json_encode(array('title'=>'foo', 'type'=>'data')));
+        $this->assertSame(401, $json['response']['code']);
+
+        //invalid key
+        $json = $this->getJson("PUT", '/api/v1/resources/5?_key=fakekey', array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), json_encode(array('title'=>'foo', 'type'=>'data')));
+        $this->assertSame(401, $json['response']['code']);        
+        $json = $this->getJson("DELETE", '/api/v1/resources/5?_key=fakekey', array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), json_encode(array('title'=>'foo', 'type'=>'data')));
+        $this->assertSame(401, $json['response']['code']);
     }
 
+    public function testRequireResourceOwner()
+    {
+        //create/modify public resource
+        $json = $this->getJson("POST", '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), json_encode(array('title'=>'foo', 'type'=>'data')));
+        $this->assertSame(201, $json['response']['code']);
+        $id = $json['resource']['id'];
+        $json = $this->getJson("PUT", '/api/v1/resources/'.$id, array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), json_encode(array('type'=>'audio')));
+        $this->assertSame(401, $json['response']['code']);
+        $json = $this->getJson("PUT", '/api/v1/resources/'.$id.'?_key=fakekey', array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), json_encode(array('type'=>'audio')));
+        $this->assertSame(401, $json['response']['code']);
+        
+        //create and modify resource as non owner
+        $json = $this->getJson("POST", '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), json_encode(array('title'=>'foo', 'type'=>'data')));
+        $this->assertSame(201, $json['response']['code']);
+        $id = $json['resource']['id'];
+        $json = $this->getJson("PUT", '/api/v1/resources/'.$id."?_key=55678isafgd56789asfgdhf4568", array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), json_encode(array('type'=>'audio')));
+        $this->assertSame(403, $json['response']['code']);
+        $json = $this->getJson("DELETE", '/api/v1/resources/'.$id."?_key=55678isafgd56789asfgdhf4568", array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), json_encode(array('type'=>'audio')));
+        $this->assertSame(403, $json['response']['code']);
+    }
+
+    public function testFilterResourcesByVisibility()
+    {
+        $this->markTestSkipped('Requires GET: /resources route to be properly implemented.');
+    }
 }
