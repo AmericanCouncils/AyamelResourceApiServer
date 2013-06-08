@@ -1,0 +1,6 @@
+services:
+    ayamel.youtube.resource_provider:
+        class: Ayamel\YouTubeBundle\YouTubeResourceProvider
+        tags:
+            - { name: ayamel.resource.provider_delegate }
+            
