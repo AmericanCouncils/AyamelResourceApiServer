@@ -56,7 +56,7 @@ class YouTubeResourceProvider implements ProviderInterface
         
         //check for error
         if (200 !== $code) {
-            throw new HttpException($code);
+            throw new HttpException($code, "Failed to create YouTube resource.");
         }
 
         $data = json_decode($data, true);
