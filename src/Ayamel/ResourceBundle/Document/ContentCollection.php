@@ -26,8 +26,8 @@ class ContentCollection
     /**
      * Note that for now this is just a hash, in the future there will probably be a legitimate document.
      *
-     * @MongoDB\Hash
-     * @JMS\Type("array")
+     * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\OEmbed")
+     * @JMS\Type("Ayamel\ResourceBundle\Document\OEmbed")
      */
     protected $oembed;
 
@@ -70,7 +70,7 @@ class ContentCollection
      *
      * @param hash $oembed
      */
-    public function setOembed(array $oembed)
+    public function setOembed(OEmbed $oembed)
     {
         $this->oembed = $oembed;
     }
