@@ -12,6 +12,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.3.3",
+        "ext-curl": "*",
         "symfony/symfony": "2.2.*",
 		    "doctrine/mongodb-odm-bundle": "dev-master",
         "symfony/assetic-bundle": "dev-master",

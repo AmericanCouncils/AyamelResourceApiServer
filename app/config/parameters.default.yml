@@ -1,9 +1,5 @@
 ## Note that this parameters.yml file includes configuration for a test/dev environment.  For an
 ## actual production configuration, change this file accordingly.
-
-imports:
-    - { resource: '@AyamelApiBundle/Resources/config/test_clients.yml' }
-
 parameters:
     database_driver: pdo_sqlite
     database_path: %kernel.root_dir%/app/data/db.sqlite
@@ -28,7 +24,7 @@ parameters:
     mailer_password: null
 
     locale: en
-    secret: 1b577a9e247bf2c882bd861e1e825d83
+    secret: thisisnotasafesecret
     
     ## File upload handling ##
     ayamel.filesystem.local_filesystem.root_dir: %kernel.root_dir%/files/resource_uploads
@@ -50,7 +46,7 @@ doctrine_mongodb:
             server: mongodb://localhost:27017
             options:
                 connect: true
-    default_database: ayamel_test
+    default_database: ayamel_dev
     document_managers:
         default:
             auto_mapping: true

@@ -184,6 +184,7 @@ class UploadContent extends ApiController
                 //notify system
                 $apiDispatcher->dispatch(Events::RESOURCE_MODIFIED, new ApiEvent($resource));
             } catch (\Exception $e) {
+                
                 //TODO: unlock resource
                 throw $e;
             }
