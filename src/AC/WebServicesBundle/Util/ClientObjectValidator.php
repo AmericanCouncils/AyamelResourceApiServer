@@ -265,14 +265,6 @@ class ClientObjectValidator
                     break;
                 }
             }
-
-            if (!$found) {
-                $invalidFields[] = $name;
-            }
-        }
-
-        if (!empty($invalidFields)) {
-            throw new HttpException(400, sprintf("The following fields cannot be set by the client: %s", implode(", ", $invalidFields)));
         }
 
         //return the modified object if present, otherwise return new one

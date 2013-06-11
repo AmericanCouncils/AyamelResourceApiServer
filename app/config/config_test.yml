@@ -21,30 +21,9 @@ services:
         tags:
             - { name: transcoding.preset }
     
-    # load api clients from config for testing
-    ayamel.client_loader:
-        class: Ayamel\ApiBundle\Client\ConfigClientLoader
-        arguments: [%ayamel.clients%]
-
-
 parameters:
     #transcode mapping for test
     ayamel.transcoding.preset_map:
         text/plain:
             - { preset: text_to_lower, tag: low, extension: txt, representation: transcoding, quality: 0 }
         
-    #test filesytem settings
-    ayamel.filesystem.local_filesystem.root_dir: /tmp
-    ayamel.filesystem.local_filesystem.secret: zeroisnotanumber
-    
-    # test api clients
-    ayamel.clients:
-        test_client:
-            name: The Test Client
-            apiKey: 45678isafgd56789asfgdhf4567
-            #customPresets: {mime to preset map}
-            #public: true/false
-            #resourceDefaults: default license/copyright, etc...
-        test_client2:
-            name: Another Test Client
-            apiKey: 55678isafgd56789asfgdhf4568
