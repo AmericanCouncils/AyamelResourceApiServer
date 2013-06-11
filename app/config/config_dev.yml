@@ -21,3 +21,12 @@ monolog:
 
 assetic:
     use_controller: true
+
+nelmio_api_doc:
+    name:   Ayamel Media API Documentation
+    sandbox:
+        enabled:  true
+        endpoint: /AyamelResourceApiServer/web/index_dev.php
+        authentication: # default null, if set, the value of the api key is read from the query string and appended to every sandbox api call
+            name: _key
+            delivery: query # only query delivery is supported for now

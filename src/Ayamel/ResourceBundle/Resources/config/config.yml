@@ -1,42 +1,12 @@
 parameters:
-    ayamel.resource.types:
-        mp4: video
-        m4v: video
-        wmv: video
-        mov: video
-        avi: video
-        webm: video
-        mp3: audio
-        wma: audio
-        m4a: audio
-        aac: audio
-        wav: audio
-        jpg: image
-        jpeg: image
-        gif: image
-        png: image
-        tiff: image
-        txt: document
-        rtf: document
-        doc: document
-        docx: document
-        xls: document
-        xlsx: document
-        ppt: document
-        pptx: document
-        odt: document
-        pdf: document
-        csv: document
-        zip: archive
-        tar: archive
-        rar: archive
-        iso: archive
-        gz: archive
-        tz: archive
-        xml: data
-        json: data
-        csv: data
-    ayamel.resource.null_extension_type: binary
+    ayamel.resource.type_extension_map:
+        video: [mp4,m4v,wmv,mov,avi,webm]
+        audio: [mp3,wma,m4a,aac,wav]
+        image: [jpg,jpeg,gif,png,tiff]
+        document: [txt,rtf,doc,docx,xls,xlsx,ppt,pptx,odt,ods,pdf,csv,html,htm,pages,numbers,key]
+        archive: [zip,tar,rar,iso,gz,tz]
+        data: [xml,json,csv,yml]
+    ayamel.resource.null_extension_type: data
 
     ayamel.resource.file_attribute_validation_map:
         Ayamel\ResourceBundle\Validation\File\VideoAttributes:
@@ -74,18 +44,18 @@ services:
 
     ayamel.resource.local_provider:
         class: Ayamel\ResourceBundle\Provider\LocalFilepathProvider
-        arguments: [%ayamel.resource.types%, %ayamel.resource.null_extension_type%]
+        arguments: [%ayamel.resource.type_extension_map%, %ayamel.resource.null_extension_type%]
         tags:
             - { name: ayamel.resource.provider_delegate }
 
     ayamel.resource.ftp_provider:
         class: Ayamel\ResourceBundle\Provider\FtpProvider
-        arguments: [%ayamel.resource.types%, %ayamel.resource.null_extension_type%]
+        arguments: [%ayamel.resource.type_extension_map%, %ayamel.resource.null_extension_type%]
         tags:
             - { name: ayamel.resource.provider_delegate }
 
     ayamel.resource.http_provider:
         class: Ayamel\ResourceBundle\Provider\HttpProvider
-        arguments: [%ayamel.resource.types%, %ayamel.resource.null_extension_type%]
+        arguments: [%ayamel.resource.type_extension_map%, %ayamel.resource.null_extension_type%]
         tags:
             - { name: ayamel.resource.provider_delegate }

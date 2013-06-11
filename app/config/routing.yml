@@ -4,7 +4,3 @@ AyamelApiBundle:
 ApiDocs:
     resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
     prefix:   /api/v1/docs
-    
-#SwaggerDocs:
-#    resource: "@NelmioApiDocBundle/Resources/config/routing.swagger.yml"
-#    prefix: /api/v1/docs

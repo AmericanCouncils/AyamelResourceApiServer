@@ -1,5 +1,4 @@
 imports:
-#    - { resource: security.yml }
     - { resource: '@ACWebServicesBundle/Resources/config/config.yml' }
     - { resource: '@AyamelResourceBundle/Resources/config/config.yml' }
     - { resource: '@AyamelApiBundle/Resources/config/config.yml' }

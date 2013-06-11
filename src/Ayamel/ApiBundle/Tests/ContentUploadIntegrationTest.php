@@ -122,7 +122,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $response = $this->getJson('POST', $apiPath.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($data));
-
+                
         $this->assertSame(200, $response['response']['code']);
         $this->assertSame($data['remoteFiles'], $response['resource']['content']['files']);
         $this->assertSame('normal', $response['resource']['status']);
