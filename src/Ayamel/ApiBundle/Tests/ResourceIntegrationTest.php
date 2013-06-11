@@ -110,7 +110,7 @@ class ResourceIntegrationTest extends ApiTestCase
         $this->assertTrue(isset($json['content_upload_url']));
     }
 
-    public function testCreateNewResourceWithInvalidData()
+    public function testCreateNewResourceIgnoresReadOnlyFields()
     {
         $data = array(
             'title' => 'A test to remember',
@@ -122,6 +122,7 @@ class ResourceIntegrationTest extends ApiTestCase
             'visibility' => array('client1', 'client2'),
             'copyright' => "Copyright text 2013",
             'license' => 'Public Domain',
+            'dateDeleted' => 132435654,
             'origin' => array(
                 'creator' => 'Leonardo da Vinci',
                 'location' => 'Italy',
@@ -140,11 +141,13 @@ class ResourceIntegrationTest extends ApiTestCase
         );
 
         $body = json_encode($data);
-        $response = $this->getResponse("POST", '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $response = $this->getJson("POST", '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), $body);
 
-        $this->assertSame(400, $response->getStatusCode());
+        $this->assertSame(201, $response['response']['code']);
+        $this->assertSame('test_client', $response['resource']['client']['id']);
+        $this->assertFalse(isset($response['resource']['dateDeleted']));
     }
 
     public function testModifyResource()

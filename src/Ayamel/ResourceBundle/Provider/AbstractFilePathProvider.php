@@ -32,7 +32,7 @@ abstract class AbstractFilePathProvider implements ProviderInterface
      *
      * @param array $resourceTypes
      */
-    public function __construct(array $resourceTypes = null, $nullType = 'binary')
+    public function __construct(array $resourceTypes = null, $nullType = 'data')
     {
         if (!is_null($resourceTypes)) {
             $this->resourceTypes = $resourceTypes;
@@ -141,6 +141,12 @@ abstract class AbstractFilePathProvider implements ProviderInterface
      */
     protected function guessTypeFromExtension($extension)
     {
-        return (isset($this->resourceTypes[$extension])) ? $this->resourceTypes[$extension] : $this->nullExtensionType;
+        foreach ($this->resourceTypes as $type => $extensions) {
+            if (in_array($extension, $extensions)) {
+                return $type;
+            }
+        }
+        
+        return $this->nullExtensionType;
     }
 }

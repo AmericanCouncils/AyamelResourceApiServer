@@ -1,5 +1,4 @@
 imports:
-#    - { resource: security.yml }
     - { resource: '@ACWebServicesBundle/Resources/config/config.yml' }
     - { resource: '@AyamelResourceBundle/Resources/config/config.yml' }
     - { resource: '@AyamelApiBundle/Resources/config/config.yml' }
@@ -10,6 +9,7 @@ imports:
     - { resource: '@AyamelTranscodingBundle/Resources/config/config.yml' }
     - { resource: '@AyamelTranscodingBundle/Resources/config/config.preset_map.yml' }
     - { resource: '@AyamelTranscodingBundle/Resources/config/config.rabbitmq.yml' }
+    - { resource: '@AyamelYouTubeBundle/Resources/config/config.yml' }
 
     # include parameters.yml last, git ignores it, so deployment specific overrides can go there safely
     - { resource: parameters.yml }

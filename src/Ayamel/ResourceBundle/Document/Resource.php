@@ -46,23 +46,6 @@ class Resource
     const STATUS_DELETED = 'deleted';
 
     /**
-     * Array of scalar property type validators, because PHP sucks and doesn't do scalar type hinting.  This is used in the `validate()` method.
-     *
-     * @JMS\Exclude
-     *
-     * @var array
-     */
-    protected $_validators = array(
-        'title' => 'string',
-        'description' => 'string',
-        'keywords' => 'string',
-        'type' => 'string',
-        'copyright' => 'string',
-        'license' => 'string',
-        'status' => 'string',
-    );
-
-    /**
      * The unique ID of the resource.
      *
      * @MongoDB\Id

@@ -10,12 +10,14 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 class ScanResourceUri extends ApiController
 {
     /**
-     * Derive as much of a full resource object as possible from a given URI.  Note that custom resource providers can be specified
-     * in URI format, for example YouTube:  `youtube://txqiwrbYGrs`.
+     * Derive as much of a full resource object as possible from a given URI. Currently supported URI schemes include:
+     * 
+     * - `http`/`https` - Points to any web-accessible file or webpage.  For example: `http://example.com/files/some_video.mp4`
+     * - `youtube` - This designates a video resource from YouTube.  For example: `youtube://txqiwrbYGrs`
      *
      * @ApiDoc(
      *      resource=true,
-     *      description="Derive resource from a URI.",
+     *      description="Derive Resource from a URI.",
      *      output="Ayamel\ResourceBundle\Document\Resource",
      *      filters={
      *          {"name"="_format", "default"="json", "description"="Return format, can be one of xml, yml or json"},

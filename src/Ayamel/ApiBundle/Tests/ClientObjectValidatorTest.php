@@ -120,7 +120,7 @@ class ClientObjectValidatorTest extends ApiTestCase
         $this->assertNull($resource->getClient());
     }
 
-    public function testThrowExceptionReadOnlyFields()
+    public function testIgnoreReadOnlyFields()
     {
         $c = $this->getContainer();
         $validator = $c->get('ac.webservices.object_validator');
@@ -142,8 +142,8 @@ class ClientObjectValidatorTest extends ApiTestCase
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($requestData));
 
-        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\HttpException');
         $resource = $validator->createObjectFromRequest('Ayamel\ResourceBundle\Document\Resource', $request);
+        $this->assertTrue(is_null($resource->getId()));
     }
 
     public function testThrowExceptionOnInvalidFieldName()
@@ -168,7 +168,7 @@ class ClientObjectValidatorTest extends ApiTestCase
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($requestData));
 
-        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\HttpException');
         $resource = $validator->createObjectFromRequest('Ayamel\ResourceBundle\Document\Resource', $request);
+        $this->assertTrue($resource instanceof Resource);
     }
 }
