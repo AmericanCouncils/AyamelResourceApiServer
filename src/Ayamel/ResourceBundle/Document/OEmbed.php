@@ -8,6 +8,8 @@ use JMS\Serializer\Annotation as JMS;
 /**
  * OEmbed document.  For more on OEmbed, see the full spec at [http://oembed.com](http://oembed.com/).
  *
+ * @MongoDB\EmbeddedDocument
+ * 
  * @package AyamelResourceBundle
  * @author Evan Villemez
  */
