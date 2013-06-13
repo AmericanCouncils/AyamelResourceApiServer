@@ -60,14 +60,25 @@ jms_serializer:
             dir: "%kernel.cache_dir%/serializer"
         auto_detection: true
 
+doctrine_mongodb:
+    connections:
+        default:
+            server: mongodb://%mongodb_host%:%mongodb_port%
+            options:
+                connect: true
+    default_database: %mongodb_database%
+    document_managers:
+        default:
+            auto_mapping: true
+
 nelmio_api_doc:
     name:   Ayamel Media API Documentation
     sandbox:
         enabled:  true
-        endpoint: /AyamelResourceApiServer/web/index_dev.php
-#        authentication: # default null, if set, the value of the api key is read from the query string and appended to every sandbox api call
-#            name: access_token
-#            delivery: query # only query delivery is supported for now
+        endpoint: %nelmio_api_doc_endpoint%
+        authentication: # default null, if set, the value of the api key is read from the query string and appended to every sandbox api call
+            name: _key
+            delivery: query # only query delivery is supported for now
 
 nelmio_cors:
     defaults:

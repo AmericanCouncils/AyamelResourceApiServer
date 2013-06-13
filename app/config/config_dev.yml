@@ -22,15 +22,6 @@ monolog:
 assetic:
     use_controller: true
 
-nelmio_api_doc:
-    name:   Ayamel Media API Documentation
-    sandbox:
-        enabled:  true
-        endpoint: /AyamelResourceApiServer/web/index_dev.php
-        authentication: # default null, if set, the value of the api key is read from the query string and appended to every sandbox api call
-            name: _key
-            delivery: query # only query delivery is supported for now
-
 services:
     # load api clients from config for testing
     ayamel.client_loader:
@@ -38,15 +29,13 @@ services:
         arguments: [%ayamel.clients%]
 
 parameters:
-    #test filesytem settings
-    ayamel.filesystem.local_filesystem.root_dir: /tmp
-    ayamel.filesystem.local_filesystem.secret: zeroisnotanumber
-    
+
     # test api clients
     ayamel.clients:
         test_client:
             name: The Test Client
             apiKey: 45678isafgd56789asfgdhf4567
+            #uri: http://example.com
             #customPresets: {mime to preset map}
             #public: true/false
             #resourceDefaults: default license/copyright, etc...
