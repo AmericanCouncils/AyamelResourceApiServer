@@ -1,14 +1,6 @@
 ## Note that this parameters.yml file includes configuration for a test/dev environment.  For an
 ## actual production configuration, change this file accordingly.
 parameters:
-    database_driver: pdo_sqlite
-    database_path: %kernel.root_dir%/app/data/db.sqlite
-    database_host: localhost
-    database_port: '9999'
-    database_name: ayamel
-    database_user: root
-    database_password: null
-    
     mongodb_host: localhost
     mongodb_port: 27017
     mongodb_database: ayamel_test
@@ -19,10 +11,10 @@ parameters:
     rabbitmq_password: guest
     rabbitmq_vhost: '/'
 
-    mailer_transport: smtp
-    mailer_host: localhost
-    mailer_user: null
-    mailer_password: null
+    #mailer_transport: smtp
+    #mailer_host: localhost
+    #mailer_user: null
+    #mailer_password: null
 
     locale: en
     secret: thisisnotasafesecret

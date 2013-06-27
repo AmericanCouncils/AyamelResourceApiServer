@@ -214,7 +214,7 @@ class RestServiceSubscriber implements EventSubscriberInterface
         //set defaults
         $responseCode = 200;
         $headers = array();
-        $template = null;
+        $template = $data->getTemplate();
 
         //check specifically for service response
         if ($data instanceof ServiceResponse) {

@@ -8,20 +8,16 @@ class AppKernel extends Kernel
     public function registerBundles()
     {
         $bundles = array(
-            //taken from standard edition
+            //from standard-edition
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
-//            new Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new Symfony\Bundle\TwigBundle\TwigBundle(),
             new Symfony\Bundle\MonologBundle\MonologBundle(),
 //            new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
-//            new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             
             //added by Evan
             new Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle($this),
-            
-            //custom
             new AC\WebServicesBundle\ACWebServicesBundle(),
             new Ayamel\ResourceBundle\AyamelResourceBundle(),
             new Ayamel\ApiBundle\AyamelApiBundle(),
