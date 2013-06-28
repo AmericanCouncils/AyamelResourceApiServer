@@ -25,7 +25,8 @@
         "ac/transcoding-bundle": "dev-master",
         "oldsound/rabbitmq-bundle": "dev-master",
         "nelmio/api-doc-bundle": "dev-master",
-        "nelmio/cors-bundle": "*"
+        "nelmio/cors-bundle": "*",
+        "ac/web-services-bundle": "*"
     },
     "scripts": {
         "post-install-cmd": [
