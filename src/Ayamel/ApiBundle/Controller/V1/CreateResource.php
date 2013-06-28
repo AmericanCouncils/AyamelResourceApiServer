@@ -64,7 +64,7 @@ class CreateResource extends ApiController
 
         //define returned content structure
         return $this->createServiceResponse(array(
-            'content_upload_url' => $uploadUrl,
+            'contentUploadUrl' => $uploadUrl,
             'resource' => $resource
         ), 201);
     }

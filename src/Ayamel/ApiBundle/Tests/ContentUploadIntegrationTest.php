@@ -23,7 +23,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $this->assertFalse(isset($response['resource']['content']));
 
         $resourceId = $response['resource']['id'];
-        $apiPath = substr($response['content_upload_url'], strlen('http://localhost'));
+        $apiPath = substr($response['contentUploadUrl'], strlen('http://localhost'));
 
         //hit the path with empty request, expect 422 (unprocessable) - then 401 on subsequent requests
         $response = $this->getResponse('POST', $apiPath.'?_key=45678isafgd56789asfgdhf4567');
@@ -41,8 +41,8 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $this->assertSame(200, $response->getStatusCode());
         $content = json_decode($response->getContent(), true);
         $this->assertSame(200, $content['response']['code']);
-        $this->assertTrue(isset($content['content_upload_url']));
-        $uploadUrl = substr($content['content_upload_url'], strlen('http://localhost'));
+        $this->assertTrue(isset($content['contentUploadUrl']));
+        $uploadUrl = substr($content['contentUploadUrl'], strlen('http://localhost'));
 
         $response = $this->getResponse('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567');
         $this->assertSame(422, $response->getStatusCode());
@@ -59,8 +59,8 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $this->assertSame(200, $response->getStatusCode());
         $content = json_decode($response->getContent(), true);
         $this->assertSame(200, $content['response']['code']);
-        $this->assertTrue(isset($content['content_upload_url']));
-        $uploadUrl = substr($content['content_upload_url'], strlen('http://localhost'));
+        $this->assertTrue(isset($content['contentUploadUrl']));
+        $uploadUrl = substr($content['contentUploadUrl'], strlen('http://localhost'));
         
         //no apikey
         $response = $this->getResponse('POST', $uploadUrl);
@@ -87,7 +87,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $this->assertSame('awaiting_content', $response['resource']['status']);
 
         $resourceId = $response['resource']['id'];
-        $apiPath = substr($response['content_upload_url'], strlen('http://localhost'));
+        $apiPath = substr($response['contentUploadUrl'], strlen('http://localhost'));
 
         $data = array(
             'remoteFiles' => array(
@@ -142,7 +142,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $this->assertSame(201, $response['response']['code']);
         $this->assertFalse(isset($response['resource']['content']));
         $resourceId = $response['resource']['id'];
-        $uploadUrl = substr($response['content_upload_url'], strlen('http://localhost'));
+        $uploadUrl = substr($response['contentUploadUrl'], strlen('http://localhost'));
 
         //create uploaded file
         $testFilePath = __DIR__."/files/resource_test_files/lorem.txt";
@@ -181,7 +181,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $this->assertFalse(isset($response['resource']['content']));
         $this->assertSame('awaiting_content', $response['resource']['status']);
         $resourceId = $response['resource']['id'];
-        $uploadUrl = substr($response['content_upload_url'], strlen('http://localhost'));
+        $uploadUrl = substr($response['contentUploadUrl'], strlen('http://localhost'));
 
         //create uploaded file
         $testFilePath = __DIR__."/files/resource_test_files/lorem.txt";
