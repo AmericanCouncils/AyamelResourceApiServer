@@ -107,7 +107,7 @@ class ResourceIntegrationTest extends ApiTestCase
         $this->assertSame($json['resource']['dateModified'], $json['resource']['dateAdded']);
         $this->assertFalse(isset($json['resource']['content']));
         $this->assertFalse(isset($json['resource']['relations']));
-        $this->assertTrue(isset($json['content_upload_url']));
+        $this->assertTrue(isset($json['contentUploadUrl']));
     }
 
     public function testCreateNewResourceIgnoresReadOnlyFields()
@@ -212,7 +212,7 @@ class ResourceIntegrationTest extends ApiTestCase
         $this->assertSame($json['resource']['dateModified'], $json['resource']['dateAdded']);
         $this->assertFalse(isset($json['resource']['content']));
         $this->assertFalse(isset($json['resource']['relations']));
-        $this->assertTrue(isset($json['content_upload_url']));
+        $this->assertTrue(isset($json['contentUploadUrl']));
 
         //use these in subsequent tests
         $dateAdded = $json['resource']['dateAdded'];
@@ -266,7 +266,7 @@ class ResourceIntegrationTest extends ApiTestCase
         $this->assertFalse($modified['resource']['dateModified'] === $modified['resource']['dateAdded']);
         $this->assertFalse(isset($modified['resource']['content']));
         $this->assertFalse(isset($modified['resource']['relations']));
-        $this->assertFalse(isset($modified['content_upload_url']));
+        $this->assertFalse(isset($modified['contentUploadUrl']));
 
         //setting a field to null should remove it
         sleep(1);   //sleeping one second to force dateModified to be different
@@ -301,7 +301,7 @@ class ResourceIntegrationTest extends ApiTestCase
         $this->assertFalse($prevDateModified === $modified['resource']['dateModified']);
         $this->assertFalse(isset($modified['resource']['content']));
         $this->assertFalse(isset($modified['resource']['relations']));
-        $this->assertFalse(isset($modified['content_upload_url']));
+        $this->assertFalse(isset($modified['contentUploadUrl']));
     }
 
     public function testDeleteResource()
@@ -366,7 +366,7 @@ class ResourceIntegrationTest extends ApiTestCase
         $this->assertSame($json['resource']['dateModified'], $json['resource']['dateAdded']);
         $this->assertFalse(isset($json['resource']['content']));
         $this->assertFalse(isset($json['resource']['relations']));
-        $this->assertTrue(isset($json['content_upload_url']));
+        $this->assertTrue(isset($json['contentUploadUrl']));
 
         $resourceId = $json['resource']['id'];
 
