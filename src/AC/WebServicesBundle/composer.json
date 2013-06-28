@@ -1,0 +1,15 @@
+{
+    "name": "ac/web-services-bundle",
+    "description": "Provides tools for developing RESTful APIs.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Evan Villemez",
+            "email": "evan.villemez@americancouncils.org"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "jms/serializer-bundle": ">=0.11"
+    }
+}

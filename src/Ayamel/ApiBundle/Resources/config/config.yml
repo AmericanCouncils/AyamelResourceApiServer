@@ -1,6 +1,4 @@
 parameters:
-    ac.webservices.api_paths:
-        - "/api/"
     ayamel.api.token_cache_dir: %kernel.cache_dir%/ayamel_upload_tokens
 
 services:

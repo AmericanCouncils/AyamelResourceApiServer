@@ -4,7 +4,7 @@ namespace Ayamel\ApiBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Ayamel\ResourceBundle\Document\Resource;
-use AC\WebServicesBundle\Response\ServiceResponse;
+use AC\WebServicesBundle\ServiceResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 /**
  * A base API Controller to provide convenience methods for actions commonly performed in various places in the Ayamel Resource API.

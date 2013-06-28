@@ -1,9 +1,3 @@
-#AyamelApiBundle_api_docs:
-#    pattern: /tester
-
-#AyamelApiBundle_api_clients:
-#    pattern: /{version}/clients
-
 AyamelApiBundle_home:
     pattern:   /
     defaults:  { _controller: Ayamel\ApiBundle\Controller\Home::buildHomePage }

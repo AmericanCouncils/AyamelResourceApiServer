@@ -1,8 +1,15 @@
 # ACWebServicesBundle #
 
-This bundle provides generic api workflow tools for developing RESTful apis.  Provided are event listeners for handling API routes, which facilitate writing output-format-agnostic controllers, content negotiation and error handling.
+This bundle provides generic api workflow tools for developing RESTful apis.
 
-*Warning:*  This bundle may be removed in the future, and replaced with `FOSRestBundle`.  This may or may not be done, depending on where development with bundle that is heading.
+*NIH:*  A lot of the functionality in this bundle already exists in [FOSRestBundle](), use that if you want safety.
+
+## Features ##
+
+* Request lifecycle events dispatched for registered *API events*
+* Object de-serializer that leverages JMS Metadata to serialize incoming data into already existing objects
+* Optionally include response data as part of the outgoing response
+* By default handles xml, json, jsonp and yml responses
 
 ## Usage ##
 
@@ -21,15 +28,16 @@ For example:
 
         namespace MyBundle\Controller;
         use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
+        use AC\WebServicesBundle\ServiceResponse;
+        
         class FooController extends Controller
         {
             public function someAction()
             {
-                return array(
+                return new ServiceResponse(array(
                     'foo' => 'bar',
                     'baz' => 23
-                );
+                ));
             }
         }
 
@@ -53,7 +61,7 @@ This is an brief description of all configuration options provided by the bundle
 * `ac.webservices.api_paths` - an array of regex expressions to match routes which should be considered "api routes"
 * `ac.webservices.allow_code_suppression` - boolean for whether or not to allow clients to suppress the http response codes, and always return `200` responses
 * `ac.webservices.include_response_data` - boolean for whether or not to include the response code and message in the response data structure
-* `ac.webservices.exception_map` - a map of exception classes, and the http code and message that should be returned if they are encountered, if not specified, all exceptions return `500`
+* `ac.webservices.exception_map` - a map of exception classes, and the http code and message that should be returned if they are encountered, if not specified, all exceptions (excluding `HttpException`) return `500`
 * `ac.webservices.default_response_format` - the default response format, if not specified `json` is assumed, but you can change this
 * `ac.webservices.include_dev_exceptions` - boolean for whether or not to include detailed exception information in API responses if in dev mode
 
@@ -124,9 +132,10 @@ subscribers to multiple events via the `ac.webservice.subscriber` tag.
 ### Services ###
 
 * `ac.webservices.object_validator` - This service will use the JMS serializer and its metadata to create, or modify pre-existing
-objects from a client's incoming request.
+objects from a client's incoming request.  It doesn't support all JMS features yet, and it would probably be best implemented as
+an extension to the serializer.
 
-    Example:
+Usage:
         
         // ... get previous object
 

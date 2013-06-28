@@ -14,7 +14,7 @@ use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use AC\WebServicesBundle\Response\ServiceResponse;
+use AC\WebServicesBundle\ServiceResponse;
 
 /**
  * TODO: Need to make formatHeaders configurable

@@ -1,6 +1,6 @@
 <?php
 
-namespace AC\WebServicesBundle\Response;
+namespace AC\WebServicesBundle;
 
 /**
  * Note that this does not extend the HttpFoundation Response for a reason, so there is some duplicate functionality.

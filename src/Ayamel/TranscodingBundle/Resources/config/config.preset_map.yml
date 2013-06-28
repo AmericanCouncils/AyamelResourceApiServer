@@ -1,10 +1,10 @@
 parameters:
-    # all video presets
+    # applies to all video formats
     ayamel.transcoding.video_presets:
         - { preset: handbrake.ipod, tag: low, extension: mp4, representation: transcoding, quality: 1 }
         - { preset: handbrake.classic, tag: medium, extension: mp4, representation: transcoding, quality: 2 }
         - { preset: handbrake.high_profile, tag: high, extension: mp4, representation: transcoding, quality: 3 }
-    #            - { preset: ffmpeg.thumbnail, tag: thumb, extension: jpg, representation: transcoding, quality: 3, params: {} }
+        #- { preset: ffmpeg.thumbnail, tag: thumb, extension: jpg, representation: transcoding, quality: 3, params: {} }
     
     # TODO: audio presets
     # TODO: image presets
@@ -12,6 +12,7 @@ parameters:
     
     #maps sets of presets to file mime types
     ayamel.transcoding.preset_map:
+        #video
         video/mp4: %ayamel.transcoding.video_presets%
         video/quicktime: %ayamel.transcoding.video_presets%
         video/x-m4v: %ayamel.transcoding.video_presets%
@@ -19,3 +20,6 @@ parameters:
         video/x-ms-wmv: %ayamel.transcoding.video_presets%
         video/x-flv: %ayamel.transcoding.video_presets%
         video/avi: %ayamel.transcoding.video_presets%
+        #audio
+        #image
+        #documents

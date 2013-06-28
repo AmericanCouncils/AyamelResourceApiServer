@@ -71,6 +71,14 @@ doctrine_mongodb:
         default:
             auto_mapping: true
 
+ac_web_services:
+    include_dev_exceptions: true
+    include_response_data: true
+    allow_code_suppression: true
+    default_response_format: json
+    api_paths: 
+        - "/api/"
+
 nelmio_api_doc:
     name:   Ayamel Media API Documentation
     sandbox:

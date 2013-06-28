@@ -135,6 +135,8 @@ class TranscodeManager
         $newFiles = array();
         try {
             foreach ($presetDefinitions as $def) {
+                //TODO: check for $def['params'] and modify preset accordingly
+                
                 //run the transcode & create a FileReference from the resulting file
                 $transcodedFile = $this->transcoder->transcodeWithPreset(
                     $ref->getInternalUri(),

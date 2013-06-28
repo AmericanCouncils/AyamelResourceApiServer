@@ -1,15 +1,3 @@
-parameters:
-    ac.webservices.default_response_format: json
-    ac.webservices.include_response_data: true
-    ac.webservices.allow_code_suppression: true
-    ac.webservices.include_dev_exceptions: true
-
-    # default blank object
-    ac.webservices.exception_map: {}
-
-    # default blank array
-    ac.webservices.api_paths: []
-
 services:
     # can be used to create and/or modify objects annoted with JMSSerializerBundle annotations
     # from an incoming request
@@ -20,7 +8,7 @@ services:
     # responsible for instantiating the API request listeners for matching paths
     ac.webservices.request_listener:
         class:        AC\WebServicesBundle\EventListener\ApiBootstrapListener
-        arguments:    [@service_container, %ac.webservices.api_paths%]
+        arguments:    [@service_container, %ac_web_services.api_paths%]
         tags:
             -  { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 1024 }
 

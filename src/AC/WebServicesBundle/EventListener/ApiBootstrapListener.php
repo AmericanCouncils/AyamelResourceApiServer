@@ -37,10 +37,10 @@ class ApiBootstrapListener
                 //build rest subscriber
                 $subscriber = new RestServiceSubscriber(
                     $this->container,
-                    $this->container->getParameter('ac.webservices.default_response_format'),
-                    $this->container->getParameter('ac.webservices.include_response_data'),
-                    $this->container->getParameter('ac.webservices.allow_code_suppression'),
-                    $this->container->getParameter('ac.webservices.include_dev_exceptions')
+                    $this->container->getParameter('ac_web_services.default_response_format'),
+                    $this->container->getParameter('ac_web_services.include_response_data'),
+                    $this->container->getParameter('ac_web_services.allow_code_suppression'),
+                    $this->container->getParameter('ac_web_services.include_dev_exceptions')
                 );
 
                 //register subscriber with dispatcher
