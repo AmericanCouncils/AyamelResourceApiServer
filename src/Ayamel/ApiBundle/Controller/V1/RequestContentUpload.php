@@ -37,7 +37,7 @@ class RequestContentUpload extends ApiController
 
         $url = $this->container->get('router')->generate('api_v1_upload_content', array('id' => $resource->getId(), 'token' => $uploadToken), true);
 
-        return $this->createServiceResponse(array('content_upload_url' => $url), 200);
+        return $this->createServiceResponse(array('contentUploadUrl' => $url), 200);
     }
 
 }
