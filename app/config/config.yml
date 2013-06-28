@@ -77,7 +77,7 @@ ac_web_services:
     allow_code_suppression: true
     default_response_format: json
     api_paths: 
-        - "/api/"
+        - "{^/api/}"
 
 nelmio_api_doc:
     name:   Ayamel Media API Documentation
