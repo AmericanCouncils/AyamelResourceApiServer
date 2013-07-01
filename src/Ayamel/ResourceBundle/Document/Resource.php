@@ -211,11 +211,21 @@ class Resource
      * @JMS\Type("Ayamel\ResourceBundle\Document\Origin")
      */
     public $origin;
+    
+    /**
+     * An object containing information about the API client that created the object.
+     *
+     * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\ClientUser")
+     * @JMS\SerializedName("clientUser")
+     * @JMS\Type("Ayamel\ResourceBundle\Document\ClientUser")
+     */
+    public $clientUser;
 
     /**
      * An object containing information about the API client that created the Resource.
      *
      * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\Client")
+     * @JMS\ReadOnly
      * @JMS\Type("Ayamel\ResourceBundle\Document\Client")
      */
     public $client;
@@ -546,6 +556,26 @@ class Resource
     public function getClient()
     {
         return $this->client;
+    }
+
+    /**
+     * Get the optional client user
+     *
+     * @param ClientUser $user 
+     */
+    public function getClientUser()
+    {
+        return $this->clientUser;
+    }
+
+    /**
+     * Set the optional client user
+     *
+     * @param ClientUser $user 
+     */
+    public function setClientUser(ClientUser $user = null)
+    {
+        $this->clientUser = $user;
     }
 
     /**

@@ -110,7 +110,7 @@ class RelationsController extends ApiController
 
         //create the relation submitted by the client
         $relation = $this->container->get('ac.webservices.object_validator')->createObjectFromRequest('Ayamel\ResourceBundle\Document\Relation', $this->getRequest());
-
+        
         try {
             $object = $this->getRequestedResourceById($relation->getObjectId());
         } catch (HttpException $e) {
@@ -120,7 +120,6 @@ class RelationsController extends ApiController
                 throw $e;
             }
         }
-        
 
         if ($object->isDeleted()) {
             throw $this->createHttpException(400, "Invalid object id.");
@@ -129,11 +128,10 @@ class RelationsController extends ApiController
         //fill in the other info
         $relation->setSubjectId($subject->getId());
         $clientDoc = $this->getApiClient()->createClientDocument();
-        if ($relation->getClient() && $relation->getClient()->getUser()) {
-            $clientUser = $relation->getClient()->getUser();
-            $clientDoc->setUser($clientUser);
-        }
         $relation->setClient($clientDoc);
+        
+        //eww
+        //$this->validateObject($relation);
 
         //actually save the relation in storage
         $manager = $this->get('doctrine_mongodb')->getManager();

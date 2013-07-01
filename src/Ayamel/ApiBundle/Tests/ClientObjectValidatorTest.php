@@ -38,10 +38,8 @@ class ClientObjectValidatorTest extends ApiTestCase
             'subjectDomains' => array('foo','bar','baz'),
             'functionalDomains' => array('foo','bar','baz','qux'),
             'type' => 'document',
-            'client' => array(
-                'user' => array(
-                    'id' => "Tester"
-                )
+            'clientUser' => array(
+                'id' => 'Tester'
             )
         );
 
@@ -57,7 +55,7 @@ class ClientObjectValidatorTest extends ApiTestCase
         $this->assertSame($resource->getSubjectDomains(), $requestData['subjectDomains']);
         $this->assertSame($resource->getFunctionalDomains(), $requestData['functionalDomains']);
         $this->assertSame($resource->getType(), $requestData['type']);
-        $this->assertSame($resource->getClient()->getUser()->getId(), $requestData['client']['user']['id']);
+        $this->assertSame($resource->getClientUser()->getId(), $requestData['clientUser']['id']);
     }
 
     public function testModifyObjectFromRequest()
@@ -67,8 +65,8 @@ class ClientObjectValidatorTest extends ApiTestCase
         $resource->setDescription('bar');
         $resource->setSubjectDomains(array('bar','baz'));
         $resource->setClient(new Client);
-        $resource->getClient()->setUser(new ClientUser);
-        $resource->getClient()->getUser()->setId('baz');
+        $resource->setClientUser(new ClientUser);
+        $resource->getClientUser()->setId('baz');
 
         $c = $this->getContainer();
         $validator = $c->get('ac.webservices.object_validator');
@@ -79,10 +77,8 @@ class ClientObjectValidatorTest extends ApiTestCase
             'functionalDomains' => array('foo','bar','baz'),
             'description' => null,
             'type' => 'document',
-            'client' => array(
-                'user' => array(
-                    'id' => "Tester"
-                )
+            'clientUser' => array(
+                'id' => 'Tester'
             )
         );
 
@@ -98,11 +94,11 @@ class ClientObjectValidatorTest extends ApiTestCase
         $this->assertSame($resource->getSubjectDomains(), $requestData['subjectDomains']);
         $this->assertSame($resource->getFunctionalDomains(), $requestData['functionalDomains']);
         $this->assertSame($resource->getType(), $requestData['type']);
-        $this->assertSame($resource->getClient()->getUser()->getId(), $requestData['client']['user']['id']);
+        $this->assertSame($resource->getClientUser()->getId(), $requestData['clientUser']['id']);
 
         //modify again
         $changes = array(
-            'client' => null
+            'clientUser' => null
         );
 
         $request = Request::create('/foo/bar', 'POST', array(), array(), array(), array(
@@ -117,7 +113,7 @@ class ClientObjectValidatorTest extends ApiTestCase
         $this->assertSame($resource->getSubjectDomains(), $requestData['subjectDomains']);
         $this->assertSame($resource->getFunctionalDomains(), $requestData['functionalDomains']);
         $this->assertSame($resource->getType(), $requestData['type']);
-        $this->assertNull($resource->getClient());
+        $this->assertNull($resource->getClientUser());
     }
 
     public function testIgnoreReadOnlyFields()
@@ -131,10 +127,8 @@ class ClientObjectValidatorTest extends ApiTestCase
             'keywords' => 'hi, there and, some stuff, hah',
             'subjectDomains' => array('foo','bar','baz'),
             'type' => 'document',
-            'client' => array(
-                'user' => array(
-                    'id' => "Tester"
-                )
+            'clientUser' => array(
+                'id' => 'Tester'
             )
         );
 
@@ -146,7 +140,7 @@ class ClientObjectValidatorTest extends ApiTestCase
         $this->assertTrue(is_null($resource->getId()));
     }
 
-    public function testThrowExceptionOnInvalidFieldName()
+    public function testIgnoreInvalidFieldNames()
     {
         $c = $this->getContainer();
         $validator = $c->get('ac.webservices.object_validator');
@@ -156,18 +150,16 @@ class ClientObjectValidatorTest extends ApiTestCase
             'keywords' => 'hi, there and, some stuff, hah',
             'subjectDomains' => array('foo','bar','baz'),
             'type' => 'document',
-            'client' => array(
-                'user' => array(
-                    'id' => "Tester",
-                    'fooasdf' => 'bar',
-                )
+            'clientUser' => array(
+                'id' => 'Tester',
+                'foooo' => 'bar'
             )
         );
 
         $request = Request::create('/foo/bar', 'POST', array(), array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($requestData));
-
+        
         $resource = $validator->createObjectFromRequest('Ayamel\ResourceBundle\Document\Resource', $request);
         $this->assertTrue($resource instanceof Resource);
     }

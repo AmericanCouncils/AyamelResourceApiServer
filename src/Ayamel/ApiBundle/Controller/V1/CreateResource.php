@@ -38,10 +38,6 @@ class CreateResource extends ApiController
 
         //fill in client info
         $clientDoc = $this->getApiClient()->createClientDocument();
-        if ($resource->getClient() && $resource->getClient()->getUser()) {
-            $clientUser = $resource->getClient()->getUser();
-            $clientDoc->setUser($clientUser);
-        }
         $resource->setClient($clientDoc);
 
         //attempt to persist the object
