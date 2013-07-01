@@ -64,11 +64,9 @@ class ResourceIntegrationTest extends ApiTestCase
                 'note' => '... you never know.',
                 'uri' => 'http://thefuture.com/'
             ),
-            'client' => array(
-                'user' => array(
-                    'id' => 'theTester',
-                    'url' => 'http://example.com/users/theTester'
-                )
+            'clientUser' => array(
+                'id' => 'theTester',
+                'url' => 'http://example.com/users/theTester'
             ),
         );
 
@@ -76,10 +74,6 @@ class ResourceIntegrationTest extends ApiTestCase
         $expectedClient = array(
             'id' => 'test_client',
             'name' => "The Test Client",
-            'user' => array(
-                'id' => 'theTester',
-                'url' => 'http://example.com/users/theTester'
-            )
         );
 
         $body = json_encode($data);
@@ -101,6 +95,7 @@ class ResourceIntegrationTest extends ApiTestCase
         $this->assertSame($data['copyright'], $json['resource']['copyright']);
         $this->assertSame($data['license'], $json['resource']['license']);
         $this->assertSame($data['origin'], $json['resource']['origin']);
+        $this->assertSame($data['clientUser'], $json['resource']['clientUser']);
         $this->assertSame($expectedClient, $json['resource']['client']);
         $this->assertTrue(isset($json['resource']['dateAdded']));
         $this->assertTrue(isset($json['resource']['dateModified']));
@@ -131,12 +126,12 @@ class ResourceIntegrationTest extends ApiTestCase
                 'note' => '... you never know.',
                 'uri' => 'http://thefuture.com/'
             ),
+            'clientUser' => array(
+                'id' => 'theTester',
+                'url' => 'http://example.com/users/theTester'
+            ),
             'client' => array(
                 'id' => 'h4x0r3d',
-                'user' => array(
-                    'id' => 'theTester',
-                    'url' => 'http://example.com/users/theTester'
-                )
             ),
         );
 
@@ -170,22 +165,16 @@ class ResourceIntegrationTest extends ApiTestCase
                 'note' => '... you never know.',
                 'uri' => 'http://thefuture.com/'
             ),
-            'client' => array(
-                'user' => array(
-                    'id' => 'theTester',
-                    'url' => 'http://example.com/users/theTester'
-                )
-            ),
+            'clientUser' => array(
+                'id' => 'theTester',
+                'url' => 'http://example.com/users/theTester'
+            )
         );
 
         //api automatically injects the client id, and it can't be set by the caller
         $expectedClient = array(
             'id' => 'test_client',
-            'name' => "The Test Client",
-            'user' => array(
-                'id' => 'theTester',
-                'url' => 'http://example.com/users/theTester'
-            )
+            'name' => "The Test Client"
         );
 
         $body = json_encode($data);
@@ -206,6 +195,7 @@ class ResourceIntegrationTest extends ApiTestCase
         $this->assertSame($data['copyright'], $json['resource']['copyright']);
         $this->assertSame($data['license'], $json['resource']['license']);
         $this->assertSame($data['origin'], $json['resource']['origin']);
+        $this->assertSame($data['clientUser'], $json['resource']['clientUser']);
         $this->assertSame($expectedClient, $json['resource']['client']);
         $this->assertTrue(isset($json['resource']['dateAdded']));
         $this->assertTrue(isset($json['resource']['dateModified']));
@@ -225,17 +215,7 @@ class ResourceIntegrationTest extends ApiTestCase
             'title' => "I CHANGED YOU!",
             'subjectDomains' => array('food','bard'),
             'functionalDomains' => array('adjectives', 'conjugation', 'nouns'),
-            'client' => array(
-                'user' => array(
-                    'id' => 'transferred',
-                    'url' => 'http://foo.bar'
-                )
-            )
-        );
-        $expectedClient = array(
-            'id' => 'test_client',
-            'name' => "The Test Client",
-            'user' => array(
+            'clientUser' => array(
                 'id' => 'transferred',
                 'url' => 'http://foo.bar'
             )
@@ -258,6 +238,7 @@ class ResourceIntegrationTest extends ApiTestCase
         $this->assertSame($data['copyright'], $modified['resource']['copyright']);
         $this->assertSame($data['license'], $modified['resource']['license']);
         $this->assertSame($data['origin'], $modified['resource']['origin']);
+        $this->assertSame($changes['clientUser'], $modified['resource']['clientUser']);
         $this->assertSame($expectedClient, $modified['resource']['client']);
         $this->assertTrue(isset($modified['resource']['dateAdded']));
         $this->assertSame($dateAdded, $modified['resource']['dateAdded']);
@@ -324,22 +305,16 @@ class ResourceIntegrationTest extends ApiTestCase
                 'note' => '... you never know.',
                 'uri' => 'http://thefuture.com/'
             ),
-            'client' => array(
-                'user' => array(
-                    'id' => 'theTester',
-                    'url' => 'http://example.com/users/theTester'
-                )
-            ),
+            'clientUser' => array(
+                'id' => 'theTester',
+                'url' => 'http://example.com/users/theTester'
+            )
         );
 
         //api automatically injects the client id, and it can't be set by the caller
         $expectedClient = array(
             'id' => 'test_client',
             'name' => "The Test Client",
-            'user' => array(
-                'id' => 'theTester',
-                'url' => 'http://example.com/users/theTester'
-            )
         );
 
         $body = json_encode($data);
@@ -360,6 +335,7 @@ class ResourceIntegrationTest extends ApiTestCase
         $this->assertSame($data['copyright'], $json['resource']['copyright']);
         $this->assertSame($data['license'], $json['resource']['license']);
         $this->assertSame($data['origin'], $json['resource']['origin']);
+        $this->assertSame($data['clientUser'], $json['resource']['clientUser']);
         $this->assertSame($expectedClient, $json['resource']['client']);
         $this->assertTrue(isset($json['resource']['dateAdded']));
         $this->assertTrue(isset($json['resource']['dateModified']));

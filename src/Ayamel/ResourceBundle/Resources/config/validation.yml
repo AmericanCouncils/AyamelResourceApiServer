@@ -67,6 +67,8 @@ Ayamel\ResourceBundle\Document\Resource:
             - Valid: ~
         content:
             - Valid: ~
+        clientUser:
+            - Valid: ~
 
 Ayamel\ResourceBundle\Document\Origin:
     properties:
@@ -102,11 +104,6 @@ Ayamel\ResourceBundle\Document\Origin:
                 type: string
             - Length:
                 max: 2500
-
-Ayamel\ResourceBundle\Document\Client:
-    properties:
-        user:
-            - Valid: ~
 
 Ayamel\ResourceBundle\Document\ClientUser:
     properties:
@@ -265,6 +262,12 @@ Ayamel\ResourceBundle\Document\Relation:
     constraints:
         - Ayamel\ResourceBundle\Validation\RelationAttributesConstraint: ~
     properties:
+        clientUser:
+            - Valid: ~
+#        subjectId:
+#            - NotBlank: ~
+#            - Type:
+#                type: string
         objectId:
             - NotBlank: ~
             - Type:

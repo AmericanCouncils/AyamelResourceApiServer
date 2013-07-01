@@ -45,14 +45,6 @@ class Client
     protected $uri;
 
     /**
-     * An optional reference to a specific user in a remote system.
-     *
-     * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\ClientUser")
-     * @JMS\Type("Ayamel\ResourceBundle\Document\ClientUser")
-     */
-    protected $user;
-
-    /**
      * Set id
      *
      * @param string $id
@@ -110,25 +102,5 @@ class Client
     public function getUri()
     {
         return $this->uri;
-    }
-
-    /**
-     * Set user
-     *
-     * @param ClientUser $user
-     */
-    public function setUser(ClientUser $user)
-    {
-        $this->user = $user;
-    }
-
-    /**
-     * Get user
-     *
-     * @return string $user
-     */
-    public function getUser()
-    {
-        return $this->user;
     }
 }

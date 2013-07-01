@@ -19,17 +19,19 @@ class RelationValidationTest extends ApiTestCase
 
         $rel = new Relation();
         $rel->setObjectId('324');
+        $rel->setSubjectId('325');
         $rel->setType('requires');
 
         $errors = $v->validate($rel);
 
-        $this->assertSame(0, count($errors));
+        $this->assertSame(0, count($errors));        
     }
 
     public function testValidatePartOfAttributes()
     {
         $rel = new Relation();
         $rel->setObjectId('324');
+        $rel->setSubjectId('325');
         $rel->setType('part_of');
         $rel->setAttributes(array(
             'index' => 23.3

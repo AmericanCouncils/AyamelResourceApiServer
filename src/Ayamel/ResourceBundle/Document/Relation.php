@@ -66,12 +66,22 @@ class Relation
     protected $attributes = array();
 
     /**
-     * An object containing information about the API client that created the Resource.
+     * An object containing information about the API client that created the object.
      *
      * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\Client")
+     * @JMS\ReadOnly
      * @JMS\Type("Ayamel\ResourceBundle\Document\Client")
      */
     protected $client;
+    
+    /**
+     * An object containing information about the API client that created the object.
+     *
+     * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\ClientUser")
+     * @JMS\SerializedName("clientUser")
+     * @JMS\Type("Ayamel\ResourceBundle\Document\ClientUser")
+     */
+    protected $clientUser;
 
     /**
      * Get unique id
@@ -234,7 +244,27 @@ class Relation
     {
         $this->client = $client;
     }
+    
+    /**
+     * Get the optional client user
+     *
+     * @param ClientUser $user 
+     */
+    public function getClientUser()
+    {
+        return $this->clientUser;
+    }
 
+    /**
+     * Set the optional client user
+     *
+     * @param ClientUser $user 
+     */
+    public function setClientUser(ClientUser $user = null)
+    {
+        $this->clientUser = $user;
+    }
+    
     /**
      * Return true if a given relation instance is the same as this relation instance
      *
