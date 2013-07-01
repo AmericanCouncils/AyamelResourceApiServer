@@ -34,10 +34,17 @@ abstract class ApiController extends Controller
         }
     }
 
-    protected function requireResourceOwner(Resource $resource)
+    protected function requireOwnerVisibility($obj)
     {
-        if ($this->getApiClient()->id !== $resource->getClient()->getId()) {
-            throw new HttpException(403, "You do not own the requested Resource.");
+        if ($this->getApiClient()->id !== $obj->getClient()->getId()) {
+            throw new HttpException(403, "Not authorized to view the requested object.");
+        }
+    }
+
+    protected function requireResourceOwner($obj)
+    {
+        if ($this->getApiClient()->id !== $obj->getClient()->getId()) {
+            throw new HttpException(403, "Not authorized to view the requested object.");
         }
     }
 
@@ -78,6 +85,21 @@ abstract class ApiController extends Controller
     protected function createServiceResponse($data, $code, $headers = array(), $template = null)
     {
         return new ServiceResponse($data, $code, $headers, $template);
+    }
+
+    /**
+     * Validate an object, throw an http exception if validation fails.
+     *
+     * @param mixed $object 
+     * @throws Symfony\Component\HttpKernel\Exception\HttpException(400) If validation fails
+     */
+    protected function validateObject($object)
+    {
+        $errors = $this->container->get('validator')->validate($object);
+        
+        if (count($errors) > 0) {
+            throw new HttpException(400, implode("; ", iterator_to_array($errors)));
+        }
     }
 
     /**

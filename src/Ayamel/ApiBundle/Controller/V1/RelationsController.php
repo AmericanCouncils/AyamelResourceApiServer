@@ -28,9 +28,8 @@ class RelationsController extends ApiController
      *      filters={
      *          {"name"="_format", "default"="json", "description"="Return format, can be one of xml, yml or json"},
      *          {"name"="type", "description"="Limit returned Resources to a certain type."},
-     *          {"name"="object", "description"="Limit returned Relations to ones with a specific `objectId`."},
      *          {"name"="client", "description"="Limit returned Relations to those owned by a specific user an API client."},
-     *          {"name"="client_user", "description"="Limit returned Relations to those owned by a specific user an API client."},
+     *          {"name"="clientUser", "description"="Limit returned Relations to those owned by a specific user an API client."},
      *          {"name"="limit", "default"=50, "description"="Limit the number of ids to return."},
      *          {"name"="skip", "default"=0, "description"="Number of results to skip. Use this for paginating results."},
      *          {"name"="order", "default"=-1, "description"="Set to '1' for ascending, or '-1' for descending"},
@@ -39,7 +38,7 @@ class RelationsController extends ApiController
      *
      * @param string $id
      */
-    public function getResourceRelations($id)
+    public function filterResourceRelations($id)
     {
         $resource = $this->getRequestedResourceById($id);
         $request = $this->getRequest();
@@ -50,26 +49,23 @@ class RelationsController extends ApiController
 
         $filters = array();
 
-        //TODO: only get the relations the requesting client is allowed to see
-
         //check for type filter
         if ($types = $request->query->get('type', false)) {
             $filters['type'] = explode(',', $types);
         }
 
-        //get the relations into an array
         $repo = $this->getRepo('AyamelResourceBundle:Relation');
         $relations = $repo->getRelationsForResource($resource->getId(), $filters);
-        $rels = array();
-        if ($relations) {
-            foreach (iterator_to_array($relations) as $rel) {
-                $rels[] = $rel;
-            }
-        }
 
         return $this->createServiceResponse(array(
-            'relations' => $rels
+            'relations' => iterator_to_array($relations)
         ), 200);
+    }
+    
+    public function filterRelations(Request $request)
+    {
+        $req = $this->getRequest();
+        $ids = implode()
     }
 
     /**
@@ -96,7 +92,7 @@ class RelationsController extends ApiController
      *
      * @param string $id
      */
-    public function createResourceRelation($id)
+    public function createRelation()
     {
         $this->requireAuthentication();
         
@@ -112,6 +108,7 @@ class RelationsController extends ApiController
         $relation = $this->container->get('ac.webservices.object_validator')->createObjectFromRequest('Ayamel\ResourceBundle\Document\Relation', $this->getRequest());
         
         try {
+            $subject = $this->getRequestedResourceById($relation->getSubjectId());
             $object = $this->getRequestedResourceById($relation->getObjectId());
         } catch (HttpException $e) {
             if (404 === $e->getStatusCode()) {
@@ -129,11 +126,9 @@ class RelationsController extends ApiController
         $relation->setSubjectId($subject->getId());
         $clientDoc = $this->getApiClient()->createClientDocument();
         $relation->setClient($clientDoc);
-        
-        //eww
-        //$this->validateObject($relation);
 
-        //actually save the relation in storage
+        //validate and actually save the relation in storage
+        $this->validateObject($relation);
         $manager = $this->get('doctrine_mongodb')->getManager();
         $manager->persist($relation);
         $manager->flush();
@@ -143,7 +138,7 @@ class RelationsController extends ApiController
     }
 
     /**
-     * Delete a Relation for a Resource by it's unique id.
+     * Delete a Relation by it's unique id.
      *
      * @ApiDoc(
      *      resource=true,
@@ -153,7 +148,7 @@ class RelationsController extends ApiController
      * @param string $resourceId
      * @param string $relationId
      */
-    public function deleteResourceRelation($resourceId, $relationId)
+    public function deleteRelation($relationId)
     {
         $this->requireAuthentication();
         
@@ -181,7 +176,9 @@ class RelationsController extends ApiController
         $manager = $this->getDocManager();
         $manager->remove($relation);
         $manager->flush();
-
+        
+        //TODO: resource modified if relation === search ?
+        
         return $this->createServiceResponse(null, 200);
     }
 
