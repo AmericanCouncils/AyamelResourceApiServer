@@ -78,21 +78,15 @@ class RelationsIntegrationTest extends ApiTestCase
             'attributes' => array(
                 'foo' => 'bar'
             ),
-            'client' => array(
-                'user' => array(
-                    'id' => 'user1',
-                    'url' => 'http://example.com/users/user1'
-                )
+            'clientUser' => array(
+                'id' => 'user1',
+                'url' => 'http://example.com/users/user1'
             )
         );
         
         $expectedClient = array(
             'id' => 'test_client',
             'name' => 'The Test Client',
-            'user' => array(
-                'id' => 'user1',
-                'url' => 'http://example.com/users/user1'
-            )
         );
 
         $response = $this->getResponse('POST', '/api/v1/resources/'.$subjectId.'/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
@@ -108,6 +102,7 @@ class RelationsIntegrationTest extends ApiTestCase
         $this->assertSame($objectId, $data['relation']['objectId']);
         $this->assertSame($relationData['type'], $data['relation']['type']);
         $this->assertSame($relationData['attributes'], $data['relation']['attributes']);
+        $this->assertSame($relationData['clientUser'], $data['relation']['clientUser']);
         $this->assertSame($expectedClient, $data['relation']['client']);
         $this->assertTrue(isset($data['relation']['client']['id']));
 
@@ -122,7 +117,7 @@ class RelationsIntegrationTest extends ApiTestCase
         $this->assertSame($objectId, $res1['resource']['relations'][0]['objectId']);
         $this->assertSame($relationData['type'], $res1['resource']['relations'][0]['type']);
         $this->assertSame($relationData['attributes'], $res1['resource']['relations'][0]['attributes']);
-        $this->assertSame($relationData['client']['user'], $res1['resource']['relations'][0]['client']['user']);
+        $this->assertSame($relationData['clientUser'], $res1['resource']['relations'][0]['clientUser']);
         $this->assertSame($data['relation']['client']['id'], $res1['resource']['relations'][0]['client']['id']);
 
         //check object resource
@@ -136,7 +131,7 @@ class RelationsIntegrationTest extends ApiTestCase
         $this->assertSame($objectId, $res2['resource']['relations'][0]['objectId']);
         $this->assertSame($relationData['type'], $res2['resource']['relations'][0]['type']);
         $this->assertSame($relationData['attributes'], $res2['resource']['relations'][0]['attributes']);
-        $this->assertSame($relationData['client']['user'], $res2['resource']['relations'][0]['client']['user']);
+        $this->assertSame($relationData['clientUser'], $res2['resource']['relations'][0]['clientUser']);
         $this->assertSame($data['relation']['client']['id'], $res2['resource']['relations'][0]['client']['id']);
     }
 
@@ -277,11 +272,9 @@ class RelationsIntegrationTest extends ApiTestCase
             'attributes' => array(
                 'foo' => 'bar'
             ),
-            'client' => array(
-                'user' => array(
-                    'id' => 'user1',
-                    'url' => 'http://example.com/users/user1'
-                )
+            'clientUser' => array(
+                'id' => 'user1',
+                'url' => 'http://example.com/users/user1'
             )
         );
 

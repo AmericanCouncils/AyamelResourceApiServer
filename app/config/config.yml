@@ -101,3 +101,8 @@ nelmio_cors:
             allow_origin: ['*']
             allow_methods: ['POST', 'PUT', 'GET', 'DELETE']
             max_age: 3600
+
+services:
+    ac.webservices.object_validator:
+            class:      AC\WebServicesBundle\Util\ClientObjectValidator
+            arguments:  [@jms_serializer.metadata_factory, @serializer, @ac.webservices.jms_parser, @validator]
