@@ -38,7 +38,23 @@ class RelationRepository extends DocumentRepository
         return $this->getQBForResource($resourceId, $filters)->remove()->getQuery()->execute();
     }
 
-    protected function getQBForResource($resourceId, $filters = array())
+    public function getQBForRelations($filters = array())
+    {
+        $qb = $this->createQueryBuilder('Relation');
+
+        //and optionally other fields
+        foreach ($filters as $field => $val) {
+            if (is_array($val)) {
+                $qb->field($field)->in($val);
+            } else {
+                $qb->field($field)->equals($val);
+            }
+        }
+        
+        return $qb;
+    }
+
+    public function getQBForResource($resourceId, $filters = array())
     {
         $qb = $this->createQueryBuilder('Relation');
 

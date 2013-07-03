@@ -69,23 +69,31 @@ api_v1_player:
     requirements:
         _method:  GET
 
-#get relations for a resource, with ability to set various filters
-api_v1_get_resource_relations:
-    pattern: /resources/{id}/relations
-    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\RelationsController::getResourceRelations }
+#filter relations
+api_v1_filter_relations:
+    pattern: /relations
+    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\RelationsController::filterRelations }
     requirements:
         _method:  GET
 
 #create a relation for a Resource
-api_v1_create_resource_relation:
-    pattern: /resources/{id}/relations
-    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\RelationsController::createResourceRelation }
+api_v1_create_relation:
+    pattern: /relations
+    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\RelationsController::createRelation }
     requirements:
         _method:  POST
 
+#get relations for a resource, with ability to set various filters
+api_v1_filter_resource_relations:
+    pattern: /resources/{id}/relations
+    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\RelationsController::filterResourceRelations }
+    requirements:
+        _method:  GET
+
+
 #delete a specific relation for a resource
-api_v1_delete_resource_relation:
-    pattern: /resources/{resourceId}/relations/{relationId}
-    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\RelationsController::deleteResourceRelation }
+api_v1_delete_relation:
+    pattern: /relations/{id}
+    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\RelationsController::deleteRelation }
     requirements:
         _method:  DELETE
