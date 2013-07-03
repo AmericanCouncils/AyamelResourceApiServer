@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Ayamel\ResourceBundle\Document\Resource;
 use AC\WebServicesBundle\ServiceResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+
 /**
  * A base API Controller to provide convenience methods for actions commonly performed in various places in the Ayamel Resource API.
  *
@@ -34,10 +35,17 @@ abstract class ApiController extends Controller
         }
     }
 
-    protected function requireResourceOwner(Resource $resource)
+    protected function requireClientVisibility($obj)
     {
-        if ($this->getApiClient()->id !== $resource->getClient()->getId()) {
-            throw new HttpException(403, "You do not own the requested Resource.");
+        if ($obj->getVisibility() && !in_array($this->getApiClient()->id, $obj->getVisibility())) {
+            throw new HttpException(403, "Not authorized to view object.");
+        }
+    }
+
+    protected function requireResourceOwner($obj)
+    {
+        if ($this->getApiClient()->id !== $obj->getClient()->getId()) {
+            throw new HttpException(403, "Not authorized to view the requested object.");
         }
     }
 
@@ -78,6 +86,21 @@ abstract class ApiController extends Controller
     protected function createServiceResponse($data, $code, $headers = array(), $template = null)
     {
         return new ServiceResponse($data, $code, $headers, $template);
+    }
+
+    /**
+     * Validate an object, throw an http exception if validation fails.
+     *
+     * @param mixed $object 
+     * @throws Symfony\Component\HttpKernel\Exception\HttpException(400) If validation fails
+     */
+    protected function validateObject($object)
+    {
+        $errors = $this->container->get('validator')->validate($object);
+        
+        if (count($errors) > 0) {
+            throw new HttpException(400, implode("; ", iterator_to_array($errors)));
+        }
     }
 
     /**

@@ -264,10 +264,10 @@ Ayamel\ResourceBundle\Document\Relation:
     properties:
         clientUser:
             - Valid: ~
-#        subjectId:
-#            - NotBlank: ~
-#            - Type:
-#                type: string
+        subjectId:
+            - NotBlank: ~
+            - Type:
+                type: string
         objectId:
             - NotBlank: ~
             - Type:

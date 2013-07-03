@@ -40,7 +40,8 @@ class CreateResource extends ApiController
         $clientDoc = $this->getApiClient()->createClientDocument();
         $resource->setClient($clientDoc);
 
-        //attempt to persist the object
+        //attempt to validate and persist the object
+        $this->validateObject($resource);
         $manager = $this->get('doctrine_mongodb')->getManager();
         try {
             $manager->persist($resource);

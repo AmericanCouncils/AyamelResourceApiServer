@@ -105,4 +105,4 @@ nelmio_cors:
 services:
     ac.webservices.object_validator:
             class:      AC\WebServicesBundle\Util\ClientObjectValidator
-            arguments:  [@jms_serializer.metadata_factory, @serializer, @ac.webservices.jms_parser, @validator]
+            arguments:  [@jms_serializer.metadata_factory, @serializer, @ac.webservices.jms_parser]
