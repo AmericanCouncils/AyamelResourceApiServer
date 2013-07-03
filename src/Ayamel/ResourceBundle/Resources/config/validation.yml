@@ -25,14 +25,9 @@ Ayamel\ResourceBundle\Document\Resource:
             - Length:
                 max: 2000
 
-        # Note that we're not actually checking for a valid code - the potential list of codes is enormous
         languages:
-            - All:
-                - Type:
-                    type: string
-                - Length:
-                    min: 3
-                    max: 3
+            - Valid: ~
+
         subjectDomains:
             - All:
                 - Type:
@@ -69,6 +64,24 @@ Ayamel\ResourceBundle\Document\Resource:
             - Valid: ~
         clientUser:
             - Valid: ~
+
+Ayamel\ResourceBundle\Document\Languages:
+    #note that we aren't closely validating either - the lists of valid values are extremely large
+    properties:
+        iso639_3:
+            - All:
+                - Type:
+                    type: string
+                - Length:
+                    min: 3
+                    max: 3
+        bcp47:
+            - All:
+                - Type:
+                    type: string
+                - Length:
+                    min: 2
+                    max: 12
 
 Ayamel\ResourceBundle\Document\Origin:
     properties:

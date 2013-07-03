@@ -50,7 +50,10 @@ class ResourceIntegrationTest extends ApiTestCase
             'description' => 'An amazing description',
             'type' => 'data',
             'keywords' => 'foo, bar, baz',
-            'languages' => array('eng', 'zho'),
+            'languages' => array(
+                'iso639_3' => array('eng', 'zho'),
+                'bcp47' => array('en', 'en-GB')
+            ),
             'subjectDomains' => array('food', 'culture', 'history'),
             'functionalDomains' => array('verbs', 'adjectives', 'conjugation'),
             'visibility' => array('test_client', 'client1', 'client2'),
