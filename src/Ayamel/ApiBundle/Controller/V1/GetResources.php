@@ -20,8 +20,7 @@ class GetResources extends ApiController
      *          {"name"="client_user", "description"="Limit returned Resources to those owned by a specific user an API client."},
      *          {"name"="languages", "description"="Limit returned Resources to those containing a specific language."},
      *          {"name"="limit", "default"="50", "description"="Limit the number of ids to return."},
-     *          {"name"="skip", "default"="0", "description"="Number of results to skip. Use this for paginating results."},
-     *          {"name"="order", "default"="-1", "description"="Set to '1' for ascending, or '-1' for descending"}
+     *          {"name"="skip", "default"="0", "description"="Number of results to skip. Use this for paginating results."}
      *      }
      * )
      *
@@ -41,7 +40,6 @@ class GetResources extends ApiController
         $ids = array();
         $results = $db->find(array(), array('id' => 1))
                         ->limit($limit)
-                        ->sort(array("_id" => $order))
                         ->skip($skip);
 
         //assemble final content structure

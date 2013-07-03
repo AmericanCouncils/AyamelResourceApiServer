@@ -32,7 +32,6 @@ class Relation
      * @MongoDB\String
      * @JMS\SerializedName("subjectId")
      * @JMS\Type("string")
-     * @JMS\ReadOnly
      */
     protected $subjectId;
 

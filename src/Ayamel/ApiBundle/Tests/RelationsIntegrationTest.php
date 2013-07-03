@@ -31,6 +31,7 @@ class RelationsIntegrationTest extends ApiTestCase
         ), json_encode($relationData));
         
         if (!isset($json['relation'])) {
+//var_dump($json['response']);
             throw new \RuntimeException("Failed creating test Relation.");
         }
         
@@ -75,7 +76,7 @@ class RelationsIntegrationTest extends ApiTestCase
         $objectId = $r2['resource']['id'];
 
         $relationData = array(
-            'subjectid' => $subjectId,
+            'subjectId' => $subjectId,
             'objectId' => $objectId,
             'type' => 'requires',
             'attributes' => array(
@@ -168,7 +169,7 @@ class RelationsIntegrationTest extends ApiTestCase
             ),
         )));
 
-        $this->assertSame(400, $response->getStatusCode());
+        $this->assertSame(404, $response->getStatusCode());
     }
 
     public function testCreateRelationForUnauthorizedObject()
@@ -204,7 +205,7 @@ class RelationsIntegrationTest extends ApiTestCase
         $json = $this->getJson('POST', '/api/v1/relations?_key=55678isafgd56789asfgdhf4568', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array(
-            'subjectid' => $objId,
+            'subjectId' => $objId,
             'objectId' => $subId,
             'type' => 'requires',
             'attributes' => array(
@@ -277,7 +278,8 @@ class RelationsIntegrationTest extends ApiTestCase
         $data = $this->getJson('GET', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ));
-        $this->assertSame(400, $data['response']['code']);
+        $this->assertSame(200, $data['response']['code']);
+        $this->assertTrue(count($data['relations']) > 0);
         
         //filter subject OR object id
         $data = $this->getJson('GET', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567&id='.$subjectId, array(), array(), array(
@@ -315,7 +317,7 @@ class RelationsIntegrationTest extends ApiTestCase
         $subjectId = $res1['resource']['id'];
         $objectId = $res2['resource']['id'];
         $relationData = array(
-            'subjectid' => $subjectId,
+            'subjectId' => $subjectId,
             'objectId' => $objectId,
             'type' => 'requires',
             'attributes' => array(
@@ -328,9 +330,10 @@ class RelationsIntegrationTest extends ApiTestCase
         );
 
         //create and check relation
-        $rel = $this->getJson('POST', '/api/v1/resources/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $rel = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($relationData));
+        $this->assertSame(201, $rel['response']['code']);
         $this->assertTrue(isset($rel['relation']['id']));
         $relationId = $rel['relation']['id'];
 

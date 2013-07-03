@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Ayamel\ResourceBundle\Document\Resource;
 use AC\WebServicesBundle\ServiceResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+
 /**
  * A base API Controller to provide convenience methods for actions commonly performed in various places in the Ayamel Resource API.
  *
@@ -34,10 +35,10 @@ abstract class ApiController extends Controller
         }
     }
 
-    protected function requireOwnerVisibility($obj)
+    protected function requireClientVisibility($obj)
     {
-        if ($this->getApiClient()->id !== $obj->getClient()->getId()) {
-            throw new HttpException(403, "Not authorized to view the requested object.");
+        if ($obj->getVisibility() && !in_array($this->getApiClient()->id, $obj->getVisibility())) {
+            throw new HttpException(403, "Not authorized to view object.");
         }
     }
 
