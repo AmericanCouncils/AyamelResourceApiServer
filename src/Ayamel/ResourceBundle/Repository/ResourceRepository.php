@@ -13,6 +13,21 @@ use Doctrine\ODM\MongoDB\DocumentRepository;
  */
 class ResourceRepository extends DocumentRepository
 {
+    public function getQBForResources($filters = array())
+    {
+        $qb = $this->createQueryBuilder('Resource');
+
+        //and optionally other fields
+        foreach ($filters as $field => $val) {
+            if (is_array($val)) {
+                $qb->field($field)->in($val);
+            } else {
+                $qb->field($field)->equals($val);
+            }
+        }
+        
+        return $qb;
+    }
 
     /**
      * Deleting a resource does not actually remove it from storage, instead

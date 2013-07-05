@@ -79,7 +79,7 @@ class Resource
     protected $keywords;
 
     /**
-     * An array of ISO 639-3 language codes. For more on ISO 639-3, see (http://www-01.sil.org/iso639-3/)[http://www-01.sil.org/iso639-3/].
+     * An object containing arrays of language codes.
      *
      * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\Languages")
      * @JMS\Type("Ayamel\ResourceBundle\Document\Languages")
