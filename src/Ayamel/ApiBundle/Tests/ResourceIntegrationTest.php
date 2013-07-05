@@ -619,5 +619,12 @@ class ResourceIntegrationTest extends ApiTestCase
         $this->assertSame(200, $data['response']['code']);
         $this->assertSame(4, count($data['resources']));
         
+        //get w/ id
+        $data = $this->getJson('GET', '/api/v1/resources?id='.$r2['id']);
+        $this->assertSame(200, $data['response']['code']);
+        $this->assertSame(1, count($data['resources']));
+        $data = $this->getJson('GET', '/api/v1/resources?id='.$r2['id'].','.$r5['id']);
+        $this->assertSame(200, $data['response']['code']);
+        $this->assertSame(2, count($data['resources']));        
     }
 }
