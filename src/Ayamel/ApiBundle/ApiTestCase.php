@@ -9,6 +9,13 @@ use Symfony\Component\Console\Output\NullOutput;
 
 abstract class ApiTestCase extends WebTestCase
 {
+    public function clearDatabase()
+    {
+        $c = $this->getContainer();
+        $dbName = $c->getParameter('mongodb_database');
+        $c->get('doctrine_mongodb')->getConnection()->dropDatabase($dbName);
+    }
+    
     /**
      * Shortcut to get client
      */
