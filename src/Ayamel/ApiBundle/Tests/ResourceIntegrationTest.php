@@ -6,6 +6,19 @@ use Ayamel\ApiBundle\ApiTestCase;
 class ResourceIntegrationTest extends ApiTestCase
 {
 
+    protected function createExampleResource(array $data, $apiKey = '45678isafgd56789asfgdhf4567')
+    {
+        $json = $this->getJson('POST', '/api/v1/resources?_key='.$apiKey, array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), json_encode($data));
+        
+        if (201 !== $json['response']['code']) {
+            throw new \RuntimeException("Could not create example Resource.");
+        }
+        
+        return $json['resource'];
+    }
+
     public function testAccessNonExistingResource()
     {
         //get/put/delete on non-existing resource
@@ -108,7 +121,7 @@ class ResourceIntegrationTest extends ApiTestCase
         $this->assertTrue(isset($json['contentUploadUrl']));
     }
 
-    public function testCreateNewResourceIgnoresReadOnlyFields()
+    public function testCreateNewResourceIgnoresReadOnlyAndInvalidFields()
     {
         $data = array(
             'title' => 'A test to remember',
@@ -121,6 +134,7 @@ class ResourceIntegrationTest extends ApiTestCase
             'copyright' => "Copyright text 2013",
             'license' => 'Public Domain',
             'dateDeleted' => 132435654,
+            'foooooo' => 'bar',
             'origin' => array(
                 'creator' => 'Leonardo da Vinci',
                 'location' => 'Italy',
@@ -146,6 +160,27 @@ class ResourceIntegrationTest extends ApiTestCase
         $this->assertSame(201, $response['response']['code']);
         $this->assertSame('test_client', $response['resource']['client']['id']);
         $this->assertFalse(isset($response['resource']['dateDeleted']));
+    }
+
+    public function testGetResource()
+    {
+        $data = array(
+            'title' => 'test',
+            'type' => 'data'
+        );
+        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), json_encode($data));
+        
+        $this->assertSame(201, $response['response']['code']);
+        $id = $response['resource']['id'];
+        
+        $response = $this->getJson('GET', '/api/v1/resources/'.$id);
+        $this->assertSame(200, $response['response']['code']);
+        $this->assertSame('test', $response['resource']['title']);
+        $this->assertSame('test_client', $response['resource']['client']['id']);
+        $this->assertTrue(isset($response['resource']['dateAdded']));
+        $this->assertTrue(isset($response['resource']['dateModified']));
     }
 
     public function testModifyResource()
@@ -504,8 +539,85 @@ class ResourceIntegrationTest extends ApiTestCase
         $this->assertSame(403, $json['response']['code']);
     }
 
-    public function testFilterResourcesByVisibility()
+    public function testFilterResources()
     {
-        $this->markTestSkipped('Requires GET: /resources route to be properly implemented.');
+        $this->clearDatabase();
+        
+        $r1 = $this->createExampleResource(array(
+            'title' => 'R1',
+            'type' => 'data'
+        ));
+        $r2 = $this->createExampleResource(array(
+            'title' => 'R2',
+            'type' => 'data',
+            'clientUser' => array(
+                'id' => 'evan'
+            )
+        ));
+        $r3 = $this->createExampleResource(array(
+            'title' => 'R3',
+            'type' => 'data',
+            'clientUser' => array(
+                'id' => 'nave'
+            )
+        ));
+        $r4 = $this->createExampleResource(array(
+            'title' => 'R4',
+            'type' => 'data',
+            'visibility' => array('test_client')
+        ));
+        $r5 = $this->createExampleResource(array(
+            'title' => 'R5',
+            'type' => 'video'
+        ));
+        
+        //get
+        $data = $this->getJson('GET', '/api/v1/resources');
+        $this->assertSame(200, $data['response']['code']);
+        $this->assertTrue(isset($data['resources']));
+        $count = count($data['resources']);
+        $this->assertSame(4, count($data['resources']));
+        $this->assertSame('R5', $data['resources'][$count - 1]['title']);
+        
+        //get w/ skip
+        $data = $this->getJson('GET', '/api/v1/resources?skip=1');
+        $this->assertSame(200, $data['response']['code']);
+        $this->assertTrue(isset($data['resources']));
+        $this->assertSame(3, count($data['resources']));
+        $this->assertSame('R3', $data['resources'][1]['title']);
+        
+        //get w/ limit
+        $data = $this->getJson('GET', '/api/v1/resources?limit=2');
+        $this->assertSame(200, $data['response']['code']);
+        $this->assertTrue(isset($data['resources']));
+        $this->assertSame(2, count($data['resources']));
+        $this->assertSame('R2', $data['resources'][1]['title']);
+        
+        //get w/ client
+        $data = $this->getJson('GET', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567');
+        $this->assertSame(200, $data['response']['code']);
+        $this->assertTrue(isset($data['resources']));
+        $this->assertSame(5, count($data['resources']));
+        $data = $this->getJson('GET', '/api/v1/resources?_key=55678isafgd56789asfgdhf4568');
+        $this->assertSame(200, $data['response']['code']);
+        $this->assertTrue(isset($data['resources']));
+        $this->assertSame(0, count($data['resources']));
+        
+        //get w/ clientUser
+        $data = $this->getJson('GET', '/api/v1/resources?clientUser=evan');
+        $this->assertSame(200, $data['response']['code']);
+        $this->assertSame(1, count($data['resources']));
+        $data = $this->getJson('GET', '/api/v1/resources?clientUser=evan,nave');
+        $this->assertSame(200, $data['response']['code']);
+        $this->assertSame(2, count($data['resources']));
+        
+        //get w/ type
+        $data = $this->getJson('GET', '/api/v1/resources?type=video');
+        $this->assertSame(200, $data['response']['code']);
+        $this->assertSame(1, count($data['resources']));
+        $data = $this->getJson('GET', '/api/v1/resources?type=video,data');
+        $this->assertSame(200, $data['response']['code']);
+        $this->assertSame(4, count($data['resources']));
+        
     }
 }
