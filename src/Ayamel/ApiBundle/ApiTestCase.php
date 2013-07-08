@@ -12,8 +12,9 @@ abstract class ApiTestCase extends WebTestCase
     public function clearDatabase()
     {
         $c = $this->getContainer();
-        $dbName = $c->getParameter('mongodb_database');
-        $c->get('doctrine_mongodb')->getConnection()->dropDatabase($dbName);
+        $db = $c->get('doctrine_mongodb.odm.default_connection')->selectDatabase($c->getParameter('mongodb_database'));
+        $db->dropCollection('resources');
+        $db->dropCollection('relations');
     }
     
     /**
