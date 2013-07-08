@@ -92,7 +92,7 @@ class Resource
      *
      *  //TODO: document valid values
      *
-     * @MongoDB\Hash
+     * @MongoDB\Collection
      * @JMS\SerializedName("subjectDomains")
      * @JMS\Type("array<string>")
      */
@@ -104,7 +104,7 @@ class Resource
      *
      *  //TODO: document valid values
      *
-     * @MongoDB\Hash
+     * @MongoDB\Collection
      * @JMS\SerializedName("functionalDomains")
      * @JMS\Type("array<string>")
      */
@@ -135,7 +135,7 @@ class Resource
      *
      * If empty, the Resource is public and visible to all client systems.
      *
-     * @MongoDB\Hash
+     * @MongoDB\Collection
      * @JMS\Type("array<string>")
      */
     protected $visibility;

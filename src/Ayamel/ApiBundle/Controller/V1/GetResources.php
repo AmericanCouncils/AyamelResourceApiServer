@@ -63,7 +63,7 @@ class GetResources extends ApiController
             $qb->addOr($qb->expr()->field('languages.iso639_3')->in($langs));
             $qb->addOr($qb->expr()->field('languages.bcp47')->in($langs));
         }
-
+        
         $limit = (($l = $req->query->get('limit', 20)) <= 100) ? $l : 1000;
         $qb->limit($limit);
         $qb->skip($req->query->get('skip', 0));
