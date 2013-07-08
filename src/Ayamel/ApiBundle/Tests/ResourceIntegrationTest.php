@@ -568,9 +568,13 @@ class ResourceIntegrationTest extends ApiTestCase
         ));
         $r5 = $this->createExampleResource(array(
             'title' => 'R5',
-            'type' => 'video'
+            'type' => 'video',
+            'languages' => array(
+                'iso639_3' => array('eng', 'ara', 'arq'),
+                'bcp47' => array('en', 'ar')
+            )
         ));
-        
+
         //get
         $data = $this->getJson('GET', '/api/v1/resources');
         $this->assertSame(200, $data['response']['code']);
@@ -625,6 +629,24 @@ class ResourceIntegrationTest extends ApiTestCase
         $this->assertSame(1, count($data['resources']));
         $data = $this->getJson('GET', '/api/v1/resources?id='.$r2['id'].','.$r5['id']);
         $this->assertSame(200, $data['response']['code']);
-        $this->assertSame(2, count($data['resources']));        
+        $this->assertSame(2, count($data['resources']));
+        
+        //get w/ languages
+        //bcp47 code
+        $data = $this->getJson('GET', '/api/v1/resources?languages=en');
+        $this->assertSame(200, $data['response']['code']);
+        $this->assertSame(1, count($data['resources']));
+        $this->assertSame($r5['id'], $data['resources'][0]['id']);
+        //iso639-3 code
+        $data = $this->getJson('GET', '/api/v1/resources?languages=arq');
+        $this->assertSame(200, $data['response']['code']);
+        $this->assertSame(1, count($data['resources']));
+        $this->assertSame($r5['id'], $data['resources'][0]['id']);
+        //both codes
+        $data = $this->getJson('GET', '/api/v1/resources?languages=ar,arq');
+        $this->assertSame(200, $data['response']['code']);
+        $this->assertSame(1, count($data['resources']));
+        $this->assertSame($r5['id'], $data['resources'][0]['id']);
+        
     }
 }
