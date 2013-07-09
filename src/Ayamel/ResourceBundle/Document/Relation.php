@@ -76,7 +76,7 @@ class Relation
      * @JMS\Type("Ayamel\ResourceBundle\Document\Client")
      */
     protected $client;
-    
+
     /**
      * An object containing information about the API client that created the object.
      *
@@ -247,11 +247,11 @@ class Relation
     {
         $this->client = $client;
     }
-    
+
     /**
      * Get the optional client user
      *
-     * @param ClientUser $user 
+     * @param ClientUser $user
      */
     public function getClientUser()
     {
@@ -261,13 +261,13 @@ class Relation
     /**
      * Set the optional client user
      *
-     * @param ClientUser $user 
+     * @param ClientUser $user
      */
     public function setClientUser(ClientUser $user = null)
     {
         $this->clientUser = $user;
     }
-    
+
     /**
      * Return true if a given relation instance is the same as this relation instance
      *

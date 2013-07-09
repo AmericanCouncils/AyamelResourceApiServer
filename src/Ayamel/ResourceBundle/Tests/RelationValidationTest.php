@@ -30,7 +30,7 @@ class RelationValidationTest extends ApiTestCase
     public function testFailsValidationWithExtraKeys()
     {
         $v = $this->getContainer()->get('validator');
-        
+
         //unmapped w/ extra key
         $rel = new Relation();
         $rel->setObjectId('324');
@@ -41,7 +41,7 @@ class RelationValidationTest extends ApiTestCase
         ));
         $errors = $v->validate($rel);
         $this->assertSame(1, count($errors));
-        
+
         //mapped w/ extra key
         $rel = new Relation();
         $rel->setObjectId('324');
@@ -53,9 +53,7 @@ class RelationValidationTest extends ApiTestCase
         $errors = $v->validate($rel);
         $this->assertSame(1, count($errors));
     }
-    
-    
-    
+
     public function testValidatePartOfRelation()
     {
         $rel = new Relation();
@@ -71,7 +69,7 @@ class RelationValidationTest extends ApiTestCase
 
         $this->assertSame(0, count($errors));
     }
-    
+
     public function testValidateVersionOfRelation()
     {
         $rel = new Relation();

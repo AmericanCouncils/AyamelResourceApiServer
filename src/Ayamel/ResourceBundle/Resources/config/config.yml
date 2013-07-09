@@ -37,7 +37,7 @@ parameters:
             - audio/vnd.rn-realaudio
             - audio/vnd.wave
             - audio/webm
-        Ayamel\ResourceBundle\Validation\File\GenericImageAttributes: 
+        Ayamel\ResourceBundle\Validation\File\GenericImageAttributes:
             - image/gif
             - image/jpeg
             - image/pjpeg
@@ -45,7 +45,7 @@ parameters:
             - image/png
             - image/tiff
             - image/x-xcf
-        Ayamel\ResourceBundle\Validation\File\GenericDocumentAttributes: 
+        Ayamel\ResourceBundle\Validation\File\GenericDocumentAttributes:
             - text/plain
             - text/vcard
             - application/pdf
@@ -63,13 +63,13 @@ parameters:
             - application/x-iwork-keynote-sffkey
             - application/x-iwork-pages-sffpages
             - application/x-iwork-numbers-sffnumbers
-        Ayamel\ResourceBundle\Validation\File\GenericDataAttributes: 
+        Ayamel\ResourceBundle\Validation\File\GenericDataAttributes:
             - application/xml
             - application/json
             - text/csv
             - application/x-yaml
             - text/yaml
-        Ayamel\ResourceBundle\Validation\File\GenericArchiveAttributes: 
+        Ayamel\ResourceBundle\Validation\File\GenericArchiveAttributes:
             - application/zip
             - application/gzip
             - application/x-rar-compressed

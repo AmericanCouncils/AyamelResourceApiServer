@@ -2,8 +2,6 @@
 
 namespace Ayamel\ApiBundle\Client;
 
-use Symfony\Component\HttpFoundation\Request;
-
 /**
  * An instance of ClientLoaderInterface can load API client instances from a source.
  *
@@ -13,8 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 interface ClientLoaderInterface
 {
     public function getClients();
-    
+
     public function getClient($id);
-    
+
     public function getClientByApiKey($key);
 }

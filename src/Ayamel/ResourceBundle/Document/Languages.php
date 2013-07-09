@@ -12,7 +12,7 @@ use JMS\Serializer\Annotation as JMS;
  */
 class Languages
 {
-    
+
     /**
      * Array of ISO 639-3 language codes.
      *
@@ -20,7 +20,7 @@ class Languages
      * @JMS\Type("array<string>")
      */
     public $iso639_3;
-    
+
     /**
      * Array of BCP 47 language codes.
      *
@@ -28,5 +28,5 @@ class Languages
      * @JMS\Type("array<string>")
      */
     public $bcp47;
-    
+
 }

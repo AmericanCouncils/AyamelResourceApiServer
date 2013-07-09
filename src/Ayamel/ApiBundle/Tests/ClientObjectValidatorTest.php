@@ -159,7 +159,7 @@ class ClientObjectValidatorTest extends ApiTestCase
         $request = Request::create('/foo/bar', 'POST', array(), array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($requestData));
-        
+
         $resource = $validator->createObjectFromRequest('Ayamel\ResourceBundle\Document\Resource', $request);
         $this->assertTrue($resource instanceof Resource);
     }

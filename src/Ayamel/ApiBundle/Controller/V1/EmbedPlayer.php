@@ -14,7 +14,7 @@ class EmbedPlayer extends ApiController
      *      resource=true,
      *      description="Embed media player."
      * );
-     * 
+     *
      * @param string $id The id of the Resource to view.
      */
     public function executeAction($id)

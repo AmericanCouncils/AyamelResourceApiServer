@@ -11,11 +11,11 @@ class ResourceIntegrationTest extends ApiTestCase
         $json = $this->getJson('POST', '/api/v1/resources?_key='.$apiKey, array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($data));
-        
+
         if (201 !== $json['response']['code']) {
             throw new \RuntimeException("Could not create example Resource.");
         }
-        
+
         return $json['resource'];
     }
 
@@ -171,10 +171,10 @@ class ResourceIntegrationTest extends ApiTestCase
         $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($data));
-        
+
         $this->assertSame(201, $response['response']['code']);
         $id = $response['resource']['id'];
-        
+
         $response = $this->getJson('GET', '/api/v1/resources/'.$id);
         $this->assertSame(200, $response['response']['code']);
         $this->assertSame('test', $response['resource']['title']);
@@ -465,12 +465,12 @@ class ResourceIntegrationTest extends ApiTestCase
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array('title'=>'foo', 'type'=>'data', 'visibility' => array('test_client2'))));
         $this->assertSame(201, $json['response']['code']);
-        
+
         $json = $this->getJson("POST", '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ));
     }
-    
+
     //ensure authenticated client
     public function testRequireApiKeyAuthentication()
     {
@@ -478,18 +478,18 @@ class ResourceIntegrationTest extends ApiTestCase
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array('title'=>'foo', 'type'=>'data')));
         $this->assertSame(401, $json['response']['code']);
-        
+
         //create w/ invalid key
         $json = $this->getJson("POST", '/api/v1/resources?_key=fakekey', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array('title'=>'foo', 'type'=>'data')));
         $this->assertSame(401, $json['response']['code']);
-        
+
         //no key
         $json = $this->getJson("PUT", '/api/v1/resources/5', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array('title'=>'foo', 'type'=>'data')));
-        $this->assertSame(401, $json['response']['code']);        
+        $this->assertSame(401, $json['response']['code']);
         $json = $this->getJson("DELETE", '/api/v1/resources/5', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array('title'=>'foo', 'type'=>'data')));
@@ -499,7 +499,7 @@ class ResourceIntegrationTest extends ApiTestCase
         $json = $this->getJson("PUT", '/api/v1/resources/5?_key=fakekey', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array('title'=>'foo', 'type'=>'data')));
-        $this->assertSame(401, $json['response']['code']);        
+        $this->assertSame(401, $json['response']['code']);
         $json = $this->getJson("DELETE", '/api/v1/resources/5?_key=fakekey', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array('title'=>'foo', 'type'=>'data')));
@@ -522,7 +522,7 @@ class ResourceIntegrationTest extends ApiTestCase
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array('type'=>'audio')));
         $this->assertSame(401, $json['response']['code']);
-        
+
         //create and modify resource as non owner
         $json = $this->getJson("POST", '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
@@ -542,7 +542,7 @@ class ResourceIntegrationTest extends ApiTestCase
     public function testFilterResources()
     {
         $this->clearDatabase();
-        
+
         $r1 = $this->createExampleResource(array(
             'title' => 'R1',
             'type' => 'data'
@@ -582,21 +582,21 @@ class ResourceIntegrationTest extends ApiTestCase
         $count = count($data['resources']);
         $this->assertSame(4, count($data['resources']));
         $this->assertSame('R5', $data['resources'][$count - 1]['title']);
-        
+
         //get w/ skip
         $data = $this->getJson('GET', '/api/v1/resources?skip=1');
         $this->assertSame(200, $data['response']['code']);
         $this->assertTrue(isset($data['resources']));
         $this->assertSame(3, count($data['resources']));
         $this->assertSame('R3', $data['resources'][1]['title']);
-        
+
         //get w/ limit
         $data = $this->getJson('GET', '/api/v1/resources?limit=2');
         $this->assertSame(200, $data['response']['code']);
         $this->assertTrue(isset($data['resources']));
         $this->assertSame(2, count($data['resources']));
         $this->assertSame('R2', $data['resources'][1]['title']);
-        
+
         //get w/ client
         $data = $this->getJson('GET', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567');
         $this->assertSame(200, $data['response']['code']);
@@ -606,7 +606,7 @@ class ResourceIntegrationTest extends ApiTestCase
         $this->assertSame(200, $data['response']['code']);
         $this->assertTrue(isset($data['resources']));
         $this->assertSame(0, count($data['resources']));
-        
+
         //get w/ clientUser
         $data = $this->getJson('GET', '/api/v1/resources?clientUser=evan');
         $this->assertSame(200, $data['response']['code']);
@@ -614,7 +614,7 @@ class ResourceIntegrationTest extends ApiTestCase
         $data = $this->getJson('GET', '/api/v1/resources?clientUser=evan,nave');
         $this->assertSame(200, $data['response']['code']);
         $this->assertSame(2, count($data['resources']));
-        
+
         //get w/ type
         $data = $this->getJson('GET', '/api/v1/resources?type=video');
         $this->assertSame(200, $data['response']['code']);
@@ -622,7 +622,7 @@ class ResourceIntegrationTest extends ApiTestCase
         $data = $this->getJson('GET', '/api/v1/resources?type=video,data');
         $this->assertSame(200, $data['response']['code']);
         $this->assertSame(4, count($data['resources']));
-        
+
         //get w/ id
         $data = $this->getJson('GET', '/api/v1/resources?id='.$r2['id']);
         $this->assertSame(200, $data['response']['code']);
@@ -630,7 +630,7 @@ class ResourceIntegrationTest extends ApiTestCase
         $data = $this->getJson('GET', '/api/v1/resources?id='.$r2['id'].','.$r5['id']);
         $this->assertSame(200, $data['response']['code']);
         $this->assertSame(2, count($data['resources']));
-        
+
         //get w/ languages
         //bcp47 code
         $data = $this->getJson('GET', '/api/v1/resources?languages=en');
@@ -647,6 +647,6 @@ class ResourceIntegrationTest extends ApiTestCase
         $this->assertSame(200, $data['response']['code']);
         $this->assertSame(1, count($data['resources']));
         $this->assertSame($r5['id'], $data['resources'][0]['id']);
-        
+
     }
 }

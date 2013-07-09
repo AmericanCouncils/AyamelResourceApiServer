@@ -11,7 +11,7 @@ class ScanResourceUri extends ApiController
 {
     /**
      * Derive as much of a full resource object as possible from a given URI. Currently supported URI schemes include:
-     * 
+     *
      * - `http`/`https` - Points to any web-accessible file or webpage.  For example: `http://example.com/files/some_video.mp4`
      * - `youtube` - This designates a video resource from YouTube.  For example: `youtube://txqiwrbYGrs`
      *
