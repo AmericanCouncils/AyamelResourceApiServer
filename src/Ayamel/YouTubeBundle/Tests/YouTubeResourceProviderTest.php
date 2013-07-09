@@ -14,7 +14,7 @@ class YouTubeResourceProviderTest extends \PHPUnit_Framework_TestCase
         $provider = new YouTubeResourceProvider();
         $this->assertTrue($provider->handlesScheme('youtube'));
     }
-    
+
     public function testDeriveYouTubeResource()
     {
         $provider = new YouTubeResourceProvider();
@@ -25,13 +25,13 @@ class YouTubeResourceProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('youtube', $r->getLicense());
         $this->assertFalse(is_null($r->getDescription()));
         $this->assertFalse(is_null($r->getSubjectDomains()));
-        
+
         //origin
         $this->assertTrue($r->origin instanceof Origin);
         $this->assertSame('booba1234', $r->origin->getCreator());
         $this->assertFalse(is_null($r->origin->getDate()));
         $this->assertSame("YouTube Video", $r->origin->getFormat());
-        
+
         //oembed
         $this->assertTrue($r->content->getOembed() instanceof OEmbed);
         $this->assertFalse(is_null($r->content->getOembed()));

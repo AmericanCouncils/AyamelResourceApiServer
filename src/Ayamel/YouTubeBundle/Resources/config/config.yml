@@ -3,4 +3,3 @@ services:
         class: Ayamel\YouTubeBundle\YouTubeResourceProvider
         tags:
             - { name: ayamel.resource.provider_delegate }
-            

@@ -211,7 +211,7 @@ class Resource
      * @JMS\Type("Ayamel\ResourceBundle\Document\Origin")
      */
     public $origin;
-    
+
     /**
      * An object containing information about the API client that created the object.
      *
@@ -561,7 +561,7 @@ class Resource
     /**
      * Get the optional client user
      *
-     * @param ClientUser $user 
+     * @param ClientUser $user
      */
     public function getClientUser()
     {
@@ -571,7 +571,7 @@ class Resource
     /**
      * Set the optional client user
      *
-     * @param ClientUser $user 
+     * @param ClientUser $user
      */
     public function setClientUser(ClientUser $user = null)
     {

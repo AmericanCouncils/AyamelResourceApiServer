@@ -11,18 +11,18 @@ class FooAttributes extends AbstractAttributes
 
 class AbstractAttributesTest extends \PHPUnit_Framework_TestCase
 {
-    
+
     public function testInstantiateWithData()
     {
         $obj = FooAttributes::createFromArray(array('foo' => 'bar'));
-        
+
         $this->assertTrue($obj instanceof AbstractAttributes);
         $this->assertTrue($obj instanceof FooAttributes);
         $this->assertSame('bar', $obj->foo);
         $extras = $obj->getExtraFields();
         $this->assertTrue(empty($extras));
     }
-    
+
     public function testInstantiateWithExtraFields()
     {
         $obj = FooAttributes::createFromArray(array('foo' => 'bar', 'baz' => 23));
@@ -30,5 +30,5 @@ class AbstractAttributesTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(1, count($extras));
         $this->assertSame('baz', $extras[0]);
     }
-    
+
 }

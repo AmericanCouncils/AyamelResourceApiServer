@@ -3,7 +3,6 @@
 namespace Ayamel\ApiBundle\EventListener;
 
 use Ayamel\ResourceBundle\Document\Resource;
-use Ayamel\ResourceBundle\Document\FileReference;
 use Ayamel\ApiBundle\Event\Events;
 use Ayamel\ApiBundle\Event\ResolveUploadedContentEvent;
 use Ayamel\ApiBundle\Event\HandleUploadedContentEvent;
@@ -90,20 +89,20 @@ class UriContentSubscriber implements EventSubscriberInterface
 
         $newResource = $this->mergeResources($oldResource, $derivedResource);
         $newResource->setStatus(Resource::STATUS_NORMAL);
-        
+
         $e->setResource($resource);
     }
-    
+
     protected function mergeResources($old, $new)
     {
         $this->mergeDocumentProperties($old, $new, array('title', 'type', 'functionalDomains', 'subjectDomains', 'license', 'copyright', 'description', 'keywords', 'languages'));
-        
+
         $old->content = $new->content;
         $old->origin = $this->mergeDocumentProperties($old->origin, $new->origin, array('creator', 'location', 'date', 'format', 'note', 'uri'));
-        
+
         return $old;
     }
-    
+
     protected function mergeDocumentProperties($old, $new, $properties = array())
     {
         foreach ($properties as $prop) {

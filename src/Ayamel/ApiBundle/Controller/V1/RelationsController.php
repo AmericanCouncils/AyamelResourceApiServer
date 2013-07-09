@@ -14,7 +14,7 @@ class RelationsController extends ApiController
     /**
      * This route allows you to get, in greater detail, relations of a given Resource.
      *
-     * By default, only relations created by the resources owner, and current requesting client of the object 
+     * By default, only relations created by the resources owner, and current requesting client of the object
      * are returned, however here you may specify filters to see relations created by any system, or only retrieve
      * relations of a specific type.
      *
@@ -47,7 +47,7 @@ class RelationsController extends ApiController
         if ($resource->isDeleted()) {
             return $this->returnDeletedResource($resource);
         }
-        
+
         $this->requireClientVisibility($resource);
 
         //build filters
@@ -63,10 +63,10 @@ class RelationsController extends ApiController
         if ($clientUsers = $req->query->get('clientUser', false)) {
             $filters['clientUser'] = explode(',', $clientUsers);
         }
-        
+
         $subject = $req->query->get('subject', false);
         $object = $req->query->get('object', false);
-        
+
         if ($subject || $object) {
             if ($subject) $filters['subjectId'] = $id;
             if ($object) $filters['objectId'] = $id;
@@ -76,7 +76,7 @@ class RelationsController extends ApiController
             $qb->addOr($qb->expr()->field('subjectId')->equals($id));
             $qb->addOr($qb->expr()->field('objectId')->equals($id));
         }
-        
+
         //set limit/skip
         $qb->limit($req->query->get('limit', 20));
         $qb->skip($req->query->get('skip', 0));
@@ -87,11 +87,11 @@ class RelationsController extends ApiController
             'relations' => $this->relationsToArray($relations)
         ), 200);
     }
-    
+
     /**
      * This route allows you to filter Relations.
      *
-     * By default, only relations created by requesting client system are returned, however here you may specify filters 
+     * By default, only relations created by requesting client system are returned, however here you may specify filters
      * to see relations created by any system, or only retrieve relations of a specific type.
      *
      * @ApiDoc(
@@ -116,7 +116,7 @@ class RelationsController extends ApiController
     public function filterRelations(Request $req)
     {
         $filters = array();
-        
+
         //set filters
         if ($subIds = $req->query->get('subjectId', false)) {
             $filters['subjectId'] = explode(',', $subIds);
@@ -137,21 +137,21 @@ class RelationsController extends ApiController
         }
         //create the query builder w/ filters
         $qb = $this->getRepo('AyamelResourceBundle:Relation')->getQBForRelations($filters);
-        
+
         //set limit/skip
         $qb->limit($req->query->get('limit', 20));
         $qb->skip($req->query->get('skip', 0));
-        
+
         //EITHER subject or object
         if ($req->query->get('id', false)) {
             $ids = explode(',', $req->get('id'));
             $qb->addOr($qb->expr()->field('subjectId')->in($ids));
             $qb->addOr($qb->expr()->field('objectId')->in($ids));
         }
-        
+
         //execute query
         $relations = $qb->getQuery()->execute();
-        
+
         return $this->createServiceResponse(array(
             'relations' => $this->relationsToArray($relations)
         ), 200);
@@ -180,12 +180,12 @@ class RelationsController extends ApiController
     public function createRelation()
     {
         $this->requireAuthentication();
-        
+
         $request = $this->getRequest();
 
         //create the relation submitted by the client
         $relation = $this->container->get('ac.webservices.object_validator')->createObjectFromRequest('Ayamel\ResourceBundle\Document\Relation', $this->getRequest());
-        
+
         //retrieve the related resources
         $subject = $this->getRequestedResourceById($relation->getSubjectId());
         $object = $this->getRequestedResourceById($relation->getObjectId());
@@ -197,7 +197,7 @@ class RelationsController extends ApiController
         if ($object->isDeleted()) {
             throw $this->createHttpException(400, "Invalid object id.");
         }
-        
+
         //require visiblity
         $this->requireClientVisibility($subject);
         $this->requireClientVisibility($object);
@@ -233,7 +233,7 @@ class RelationsController extends ApiController
         //get the relation
         $repo = $this->getRepo('AyamelResourceBundle:Relation');
         $relation = $repo->find($id);
-        
+
         //only owners may delete the relation
         if ($this->getApiClient()->id !== $relation->getClient()->getId()) {
             throw $this->createHttpException(403, "You are not the owner of this Relation.");
@@ -243,12 +243,11 @@ class RelationsController extends ApiController
         $manager = $this->getDocManager();
         $manager->remove($relation);
         $manager->flush();
-        
+
         //TODO: resource modified if relation === search ?
-        
         return $this->createServiceResponse(null, 200);
     }
-    
+
     protected function relationsToArray($relations)
     {
         $rels = array();
@@ -256,7 +255,7 @@ class RelationsController extends ApiController
         foreach (iterator_to_array($relations) as $key => $val) {
             $rels[] = $val;
         }
-        
+
         return $rels;
     }
 

@@ -2,7 +2,6 @@
 
 namespace Ayamel\ResourceBundle\Validation;
 
-use Symfony\Component\Validator\ValidatorInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -14,7 +13,7 @@ class AspectRatioValidator extends ConstraintValidator
     public function validate($value, Constraint $constraint)
     {
         $exp = explode(':', $value);
-        
+
         if (count($exp) !== 2) {
             //if it equals 0, it means it's a scalable vector image, so the
             //aspect ratio can change
@@ -24,7 +23,7 @@ class AspectRatioValidator extends ConstraintValidator
 
             $this->context->addViolation($constraint->message);
         }
-        
+
         if (!is_numeric($exp[0]) || !is_int((int) $exp[1])) {
             $this->context->addViolation($constraint->message);
         }

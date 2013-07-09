@@ -76,7 +76,7 @@ class LogSubscriber implements EventSubscriberInterface
         if ($this->logMessage) {
             $response = $e->getResponse();
             $request = $e->getRequest();
-            
+
             $this->logMessage['response'] = array(
                 'status' => $response->getStatusCode(),
                 'type' => $response->headers->get('Content-Type'),

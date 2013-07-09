@@ -380,7 +380,7 @@ Ayamel\ResourceBundle\Validation\File\GenericImageAttributes:
                 type: string
             - Length:
                 max: 250
-                
+
 Ayamel\ResourceBundle\Validation\File\GenericDocumentAttributes:
     properties:
         pages:
@@ -388,14 +388,14 @@ Ayamel\ResourceBundle\Validation\File\GenericDocumentAttributes:
                 type: integer
             - Range:
                 min: 0
-                
+
 Ayamel\ResourceBundle\Validation\File\CaptionAttributes:
     properties:
         duration:
             - Type:
                 type: integer
             - Range:
-                min: 0            
+                min: 0
 
 ##
 ## RELATION ATTRIBUTES

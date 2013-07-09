@@ -29,7 +29,7 @@ abstract class ApiController extends Controller
         if (!$key = $this->getRequest()->get('_key', false)) {
             throw new HttpException(401, "Valid API key required.");
         }
-        
+
         if (!$client = $this->container->get('ayamel.client_loader')->getClientByApiKey($key)) {
             throw new HttpException(401, "Valid API key required.");
         }
@@ -60,7 +60,7 @@ abstract class ApiController extends Controller
         if (!$key = $this->container->get('request')->get('_key', false)) {
             return false;
         }
-        
+
         return $this->container->get('ayamel.client_loader')->getClientByApiKey($key);
     }
 
@@ -91,13 +91,13 @@ abstract class ApiController extends Controller
     /**
      * Validate an object, throw an http exception if validation fails.
      *
-     * @param mixed $object 
+     * @param  mixed                                                     $object
      * @throws Symfony\Component\HttpKernel\Exception\HttpException(400) If validation fails
      */
     protected function validateObject($object)
     {
         $errors = $this->container->get('validator')->validate($object);
-        
+
         if (count($errors) > 0) {
             throw new HttpException(400, implode("; ", iterator_to_array($errors)));
         }
@@ -128,7 +128,7 @@ abstract class ApiController extends Controller
             if (!$client = $this->getApiClient()) {
                 throw new HttpException(401, "Valid API key required.");
             }
-            
+
             if (($client->id !== $resource->getClient()->getId()) || !in_array($client->id, $visibility)) {
                 throw new HttpException(403, "Not authorized.");
             }
@@ -136,7 +136,7 @@ abstract class ApiController extends Controller
 
         return $resource;
     }
-    
+
     /**
      * Filter an array of Resources to exclude Resources not visible to the requesting client.
      *
@@ -147,7 +147,7 @@ abstract class ApiController extends Controller
     {
         $visibleResources = array();
         $client = $this->getApiClient();
-        
+
         foreach ($resources as $resource) {
             if (!$client && null === $resource->getVisibility()) {
                 $visibleResources[] = $resource;
@@ -157,7 +157,7 @@ abstract class ApiController extends Controller
                 }
             }
         }
-        
+
         return $visibleResources;
     }
 

@@ -146,7 +146,7 @@ abstract class AbstractFilePathProvider implements ProviderInterface
                 return $type;
             }
         }
-        
+
         return $this->nullExtensionType;
     }
 }

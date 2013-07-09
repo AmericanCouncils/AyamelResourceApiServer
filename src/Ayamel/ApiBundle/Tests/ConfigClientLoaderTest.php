@@ -28,29 +28,29 @@ class ConfigClientLoaderTest extends \PHPUnit_Framework_TestCase
         $l = new ConfigClientLoader();
         $this->assertTrue($l instanceof ClientLoaderInterface);
     }
-    
+
     public function testGetClients()
     {
         $l = $this->getLoader();
-        
+
         $clients = $l->getClients();
         $this->assertSame(2, count($clients));
-        
-        foreach($clients as $client) {
+
+        foreach ($clients as $client) {
             $this->assertTrue($client instanceof Client);
         }
     }
-    
+
     public function testGetClient()
     {
         $l = $this->getLoader();
         $c = $l->getClient('test_client2');
         $this->assertTrue($c instanceof Client);
         $this->assertSame('test_client2', $c->id);
-        
+
         $this->assertFalse($l->getClient('foo'));
     }
-    
+
     public function testGetClientByApiKey()
     {
         $l = $this->getLoader();

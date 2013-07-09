@@ -28,7 +28,7 @@ class FileAttributesValidator extends ConstraintValidator
         if (empty($fileAttributes)) {
             return;
         }
-        
+
         $mime = $object->getMimeType();
         $attrs = $this->getAttributesClasses($mime, $object->getAttributes());
         if (empty($attrs)) {
@@ -48,7 +48,7 @@ class FileAttributesValidator extends ConstraintValidator
                 }
             }
         }
-        
+
         //add violations, if any
         if (count($errors) > 0) {
             foreach ($errors as $error) {
