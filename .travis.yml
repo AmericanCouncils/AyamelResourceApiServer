@@ -14,3 +14,5 @@ services:
 before_script:
     - phpenv config-add travis.php.ini
     - composer install --dev
+    - cp app/config/parameters.default.yml app/config/parameters.yml
+    - app/console cache:clear --env=test
