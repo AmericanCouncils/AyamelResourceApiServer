@@ -5,15 +5,16 @@ namespace Ayamel\ResourceBundle\Validation\File;
 use Ayamel\ResourceBundle\Validation\AbstractAttributes;
 
 /**
- * Defines properties for validating video files attributes.
+ * Defines properties for validating video file attributes.
  *
  * @package AyamelResourceBundle
  * @author Evan Villemez
  */
-class VideoAttributes extends AbstractAttributes
+class GenericVideoAttributes extends AbstractAttributes
 {
-    public $resolutionX;
-    public $resolutionY;
+    public $frameSize;
     public $duration;
-    public $averageBitrate;
+    public $aspectRatio;
+    public $frameRate;
+    public $bitrate;
 }

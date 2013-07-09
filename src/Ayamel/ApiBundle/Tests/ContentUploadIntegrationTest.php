@@ -100,8 +100,10 @@ class ContentUploadIntegrationTest extends ApiTestCase
                     'mime' => 'video/mp4; encoding=binary',
                     'mimeType' => 'video/mp4',
                     'attributes' => array(
-                        'key' => 'val',
-                        'foo' => 'bar'
+                        'frameSize' => array(
+                            'height' => 1080,
+                            'width' => 1920
+                        ),
                     )
                 ),
                 array(
@@ -113,8 +115,10 @@ class ContentUploadIntegrationTest extends ApiTestCase
                     'mime' => 'video/mp4; encoding=binary',
                     'mimeType' => 'video/mp4',
                     'attributes' => array(
-                        'key' => 'val',
-                        'foo' => 'bar'
+                        'frameSize' => array(
+                            'height' => 400,
+                            'width' => 600
+                        ),
                     )
                 )
             )
@@ -126,6 +130,8 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $this->assertSame(200, $response['response']['code']);
         $this->assertSame($data['remoteFiles'], $response['resource']['content']['files']);
         $this->assertSame('normal', $response['resource']['status']);
+        
+        //TODO: test failing attributes
     }
 
     public function testUploadContentAsFile()
