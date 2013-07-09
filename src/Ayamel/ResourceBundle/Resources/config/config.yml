@@ -79,9 +79,12 @@ parameters:
             - text/srt
 
     ayamel.resource.relation_attribute_validation_map:
-        depends_on: ~
+        based_on: ~
+        references: ~
         requires: ~
-        derived_from: ~
+        transcript_of: ~
+        search: ~
+        version_of: Ayamel\ResourceBundle\Validation\Relation\VersionOfAttributes
         part_of: Ayamel\ResourceBundle\Validation\Relation\PartOfAttributes
 
 services:

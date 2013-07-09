@@ -13,7 +13,7 @@ use Ayamel\ResourceBundle\Document\Relation;
  */
 class RelationValidationTest extends ApiTestCase
 {
-    public function testNoErrorsOnUnmappedOrNullRelation()
+    public function testPassValidationOnUnmappedOrNullRelation()
     {
         $v = $this->getContainer()->get('validator');
 
@@ -24,23 +24,67 @@ class RelationValidationTest extends ApiTestCase
 
         $errors = $v->validate($rel);
 
-        $this->assertSame(0, count($errors));        
+        $this->assertSame(0, count($errors));
     }
 
-    public function testValidatePartOfAttributes()
+    public function testFailsValidationWithExtraKeys()
+    {
+        $v = $this->getContainer()->get('validator');
+        
+        //unmapped w/ extra key
+        $rel = new Relation();
+        $rel->setObjectId('324');
+        $rel->setSubjectId('325');
+        $rel->setType('requires');
+        $rel->setAttributes(array(
+            'foo' => 'bar'
+        ));
+        $errors = $v->validate($rel);
+        $this->assertSame(1, count($errors));
+        
+        //mapped w/ extra key
+        $rel = new Relation();
+        $rel->setObjectId('324');
+        $rel->setSubjectId('325');
+        $rel->setType('part_of');
+        $rel->setAttributes(array(
+            'foo' => 'bar'
+        ));
+        $errors = $v->validate($rel);
+        $this->assertSame(1, count($errors));
+    }
+    
+    
+    
+    public function testValidatePartOfRelation()
     {
         $rel = new Relation();
         $rel->setObjectId('324');
         $rel->setSubjectId('325');
         $rel->setType('part_of');
         $rel->setAttributes(array(
-            'index' => 23.3
+            'index' => 3
         ));
 
         $v = $this->getContainer()->get('validator');
         $errors = $v->validate($rel);
 
-        $this->assertSame(1, count($errors));
-        $this->assertSame('attributes', $errors[0]->getPropertyPath());
+        $this->assertSame(0, count($errors));
+    }
+    
+    public function testValidateVersionOfRelation()
+    {
+        $rel = new Relation();
+        $rel->setObjectId('324');
+        $rel->setSubjectId('325');
+        $rel->setType('version_of');
+        $rel->setAttributes(array(
+            'version' => "99.23.33"
+        ));
+
+        $v = $this->getContainer()->get('validator');
+        $errors = $v->validate($rel);
+
+        $this->assertSame(0, count($errors));
     }
 }
