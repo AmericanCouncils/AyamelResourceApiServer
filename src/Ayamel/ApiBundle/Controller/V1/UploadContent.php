@@ -44,7 +44,7 @@ class UploadContent extends ApiController
      *          }
      *
      * -    Specify an array of file references on a remote file server by passing a JSON object with the `remoteFiles` key
-     *      containing an array of file objects.  These references are stored exactly as received.  Note that the content of 
+     *      containing an array of file objects.  These references are stored exactly as received.  Note that the content of
      *      the `attributes` key is validated depending on the file's `mimeType` property.  TODO: determine proper place to
      *      document file attributes.
      *
@@ -68,7 +68,7 @@ class UploadContent extends ApiController
      *                      "downloadUri": "http://example.com/files/transcoded.mp4",
      *                      "mime": "video/mp4",
      *                      "mimeType": "video/mp4",
-     *                      "representation": "transcoded",
+     *                      "representation": "transcoding",
      *                      "quality": 1,
      *                      "bytes": 9600,
      *                      "attributes": {
@@ -98,7 +98,7 @@ class UploadContent extends ApiController
     public function executeAction($id, $token)
     {
         $this->requireAuthentication();
-        
+
         //get the resource
         $resource = $this->getRequestedResourceById($id);
 
@@ -184,7 +184,7 @@ class UploadContent extends ApiController
                 //notify system
                 $apiDispatcher->dispatch(Events::RESOURCE_MODIFIED, new ApiEvent($resource));
             } catch (\Exception $e) {
-                
+
                 //TODO: unlock resource
                 throw $e;
             }

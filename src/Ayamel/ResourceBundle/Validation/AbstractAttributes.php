@@ -26,14 +26,15 @@ abstract class AbstractAttributes
         }
 
         $obj->setExtraFields($extras);
+
         return $obj;
     }
-    
+
     public function setExtraFields(array $extras)
     {
         $this->extraFields = $extras;
     }
-    
+
     public function getExtraFields()
     {
         return $this->extraFields;

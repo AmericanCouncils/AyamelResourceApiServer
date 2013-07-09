@@ -50,7 +50,7 @@ class RelationRepository extends DocumentRepository
                 $qb->field($field)->equals($val);
             }
         }
-        
+
         return $qb;
     }
 

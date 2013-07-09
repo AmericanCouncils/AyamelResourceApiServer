@@ -8,11 +8,11 @@ use Symfony\Component\HttpFoundation\Request;
 class GetResources extends ApiController
 {
     /**
-     * Returns multiple resources based on some query parameters.  Unless otherwise specified only Resources owned by the requesting 
+     * Returns multiple resources based on some query parameters.  Unless otherwise specified only Resources owned by the requesting
      * client are returned.  Only resources visible to the requesting client are returned.
      *
      * Query filters can be comma-delimited strings for multiple values.
-     * 
+     *
      * @ApiDoc(
      *      resource=true,
      *      description="Retrieve multiple resources",
@@ -31,7 +31,7 @@ class GetResources extends ApiController
      */
     public function executeAction(Request $req)
     {
-        
+
         //create filters
         $filters = array();
         if ($ids = $req->query->get('id', false)) {
@@ -55,7 +55,7 @@ class GetResources extends ApiController
 
         //get query builder
         $qb = $this->getRepo('AyamelResourceBundle:Resource')->getQBForResources($filters);
-        
+
         //langs filter is an "or", unless we decide we really have to force the client
         //to choose exactly which language standard they want to filter on
         if ($languages = $req->query->get('languages', false)) {
@@ -63,7 +63,7 @@ class GetResources extends ApiController
             $qb->addOr($qb->expr()->field('languages.iso639_3')->in($langs));
             $qb->addOr($qb->expr()->field('languages.bcp47')->in($langs));
         }
-        
+
         $limit = (($l = $req->query->get('limit', 20)) <= 100) ? $l : 1000;
         $qb->limit($limit);
         $qb->skip($req->query->get('skip', 0));
@@ -73,7 +73,7 @@ class GetResources extends ApiController
         //assemble final content structure
         return $this->createServiceResponse(array('resources' => $this->getResourcesAsArray($results)), 200);
     }
-    
+
     /**
      * Converts result set to normal array, and only includes Resources that are visible
      * to the requesting client
@@ -83,7 +83,7 @@ class GetResources extends ApiController
         $resources = array();
         $client = $this->getApiClient();
         $id = ($client) ? $client->id : false;
-        
+
         foreach ($results as $resource) {
             if (is_null($resource->getVisibility()) || ($id && in_array($id, $resource->getVisibility())) ) {
                 $resources[] = $resource;

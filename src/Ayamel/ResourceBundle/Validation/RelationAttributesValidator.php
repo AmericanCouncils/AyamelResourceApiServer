@@ -24,15 +24,16 @@ class RelationAttributesValidator extends ConstraintValidator
     {
         $type = $object->getType($object);
         $attrs = $object->getAttributes();
-        
+
         //check map for validation class
         if (!isset($this->map[$type]) || is_null($this->map[$type])) {
             if (empty($attrs)) {
                 return;
             }
-            
+
             //if not mapped and there are attributes, it's invalid
             $this->context->addViolationAt('attributes', sprintf("Relation of type [%s] cannot contain attributes.", $type));
+
             return;
         }
 

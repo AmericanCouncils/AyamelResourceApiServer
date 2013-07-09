@@ -16,7 +16,7 @@ abstract class ApiTestCase extends WebTestCase
         $db->dropCollection('resources');
         $db->dropCollection('relations');
     }
-    
+
     /**
      * Shortcut to get client
      */

@@ -18,7 +18,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($data));
-        
+
         $this->assertSame(201, $response['response']['code']);
         $this->assertFalse(isset($response['resource']['content']));
 
@@ -53,7 +53,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $this->assertSame(401, $response->getStatusCode());
         $content = json_decode($response->getContent(), true);
         $this->assertSame(401, $content['response']['code']);
-        
+
         //deny access
         $response = $this->getResponse('GET', '/api/v1/resources/'.$resourceId."/request-upload-url?_key=45678isafgd56789asfgdhf4567");
         $this->assertSame(200, $response->getStatusCode());
@@ -61,15 +61,15 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $this->assertSame(200, $content['response']['code']);
         $this->assertTrue(isset($content['contentUploadUrl']));
         $uploadUrl = substr($content['contentUploadUrl'], strlen('http://localhost'));
-        
+
         //no apikey
         $response = $this->getResponse('POST', $uploadUrl);
         $this->assertSame(401, $response->getStatusCode());
-        
+
         //invalid key
         $response = $this->getResponse('POST', $uploadUrl.'?_key=55678isafgd56789asfgdhf4568');
         $this->assertSame(403, $response->getStatusCode());
-        
+
     }
 
     public function testUploadContentAsRemoteFilesArray()
@@ -126,11 +126,11 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $response = $this->getJson('POST', $apiPath.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($data));
-                
+
         $this->assertSame(200, $response['response']['code']);
         $this->assertSame($data['remoteFiles'], $response['resource']['content']['files']);
         $this->assertSame('normal', $response['resource']['status']);
-        
+
         //TODO: test failing attributes
     }
 

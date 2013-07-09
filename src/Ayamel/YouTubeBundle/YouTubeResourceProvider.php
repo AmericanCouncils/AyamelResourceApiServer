@@ -23,17 +23,17 @@ class YouTubeResourceProvider implements ProviderInterface
     {
         return 'youtube';
     }
-    
+
     public function handlesScheme($scheme)
     {
         return $scheme === 'youtube';
     }
-    
+
     public function createResourceFromUri($uri)
     {
         $exp = explode('://', $uri);
         $videoId = $exp[1];
-        
+
         //call youtube api
         $youtubeApiUrl = sprintf("https://gdata.youtube.com/feeds/api/videos/%s?v=2&alt=json", $videoId);
         $call = curl_init();
@@ -53,7 +53,7 @@ class YouTubeResourceProvider implements ProviderInterface
         $data = curl_exec($call);
         $code = curl_getinfo($call, CURLINFO_HTTP_CODE);
         curl_close($call);
-        
+
         //check for error
         if (200 !== $code) {
             throw new HttpException($code, "Failed to create YouTube resource.");
@@ -85,7 +85,7 @@ class YouTubeResourceProvider implements ProviderInterface
         if (isset($data['entry']['media$group']['media$license']['$t'])) {
             $res->setLicense($data['entry']['media$group']['media$license']['$t']);
         }
-        
+
         //create content
         if (isset($data['entry']['media$group']['media$player']['url'])) {
             $res->content->setCanonicalUri($data['entry']['media$group']['media$player']['url']);
@@ -103,7 +103,7 @@ class YouTubeResourceProvider implements ProviderInterface
                 $ref->setDownloadUri($item['url']);
                 $res->content->addFile($ref);
             }
-            
+
             if (isset($data['entry']['media$group']['media$thumbnail'])) {
                 foreach ($data['entry']['media$group']['media$thumbnail'] as $item) {
                     $ref = new FileReference();
@@ -116,7 +116,7 @@ class YouTubeResourceProvider implements ProviderInterface
                 }
             }
         }
-        
+
         //create origin
         $o = new Origin();
         $o->setFormat('YouTube Video');
@@ -128,7 +128,7 @@ class YouTubeResourceProvider implements ProviderInterface
             $o->setDate($data['entry']['published']['$t']);
         }
         $res->origin = $o;
-        
+
         //create oembed
         $oem = new OEmbed();
         $data = json_decode(
@@ -143,7 +143,7 @@ class YouTubeResourceProvider implements ProviderInterface
 
             $res->content->setOembed($oem);
         }
-        
+
         return $res;
     }
 }

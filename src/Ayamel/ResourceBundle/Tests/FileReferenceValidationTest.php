@@ -19,11 +19,11 @@ class FileReferenceValidationTest extends ApiTestCase
         $ref->setRepresentation('original');
         $ref->setQuality(0);
         $ref->setMimeType('fake/mime-type');
-        
+
         $errors = $v->validate($ref);
         $this->assertSame(0, count($errors));
     }
-    
+
     public function testFailsOnExtraAttributeKeys()
     {
         $v = $this->getContainer()->get('validator');
@@ -37,11 +37,11 @@ class FileReferenceValidationTest extends ApiTestCase
             'duration' => 23,
             'foo' => 'bar'
         ));
-        
+
         $errors = $v->validate($ref);
         $this->assertSame(1, count($errors));
     }
-    
+
     public function testFailValidatingUnknownMimeWithAttributes()
     {
         $v = $this->getContainer()->get('validator');
@@ -85,14 +85,14 @@ class FileReferenceValidationTest extends ApiTestCase
         ));
         $errors = $v->validate($ref);
         $this->assertSame(0, count($errors));
-        
+
         //bad frame size
         $ref->setAttribute('frameSize', array(
             'height' => 3444,
         ));
         $errors = $v->validate($ref);
         $this->assertSame(1, count($errors));
-        
+
         //bad duration
         $ref->setAttributes(array(
             'duration' => 3.14159,
@@ -104,7 +104,7 @@ class FileReferenceValidationTest extends ApiTestCase
         ));
         $errors = $v->validate($ref);
         $this->assertSame(1, count($errors));
-        
+
         //bad aspect ratio
         $ref->setAttributes(array(
             'aspectRatio' => '23f.3:3',
@@ -112,7 +112,7 @@ class FileReferenceValidationTest extends ApiTestCase
         ));
         $errors = $v->validate($ref);
         $this->assertSame(1, count($errors));
-        
+
     }
 
     public function testValidateGenericAudioAttributes()
@@ -142,7 +142,7 @@ class FileReferenceValidationTest extends ApiTestCase
         $errors = $v->validate($ref);
         $this->assertSame(1, count($errors));
     }
-    
+
     public function testValidateGenericImageAttributes()
     {
         $v = $this->getContainer()->get('validator');
@@ -195,7 +195,7 @@ class FileReferenceValidationTest extends ApiTestCase
 
         $errors = $v->validate($ref);
         $this->assertSame(0, count($errors));
-        
+
     }
     public function testValidateGenericDocumentAttributes()
     {
@@ -213,7 +213,7 @@ class FileReferenceValidationTest extends ApiTestCase
 
         $errors = $v->validate($ref);
         $this->assertSame(0, count($errors));
-        
+
     }
     public function testValidateCaptionAttributes()
     {
