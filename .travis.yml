@@ -1,15 +1,16 @@
 language: php
 
 php:
-  - 5.3
-  - 5.4
+    - 5.3
+    - 5.4
 
 env:
-  - MONGO_VERSION=1.2.12
+    - MONGO_VERSION=1.2.12
 
 services:
     - mongodb
     - rabbitmq
 
 before_script:
-  - composer install --dev
+    - phpenv config-add travis.php.ini
+    - composer install --dev
