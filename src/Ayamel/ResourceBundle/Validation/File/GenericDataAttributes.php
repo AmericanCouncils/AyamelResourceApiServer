@@ -5,13 +5,11 @@ namespace Ayamel\ResourceBundle\Validation\File;
 use Ayamel\ResourceBundle\Validation\AbstractAttributes;
 
 /**
- * Defines properties for validating audio file attributes.
+ * Defines properties for validating data file attributes.
  *
  * @package AyamelResourceBundle
  * @author Evan Villemez
  */
-class AudioAttributes extends AbstractAttributes
+class GenericDataAttributes extends AbstractAttributes
 {
-    public $duration;
-    public $averageBitrate;
 }
