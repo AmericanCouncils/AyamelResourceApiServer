@@ -1,5 +1,7 @@
 # Ayamel Media API #
 
+[![Build Status](https://travis-ci.org/AmericanCouncils/AyamelResourceApiServer.png?branch=master)](https://travis-ci.org/AmericanCouncils/AyamelResourceApiServer)
+
 This project is an API server for managing multimedia resources.  The primary focus of the project is to provide a 
 mechanism for institutions to host and search multimedia resources that are useful for language learners. The API served
 by this application can be used by other applications to simplify managing multimedia, and also to facilitate
