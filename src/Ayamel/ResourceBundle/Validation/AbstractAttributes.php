@@ -15,18 +15,25 @@ abstract class AbstractAttributes
 
     public static function createFromArray(array $data)
     {
+        $extras = array();
         $obj = new static();
         foreach ($data as $key => $val) {
             if (property_exists($obj, $key)) {
                 $obj->$key = $val;
             } else {
-                $extraFields[] = $key;
+                $extras[] = $key;
             }
         }
 
+        $obj->setExtraFields($extras);
         return $obj;
     }
-
+    
+    public function setExtraFields(array $extras)
+    {
+        $this->extraFields = $extras;
+    }
+    
     public function getExtraFields()
     {
         return $this->extraFields;

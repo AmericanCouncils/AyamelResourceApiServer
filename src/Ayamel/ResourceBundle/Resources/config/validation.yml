@@ -294,41 +294,108 @@ Ayamel\ResourceBundle\Document\Relation:
 ## FILE ATTRIBUTES
 ##
 
-Ayamel\ResourceBundle\Validation\File\VideoAttributes:
+Ayamel\ResourceBundle\Validation\File\GenericVideoAttributes:
     properties:
-        resolutionX:
-            - Type:
-                type: integer
-            - Range:
-                min: 0
-        resolutionY:
-            - Type:
-                type: integer
-            - Range:
-                min: 0
+        frameSize:
+            - Collection:
+                allowExtraFields: false
+                allowMissingFields: false
+                fields:
+                    height:
+                        - Type:
+                            type: integer
+                        - Range:
+                            min: 0
+                    width:
+                        - Type:
+                            type: integer
+                        - Range:
+                            min: 0
         duration:
             - Type:
                 type: integer
             - Range:
                 min: 0
-        averageBitrate:
+        aspectRatio:
+            - Type:
+                type: string
+            - Ayamel\ResourceBundle\Validation\AspectRatioConstraint: ~
+        bitrate:
+            - Type:
+                type: integer
+            - Range:
+                min: 0
+        frameRate:
             - Type:
                 type: integer
             - Range:
                 min: 0
 
-Ayamel\ResourceBundle\Validation\File\AudioAttributes:
+Ayamel\ResourceBundle\Validation\File\GenericAudioAttributes:
     properties:
         duration:
             - Type:
                 type: integer
             - Range:
                 min: 0
-        averageBitrate:
+        bitrate:
             - Type:
                 type: integer
             - Range:
                 min: 0
+        channels:
+            - Type:
+                type: integer
+            - Range:
+                min: 0
+
+Ayamel\ResourceBundle\Validation\File\GenericImageAttributes:
+    properties:
+        frameSize:
+            - Collection:
+                allowExtraFields: false
+                allowMissingFields: false
+                fields:
+                    height:
+                        - Type:
+                            type: integer
+                        - Range:
+                            min: 0
+                    width:
+                        - Type:
+                            type: integer
+                        - Range:
+                            min: 0
+        aspectRatio:
+            - Type:
+                type: string
+            - Ayamel\ResourceBundle\Validation\AspectRatioConstraint: ~
+        time:
+            - Type:
+                type: integer
+            - Range:
+                min: 0
+        units:
+            - Type:
+                type: string
+            - Length:
+                max: 250
+                
+Ayamel\ResourceBundle\Validation\File\GenericDocumentAttributes:
+    properties:
+        pages:
+            - Type:
+                type: integer
+            - Range:
+                min: 0
+                
+Ayamel\ResourceBundle\Validation\File\CaptionAttributes:
+    properties:
+        duration:
+            - Type:
+                type: integer
+            - Range:
+                min: 0            
 
 ##
 ## RELATION ATTRIBUTES
