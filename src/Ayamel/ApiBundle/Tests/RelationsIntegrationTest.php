@@ -78,9 +78,9 @@ class RelationsIntegrationTest extends ApiTestCase
         $relationData = array(
             'subjectId' => $subjectId,
             'objectId' => $objectId,
-            'type' => 'requires',
+            'type' => 'version_of',
             'attributes' => array(
-                'foo' => 'bar'
+                'version' => '12.23.45'
             ),
             'clientUser' => array(
                 'id' => 'user1',
@@ -320,9 +320,6 @@ class RelationsIntegrationTest extends ApiTestCase
             'subjectId' => $subjectId,
             'objectId' => $objectId,
             'type' => 'requires',
-            'attributes' => array(
-                'foo' => 'bar'
-            ),
             'clientUser' => array(
                 'id' => 'user1',
                 'url' => 'http://example.com/users/user1'

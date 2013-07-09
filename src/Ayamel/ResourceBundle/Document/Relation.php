@@ -47,9 +47,13 @@ class Relation
     /**
      * The type of the Relation.  Valid types include:
      *
-     * - **part_of** - words here...
-     * - **requires** - words here...
-     * - **depends_on** - words here...
+     * - **based_on** - The subject is a performance, production, derivation, adaptation, or interpretation of the object resource.
+     * - **references** - The subject cites or otherwise refers to the object resource.
+     * - **requires** - The subject requires the object for its functioning, delivery, or content and cannot be used without the related resource being present.
+     * - **transcript_of** - The subject is a linear description of a time-based object (e.g., a text transcript of audio)
+     * - **search** - Content for the object resource will affect hits against the subject resource when searching.  Only owners of the subject Resource may create `search` relations.
+     * - **version_of** - The subject is a historical state or edition of the object resource.
+     * - **part_of** - The subject is a physical or logical part of the object resource.
      *
      * @MongoDB\String
      * @JMS\Type("string")

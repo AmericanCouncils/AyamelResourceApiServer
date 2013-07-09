@@ -288,7 +288,7 @@ Ayamel\ResourceBundle\Document\Relation:
         type:
             - NotBlank: ~
             - Choice:
-                choices: [part_of, requires, depends_on]
+                choices: [based_on, references, requires, transcript_of, search, version_of, part_of]
 
 ##
 ## FILE ATTRIBUTES
@@ -408,3 +408,11 @@ Ayamel\ResourceBundle\Validation\Relation\PartOfAttributes:
                 type: integer
             - Range:
                 min: 0
+
+Ayamel\ResourceBundle\Validation\Relation\VersionOfAttributes:
+    properties:
+        version:
+            - Type:
+                type: string
+            - Length:
+                max: 500
