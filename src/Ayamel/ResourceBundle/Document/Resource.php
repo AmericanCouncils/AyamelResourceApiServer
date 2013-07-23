@@ -84,7 +84,7 @@ class Resource
      * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\Languages")
      * @JMS\Type("Ayamel\ResourceBundle\Document\Languages")
      */
-    protected $languages;
+    public $languages;
 
     /**
      * An array of categories that apply to the content of the Resource.  Categories here are vetted
@@ -517,7 +517,27 @@ class Resource
     {
         return $this->status;
     }
+    
+    /**
+     * Set languages
+     *
+     * @param Languages $langs 
+     */
+    public function setLanguages(Languages $langs = null)
+    {
+        $this->languages = $langs;
+    }
 
+    /**
+     * Get langauges
+     *
+     * @return Languages
+     */
+    public function getLanguages()
+    {
+        return $this->languages;
+    }
+    
     /**
      * Set the origin
      *
