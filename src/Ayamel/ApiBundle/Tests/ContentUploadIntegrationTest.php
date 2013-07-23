@@ -130,8 +130,6 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $this->assertSame(200, $response['response']['code']);
         $this->assertSame($data['remoteFiles'], $response['resource']['content']['files']);
         $this->assertSame('normal', $response['resource']['status']);
-
-        //TODO: test failing attributes
     }
 
     public function testUploadContentAsFile()
@@ -243,5 +241,33 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $response = $this->getResponse('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', array(), array('file' => $uploadedFile));
         $this->assertSame(401, $response->getStatusCode());
     }
+    
+    public function testUploadContentAsGenericUri()
+    {
+        $data = array(
+            'title' => 'test',
+            'type' => 'data'
+        );
 
+        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), json_encode($data));
+        $this->assertSame(201, $response['response']['code']);
+        $this->assertFalse(isset($response['resource']['content']));
+        $this->assertSame('awaiting_content', $response['resource']['status']);
+
+        $resourceId = $response['resource']['id'];
+        $apiPath = substr($response['contentUploadUrl'], strlen('http://localhost'));
+        
+        $response = $this->getJson('POST', $apiPath.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), json_encode(array(
+            'uri' => 'http://www.google.com/'
+        )));
+        
+        $this->assertSame(200, $response['response']['code']);
+        $this->assertTrue(isset($response['resource']['content']['files']));
+        $this->assertTrue(0 < count(isset($response['resource']['content']['files'])));
+        $this->assertSame('normal', $response['resource']['status']);
+    }
 }
