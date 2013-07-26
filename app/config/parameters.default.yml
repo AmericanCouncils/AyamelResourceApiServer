@@ -32,3 +32,5 @@ parameters:
     transcoding.handbrake.path: /usr/local/bin/HandBrakeCLI
     ayamel.transcoding.temp_directory: %kernel.root_dir%/files/tmp
     
+    ## media info ##
+    mediainfo_path: /usr/bin/mediainfo
