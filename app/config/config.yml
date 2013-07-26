@@ -103,6 +103,9 @@ nelmio_cors:
             allow_headers: ['X-Requested-With', 'Content-Type', 'Origin']
             max_age: 3600
 
+ac_media_info:
+    path: %mediainfo_path%
+
 services:
     ac.webservices.object_validator:
             class:      AC\WebServicesBundle\Util\ClientObjectValidator

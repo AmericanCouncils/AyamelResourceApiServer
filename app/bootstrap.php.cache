@@ -234,7 +234,7 @@ return isset($this->scopedServices[$name]);
 }
 public static function camelize($id)
 {
-return preg_replace_callback('/(^|_|\.)+(.)/', function ($match) { return ('.'=== $match[1] ?'_':'').strtoupper($match[2]); }, $id);
+return strtr(ucwords(strtr($id, array('_'=>' ','.'=>'_ '))), array(' '=>''));
 }
 public static function underscore($id)
 {
@@ -327,11 +327,11 @@ protected $name;
 protected $startTime;
 protected $classes;
 protected $errorReportingLevel;
-const VERSION ='2.2.3-DEV';
-const VERSION_ID ='20203';
+const VERSION ='2.2.5-DEV';
+const VERSION_ID ='20205';
 const MAJOR_VERSION ='2';
 const MINOR_VERSION ='2';
-const RELEASE_VERSION ='3';
+const RELEASE_VERSION ='5';
 const EXTRA_VERSION ='DEV';
 public function __construct($environment, $debug)
 {

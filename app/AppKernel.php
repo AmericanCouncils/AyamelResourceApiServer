@@ -22,14 +22,13 @@ class AppKernel extends Kernel
             new Ayamel\ResourceBundle\AyamelResourceBundle(),
             new Ayamel\ApiBundle\AyamelApiBundle(),
             new Ayamel\FilesystemBundle\AyamelFilesystemBundle(),
-            new AC\GetID3Bundle\ACGetID3Bundle(),
-//            new Ayamel\GetID3Bundle\AyamelGetID3Bundle(),
             new AC\TranscodingBundle\ACTranscodingBundle(),
             new OldSound\RabbitMqBundle\OldSoundRabbitMqBundle(),
             new Ayamel\TranscodingBundle\AyamelTranscodingBundle(),
             new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
             new Nelmio\CorsBundle\NelmioCorsBundle(),
             new Ayamel\YouTubeBundle\AyamelYouTubeBundle(),
+            new AC\MediaInfoBundle\ACMediaInfoBundle()
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
