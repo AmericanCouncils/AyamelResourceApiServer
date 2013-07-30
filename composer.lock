@@ -3,21 +3,21 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "62086e1b52569771d5d7410d42aab201",
+    "hash": "b02dde1488ab5f714959f6fafa9dfe37",
     "packages": [
         {
             "name": "ac/media-info-bundle",
-            "version": "1.1.0",
+            "version": "dev-master",
             "target-dir": "AC/MediaInfoBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/AmericanCouncils/MediaInfoBundle.git",
-                "reference": "1.1.0"
+                "reference": "6cf6cd763f63aa3f8b9efaad28a8352387388e7a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AmericanCouncils/MediaInfoBundle/zipball/1.1.0",
-                "reference": "1.1.0",
+                "url": "https://api.github.com/repos/AmericanCouncils/MediaInfoBundle/zipball/6cf6cd763f63aa3f8b9efaad28a8352387388e7a",
+                "reference": "6cf6cd763f63aa3f8b9efaad28a8352387388e7a",
                 "shasum": ""
             },
             "require": {
@@ -47,7 +47,7 @@
                 "metadata",
                 "multimedia"
             ],
-            "time": "2013-07-30 13:45:36"
+            "time": "2013-07-30 20:02:47"
         },
         {
             "name": "ac/transcoding",
@@ -2043,7 +2043,8 @@
         "symfony/swiftmailer-bundle": 20,
         "ac/transcoding-bundle": 20,
         "oldsound/rabbitmq-bundle": 20,
-        "nelmio/api-doc-bundle": 20
+        "nelmio/api-doc-bundle": 20,
+        "ac/media-info-bundle": 20
     },
     "platform": {
         "php": ">=5.3.3",

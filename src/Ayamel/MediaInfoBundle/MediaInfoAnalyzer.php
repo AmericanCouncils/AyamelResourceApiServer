@@ -59,10 +59,10 @@ class MediaInfoAnalyzer implements AnalyzerInterface
         
         if (isset($image['height']) && isset($image['width'])) {
             $attrs['frameSize'] = array(
-                'height' => $this->parseHeightWidth($image['height']),
-                'width' => $this->parseHeightWidth($image['width'])
+                'height' => $this->getNumericValue($image['height']),
+                'width' => $this->getNumericValue($image['width'])
             );
-            
+            $attrs['units'] = 'px';
             $attrs['aspectRatio'] = $this->calculateAspectRatio($attrs['frameSize']['width'], $attrs['frameSize']['width']);
         }
                 
@@ -81,26 +81,35 @@ class MediaInfoAnalyzer implements AnalyzerInterface
         
     }
     
-    protected function parseHeightWidth($val)
+    protected function getNumericValue($val)
     {
-        
-        return $val;
+        foreach ($val as $item) {
+            if (is_numeric($item)) {
+                return (int) $item;
+            }
+        }
     }
     
     protected function parseDuration($val)
     {
-        return $val;
+        $val = $this->getNumericValue($val);
+        
+        return $val / 1000;
     }
     
-    protected function parseBitrate($val)
+    public function parseBitrate($val)
     {
+        $val = $this->getNumericValue($val);
+        
+        //TODO: convert to kbps
+        
         return $val;
     }
     
     protected function calculateAspectRatio($width, $height)
     {
         $gcd = $this->calculateGCD($width, $height);
-        return ($width/$gcd) . ':' . ($height/$gcd);
+        return ($width / $gcd) . ':' . ($height / $gcd);
     }
     
     protected function calculateGCD($width, $height)
