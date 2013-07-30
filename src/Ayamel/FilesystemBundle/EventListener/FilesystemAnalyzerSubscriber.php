@@ -39,7 +39,7 @@ class FilesystemAnalyzerSubscriber implements EventSubscriberInterface
      */
     public function onRetrieveFile(FilesystemEvent $e)
     {
-        $this->container->get('ayamel.api.filesystem.analyzer')->analyzeFile($e->getFileReference());
+        $this->container->get('ayamel.filesystem.analyzer')->analyzeFile($e->getFileReference());
     }
 
 }

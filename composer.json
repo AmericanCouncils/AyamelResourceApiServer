@@ -23,13 +23,12 @@
         "sensio/distribution-bundle": "2.2.*",
         "sensio/generator-bundle": "2.2.*",
 	      "jms/serializer-bundle": ">=0.11",
-        "getid3/getid3": "1.9.3",
         "ac/transcoding-bundle": "dev-master",
         "oldsound/rabbitmq-bundle": "dev-master",
         "nelmio/api-doc-bundle": "dev-master",
         "nelmio/cors-bundle": "*",
         "ac/web-services-bundle": "*",
-        "ac/media-info-bundle": "~1.0.0"
+        "ac/media-info-bundle": "~1.1.0"
     },
     "scripts": {
         "post-install-cmd": [

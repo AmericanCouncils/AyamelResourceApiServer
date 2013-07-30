@@ -2,15 +2,14 @@ parameters:
     ayamel.filesystem.local_filesystem.root_dir: %kernel.root_dir%/files/resource_uploads
     ayamel.filesystem.local_filesystem.secret: 34565dfg897jksksk4wk4ksdfkj34
     ayamel.filesystem.local_filesystem.base_uri: http://ayamel.americancouncils.org/resources/files
+    ayamel.filesystem.analyzer.cache_results: true
+    ayamel.filesystem.analyzer.cache_ttl: 604800 #1 week
+    ayamel.filesystem.analyzer.cache_dir: %kernel.cache_dir%/filesystem_analyzer
 
 services:
     ayamel.api.filesystem:
         class: Ayamel\FilesystemBundle\Filesystem\FilesystemManager
-        arguments: [@ayamel.api.filesystem.backend, @ayamel.api.filesystem.dispatcher]
-
-    ayamel.api.filesystem.dispatcher:
-        class: Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher
-        arguments: [@service_container]
+        arguments: [@ayamel.api.filesystem.backend, @event_dispatcher]
 
     ayamel.api.filesystem.backend:
         class: Ayamel\FilesystemBundle\Filesystem\LocalFilesystem
@@ -18,12 +17,30 @@ services:
             - %ayamel.filesystem.local_filesystem.root_dir%
             - %ayamel.filesystem.local_filesystem.secret%
             - %ayamel.filesystem.local_filesystem.base_uri%
+    
+    ayamel.filesystem.analyzer:
+        class: Ayamel\FilesystemBundle\Analyzer\DelegatingAnalyzer
+        arguments:
+            - @?ayamel.filesystem.analyzer_cache #optional, use it if the service is defined
+            - %ayamel.filesystem.analyzer.cache_results%
+            - %ayamel.filesystem.analyzer.cache_ttl%
 
+    #TODO: change the cache backend to redis eventually
+    ayamel.filesystem.analyzer_cache:
+        class: Ayamel\ApiBundle\Cache\FileCache
+        public: false
+        arguments: [%ayamel.filesystem.analyzer.cache_dir%]
+    
+    ayamel.filesystem.analyzer_subscriber:
+        class: Ayamel\FilesystemBundle\EventListener\FilesystemAnalyzerSubscriber
+        arguments: [@service_container]
+    
     ayamel.api.content.filesystem_subscriber:
         class: Ayamel\FilesystemBundle\EventListener\FileUploadContentSubscriber
         arguments: [@service_container]
         tags:
             - { name: ayamel.api.dispatcher.event_subscriber }
+            
     ayamel.api.content.remote_files_subscriber:
         class: Ayamel\FilesystemBundle\EventListener\RemoteFilesContentSubscriber
         arguments: [@service_container]

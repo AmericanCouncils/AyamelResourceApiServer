@@ -5,6 +5,7 @@ namespace Ayamel\FilesystemBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Ayamel\FilesystemBundle\DependencyInjection\Compiler\RegisterFilesystemEventListenersPass;
+use Ayamel\FilesystemBundle\DependencyInjection\Compiler\RegisterFilesystemAnalyzersPass;
 
 class AyamelFilesystemBundle extends Bundle
 {
@@ -13,7 +14,7 @@ class AyamelFilesystemBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(new RegisterFilesystemEventListenersPass());
-        //$container->addCompilerPass(new RegisterFilesystemAnalyzersPass());
+        $container->addCompilerPass(new RegisterFilesystemAnalyzersPass());
     }
 
 }

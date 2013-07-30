@@ -6,6 +6,7 @@ services:
         class: Ayamel\ApiBundle\Validation\UploadTokenManager
         arguments: [@ayamel.api.token_cache]
 
+    #TODO: change the cache backend to redis eventually
     ayamel.api.token_cache:
         class: Ayamel\ApiBundle\Cache\FileCache
         public: false
