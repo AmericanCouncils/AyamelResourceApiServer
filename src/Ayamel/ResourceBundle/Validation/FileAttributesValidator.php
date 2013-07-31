@@ -39,6 +39,11 @@ class FileAttributesValidator extends ConstraintValidator
 
         $errors = array();
 
+        //allow pre-processing of the file reference
+        foreach ($attrs as $attr) {
+            $attr->validateFileReference($object, $this->context);
+        }
+
         //validate each applicable attributes class
         foreach ($attrs as $attr) {
             $failures = $this->validator->validate($attr);

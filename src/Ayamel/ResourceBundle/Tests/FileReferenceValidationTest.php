@@ -154,7 +154,7 @@ class FileReferenceValidationTest extends ApiTestCase
         $ref->setQuality(0);
         $ref->setMimeType('image/png');
         $ref->setAttributes(array(
-            'units' => ".something",
+            'units' => "px",
             'frameSize' => array(
                 'width' => 600,
                 'height' => 400
@@ -165,7 +165,27 @@ class FileReferenceValidationTest extends ApiTestCase
 
         $errors = $v->validate($ref);
         $this->assertSame(0, count($errors));
+
+        $ref = new FileReference();
+        $ref->setDownloadUri("http://example.org/foo.png");
+        $ref->setBytes(100);
+        $ref->setRepresentation('original');
+        $ref->setQuality(0);
+        $ref->setMimeType('image/png');
+        $ref->setAttributes(array(
+            'frameSize' => array(
+                'width' => 600,
+                'height' => 400
+            ),
+            'aspectRatio' => '16:9',
+            'time' => 4,
+        ));
+
+        $errors = $v->validate($ref);
+        $this->assertSame(0, count($errors));
+        $this->assertSame('px', $ref->getAttribute('units'));
     }
+
     public function testValidateGenericArchiveAttributes()
     {
         $v = $this->getContainer()->get('validator');
