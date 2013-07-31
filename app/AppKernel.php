@@ -28,7 +28,8 @@ class AppKernel extends Kernel
             new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
             new Nelmio\CorsBundle\NelmioCorsBundle(),
             new Ayamel\YouTubeBundle\AyamelYouTubeBundle(),
-            new AC\MediaInfoBundle\ACMediaInfoBundle()
+            new AC\MediaInfoBundle\ACMediaInfoBundle(),
+            new Ayamel\MediaInfoBundle\AyamelMediaInfoBundle()
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

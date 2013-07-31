@@ -14,11 +14,11 @@ class DelegatingAnalyzer implements AnalyzerInterface
 {
     protected $cache;
 
+    protected $cacheResults;
+
+    protected $cacheTTL;
+
     protected $analyzers = array();
-
-    protected $analyzeRemote = false;
-
-    protected $cacheResults = true;
 
     /**
      * Constructor, tell it whether or not to analyze remote files, and optionally give it a cache mechanism.
@@ -26,22 +26,21 @@ class DelegatingAnalyzer implements AnalyzerInterface
      * @param string $analyzeRemote
      * @param Cache  $cache
      */
-    public function __construct($analyzeRemote = false, Cache $cache = null)
+    public function __construct(Cache $cache = null, $cacheResults = true, $cacheTTL = 0)
     {
-        $this->analyzeRemote = $analyzeRemote;
-        if ($cache) {
-            $this->cache = $cache;
-        }
+        $this->cache = $cache;
+        $this->cacheResults = $cacheResults;
+        $this->cacheTTL = $cacheTTL;
     }
 
     /**
-     * Set whether or not to analyze remote files.
+     * Set TTL on cached items in seconds
      *
      * @param boolean $bool
      */
-    public function setAnalyzeRemoteFiles($bool)
+    public function setAnalyzeRemoteFiles($ttl)
     {
-        $this->analyzeRemote = (bool) $bool;
+        $this->cacheTTL = $ttl;
     }
 
     /**
@@ -54,14 +53,9 @@ class DelegatingAnalyzer implements AnalyzerInterface
         $this->cacheResults = (bool) $bool;
     }
 
-    /**
-     * Set whether or not to use cached results if they exist
-     *
-     * @param boolean $bool
-     */
-    public function setTrustCache($bool)
+    public function getAnalyzers()
     {
-        $this->trustCache = (bool) $bool;
+        return $this->analyzers;
     }
 
     /**
@@ -101,14 +95,9 @@ class DelegatingAnalyzer implements AnalyzerInterface
         //using md5 in the cache keys to avoid proplematic characters
         $cacheKey = ($ref->getInternalUri()) ? md5($ref->getInternalUri())."_attrs" : md5($ref->getDownloadUri())."_attrs";
 
-        //check for whether or not to copy a remote file for analysis
-        if ($this->copyRemote) {
-            $ref = $this->getRemoteFile($ref);
-        }
-
         //check cache first if we can
-        if ($this->cache && $this->trustCache) {
-            if ($attrs = $this->cache->get($cacheKey)) {
+        if ($this->cache) {
+            if ($attrs = $this->cache->fetch($cacheKey)) {
                 $ref->setAttributes($attrs);
 
                 return $ref;
@@ -131,15 +120,9 @@ class DelegatingAnalyzer implements AnalyzerInterface
 
         //cache results if we can
         if ($this->cache && $this->cacheResults) {
-            $this->cache->save($cacheKey, $ref->getAttributes(), 0);
+            $this->cache->save($cacheKey, $ref->getAttributes(), $this->cacheTTL);
         }
 
-        return $ref;
-    }
-
-    protected function getRemoteFile(FileReference $ref)
-    {
-        //TODO: implement
         return $ref;
     }
 

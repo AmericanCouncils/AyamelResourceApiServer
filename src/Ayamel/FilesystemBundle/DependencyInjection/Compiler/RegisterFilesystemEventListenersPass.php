@@ -13,13 +13,9 @@ class RegisterFilesystemEventListenersPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition('ayamel.filesystem.dispatcher')) {
-            return;
-        }
+        $dispatcherDefinition = $container->getDefinition('event_dispatcher');
 
-        $definition = $container->getDefinition('ayamel.filesystem.dispatcher');
-
-        foreach ($container->findTaggedServiceIds('ayamel.filesystem.dispatcher.event_listener') as $id => $events) {
+        foreach ($container->findTaggedServiceIds('ayamel.filesystem.event_listener') as $id => $events) {
             foreach ($events as $event) {
                 $priority = isset($event['priority']) ? $event['priority'] : 0;
 
@@ -34,11 +30,11 @@ class RegisterFilesystemEventListenersPass implements CompilerPassInterface
                     ), array('strtoupper("\\0")', ''), $event['event']);
                 }
 
-                $definition->addMethodCall('addListenerService', array($event['event'], array($id, $event['method']), $priority));
+                $dispatcherDefinition->addMethodCall('addListenerService', array($event['event'], array($id, $event['method']), $priority));
             }
         }
 
-        foreach ($container->findTaggedServiceIds('ayamel.filesystem.dispatcher.event_subscriber') as $id => $attributes) {
+        foreach ($container->findTaggedServiceIds('ayamel.filesystem.event_subscriber') as $id => $attributes) {
             // We must assume that the class value has been correcly filled, even if the service is created by a factory
             $class = $container->getDefinition($id)->getClass();
 
@@ -48,7 +44,7 @@ class RegisterFilesystemEventListenersPass implements CompilerPassInterface
                 throw new \InvalidArgumentException(sprintf('Service "%s" must implement interface "%s".', $id, $interface));
             }
 
-            $definition->addMethodCall('addSubscriberService', array($id, $class));
+            $dispatcherDefinition->addMethodCall('addSubscriberService', array($id, $class));
         }
     }
 }

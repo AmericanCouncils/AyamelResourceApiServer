@@ -241,7 +241,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $response = $this->getResponse('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', array(), array('file' => $uploadedFile));
         $this->assertSame(401, $response->getStatusCode());
     }
-    
+
     public function testUploadContentAsGenericUri()
     {
         $data = array(
@@ -258,13 +258,13 @@ class ContentUploadIntegrationTest extends ApiTestCase
 
         $resourceId = $response['resource']['id'];
         $apiPath = substr($response['contentUploadUrl'], strlen('http://localhost'));
-        
+
         $response = $this->getJson('POST', $apiPath.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array(
             'uri' => 'http://www.google.com/'
         )));
-        
+
         $this->assertSame(200, $response['response']['code']);
         $this->assertTrue(isset($response['resource']['content']['files']));
         $this->assertTrue(0 < count(isset($response['resource']['content']['files'])));
