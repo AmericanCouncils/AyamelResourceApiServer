@@ -17,7 +17,7 @@ class RegisterFilesystemAnalyzersPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         $analyzerDefinition = $container->getDefinition('ayamel.filesystem.analyzer');
-        
+
         if ('Ayamel\FilesystemBundle\Analyzer\DelegatingAnalyzer' === $analyzerDefinition->getClass()) {
             foreach ($container->findTaggedServiceIds('ayamel.filesystem.analyzer') as $id => $attributes) {
                 $class = $container->getDefinition($id)->getClass();

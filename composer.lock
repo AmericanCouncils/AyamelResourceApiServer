@@ -3,21 +3,21 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "b02dde1488ab5f714959f6fafa9dfe37",
+    "hash": "6c98e48d2e5d3810e00857f7f251ca72",
     "packages": [
         {
             "name": "ac/media-info-bundle",
-            "version": "dev-master",
+            "version": "1.2.0",
             "target-dir": "AC/MediaInfoBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/AmericanCouncils/MediaInfoBundle.git",
-                "reference": "6cf6cd763f63aa3f8b9efaad28a8352387388e7a"
+                "reference": "1.2.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AmericanCouncils/MediaInfoBundle/zipball/6cf6cd763f63aa3f8b9efaad28a8352387388e7a",
-                "reference": "6cf6cd763f63aa3f8b9efaad28a8352387388e7a",
+                "url": "https://api.github.com/repos/AmericanCouncils/MediaInfoBundle/zipball/1.2.0",
+                "reference": "1.2.0",
                 "shasum": ""
             },
             "require": {
@@ -47,7 +47,7 @@
                 "metadata",
                 "multimedia"
             ],
-            "time": "2013-07-30 20:02:47"
+            "time": "2013-07-31 14:47:46"
         },
         {
             "name": "ac/transcoding",
@@ -327,12 +327,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/cache.git",
-                "reference": "dc3438804c6303f1b5892f184a79aa8e3ce5d81d"
+                "reference": "beb242e0e22eebdca1db571edb1bac788b054124"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/cache/zipball/dc3438804c6303f1b5892f184a79aa8e3ce5d81d",
-                "reference": "dc3438804c6303f1b5892f184a79aa8e3ce5d81d",
+                "url": "https://api.github.com/repos/doctrine/cache/zipball/beb242e0e22eebdca1db571edb1bac788b054124",
+                "reference": "beb242e0e22eebdca1db571edb1bac788b054124",
                 "shasum": ""
             },
             "require": {
@@ -388,7 +388,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2013-07-04 15:48:06"
+            "time": "2013-07-31 00:07:06"
         },
         {
             "name": "doctrine/collections",
@@ -722,12 +722,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/mongodb-odm.git",
-                "reference": "f24c23d2e181dc2dd789ed2077ebe0c959e6a507"
+                "reference": "42909efe19a4b78e2d0b7076f72f3a8b90ad0b19"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/mongodb-odm/zipball/f24c23d2e181dc2dd789ed2077ebe0c959e6a507",
-                "reference": "f24c23d2e181dc2dd789ed2077ebe0c959e6a507",
+                "url": "https://api.github.com/repos/doctrine/mongodb-odm/zipball/42909efe19a4b78e2d0b7076f72f3a8b90ad0b19",
+                "reference": "42909efe19a4b78e2d0b7076f72f3a8b90ad0b19",
                 "shasum": ""
             },
             "require": {
@@ -787,7 +787,7 @@
                 "odm",
                 "persistence"
             ],
-            "time": "2013-07-17 13:49:45"
+            "time": "2013-07-30 18:12:11"
         },
         {
             "name": "doctrine/mongodb-odm-bundle",
@@ -796,12 +796,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/DoctrineMongoDBBundle.git",
-                "reference": "27797453d24088087a048e4b83bda928000d626e"
+                "reference": "a10cd474783739c238a045e3aaf9b9335a63e946"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineMongoDBBundle/zipball/27797453d24088087a048e4b83bda928000d626e",
-                "reference": "27797453d24088087a048e4b83bda928000d626e",
+                "url": "https://api.github.com/repos/doctrine/DoctrineMongoDBBundle/zipball/a10cd474783739c238a045e3aaf9b9335a63e946",
+                "reference": "a10cd474783739c238a045e3aaf9b9335a63e946",
                 "shasum": ""
             },
             "require": {
@@ -857,7 +857,7 @@
                 "persistence",
                 "symfony"
             ],
-            "time": "2013-05-15 16:34:21"
+            "time": "2013-07-30 15:16:18"
         },
         {
             "name": "jms/metadata",
@@ -1223,12 +1223,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nelmio/NelmioApiDocBundle.git",
-                "reference": "3b6223feb276e9555b5f2c0006090a924acfc2af"
+                "reference": "d9607477ba5d451c60ce09a432936f61c6b10b49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nelmio/NelmioApiDocBundle/zipball/3b6223feb276e9555b5f2c0006090a924acfc2af",
-                "reference": "3b6223feb276e9555b5f2c0006090a924acfc2af",
+                "url": "https://api.github.com/repos/nelmio/NelmioApiDocBundle/zipball/d9607477ba5d451c60ce09a432936f61c6b10b49",
+                "reference": "d9607477ba5d451c60ce09a432936f61c6b10b49",
                 "shasum": ""
             },
             "require": {
@@ -1282,7 +1282,7 @@
                 "documentation",
                 "rest"
             ],
-            "time": "2013-07-23 10:03:30"
+            "time": "2013-07-31 10:28:43"
         },
         {
             "name": "nelmio/cors-bundle",
@@ -2043,8 +2043,7 @@
         "symfony/swiftmailer-bundle": 20,
         "ac/transcoding-bundle": 20,
         "oldsound/rabbitmq-bundle": 20,
-        "nelmio/api-doc-bundle": 20,
-        "ac/media-info-bundle": 20
+        "nelmio/api-doc-bundle": 20
     },
     "platform": {
         "php": ">=5.3.3",

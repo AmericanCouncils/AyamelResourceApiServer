@@ -15,7 +15,7 @@ class DelegatingAnalyzer implements AnalyzerInterface
     protected $cache;
 
     protected $cacheResults;
-    
+
     protected $cacheTTL;
 
     protected $analyzers = array();
