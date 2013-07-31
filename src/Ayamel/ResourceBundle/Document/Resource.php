@@ -517,11 +517,11 @@ class Resource
     {
         return $this->status;
     }
-    
+
     /**
      * Set languages
      *
-     * @param Languages $langs 
+     * @param Languages $langs
      */
     public function setLanguages(Languages $langs = null)
     {
@@ -537,7 +537,7 @@ class Resource
     {
         return $this->languages;
     }
-    
+
     /**
      * Set the origin
      *

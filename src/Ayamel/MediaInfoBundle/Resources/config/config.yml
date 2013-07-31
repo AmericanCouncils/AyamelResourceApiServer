@@ -1,0 +1,6 @@
+services:
+    ayamel.filesystem.mediainfo_analyzer:
+        class: Ayamel\MediaInfoBundle\MediaInfoAnalyzer
+        arguments: [@ac.mediainfo]
+        tags:
+            - { name: ayamel.filesystem.analyzer }

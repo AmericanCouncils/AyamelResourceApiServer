@@ -91,29 +91,29 @@ class UriContentSubscriber implements EventSubscriberInterface
         $newResource->setStatus(Resource::STATUS_NORMAL);
         $e->setResource($newResource);
     }
-    
+
     /**
      * merge derived resource properties into the existing resource
      *
-     * @param Resource $old 
-     * @param Resource $new 
+     * @param  Resource $old
+     * @param  Resource $new
      * @return Resource
      */
     protected function mergeResources(Resource $old, Resource $new)
     {
         //set any unset top-level properties
         $this->mergeDocumentProperties($old, $new, array('title', 'type', 'functionalDomains', 'subjectDomains', 'license', 'copyright', 'description', 'keywords'));
-        
+
         //always take newly derived content
         $old->content = $new->content;
-        
+
         //set origin if not previously set
         if ($old->origin) {
             $this->mergeDocumentProperties($old->origin, $new->origin, array('creator', 'location', 'date', 'format', 'note', 'uri'));
         } else {
             $old->origin = $new->origin;
         }
-        
+
         //set languages if not previously set
         if ($old->languages) {
             $this->mergeDocumentProperties($old->languages, $new->languages, array('iso639_3', 'bcp47'));

@@ -2,6 +2,7 @@
 
 namespace Ayamel\FilesystemBundle\EventListener;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Ayamel\FilesystemBundle\Event\Events;
 use Ayamel\FilesystemBundle\Event\FilesystemEvent;
@@ -39,7 +40,7 @@ class FilesystemAnalyzerSubscriber implements EventSubscriberInterface
      */
     public function onRetrieveFile(FilesystemEvent $e)
     {
-        $this->container->get('ayamel.api.filesystem.analyzer')->analyzeFile($e->getFileReference());
+        $this->container->get('ayamel.filesystem.analyzer')->analyzeFile($e->getFileReference());
     }
 
 }
