@@ -378,8 +378,8 @@ Ayamel\ResourceBundle\Validation\File\GenericImageAttributes:
         units:
             - Type:
                 type: string
-            - Length:
-                max: 250
+            - Choice:
+                choices: ['px', 'pt', 'em', 'pc', '%','ex', 'ch', 'rem', 'vw', 'vh', 'vmin', 'vmax', 'cm', 'mm', 'in']
 
 Ayamel\ResourceBundle\Validation\File\GenericDocumentAttributes:
     properties:
