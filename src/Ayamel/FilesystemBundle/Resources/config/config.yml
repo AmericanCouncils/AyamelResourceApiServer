@@ -34,6 +34,8 @@ services:
     ayamel.filesystem.analyzer_subscriber:
         class: Ayamel\FilesystemBundle\EventListener\FilesystemAnalyzerSubscriber
         arguments: [@service_container]
+        tags:
+            - { name: ayamel.filesystem.event_subscriber }
     
     ayamel.api.content.filesystem_subscriber:
         class: Ayamel\FilesystemBundle\EventListener\FileUploadContentSubscriber

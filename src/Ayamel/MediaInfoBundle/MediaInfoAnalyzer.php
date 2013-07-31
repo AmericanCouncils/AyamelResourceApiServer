@@ -6,6 +6,12 @@ use AC\MediaInfoBundle\MediaInfo;
 use Ayamel\FilesystemBundle\Analyzer\AnalyzerInterface;
 use Ayamel\ResourceBundle\Document\FileReference;
 
+/**
+ * Uses mediainfo to fill in any available FileReference attributes.
+ *
+ * @package AyamelMediaInfoBundle
+ * @author Evan Villemez
+ */
 class MediaInfoAnalyzer implements AnalyzerInterface
 {
     protected $mediaInfo;
@@ -52,15 +58,15 @@ class MediaInfoAnalyzer implements AnalyzerInterface
         $general = $data['file']['general'];
         
         if (isset($general['internet_media_type'])) {
-            $ref->setMimeType($general['internet_media_type']);
+            $ref->setMimeType($general['internet_media_type'][0]);
         }
         
         $attrs = array();
         
         if (isset($image['height']) && isset($image['width'])) {
             $attrs['frameSize'] = array(
-                'height' => $this->getNumericValue($image['height']),
-                'width' => $this->getNumericValue($image['width'])
+                'height' => $this->getIntValue($image['height']),
+                'width' => $this->getIntValue($image['width'])
             );
             $attrs['units'] = 'px';
             $attrs['aspectRatio'] = $this->calculateAspectRatio($attrs['frameSize']['width'], $attrs['frameSize']['width']);
@@ -73,15 +79,81 @@ class MediaInfoAnalyzer implements AnalyzerInterface
     
     protected function handleVideo(FileReference $ref, $data)
     {
+        $video = $data['file']['video'];
+        $general = $data['file']['general'];
         
+        if (isset($general['internet_media_type'])) {
+            $ref->setMimeType($general['internet_media_type'][0]);
+        }
+        
+        $attrs = array();
+        
+        if (isset($video['height']) && isset($video['width'])) {
+            $attrs['frameSize'] = array(
+                'height' => $this->getIntValue($video['height']),
+                'width' => $this->getIntValue($video['width'])
+            );
+        }
+        
+        if (isset($video['display_aspect_ratio'])) {
+            $attrs['aspectRatio'] = $this->parseAspectRatio($video['display_aspect_ratio']);
+        }
+        
+        if (isset($video['frame_rate'])) {
+            $attrs['frameRate'] = $this->parseFPS($video['frame_rate']);
+        }
+        
+        if (isset($general['overall_bit_rate'])) {
+            $attrs['bitrate'] = $this->getIntValue($general['overall_bit_rate']);
+        }
+        
+        if (isset($general['duration'])) {
+            $attrs['duration'] = $this->parseDuration($general['duration']);
+        }
+
+        foreach ($attrs as $key => $val) {
+            $ref->setAttribute($key, $val);
+        }
     }
     
     protected function handleAudio(FileReference $ref, $data)
     {
+        $audio = $data['file']['audio'];
+        $general = $data['file']['general'];
         
+        if (isset($general['internet_media_type'])) {
+            $ref->setMimeType($general['internet_media_type'][0]);
+        }
+        
+        $attrs = array();
+        
+        if (isset($general['overall_bit_rate'])) {
+            $attrs['bitrate'] = $this->getIntValue($general['overall_bit_rate']);
+        }
+        
+        if (isset($general['duration'])) {
+            $attrs['duration'] = $this->parseDuration($general['duration']);
+        }
+        
+        if (isset($audio['channel_s_'])) {
+            $attrs['channels'] = $this->getIntValue($audio['channel_s_']);
+        }
+
+        foreach ($attrs as $key => $val) {
+            $ref->setAttribute($key, $val);
+        }
     }
     
-    protected function getNumericValue($val)
+    protected function getFloatValue(array $val)
+    {
+        foreach ($val as $item) {
+            if (is_numeric($item)) {
+                return (float) $item;
+            }
+        }
+    }
+    
+    protected function getIntValue(array $val)
     {
         foreach ($val as $item) {
             if (is_numeric($item)) {
@@ -90,19 +162,34 @@ class MediaInfoAnalyzer implements AnalyzerInterface
         }
     }
     
-    protected function parseDuration($val)
+    protected function parseAspectRatio(array $val)
     {
-        $val = $this->getNumericValue($val);
-        
-        return $val / 1000;
+        foreach ($val as $item) {
+            $exp = explode(':', $item);
+            if (2 === count($exp)) {
+                return $item;
+            }
+        }
     }
     
-    public function parseBitrate($val)
+    //returns value in seconds
+    protected function parseDuration(array $val)
     {
-        $val = $this->getNumericValue($val);
-        
-        //TODO: convert to kbps
-        
+        $val = $this->getIntValue($val);
+        return (int) round($val / 1000);
+    }
+    
+    //returns nearest int
+    public function parseFPS(array $val)
+    {
+        $val = $this->getFloatValue($val);
+        return (int) round($val);
+    }
+    
+    //returns bits/s
+    public function parseBitrate(array $val)
+    {
+        $val = $this->getIntValue($val);
         return $val;
     }
     

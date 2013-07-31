@@ -2,6 +2,7 @@
 
 namespace Ayamel\FilesystemBundle\EventListener;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Ayamel\FilesystemBundle\Event\Events;
 use Ayamel\FilesystemBundle\Event\FilesystemEvent;

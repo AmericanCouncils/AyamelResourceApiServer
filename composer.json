@@ -28,7 +28,7 @@
         "nelmio/api-doc-bundle": "dev-master",
         "nelmio/cors-bundle": "*",
         "ac/web-services-bundle": "*",
-        "ac/media-info-bundle": "dev-master"
+        "ac/media-info-bundle": "1.2.*"
     },
     "scripts": {
         "post-install-cmd": [

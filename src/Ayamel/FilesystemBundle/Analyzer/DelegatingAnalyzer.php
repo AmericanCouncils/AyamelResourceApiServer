@@ -97,7 +97,7 @@ class DelegatingAnalyzer implements AnalyzerInterface
 
         //check cache first if we can
         if ($this->cache) {
-            if ($attrs = $this->cache->get($cacheKey)) {
+            if ($attrs = $this->cache->fetch($cacheKey)) {
                 $ref->setAttributes($attrs);
 
                 return $ref;
