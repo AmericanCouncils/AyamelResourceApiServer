@@ -129,9 +129,7 @@ abstract class ApiController extends Controller
                 throw new HttpException(401, "Valid API key required.");
             }
 
-            if (($client->id !== $resource->getClient()->getId()) || !in_array($client->id, $visibility)) {
-                throw new HttpException(403, "Not authorized.");
-            }
+            $this->requireClientVisibility($resource);
         }
 
         return $resource;
