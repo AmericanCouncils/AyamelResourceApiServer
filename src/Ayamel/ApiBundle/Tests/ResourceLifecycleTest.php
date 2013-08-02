@@ -87,14 +87,14 @@ class ResourceLifecycleTest extends ApiTestCase
         $this->assertSame(1, count($json['resource']['content']));
 
         //delete it
-        $this->getJson("DELETE", '/api/v1/resources/'.$id.'?_key=45678isafgd56789asfgdhf4567');
+        $json = $this->getJson("DELETE", '/api/v1/resources/'.$id.'?_key=45678isafgd56789asfgdhf4567');
         $this->assertSame(200, $json['response']['code']);
         $this->assertSame('deleted', $json['resource']['status']);
         $this->assertTrue(isset($json['resource']['dateDeleted']));
         $this->assertFalse(isset($json['resource']['content']));
 
         //get it
-        $this->getJson('GET', '/api/v1/resources/'.$id.'?_key=45678isafgd56789asfgdhf4567');
+        $json = $this->getJson('GET', '/api/v1/resources/'.$id.'?_key=45678isafgd56789asfgdhf4567');
         $this->assertSame(410, $json['response']['code']);
         $this->assertSame('deleted', $json['resource']['status']);
         $this->assertTrue(isset($json['resource']['dateDeleted']));
