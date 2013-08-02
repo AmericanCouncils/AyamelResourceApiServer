@@ -2,10 +2,6 @@
 
 namespace Ayamel\ResourceBundle\Provider;
 
-use Ayamel\ResourceBundle\Document\Resource;
-use Ayamel\ResourceBundle\Document\ContentCollection;
-use Ayamel\ResourceBundle\Document\FileReference;
-
 /**
  * Provider for deriving resource objects from generic file paths of any scheme.
  *
@@ -62,48 +58,7 @@ abstract class AbstractFilePathProvider implements ProviderInterface
      */
     public function createResourceFromUri($uri)
     {
-        return $this->createNewResourceFromUri($uri);
-    }
-
-    /**
-     * Create the basic resource with one file entry for content.
-     *
-     * @author Evan Villemez
-     */
-    protected function createNewResourceFromUri($uri)
-    {
-        $exp = explode("://", $uri);
-        if (1 === count($exp)) {
-            $scheme = 'file';
-            $path = $uri;
-        } else {
-            $scheme = $exp[0];
-            $path = $exp[1];
-        }
-
-        //does the file actually exist?
-        //TODO: change this to use a curl head request and get other file info as well
-        //http://stackoverflow.com/questions/2610713/get-mime-type-of-external-file-using-curl-and-php#4
-        if (!$handle = @fopen($uri, "r")) {
-            throw new \InvalidArgumentException(sprintf("Resource at [%s] could not be found.", $uri));
-        }
-        fclose($handle);
-
-        //create original file reference
-        $file = ($scheme === 'file') ? FileReference::createFromLocalPath($uri) : FileReference::createFromDownloadUri($uri);
-        $file->setOriginal(true);
-
-        //TODO: populate mime and mimeType
-
-        //build new resource
-        $r = new Resource;
-        $type = $this->guessTypeFromExtension($this->getPathExtension($path));
-        $r->setType($type);
-        $r->setTitle($this->getFilenameFromPath($path));
-        $r->setContent(new ContentCollection);
-        $r->content->addFile($file);
-
-        return $r;
+        throw new \RuntimeException(sprintf("%s not implemented.", __METHOD__));
     }
 
     /**

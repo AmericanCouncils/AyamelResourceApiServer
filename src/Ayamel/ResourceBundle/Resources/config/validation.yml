@@ -142,8 +142,8 @@ Ayamel\ResourceBundle\Document\ContentCollection:
         oembed:
             - Valid: ~
         files:
-            - All:
-                - Valid: ~
+            - Valid:
+                traverse: true
 
 Ayamel\ResourceBundle\Document\OEmbed:
     properties:
@@ -288,7 +288,7 @@ Ayamel\ResourceBundle\Document\Relation:
         type:
             - NotBlank: ~
             - Choice:
-                choices: [based_on, references, requires, transcript_of, search, version_of, part_of]
+                choices: [based_on, references, requires, transcript_of, search, version_of, part_of, translation_of]
 
 ##
 ## FILE ATTRIBUTES
@@ -416,3 +416,11 @@ Ayamel\ResourceBundle\Validation\Relation\VersionOfAttributes:
                 type: string
             - Length:
                 max: 500
+
+Ayamel\ResourceBundle\Validation\Relation\TranscriptOfAttributes:
+    properties:
+        kind:
+            - Type:
+                type: string
+            - Choice:
+                choices: ['subtitles', 'captions', 'descriptions', 'chapters', 'metadata']

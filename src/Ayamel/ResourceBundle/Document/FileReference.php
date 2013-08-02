@@ -90,12 +90,6 @@ class FileReference
     protected $mimeType;
 
     /**
-     * @MongoDB\Boolean
-     * @JMS\Exclude
-     */
-    private $original;
-
-    /**
      * A key/val hash of attributes, relevant to the `mimeType` of the file.
      *
      *  //TODO: Needs to be clearly document what valid values are per type
@@ -134,23 +128,13 @@ class FileReference
     }
 
     /**
-     * Set boolean if this file reference is the original file content added.
+     * Return whether or not the file is the original
      *
      * @param boolean $bool
      */
-    public function setOriginal($bool = true)
+    public function isOriginal()
     {
-        $this->original = $bool;
-    }
-
-    /**
-     * Get whether or not this file reference was the original resource content.
-     *
-     * @return boolean
-     */
-    public function getOriginal()
-    {
-        return $this->original;
+        return ('original' === $this->representation);
     }
 
     /**

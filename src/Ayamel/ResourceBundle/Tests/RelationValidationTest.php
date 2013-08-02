@@ -85,4 +85,20 @@ class RelationValidationTest extends ApiTestCase
 
         $this->assertSame(0, count($errors));
     }
+
+    public function testValidateTranscriptOfRelation()
+    {
+        $rel = new Relation();
+        $rel->setObjectId('324');
+        $rel->setSubjectId('325');
+        $rel->setType('transcript_of');
+        $rel->setAttributes(array(
+            'kind' => "descriptions"
+        ));
+
+        $v = $this->getContainer()->get('validator');
+        $errors = $v->validate($rel);
+
+        $this->assertSame(0, count($errors));
+    }
 }
