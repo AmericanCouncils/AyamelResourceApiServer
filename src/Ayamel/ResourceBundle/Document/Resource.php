@@ -718,6 +718,13 @@ class Resource
 
             $this->setDateModified($date);
         }
+
+        //make sure clients can't lock themselves out of their own resources
+        if ($this->getVisibility() && $this->getClient()) {
+            if (!in_array($this->getClient()->getId(), $this->visibility)) {
+                $this->visibility[] = $this->getClient()->getId();
+            }
+        }
     }
 
 }

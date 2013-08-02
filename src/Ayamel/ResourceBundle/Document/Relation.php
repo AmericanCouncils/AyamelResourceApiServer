@@ -54,6 +54,7 @@ class Relation
      * - **search** - Content for the object resource will affect hits against the subject resource when searching.  Only owners of the subject Resource may create `search` relations.
      * - **version_of** - The subject is a historical state or edition of the object resource.
      * - **part_of** - The subject is a physical or logical part of the object resource.
+     * - **translation_of** - The subject content is a translation into another human language of the object resource's content.
      *
      * @MongoDB\String
      * @JMS\Type("string")

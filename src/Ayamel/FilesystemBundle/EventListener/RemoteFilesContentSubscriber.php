@@ -62,21 +62,16 @@ class RemoteFilesContentSubscriber implements EventSubscriberInterface
             return;
         }
 
-        //create FileReference instances
+        //create & validate FileReference instances
         $remoteFiles = array();
-        try {
-            foreach ($body['remoteFiles'] as $fileData) {
+        foreach ($body['remoteFiles'] as $fileData) {
+            $newFileRef = $this->container->get('serializer')->deserialize(json_encode($fileData), 'Ayamel\ResourceBundle\Document\FileReference', 'json');
+            $errors = $this->container->get('validator')->validate($newFileRef);
+            $remoteFiles[] = $newFileRef;
+        }
 
-                $newFileRef = $this->container->get('serializer')->deserialize(json_encode($fileData), 'Ayamel\ResourceBundle\Document\FileReference', 'json');
-                $errors = $this->container->get('validator')->validate($newFileRef);
-                if (count($errors) > 0) {
-                    throw new \InvalidArgumentException(implode("; ", iterator_to_array($errors)));
-                }
-
-                $remoteFiles[] = $newFileRef;
-            }
-        } catch (\Exception $e) {
-            throw new HttpException(400, $e->getMessage());
+        if (count($errors) > 0) {
+            throw new HttpException(400, implode("; ", iterator_to_array($errors)));
         }
 
         //if we didn't actually create anything, just return to let others try and process the event
@@ -84,7 +79,16 @@ class RemoteFilesContentSubscriber implements EventSubscriberInterface
             return;
         }
 
-        //TODO: make HEAD requests to ensure remote files actually exist.
+        //make sure the files defined actually exist by trying to derive a new resource from them
+        $failed = array();
+        foreach ($remoteFiles as $ref) {
+            if (!$this->container->get('ayamel.resource.provider')->createResourceFromUri($ref->getDownloadUri())) {
+                $failed[] = $ref->getDownloadUri();
+            }
+        }
+        if (!empty($failed)) {
+            throw new HttpException(400, sprintf("The following files could not be reached: [%s]", implode(', ', $failed)));
+        }
 
         //notify the event as having been handled
         $e->setContentType('remote_files');

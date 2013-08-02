@@ -461,14 +461,45 @@ class ResourceIntegrationTest extends ApiTestCase
 
     public function testResourceVisibility()
     {
-        $json = $this->getJson("POST", '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $client1Key = '45678isafgd56789asfgdhf4567';
+        $client2Key = '55678isafgd56789asfgdhf4568';
+
+        //client1 limits visibility to self
+        $json = $this->getJson("POST", '/api/v1/resources?_key='.$client1Key, array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), json_encode(array('title'=>'foo', 'type'=>'data', 'visibility' => array('test_client'))));
+        $this->assertSame(201, $json['response']['code']);
+        $id = $json['resource']['id'];
+        $this->assertSame(array('test_client'), $json['resource']['visibility']);
+        //get as client2, denied
+        $json = $this->getJson('GET', '/api/v1/resources/'.$id.'?_key='.$client2Key);
+        $this->assertSame(403, $json['response']['code']);
+
+        //client1 limits visibility to self & client2
+        $json = $this->getJson("POST", '/api/v1/resources?_key='.$client1Key, array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), json_encode(array('title'=>'foo', 'type'=>'data', 'visibility' => array('test_client', 'test_client2'))));
+        $this->assertSame(201, $json['response']['code']);
+        $id = $json['resource']['id'];
+        $json = $this->getJson('GET', '/api/v1/resources/'.$id.'?_key='.$client2Key);
+        $this->assertSame(200, $json['response']['code']);
+        $this->assertSame(array('test_client', 'test_client2'), $json['resource']['visibility']);
+        $json = $this->getJson('GET', '/api/v1/resources/'.$id.'?_key='.$client1Key);
+        $this->assertSame(200, $json['response']['code']);
+
+        //client1 locks self out, should still be able to see own resource
+        $json = $this->getJson("POST", '/api/v1/resources?_key='.$client1Key, array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array('title'=>'foo', 'type'=>'data', 'visibility' => array('test_client2'))));
         $this->assertSame(201, $json['response']['code']);
+        $id = $json['resource']['id'];
+        $json = $this->getJson('GET', '/api/v1/resources/'.$id.'?_key='.$client2Key);
+        $this->assertSame(200, $json['response']['code']);
+        $this->assertSame(array('test_client2','test_client'), $json['resource']['visibility']);
+        $json = $this->getJson('GET', '/api/v1/resources/'.$id.'?_key='.$client1Key);
+        $this->assertSame(200, $json['response']['code']);
+        $this->assertSame(array('test_client2','test_client'), $json['resource']['visibility']);
 
-        $json = $this->getJson("POST", '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
-            'CONTENT_TYPE' => 'application/json'
-        ));
     }
 
     //ensure authenticated client

@@ -59,6 +59,7 @@ abstract class ApiTestCase extends WebTestCase
      */
     protected function getResponse($method, $uri, $params = array(), $files = array(), $server = array(), $content = null, $changehistory = true)
     {
+        $server['SERVER_NAME'] = '127.0.0.1';
         $client = static::createClient(array(
             'environment' => 'test',
             'debug' => true
