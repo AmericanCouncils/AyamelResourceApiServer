@@ -172,8 +172,15 @@ class UploadContent extends ApiController
             throw ($e instanceof HttpException) ? $e : $this->createHttpException(500, $e->getMessage());
         }
 
-        //if resource was processed, persist it and notify the system that a resource has changed
+        //if resource was processed, validate, persist it, and notify the system that a resource has changed
         if ($handleEvent->isResourceModified()) {
+
+            //validate it
+            $errors = $this->container->get('validator')->validate($resource);
+            if (0 != count($errors)) {
+                throw $this->createHttpException(500, implode('; ', iterator_to_array($errors)));
+            }
+
             try {
                 //persist it
                 $resource = $handleEvent->getResource();
@@ -186,7 +193,7 @@ class UploadContent extends ApiController
             } catch (\Exception $e) {
 
                 //TODO: unlock resource
-                throw $e;
+                throw $this->createHttpException(500, $e->getMessage());
             }
         } else {
             //TODO: unlock resource

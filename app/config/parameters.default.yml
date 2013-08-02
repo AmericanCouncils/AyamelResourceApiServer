@@ -22,10 +22,10 @@ parameters:
     ## File upload handling ##
     ayamel.filesystem.local_filesystem.root_dir: %kernel.root_dir%/files/resource_uploads
     ayamel.filesystem.local_filesystem.secret: zeroisnotanumber
-    ayamel.filesystem.local_filesystem.base_uri: http://localhost/ayamel/web/files
+    ayamel.filesystem.local_filesystem.base_uri: http://127.0.0.1/ayamel/web/files
     
     ## API Docs
-    nelmio_api_doc_endpoint: http://localhost/AyamelResourceApiServer/web/index_dev.php
+    nelmio_api_doc_endpoint: http://127.0.0.1/AyamelResourceApiServer/web/index_dev.php
 
     ## Transcoding support
     transcoding.ffmpeg.path: /usr/bin/ffmpeg

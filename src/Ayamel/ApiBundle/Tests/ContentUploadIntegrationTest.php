@@ -92,7 +92,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $data = array(
             'remoteFiles' => array(
                 array(
-                    'downloadUri' => 'http://example.com/files/test.mp4',
+                    'downloadUri' => 'https://www.google.com/',             //api actually tries to query the file, so this url is likely to work in tests
                     'streamUri' => 'http://streaming.example.com/test',
                     'bytes' => 23456,
                     'representation' => 'original',
@@ -107,7 +107,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
                     )
                 ),
                 array(
-                    'downloadUri' => 'http://example.com/files/test.low.mp4',
+                    'downloadUri' => 'https://www.google.com/',             //api actually tries to query the file, so this url is likely to work in tests
                     'streamUri' => 'http://streaming.example.com/test.low',
                     'bytes' => 23456,
                     'representation' => 'transcoding',
@@ -252,7 +252,6 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($data));
-        $this->assertSame(201, $response['response']['code']);
         $this->assertFalse(isset($response['resource']['content']));
         $this->assertSame('awaiting_content', $response['resource']['status']);
 

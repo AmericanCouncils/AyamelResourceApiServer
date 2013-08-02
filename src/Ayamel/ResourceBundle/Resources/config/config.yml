@@ -82,7 +82,8 @@ parameters:
         based_on: ~
         references: ~
         requires: ~
-        transcript_of: ~
+        transcript_of: Ayamel\ResourceBundle\Validation\Relation\TranscriptOfAttributes
+        translation_of: ~
         search: ~
         version_of: Ayamel\ResourceBundle\Validation\Relation\VersionOfAttributes
         part_of: Ayamel\ResourceBundle\Validation\Relation\PartOfAttributes
@@ -105,12 +106,6 @@ services:
 
     ayamel.resource.local_provider:
         class: Ayamel\ResourceBundle\Provider\LocalFilepathProvider
-        arguments: [%ayamel.resource.type_extension_map%, %ayamel.resource.null_extension_type%]
-        tags:
-            - { name: ayamel.resource.provider_delegate }
-
-    ayamel.resource.ftp_provider:
-        class: Ayamel\ResourceBundle\Provider\FtpProvider
         arguments: [%ayamel.resource.type_extension_map%, %ayamel.resource.null_extension_type%]
         tags:
             - { name: ayamel.resource.provider_delegate }
