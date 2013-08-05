@@ -198,12 +198,22 @@ class RelationsController extends ApiController
             throw $this->createHttpException(400, "Invalid object id.");
         }
 
-        //require visiblity
-        $this->requireClientVisibility($subject);
-        $this->requireClientVisibility($object);
+        //validate ownership depending on type
+        $client = $this->getApiClient();
+        switch ($relation->getType()) {
+            case 'requires': $this->requireSubjectOwnershipAndObjectVisibility($subject, $object, $client); break;
+            case 'transcript_of': $this->requireSubjectOwnershipAndObjectVisibility($subject, $object, $client); break;
+            case 'references': $this->requireSubjectOwnershipAndObjectVisibility($subject, $object, $client); break;
+            case 'based_on': $this->requireSubjectOwnershipAndObjectVisibility($subject, $object, $client); break;
+            case 'translation_of': $this->requireSubjectOwnershipAndObjectVisibility($subject, $object, $client); break;
+            case 'search': $this->requireSubjectOwnershipAndObjectVisibility($subject, $object, $client); break;
+            case 'version_of': $this->requireSubjectAndObjectOwnership($subject, $object, $client); break;
+            case 'part_of': $this->requireSubjectAndObjectOwnership($subject, $object, $client); break;
+            default : $this->requireSubjectOwnershipAndObjectVisibility($subject, $object, $client);
+        }
 
         //fill in the other info
-        $clientDoc = $this->getApiClient()->createClientDocument();
+        $clientDoc = $client->createClientDocument();
         $relation->setClient($clientDoc);
 
         //validate and actually save the relation in storage
@@ -246,6 +256,24 @@ class RelationsController extends ApiController
 
         //TODO: resource modified if relation === search ?
         return $this->createServiceResponse(null, 200);
+    }
+    
+    protected function requireSubjectOwnershipAndObjectVisibility($sub, $obj, $client)
+    {
+        if ($sub->getClient()->getId() !== $client->id) {
+            throw $this->createHttpException(403, "You must be owner the subject Resource to create this type of Relation.");
+        }
+        
+        if ($obj->getVisibility() && !in_array($client->id, $obj->getVisibility())) {
+            throw $this->createHttpException(403, "You must be able to view the object Resource to create this type of Relation.");
+        }
+    }
+    
+    protected function requireSubjectAndObjectOwnership($sub, $obj, $client)
+    {
+        if ($sub->getClient()->getId() !== $client->id || $obj->getClient()->getId() !== $client->id) {
+            throw $this->createHttpException(403, "You must own the subject and object Resources to create this type of Relation.");
+        }
     }
 
     protected function relationsToArray($relations)
