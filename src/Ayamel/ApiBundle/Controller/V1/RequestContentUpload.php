@@ -11,6 +11,9 @@ class RequestContentUpload extends ApiController
      * Request a valid content upload url for a resource.  Note that a content upload url is only valid for one use only.
      * For more information on this, see the documentation for the upload route: `POST: /resources/{id}/content/{token}`
      *
+     * For more specifics about uploading content, make sure to read through the documentation on the
+     * [wiki](https://github.com/AmericanCouncils/AyamelResourceApiServer/wiki/Uploading-Content).
+     *
      * @param string $id
      *
      * @ApiDoc(
