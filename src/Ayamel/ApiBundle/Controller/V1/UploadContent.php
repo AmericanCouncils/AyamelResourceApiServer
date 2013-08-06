@@ -20,7 +20,10 @@ class UploadContent extends ApiController
      * url may or may not handle content directly from an authorized client.  Technically files can be uploaded directly
      * from a user of a client system in order to avoid having to send a file via multiple servers.  Because of this, the library
      * will allow clients to reserve one-time-use urls for sending content, which they can then expose to their internal users
-     * as nedded.
+     * as needed.
+     * 
+     * For more specifics about uploading content, make sure to read through the documentation on the
+     * [wiki](https://github.com/AmericanCouncils/AyamelResourceApiServer/wiki/Uploading-Content).
      *
      * Content can be provided in one of many formats, refer to the list below:
      *

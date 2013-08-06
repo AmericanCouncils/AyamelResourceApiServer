@@ -62,7 +62,8 @@ class Relation
     protected $type;
 
     /**
-     * A key/val hash of properties relevant to the given "type".
+     * A key/val hash of properties relevant to the given "type".  For more details on which attributes
+     * are valid for a given Relation type, check the documentation in the [project wiki](https://github.com/AmericanCouncils/AyamelResourceApiServer/wiki/Validation:-Relation-Attributes).
      *
      * @MongoDB\Hash
      * @JMS\Type("array")

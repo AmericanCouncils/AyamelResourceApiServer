@@ -129,7 +129,7 @@ class RelationsController extends ApiController
         }
         if ($clients = $req->query->get('client', false)) {
             $filters['client.id'] = explode(',', $clients);
-        } else {
+        } else if ($this->getApiClient()) {
             $filters['client.id'] = array($this->getApiClient()->id);
         }
         if ($clientUsers = $req->query->get('clientUser', false)) {

@@ -90,9 +90,8 @@ class FileReference
     protected $mimeType;
 
     /**
-     * A key/val hash of attributes, relevant to the `mimeType` of the file.
-     *
-     *  //TODO: Needs to be clearly document what valid values are per type
+     * A key/val hash of attributes, relevant to the `mimeType` of the file.  For details on which attributes
+     * are valid for a given mimeTime, please read through the documentation on the [project wiki](https://github.com/AmericanCouncils/AyamelResourceApiServer/wiki/Validation:-File-Attributes).
      *
      * @MongoDB\Hash
      * @JMS\Type("array")
