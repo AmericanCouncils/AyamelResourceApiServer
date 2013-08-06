@@ -7,6 +7,10 @@
         <title>{{ apiName }}</title>
         <style type="text/css">
             {{ css|raw }}
+            
+            .note {
+              margin-left: 10px;
+            }
         </style>
         <script type="text/javascript">
             {{ js|raw }}
@@ -22,6 +26,8 @@
             {% endif %}
             <br style="clear: both;" />
         </div>
+        <p class='note'>For higher level documentation with some example API usage, make sure to check the <a href='https://github.com/AmericanCouncils/AyamelResourceApiServer/wiki'>project wiki</a> on GitHub.</p>
+        
         <div class="container" id="resources_container">
             <ul id="resources">
                 {% block content %}{% endblock %}
