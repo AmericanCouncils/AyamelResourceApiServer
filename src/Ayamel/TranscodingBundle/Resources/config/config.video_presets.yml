@@ -1,0 +1,104 @@
+parameters:
+    ayamel.transcoding.video_presets:
+        -   #mp4 480x320
+            preset_service: transcoding.preset.ffmpeg.generic_mp4
+            tag: low
+            quality: 1
+            extension: mp4
+            representation: transcoding
+            params:
+                height: 320
+                width: 480
+            #filters: no filters - the low quality preset should always apply, regardless of original video quality
+        -   #mp4 640x480
+            preset_service: transcoding.preset.ffmpeg.generic_mp4
+            tag: standard
+            quality: 2
+            extension: mp4
+            representation: transcoding
+            params:
+                height: 480
+                width: 640
+            filters:
+                height: 480
+                width: 640
+        -   #mp4 1280x720
+            preset_service: transcoding.preset.ffmpeg.generic_mp4
+            tag: high
+            quality: 3
+            extension: mp4
+            representation: transcoding
+            params:
+                height: 720
+                width: 1280
+            filters:
+                height: 720
+                width: 1280
+        -   #mp4 1920x1080
+            preset_service: transcoding.preset.ffmpeg.generic_mp4
+            tag: highest
+            quality: 4
+            extension: mp4
+            representation: transcoding
+            params:
+                height: 1080
+                width: 1920
+            filters:
+                height: 1080
+                width: 1920
+        -   #mp4 480x320
+            preset_service: transcoding.preset.ffmpeg.generic_webm
+            tag: low
+            quality: 1
+            extension: webm
+            representation: transcoding
+            params:
+                height: 320
+                width: 480
+            #filters: no filters - the low quality preset should always apply, regardless of original video quality
+        -   #mp4 640x480
+            preset_service: transcoding.preset.ffmpeg.generic_webm
+            tag: standard
+            quality: 2
+            extension: webm
+            representation: transcoding
+            params:
+                height: 480
+                width: 640
+            filters:
+                height: 480
+                width: 640
+        -   #mp4 1280x720
+            preset_service: transcoding.preset.ffmpeg.generic_webm
+            tag: high
+            quality: 3
+            extension: webm
+            representation: transcoding
+            params:
+                height: 720
+                width: 1280
+            filters:
+                height: 720
+                width: 1280
+        -   #mp4 1920x1080
+            preset_service: transcoding.preset.ffmpeg.generic_webm
+            tag: highest
+            quality: 4
+            extension: webm
+            representation: transcoding
+            params:
+                height: 1080
+                width: 1920
+            filters:
+                height: 1080
+                width: 1920
+        -   #square thumbnail medium
+            preset_service: transcoding.preset.ffmpeg.thumbnail
+            tag: thumbnail_square_medium
+            quality: 1
+            extension: jpg
+            representation: summary
+            params: 
+                height: 100
+                width: 100
+                square: true
