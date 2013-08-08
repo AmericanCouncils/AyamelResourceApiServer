@@ -13,11 +13,11 @@ web_profiler:
 services:
     # register test text transcoding adapters/presets for testing
     ayamel.test.transcoding_adapter:
-        class: AC\Component\Transcoding\Tests\Mock\PhpTextAdapter
+        class: AC\Transcoding\Tests\Mock\PhpTextAdapter
         tags:
             - { name: transcoding.adapter }
     ayamel.test.transcoding_preset:
-        class: AC\Component\Transcoding\Tests\Mock\TextToLowerCasePreset
+        class: AC\Transcoding\Tests\Mock\TextToLowerCasePreset
         tags:
             - { name: transcoding.preset }
     

@@ -1,4 +1,6 @@
 <?php
+//TODO: fix this, data structure changed
+//TODO: check for transcode=false
 
 namespace Ayamel\TranscodingBundle\RabbitMQ;
 
@@ -6,7 +8,7 @@ use Ayamel\ApiBundle\Event\Events as ApiEvents;
 use Ayamel\ApiBundle\Event\ApiEvent;
 use Ayamel\ApiBundle\Event\HandleUploadedContentEvent;
 use AC\WebServicesBundle\EventListener\RestServiceSubscriber;
-use AC\Component\Transcoding\File;
+use AC\Transcoding\File;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 

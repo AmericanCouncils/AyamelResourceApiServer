@@ -1,3 +1,7 @@
+imports:
+    - { resource: '@AyamelTranscodingBundle/Resources/config/config.preset_map.yml' }
+    - { resource: '@AyamelTranscodingBundle/Resources/config/config.rabbitmq.yml' }
+
 parameters:
     ayamel.transcoding.temp_directory: %kernel.root_dir%/files/tmp
 
@@ -6,7 +10,6 @@ services:
         class: Ayamel\TranscodingBundle\PresetMapper
         arguments: [%ayamel.transcoding.preset_map%]
         scope: prototype
-
 
     ayamel.transcoding.manager:
         class: Ayamel\TranscodingBundle\TranscodeManager
@@ -24,7 +27,7 @@ services:
         class: Ayamel\TranscodingBundle\RabbitMQ\PublisherListener
         arguments: [@service_container]
         tags:
-            - { name: ayamel.api.dispatcher.event_listener , event: ayamel.api.handle_uploaded_content, method: onHandleUploadedContent, priority: 0}
+            - { name: ayamel.api.dispatcher.event_listener , event: ayamel.api.handle_uploaded_content, method: onHandleUploadedContent, priority: 0 }
 
     # This service handles rabbitMQ for transcoding Resource files asyncronously
     ayamel.transcoding.consumer:

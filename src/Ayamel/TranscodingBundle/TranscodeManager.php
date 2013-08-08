@@ -5,7 +5,7 @@ namespace Ayamel\TranscodingBundle;
 use Ayamel\ResourceBundle\Document\Resource;
 use Ayamel\ResourceBundle\Document\FileReference;
 use Ayamel\FilesystemBundle\Filesystem\FilesystemInterface;
-use AC\Component\Transcoding\Transcoder;
+use AC\Transcoding\Transcoder;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Ayamel\TranscodingBundle\Exception\NoRelevantPresetsException;
 use Ayamel\TranscodingBundle\Exception\NoTranscodeableFilesException;
