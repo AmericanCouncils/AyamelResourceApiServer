@@ -21,13 +21,17 @@ use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 class PublisherListener
 {
     private $container;
-    private $uploaded_file;
+    private $uploadedData;
     private $resource;
 
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
+    
+    
+    //TODO: add "resolve" listener to check for "transcode" option
+    
 
     /**
      * Only enables if a handling a file upload via the api
@@ -39,7 +43,7 @@ class PublisherListener
         }
 
         //keep track of newly uploaded file reference
-        $this->uploaded_file = $e->getContentData();
+        $this->uploadedData = $e->getContentData();
 
         //dynamically register a listener for the api resource modified event
         $this->container->get('ayamel.api.dispatcher')->addListener(ApiEvents::RESOURCE_MODIFIED, array($this, 'onResourceModified'));
