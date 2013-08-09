@@ -33,3 +33,17 @@ services:
     ayamel.transcoding.consumer:
         class: Ayamel\TranscodingBundle\RabbitMQ\Consumer
         arguments: [@service_container, %ayamel.transcoding.preset_map%]
+
+################## PRESET TESTING ######################
+
+    ayamel.transcoding.preset.ffmpeg_generic_mp4:
+        class: Ayamel\TranscodingBundle\Preset\VideoToMp4
+        scope: prototype
+        tags:
+            - { name: transcoding.preset }
+
+    ayamel.transcoding.preset.ffmpeg_generic_webm:
+        class: Ayamel\TranscodingBundle\Preset\VideoToWebM
+        scope: prototype
+        tags:
+            - { name: transcoding.preset }

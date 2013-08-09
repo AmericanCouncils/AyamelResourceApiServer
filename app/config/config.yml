@@ -108,7 +108,9 @@ ac_transcoding:
         path: %ffmpeg_path%
         timeout: 0
     handbrake:
-        enabled: false
+        enabled: true
+        path: %handbrake_path%
+        timeout: 0
 
 services:
     ac.webservices.object_validator:

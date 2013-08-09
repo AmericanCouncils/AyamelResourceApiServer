@@ -10,6 +10,11 @@ web_profiler:
     toolbar: false
     intercept_redirects: false
 
+
+## TODO: once proper video presets are established and implemented, remove this transcode
+## specific test configuration - the real presets need to be tested in real-world scenarios
+
+
 services:
     # register test text transcoding adapters/presets for testing
     ayamel.test.transcoding_adapter:
