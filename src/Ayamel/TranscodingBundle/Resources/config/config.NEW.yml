@@ -1,11 +1,12 @@
 parameters:
     ayamel.transcoding.preset_map:
-        video/avi: [video_to_mp4_low, ]
-        video/mp4: []
-        video/webm: []
+        video/avi: [video_to_mp4_low, video_to_mp4_standard]
+        video/mp4: [video_to_mp4_low, video_to_mp4_standard]
+        video/webm: [video_to_mp4_low, video_to_mp4_standard]
     ayamel.transcoding.presets:
+
 ##################################
-## MP4
+## VIDEO
 ##################################
         video_to_mp4_low:   #mp4 480x320
             preset_service: transcoding.preset.ffmpeg.generic_mp4
@@ -27,4 +28,13 @@ parameters:
             filters:
                 height: 480
                 width: 640
-                
+
+##################################
+## AUDIO
+##################################
+# TODO
+
+##################################
+## IMAGE
+##################################
+# TODO
