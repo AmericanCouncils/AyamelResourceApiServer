@@ -55,7 +55,7 @@ class Consumer implements ConsumerInterface
         //try the transcode, if it fails, depending on how, either remove the job from the queue
         //or requeue for later
         try {
-            $this->container->get('ayamel.transcoding.manager')->transcodeResource($id, $appendFiles, $presetFilter, $mimeFilter);
+            $resource = $this->container->get('ayamel.transcoding.manager')->transcodeResource($id, $appendFiles, $presetFilter, $mimeFilter);
         } catch (ResourceLockedException $e) {
             return false;
         } catch (NoTranscodeableFilesException $e) {

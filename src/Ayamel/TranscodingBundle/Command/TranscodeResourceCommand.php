@@ -50,7 +50,7 @@ class TranscodeResourceCommand extends ContainerAwareCommand
             }
 
             //run transcode for Resource immediately
-            $this->getContainer()->get('ayamel.transcoding.manager')->transcodeResource($id);
+            $resource = $this->getContainer()->get('ayamel.transcoding.manager')->transcodeResource($id);
 
         } else {
             //otherwise publish message via RabbitMQ

@@ -1,9 +1,15 @@
-imports:
-    - { resource: '@AyamelTranscodingBundle/Resources/config/config.video_presets.yml' }
-    #- { resource: '@AyamelTranscodingBundle/Resources/config/config.audio_presets.yml' }
-    #- { resource: '@AyamelTranscodingBundle/Resources/config/config.image_presets.yml' }
-
 parameters:
+    ayamel.transcoding.video_presets: 
+        - video_to_mp4_low
+        - video_to_mp4_sd
+        - video_to_mp4_hd
+        - video_to_mp4_full_hd
+        - video_to_webm_low
+        - video_to_webm_sd
+        - video_to_webm_hd
+        - video_to_webm_full_hd
+        - video_to_thumbnail
+    
     #maps sets of presets to file mime types
     ayamel.transcoding.preset_map:
         #video

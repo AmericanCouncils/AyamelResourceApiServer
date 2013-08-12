@@ -6,28 +6,8 @@ use Ayamel\ResourceBundle\Document\FileReference;
 
 /**
  * The PresetMapper maps file mime types to transcoding presets, along
- * with other metadata that is needed by the Resource Library.
- *
- * The PresetMapper can answer questions about specific resources to
- * determine which presets are applicable to which files.
- *
- * The PresetMapper is created per-Resource and used internally in the
- * TranscodeManager for this purpose.
- *
- * The format of a preset mapping can be seen in the YAML example below:
- *
- *      video/mp4:
- *          - { preset: handbrake.ipod, tag: low, extension: mp4, representation: transcoding, quality: 1 }
- *          - { preset: handbrake.classic, tag: medium, extension: mp4, representation: transcoding, quality: 2 }
- *          - { preset: handbrake.high_profile, tag: high, extension: mp4, representation: transcoding, quality: 3 }
- *
- * An explanation of the preset array keys:
- *
- * - `preset`: TODO...
- * - `tag`:
- * - `extension`:
- * - `representation`:
- * - `quality`:
+ * with other metadata that is needed by the Resource Library. The PresetMapper 
+ * is used internally in the TranscodeManager for this purpose.
  *
  * @package AyamelTranscodingBundle
  * @author Evan Villemez
@@ -35,29 +15,58 @@ use Ayamel\ResourceBundle\Document\FileReference;
 class PresetMapper
 {
 
-    private $mimes = array();
-
-    public function __construct($presetMap = array())
+    private $presets = array();
+    private $map = array();
+    
+    /**
+     * Constructor expects two arguments describing the available presets.
+     * 
+     * Presets in the form of (YAML):
+     * 
+     *      name_of_preset:
+     *          preset_service: 'transcoder.preset.service_name'
+     *          tag: 'low'
+     *          extension: 'mp3'
+     *          representation: 'transcoding'
+     *          quality: 2
+     * 
+     * Preset map in the form of (YAML): 
+     * 
+     *      'video/quicktime': [name_of_preset]
+     *
+     * @param array $presets Map of presetDefinitionKey => array of preset data
+     * @param array $map Map of mimeType => array of preset definition keys
+     */
+    public function __construct(array $presets = array(), array $map = array())
     {
-        $this->addPresetDefinitions($presetMap);
-    }
-
-    protected function processMimeMap(array $presetMap)
-    {
-        $mimes = array();
-        foreach ($presetMap as $presetName => $data) {
-            if (isset($data['mimes'])) {
-                foreach ($data['mimes'] as $mime) {
-                    if (!isset($mimes[$mime])) {
-                        $mimes[$mime] = array();
-                    }
-
-                    $mimes[$mime][] = $presetName;
-                }
+        foreach ($presets as $key => $data)
+        {
+            if ($this->validatePreset($data)) {
+                $this->addPreset($key, $data);
             }
         }
-
-        return $mimes;
+        
+        $this->map = $map;
+    }
+    
+    public function getPreset($key)
+    {
+        return (isset($this->presets[$key])) ? $this->presets[$key] : false;
+    }
+    
+    public function getPresets()
+    {
+        return $this->presets;
+    }
+    
+    public function getMap()
+    {
+        return $this->map;
+    }
+    
+    public function addPreset($key, array $data)
+    {
+        $this->presets[$key] = $data;
     }
 
     /**
@@ -69,7 +78,7 @@ class PresetMapper
      */
     public function canTranscodeFileReference(FileReference $ref)
     {
-        return isset($this->mimes[$ref->getMimeType()]);
+        return isset($this->map[$ref->getMimeType()]);
     }
 
     public function getPresetMappingsForFileReference(FileReference $ref)
@@ -79,18 +88,24 @@ class PresetMapper
 
     public function getPresetMappingsForMimeType($mime)
     {
-        return (isset($this->mimes[$mime])) ? $this->mimes[$mime] : false;
+        if (!isset($this->map[$mime])) {
+            return false;
+        }
+        
+        $presets = array();
+        foreach ($this->map[$mime] as $key) {
+            if (isset($this->presets[$key])) {
+                $presets[$key] = $this->presets[$key];
+            }
+        }
+        
+        return $presets;
     }
 
     public function getPresetsForMimeType($mime)
     {
-        if (isset($this->mimes[$mime])) {
-            $presets = array();
-            foreach ($this->mimes[$mime] as $def) {
-                $presets[] = $def['preset'];
-            }
-
-            return array_unique($presets);
+        if (isset($this->map[$mime])) {
+            return $this->map[$mime];
         }
 
         return false;
@@ -99,32 +114,19 @@ class PresetMapper
     public function getMimeTypesForPreset($presetName)
     {
         $mimeTypes = array();
-        foreach ($this->mimes as $mime => $defs) {
-            foreach ($defs as $def) {
-                if ($presetName === $def['preset']) {
-                    $mimeTypes[] = $mime;
-                }
+        foreach ($this->map as $mime => $presets) {
+            if (in_array($presetName, $presets)) {
+                $mimeTypes[] = $mime;
             }
         }
 
         return empty($mimeTypes) ? false : $mimeTypes;
     }
 
-    public function addPresetDefinitions(array $map)
+    protected function validatePreset(array $map)
     {
-        foreach ($map as $mime => $defs) {
-            foreach ($defs as $def) {
-                if ($this->validatePresetMapping($def)) {
-                    $this->mimes[$mime][] = $def;
-                }
-            }
-        }
-    }
-
-    protected function validatePresetMapping(array $map)
-    {
-        if (!isset($map['preset']) || !isset($map['tag']) || !isset($map['quality']) || !isset($map['representation']) || !isset($map['extension'])) {
-            throw new \InvalidArgumentException(sprintf("Preset mapping did not have the required fields."));
+        if (!isset($map['preset_service']) || !isset($map['tag']) || !isset($map['quality']) || !isset($map['representation']) || !isset($map['extension'])) {
+            return false;
         }
 
         return true;

@@ -12,7 +12,7 @@ class VideoTranscodeTest extends ApiTestCase
      */
     public function testTranscodeOfNewResourceWithHighQualityVideo()
     {
-        $this->markTestSkipped('not ready yet');
+        $this->markTestSkipped('must determine proper presets first');
     }
 
     /**
@@ -22,6 +22,6 @@ class VideoTranscodeTest extends ApiTestCase
      */
     public function testTranscodeOfNewResourceWithLowQualityVideo()
     {
-        $this->markTestSkipped('not ready yet');
+        $this->markTestSkipped('must determine proper presets first');
     }
 }
