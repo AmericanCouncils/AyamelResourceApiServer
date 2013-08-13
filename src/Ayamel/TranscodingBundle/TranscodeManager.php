@@ -360,14 +360,59 @@ class TranscodeManager
         }
 
         $filtered = array();
-        foreach ($mappings as $map) {
-            if (!empty($presetFilter) && !in_array($map['preset'], $presetFilter)) {
+        foreach ($mappings as $key => $data) {
+            if (!empty($presetFilter) && !in_array($key, $presetFilter)) {
                 continue;
             }
 
-            $filtered[] = $map;
+            $filtered[$key] = $data;
         }
-
+        
+        $filtered = $this->filterPresetMappingsByConfig($ref, $filtered);
+        
+        return $filtered;
+    }
+    
+    protected function filterPresetMappingsByConfig(FileReference $ref, array $presets)
+    {
+        $attrs = $ref->getAttributes();
+        $filtered = array();
+        
+        foreach ($presets as $key => $data) {
+            $include = true;
+            
+            //height
+            if (
+                isset($attrs['frameSize']['height']) && 
+                isset($data['filters']['height']) && 
+                $attrs['frameSize']['height'] > $data['filters']['height']
+            ) {
+                $include = false;
+            }
+        
+            //width
+            if (
+                isset($attrs['frameSize']['width']) && 
+                isset($data['filters']['width']) && 
+                $attrs['frameSize']['width'] > $data['filters']['width']
+            ) {
+                $include = false;
+            }
+        
+            //bitrate
+            if (
+                isset($attrs['bitrate']) && 
+                isset($data['filters']['bitrate']) && 
+                $attrs['bitrate'] > $data['filters']['bitrate']
+            ) {
+                $include = false;
+            }
+            
+            if ($include) {
+                $filtered[$key] = $data;
+            }
+        }
+        
         return $filtered;
     }
 }
