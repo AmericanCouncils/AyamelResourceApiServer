@@ -52,8 +52,7 @@ class ModifyResource extends ApiController
         }
 
         //notify rest of system of modified resource
-        $event = new ApiEvent($modifiedResource);
-        $this->container->get('ayamel.api.dispatcher')->dispatch(Events::RESOURCE_MODIFIED, $event);
+        $this->container->get('event_dispatcher')->dispatch(Events::RESOURCE_MODIFIED, new ApiEvent($modifiedResource));
 
         //return it
         return $this->createServiceResponse(array('resource' => $modifiedResource), 200);

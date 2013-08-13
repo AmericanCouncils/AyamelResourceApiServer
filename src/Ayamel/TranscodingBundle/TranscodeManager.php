@@ -115,7 +115,7 @@ class TranscodeManager
         if (!$processed) {
             throw new NoRelevantPresetsException();
         }
-        
+
         //notify system that Resource was modified
         $this->dispatcher->dispatch(ApiEvents::RESOURCE_MODIFIED, new ApiEvent($resource));
 
@@ -139,9 +139,9 @@ class TranscodeManager
         $newFiles = array();
         try {
             foreach ($presetDefinitions as $def) {
-                
+
                 $preset = $this->container->get($def['preset_service']);
-                
+
                 if (isset($def['params'])) {
                     $preset->mergeOptions($def['params']);
                 }

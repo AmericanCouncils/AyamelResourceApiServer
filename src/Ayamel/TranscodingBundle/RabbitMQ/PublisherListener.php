@@ -1,6 +1,4 @@
 <?php
-//TODO: fix this, data structure changed
-
 namespace Ayamel\TranscodingBundle\RabbitMQ;
 
 use Ayamel\ApiBundle\Event\Events as AyamelEvents;
@@ -30,32 +28,31 @@ class PublisherListener implements EventSubscriberInterface
     {
         $this->container = $container;
     }
-    
+
     public static function getSubscribedEvents()
     {
         return array(
-            AyamelEvents::HANDLE_UPLOADED_CONTENT => 'onHandleUploadedContent',
+            AyamelEvents::HANDLE_UPLOADED_CONTENT => array('onHandleUploadedContent', 255),
             AyamelEvents::RESOURCE_MODIFIED => 'onResourceModified',
             RestServiceSubscriber::API_TERMINATE => 'onApiTerminate'
         );
     }
-    
+
     /**
      * This listens early for upload events, and in the case of uploaded files
      * that should be transcoded it registers the other listeners defined here.
      *
-     * @param ResolveUploadedContentEvent $e 
+     * @param ResolveUploadedContentEvent $e
      */
     public function onResolveUploadedContent(ResolveUploadedContentEvent $e)
     {
         $req = $e->getRequest();
-        if ($req->files->get('file', false)) {
-            return;
+        if ($file = $req->files->get('file', false)) {
+            if ('false' !== $req->request->get('transcode', 'true')) {
+                $this->container->get('event_dispatcher')->addSubscriber($this);
+            }
         }
-        
-        if ('false' !== $req->request->get('transcode', 'true')) {
-            $this->container->get('event_dispatcher')->addSubscriber($this);
-        }
+
     }
 
     /**
@@ -78,8 +75,9 @@ class PublisherListener implements EventSubscriberInterface
         $uploadedFile = $this->uploadedData['file'];
 
         foreach ($this->resource->content->getFiles() as $file) {
-            if ('original' === $file->getRepresentation() && $file->getInternalUri() && $uploadedFile->getSize() === $file->getBytes()) {
+            if ('original' === $file->getRepresentation() && $file->getInternalUri()) {
                 $this->fileToTranscode = $file;
+
                 return;
             }
         }
@@ -95,7 +93,6 @@ class PublisherListener implements EventSubscriberInterface
      */
     public function onApiTerminate(PostResponseEvent $e)
     {
-
         //TODO: change to dispatch multiple transcode jobs
         //and track state in cache
         //specify total number of jobs scheduled so consuming process knows when a full

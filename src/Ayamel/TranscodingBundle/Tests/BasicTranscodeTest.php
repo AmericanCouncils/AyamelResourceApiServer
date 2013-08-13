@@ -6,7 +6,7 @@ use Symfony\Component\Process\Process;
 
 /**
  * This tests initiating the transcode for a Resource by:
- * 
+ *
  * - using the TranscodingManager directly
  * - running the TranscodeResourceCommand from the CLI
  * - asynchronously via the RabbitMQ consumer
@@ -16,7 +16,10 @@ use Symfony\Component\Process\Process;
  */
 class BasicTranscodeTest extends ApiTestCase
 {
-    
+
+    /**
+     * @group transcoding
+     */
     public function testTranscodeManagerTranscodeResource()
     {
         $data = array(
@@ -43,7 +46,6 @@ class BasicTranscodeTest extends ApiTestCase
         );
 
         $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', array(), array('file' => $uploadedFile));
-
         $this->assertSame(202, $content['response']['code']);
         $this->assertSame('awaiting_processing', $content['resource']['status']);
         $this->assertSame($data['title'], $content['resource']['title']);
@@ -61,7 +63,10 @@ class BasicTranscodeTest extends ApiTestCase
         $files = $resource->content->getFiles();
         $this->assertSame(2, count($files));
     }
-    
+
+    /**
+     * @group transcoding
+     */
     public function testTranscodeResourceCommand()
     {
         $data = array(
@@ -129,20 +134,20 @@ class BasicTranscodeTest extends ApiTestCase
         $this->assertSame($expected['bytes'], $transcoded['bytes']);
         $this->assertTrue(isset($transcoded['downloadUri']));
     }
-    
+
+    /**
+     * @group transcoding
+     */
     public function testTranscodeViaRabbitMQ()
     {
-        //start process asynchronously
-        $rabbitProcess = new Process('ayamel rabbitmq:consumer transcoding --messages=1');
-        $rabbitProcess->start();
-        $this->assertTrue($rabbitProcess->isRunning());
-        
-        //upload resource
+        //clear queue of any messages
+        $this->getContainer()->get('old_sound_rabbit_mq.transcoding_producer')->getChannel()->queue_purge('transcoding');
+
+        //create resource
         $data = array(
             'title' => 'test',
             'type' => 'data'
         );
-
         $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($data));
@@ -151,6 +156,13 @@ class BasicTranscodeTest extends ApiTestCase
         $this->assertSame('awaiting_content', $response['resource']['status']);
         $resourceId = $response['resource']['id'];
         $uploadUrl = substr($response['contentUploadUrl'], strlen('http://localhost'));
+
+        //start the rabbitmq consumer
+        $rabbitProcess = new Process('ayamel --env=test rabbitmq:consumer transcoding --messages=1 --verbose');
+        $rabbitProcess->start();
+        if (!$rabbitProcess->isRunning()) {
+            throw new \RuntimeException(($rabbitProcess->isSuccessful()) ? $rabbitProcess->getOutput() : $rabbitProcess->getErrorOutput());
+        }
 
         //upload the test file
         $testFilePath = __DIR__."/sample_files/lorem.txt";
@@ -172,12 +184,23 @@ class BasicTranscodeTest extends ApiTestCase
         $this->assertSame('text/plain', $data['mime']);
         $this->assertSame('text/plain', $data['mimeType']);
         $this->assertSame(filesize($testFilePath), $data['bytes']);
-        
+
         //wait for the rabbit process to exit after it has
         //transcoded the resource, then make some assertions
         $tester = $this;
-        $rabbitProcess->wait(function() use ($tester, $resourceId, $rabbitProcess) {
-            $tester->assertFalse($rabbitProcess->isRunning());
+        $rabbitProcess->wait(function($type, $output) use ($tester, $resourceId, $rabbitProcess) {
+            //I'm not sure why I have to wait here in this loop... theoretically this should have only
+            //been triggered if the process was actually done... ?
+            while ($rabbitProcess->isRunning()) {
+                usleep(500000); //wait half a second
+            }
+
+            //var_dump($output);
+
+            if (!$rabbitProcess->isSuccessful()) {
+                throw new \RuntimeException($rabbitProcess->getErrorOutput());
+            }
+
             $data = $tester->getJson('GET', '/api/v1/resources/'.$resourceId);
             $tester->assertSame(200, $data['response']['code']);
             $tester->assertSame('normal', $data['resource']['status']);

@@ -30,7 +30,7 @@ services:
         class: Ayamel\TranscodingBundle\RabbitMQ\PublisherListener
         arguments: [@service_container]
         tags:
-            - { name: ayamel.api.dispatcher.event_listener , event: ayamel.api.resolve_uploaded_content, method: onResolveUploadedContent, priority: 0 }
+            - { name: ayamel.api.event_listener , event: ayamel.api.resolve_uploaded_content, method: onResolveUploadedContent, priority: 128 }
 
     # This service handles rabbitMQ for transcoding Resource files asyncronously
     ayamel.transcoding.consumer:

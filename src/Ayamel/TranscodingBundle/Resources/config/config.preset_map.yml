@@ -1,5 +1,5 @@
 parameters:
-    ayamel.transcoding.video_presets: 
+    ayamel.transcoding.video_presets:
         - video_to_mp4_low
         - video_to_mp4_sd
         - video_to_mp4_hd
@@ -9,7 +9,7 @@ parameters:
         - video_to_webm_hd
         - video_to_webm_full_hd
         - video_to_thumbnail
-    
+
     #maps sets of presets to file mime types
     ayamel.transcoding.preset_map:
         #video

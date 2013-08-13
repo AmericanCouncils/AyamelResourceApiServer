@@ -4,7 +4,7 @@ use Ayamel\ApiBundle\ApiTestCase;
 
 class VideoTranscodeTest extends ApiTestCase
 {
-    
+
     /**
      * high quality original, hits all presets
      *
@@ -12,7 +12,7 @@ class VideoTranscodeTest extends ApiTestCase
      */
     public function testTranscodeOfNewResourceWithHighQualityVideo()
     {
-        $this->markTestSkipped('must determine proper presets first');
+        //$this->markTestSkipped('must determine proper presets first');
     }
 
     /**
@@ -22,6 +22,6 @@ class VideoTranscodeTest extends ApiTestCase
      */
     public function testTranscodeOfNewResourceWithLowQualityVideo()
     {
-        $this->markTestSkipped('must determine proper presets first');
+        //$this->markTestSkipped('must determine proper presets first');
     }
 }

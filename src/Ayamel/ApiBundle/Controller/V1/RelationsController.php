@@ -129,7 +129,7 @@ class RelationsController extends ApiController
         }
         if ($clients = $req->query->get('client', false)) {
             $filters['client.id'] = explode(',', $clients);
-        } else if ($this->getApiClient()) {
+        } elseif ($this->getApiClient()) {
             $filters['client.id'] = array($this->getApiClient()->id);
         }
         if ($clientUsers = $req->query->get('clientUser', false)) {
@@ -257,18 +257,18 @@ class RelationsController extends ApiController
         //TODO: resource modified if relation === search ?
         return $this->createServiceResponse(null, 200);
     }
-    
+
     protected function requireSubjectOwnershipAndObjectVisibility($sub, $obj, $client)
     {
         if ($sub->getClient()->getId() !== $client->id) {
             throw $this->createHttpException(403, "You must be owner the subject Resource to create this type of Relation.");
         }
-        
+
         if ($obj->getVisibility() && !in_array($client->id, $obj->getVisibility())) {
             throw $this->createHttpException(403, "You must be able to view the object Resource to create this type of Relation.");
         }
     }
-    
+
     protected function requireSubjectAndObjectOwnership($sub, $obj, $client)
     {
         if ($sub->getClient()->getId() !== $client->id || $obj->getClient()->getId() !== $client->id) {

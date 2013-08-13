@@ -181,6 +181,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($data));
+        $this->assertSame(201, $response['response']['code']);
         $this->assertFalse(isset($response['resource']['content']));
         $this->assertSame('awaiting_content', $response['resource']['status']);
 

@@ -6,7 +6,7 @@ use Ayamel\ResourceBundle\Document\FileReference;
 
 /**
  * The PresetMapper maps file mime types to transcoding presets, along
- * with other metadata that is needed by the Resource Library. The PresetMapper 
+ * with other metadata that is needed by the Resource Library. The PresetMapper
  * is used internally in the TranscodeManager for this purpose.
  *
  * @package AyamelTranscodingBundle
@@ -17,53 +17,52 @@ class PresetMapper
 
     private $presets = array();
     private $map = array();
-    
+
     /**
      * Constructor expects two arguments describing the available presets.
-     * 
+     *
      * Presets in the form of (YAML):
-     * 
+     *
      *      name_of_preset:
      *          preset_service: 'transcoder.preset.service_name'
      *          tag: 'low'
      *          extension: 'mp3'
      *          representation: 'transcoding'
      *          quality: 2
-     * 
-     * Preset map in the form of (YAML): 
-     * 
+     *
+     * Preset map in the form of (YAML):
+     *
      *      'video/quicktime': [name_of_preset]
      *
      * @param array $presets Map of presetDefinitionKey => array of preset data
-     * @param array $map Map of mimeType => array of preset definition keys
+     * @param array $map     Map of mimeType => array of preset definition keys
      */
     public function __construct(array $presets = array(), array $map = array())
     {
-        foreach ($presets as $key => $data)
-        {
+        foreach ($presets as $key => $data) {
             if ($this->validatePreset($data)) {
                 $this->addPreset($key, $data);
             }
         }
-        
+
         $this->map = $map;
     }
-    
+
     public function getPreset($key)
     {
         return (isset($this->presets[$key])) ? $this->presets[$key] : false;
     }
-    
+
     public function getPresets()
     {
         return $this->presets;
     }
-    
+
     public function getMap()
     {
         return $this->map;
     }
-    
+
     public function addPreset($key, array $data)
     {
         $this->presets[$key] = $data;
@@ -91,14 +90,14 @@ class PresetMapper
         if (!isset($this->map[$mime])) {
             return false;
         }
-        
+
         $presets = array();
         foreach ($this->map[$mime] as $key) {
             if (isset($this->presets[$key])) {
                 $presets[$key] = $this->presets[$key];
             }
         }
-        
+
         return $presets;
     }
 

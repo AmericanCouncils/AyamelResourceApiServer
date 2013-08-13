@@ -10,14 +10,13 @@ class PresetMapperTest extends \PHPUnit_Framework_TestCase
 
     protected function getPresets()
     {
-        
         return array(
             'video_to_mp4_low' => array('preset_service' => 'handbrake.classic', 'tag' => 'medium', 'extension' => 'mp4', 'representation' => 'transcoding', 'quality' => 2),
             'video_to_mp4_sd' => array('preset_service' => 'handbrake.ipod', 'tag' => 'medium', 'extension' => 'mp4', 'representation' => 'transcoding', 'quality' => 1),
             'video_to_thumbnail' => array('preset_service' => 'imagine.resize', 'tag' => 'medium', 'extension' => 'mp4', 'representation' => 'transcoding', 'quality' => 3)
         );
     }
-    
+
     protected function getMap()
     {
         return array(
@@ -49,14 +48,14 @@ class PresetMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($m);
         $this->assertTrue($m instanceof PresetMapper);
     }
-    
+
     public function testGetPreset()
     {
         $data = $this->createTestMapper()->getPreset('video_to_mp4_low');
-        $this->assertSame('handbrake.classic', $data['preset_service']);        
+        $this->assertSame('handbrake.classic', $data['preset_service']);
         $this->assertFalse($this->createTestMapper()->getPreset('does_not_exist'));
     }
-    
+
     public function testCanTranscodeFileReference()
     {
         $this->assertTrue($this->createTestMapper()->canTranscodeFileReference($this->createTestReference('video/x-ms-wmv')));

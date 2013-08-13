@@ -55,7 +55,7 @@ class CreateResource extends ApiController
         $uploadToken = $this->container->get('ayamel.api.upload_token_manager')->createTokenForId($newID);
 
         //notify rest of system of new resource
-        $this->container->get('ayamel.api.dispatcher')->dispatch(Events::RESOURCE_CREATED, new ApiEvent($resource));
+        $this->container->get('event_dispatcher')->dispatch(Events::RESOURCE_CREATED, new ApiEvent($resource));
 
         $uploadUrl = $this->container->get('router')->generate('api_v1_upload_content', array('id' => $resource->getId(), 'token' => $uploadToken), true);
 

@@ -6,20 +6,20 @@ use AC\Transcoding\Preset;
 use AC\Transcoding\Preset\FFmpeg\BasePreset;
 use AC\Transcoding\FileHandlerDefinition;
 /*
--s hd720 
--vcodec libvpx 
--g 120 
--lag-in-frames 16 
--deadline good 
--cpu-used 0 
--vprofile 0 
--qmax 51 
--qmin 11 
--slices 4 
--b:v 2M 
--acodec libvorbis 
--ab 112k 
--ar 44100 
+-s hd720
+-vcodec libvpx
+-g 120
+-lag-in-frames 16
+-deadline good
+-cpu-used 0
+-vprofile 0
+-qmax 51
+-qmin 11
+-slices 4
+-b:v 2M
+-acodec libvorbis
+-ab 112k
+-ar 44100
 -f webm
 */
 /**
@@ -54,8 +54,7 @@ class VideoToWebM extends BasePreset
             '-threads' => "8"
         ));
     }
-    
-    
+
     protected function buildOutputDefinition()
     {
         return new FileHandlerDefinition(array(

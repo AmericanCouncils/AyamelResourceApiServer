@@ -36,8 +36,7 @@ class VideoToMp4 extends BasePreset
             '-threads' => "0"
         ));
     }
-    
-    
+
     protected function buildOutputDefinition()
     {
         return new FileHandlerDefinition(array(

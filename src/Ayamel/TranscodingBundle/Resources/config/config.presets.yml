@@ -96,7 +96,7 @@ parameters:
             filters:
                 height: 1080
                 width: 1920
-                                
+
 ##################################
 ## VIDEO THUMBNAILS
 ##################################
@@ -107,8 +107,7 @@ parameters:
             quality: 1
             extension: jpg
             representation: summary
-            params: 
+            params:
                 height: 100
                 width: 100
                 preserve_ratio: true
-                
