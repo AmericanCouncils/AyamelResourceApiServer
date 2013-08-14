@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "6c98e48d2e5d3810e00857f7f251ca72",
+    "hash": "9bd61ab69928dcbf38440f314e4f1745",
     "packages": [
         {
             "name": "ac/media-info-bundle",
@@ -51,31 +51,31 @@
         },
         {
             "name": "ac/transcoding",
-            "version": "0.3.1",
-            "target-dir": "AC/Component/Transcoding",
+            "version": "0.4.0",
+            "target-dir": "AC/Transcoding",
             "source": {
                 "type": "git",
                 "url": "https://github.com/AmericanCouncils/Transcoding.git",
-                "reference": "0.3.1"
+                "reference": "0.4.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AmericanCouncils/Transcoding/zipball/0.3.1",
-                "reference": "0.3.1",
+                "url": "https://api.github.com/repos/AmericanCouncils/Transcoding/zipball/0.4.0",
+                "reference": "0.4.0",
                 "shasum": ""
             },
             "require": {
                 "ext-fileinfo": "*",
                 "php": ">=5.3.2",
-                "symfony/event-dispatcher": ">=2.0, <2.3"
+                "symfony/event-dispatcher": ">=2.1, <2.4"
             },
             "require-dev": {
-                "symfony/process": ">=2.0, <2.3"
+                "symfony/process": ">=2.1, <2.4"
             },
             "type": "library",
             "autoload": {
                 "psr-0": {
-                    "AC\\Component\\Transcoding": ""
+                    "AC\\Transcoding": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -101,31 +101,27 @@
                 "file",
                 "transcode"
             ],
-            "time": "2013-03-04 17:21:38"
+            "time": "2013-08-08 15:19:14"
         },
         {
             "name": "ac/transcoding-bundle",
-            "version": "dev-master",
+            "version": "0.4.0",
             "target-dir": "AC/TranscodingBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/AmericanCouncils/TranscodingBundle.git",
-                "reference": "754e8d1fce05ed756e5222497f2ba59b5810e489"
+                "reference": "0.4.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AmericanCouncils/TranscodingBundle/zipball/754e8d1fce05ed756e5222497f2ba59b5810e489",
-                "reference": "754e8d1fce05ed756e5222497f2ba59b5810e489",
+                "url": "https://api.github.com/repos/AmericanCouncils/TranscodingBundle/zipball/0.4.0",
+                "reference": "0.4.0",
                 "shasum": ""
             },
             "require": {
-                "ac/transcoding": "0.3.*",
+                "ac/transcoding": "0.4.*",
                 "php": ">=5.3.3",
-                "symfony/framework-bundle": ">2.0, <2.3"
-            },
-            "suggest": {
-                "oldsound/rabbitmq-bundle": "dev-master",
-                "sonata-project/notification-bundle": "2.0.*"
+                "symfony/framework-bundle": ">2.1, <2.4"
             },
             "type": "symfony-bundle",
             "autoload": {
@@ -148,7 +144,7 @@
                 "files",
                 "transcoding"
             ],
-            "time": "2013-02-26 15:19:41"
+            "time": "2013-08-08 16:28:37"
         },
         {
             "name": "ac/web-services-bundle",
@@ -327,12 +323,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/cache.git",
-                "reference": "beb242e0e22eebdca1db571edb1bac788b054124"
+                "reference": "2c9761ff1d13e188d5f7378066c1ce2882d7a336"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/cache/zipball/beb242e0e22eebdca1db571edb1bac788b054124",
-                "reference": "beb242e0e22eebdca1db571edb1bac788b054124",
+                "url": "https://api.github.com/repos/doctrine/cache/zipball/2c9761ff1d13e188d5f7378066c1ce2882d7a336",
+                "reference": "2c9761ff1d13e188d5f7378066c1ce2882d7a336",
                 "shasum": ""
             },
             "require": {
@@ -388,7 +384,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2013-07-31 00:07:06"
+            "time": "2013-08-07 16:04:25"
         },
         {
             "name": "doctrine/collections",
@@ -583,7 +579,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes Schmitt",
+                    "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -722,16 +718,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/mongodb-odm.git",
-                "reference": "42909efe19a4b78e2d0b7076f72f3a8b90ad0b19"
+                "reference": "2c32111f87c8789948d67b39b258404f5393e64e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/mongodb-odm/zipball/42909efe19a4b78e2d0b7076f72f3a8b90ad0b19",
-                "reference": "42909efe19a4b78e2d0b7076f72f3a8b90ad0b19",
+                "url": "https://api.github.com/repos/doctrine/mongodb-odm/zipball/2c32111f87c8789948d67b39b258404f5393e64e",
+                "reference": "2c32111f87c8789948d67b39b258404f5393e64e",
                 "shasum": ""
             },
             "require": {
                 "doctrine/common": ">=2.2.0,<2.5-dev",
+                "doctrine/inflector": "~1.0",
                 "doctrine/mongodb": "1.0.*",
                 "php": ">=5.3.2",
                 "symfony/console": "~2.0"
@@ -787,7 +784,7 @@
                 "odm",
                 "persistence"
             ],
-            "time": "2013-07-30 18:12:11"
+            "time": "2013-08-05 18:38:02"
         },
         {
             "name": "doctrine/mongodb-odm-bundle",
@@ -796,12 +793,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/DoctrineMongoDBBundle.git",
-                "reference": "a10cd474783739c238a045e3aaf9b9335a63e946"
+                "reference": "387ff28b145a7572cc38054393b5b964811d0b2b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineMongoDBBundle/zipball/a10cd474783739c238a045e3aaf9b9335a63e946",
-                "reference": "a10cd474783739c238a045e3aaf9b9335a63e946",
+                "url": "https://api.github.com/repos/doctrine/DoctrineMongoDBBundle/zipball/387ff28b145a7572cc38054393b5b964811d0b2b",
+                "reference": "387ff28b145a7572cc38054393b5b964811d0b2b",
                 "shasum": ""
             },
             "require": {
@@ -857,7 +854,7 @@
                 "persistence",
                 "symfony"
             ],
-            "time": "2013-07-30 15:16:18"
+            "time": "2013-08-07 21:02:03"
         },
         {
             "name": "jms/metadata",
@@ -865,12 +862,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/schmittjoh/metadata.git",
-                "reference": "0979c7d9eb7f0031a3c5ffed1d6e1fa4eb846e4e"
+                "reference": "b63f380d36a70586fd2abe518e35899d044745df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/schmittjoh/metadata/zipball/0979c7d9eb7f0031a3c5ffed1d6e1fa4eb846e4e",
-                "reference": "0979c7d9eb7f0031a3c5ffed1d6e1fa4eb846e4e",
+                "url": "https://api.github.com/repos/schmittjoh/metadata/zipball/b63f380d36a70586fd2abe518e35899d044745df",
+                "reference": "b63f380d36a70586fd2abe518e35899d044745df",
                 "shasum": ""
             },
             "require": {
@@ -909,7 +906,7 @@
                 "xml",
                 "yaml"
             ],
-            "time": "2013-03-28 16:32:37"
+            "time": "2013-08-04 12:47:51"
         },
         {
             "name": "jms/parser-lib",
@@ -917,12 +914,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/schmittjoh/parser-lib.git",
-                "reference": "4d469a70c6dd03f921cbdeadafbcb261bb23e8b0"
+                "reference": "316cffddc833c424f730723eaba9f6b8dcb25ef6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/schmittjoh/parser-lib/zipball/4d469a70c6dd03f921cbdeadafbcb261bb23e8b0",
-                "reference": "4d469a70c6dd03f921cbdeadafbcb261bb23e8b0",
+                "url": "https://api.github.com/repos/schmittjoh/parser-lib/zipball/316cffddc833c424f730723eaba9f6b8dcb25ef6",
+                "reference": "316cffddc833c424f730723eaba9f6b8dcb25ef6",
                 "shasum": ""
             },
             "require": {
@@ -944,7 +941,7 @@
                 "Apache2"
             ],
             "description": "A library for easily creating recursive-descent parsers.",
-            "time": "2012-11-30 08:11:04"
+            "time": "2013-08-03 15:44:32"
         },
         {
             "name": "jms/serializer",
@@ -1020,12 +1017,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/schmittjoh/JMSSerializerBundle.git",
-                "reference": "c7f57e622ec4ad531f59ac79b2536b0cb5681559"
+                "reference": "5531198a73c4adee669a8a2d1452999349822771"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/schmittjoh/JMSSerializerBundle/zipball/c7f57e622ec4ad531f59ac79b2536b0cb5681559",
-                "reference": "c7f57e622ec4ad531f59ac79b2536b0cb5681559",
+                "url": "https://api.github.com/repos/schmittjoh/JMSSerializerBundle/zipball/5531198a73c4adee669a8a2d1452999349822771",
+                "reference": "5531198a73c4adee669a8a2d1452999349822771",
                 "shasum": ""
             },
             "require": {
@@ -1081,7 +1078,7 @@
                 "serialization",
                 "xml"
             ],
-            "time": "2013-07-29 12:32:39"
+            "time": "2013-07-29 12:36:36"
         },
         {
             "name": "kriswallsmith/assetic",
@@ -1160,12 +1157,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "b33357d16bb84ca83be119e67abaff7321702b22"
+                "reference": "a0101d1a7bd2d851c9a50ca6a4527b03e0d2d1b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/b33357d16bb84ca83be119e67abaff7321702b22",
-                "reference": "b33357d16bb84ca83be119e67abaff7321702b22",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/a0101d1a7bd2d851c9a50ca6a4527b03e0d2d1b9",
+                "reference": "a0101d1a7bd2d851c9a50ca6a4527b03e0d2d1b9",
                 "shasum": ""
             },
             "require": {
@@ -1214,7 +1211,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2013-07-30 11:01:58"
+            "time": "2013-08-01 19:30:22"
         },
         {
             "name": "nelmio/api-doc-bundle",
@@ -1223,12 +1220,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nelmio/NelmioApiDocBundle.git",
-                "reference": "d9607477ba5d451c60ce09a432936f61c6b10b49"
+                "reference": "475ecf349b968602ef1f94039627a6e5eb98f937"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nelmio/NelmioApiDocBundle/zipball/d9607477ba5d451c60ce09a432936f61c6b10b49",
-                "reference": "d9607477ba5d451c60ce09a432936f61c6b10b49",
+                "url": "https://api.github.com/repos/nelmio/NelmioApiDocBundle/zipball/475ecf349b968602ef1f94039627a6e5eb98f937",
+                "reference": "475ecf349b968602ef1f94039627a6e5eb98f937",
                 "shasum": ""
             },
             "require": {
@@ -1282,7 +1279,7 @@
                 "documentation",
                 "rest"
             ],
-            "time": "2013-07-31 10:28:43"
+            "time": "2013-08-07 10:56:32"
         },
         {
             "name": "nelmio/cors-bundle",
@@ -1342,17 +1339,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/videlalvaro/RabbitMqBundle.git",
-                "reference": "0f60c2ba1ba62908007213b7f0ea964f054c1882"
+                "reference": "a84c93f7e39422db8f68448a23749bb4f47ee6d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/videlalvaro/RabbitMqBundle/zipball/0f60c2ba1ba62908007213b7f0ea964f054c1882",
-                "reference": "0f60c2ba1ba62908007213b7f0ea964f054c1882",
+                "url": "https://api.github.com/repos/videlalvaro/RabbitMqBundle/zipball/a84c93f7e39422db8f68448a23749bb4f47ee6d1",
+                "reference": "a84c93f7e39422db8f68448a23749bb4f47ee6d1",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0",
-                "symfony/framework-bundle": ">=2.0,<2.4",
+                "symfony/framework-bundle": "~2.0",
                 "symfony/yaml": "~2.0",
                 "videlalvaro/php-amqplib": "2.1.*"
             },
@@ -1360,6 +1357,11 @@
                 "symfony/console": "~2.0"
             },
             "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2.x-dev"
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "OldSound\\RabbitMqBundle\\": ""
@@ -1381,7 +1383,7 @@
                 "queue",
                 "rabbitmq"
             ],
-            "time": "2013-06-19 08:27:04"
+            "time": "2013-08-06 10:49:53"
         },
         {
             "name": "phpcollection/phpcollection",
@@ -1527,12 +1529,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensiolabs/SensioDistributionBundle.git",
-                "reference": "2a518e7c957b66c9478730ca95f67e16ccdc982b"
+                "reference": "c3d1f4e7ac6eb441521c2f8c47c267332d0bd457"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs/SensioDistributionBundle/zipball/2a518e7c957b66c9478730ca95f67e16ccdc982b",
-                "reference": "2a518e7c957b66c9478730ca95f67e16ccdc982b",
+                "url": "https://api.github.com/repos/sensiolabs/SensioDistributionBundle/zipball/c3d1f4e7ac6eb441521c2f8c47c267332d0bd457",
+                "reference": "c3d1f4e7ac6eb441521c2f8c47c267332d0bd457",
                 "shasum": ""
             },
             "require": {
@@ -1564,7 +1566,7 @@
                 "configuration",
                 "distribution"
             ],
-            "time": "2013-07-23 14:20:01"
+            "time": "2013-08-08 12:17:50"
         },
         {
             "name": "sensio/generator-bundle",
@@ -1573,12 +1575,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensiolabs/SensioGeneratorBundle.git",
-                "reference": "v2.2.4"
+                "reference": "v2.2.5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs/SensioGeneratorBundle/zipball/v2.2.4",
-                "reference": "v2.2.4",
+                "url": "https://api.github.com/repos/sensiolabs/SensioGeneratorBundle/zipball/v2.2.5",
+                "reference": "v2.2.5",
                 "shasum": ""
             },
             "require": {
@@ -1791,12 +1793,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/SwiftmailerBundle.git",
-                "reference": "6b52e41483561a6c8594077f9e6a7d60236e67d7"
+                "reference": "v2.3.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/SwiftmailerBundle/zipball/6b52e41483561a6c8594077f9e6a7d60236e67d7",
-                "reference": "6b52e41483561a6c8594077f9e6a7d60236e67d7",
+                "url": "https://api.github.com/repos/symfony/SwiftmailerBundle/zipball/v2.3.3",
+                "reference": "v2.3.3",
                 "shasum": ""
             },
             "require": {
@@ -1837,7 +1839,7 @@
             ],
             "description": "Symfony SwiftmailerBundle",
             "homepage": "http://symfony.com",
-            "time": "2013-07-26 11:55:32"
+            "time": "2013-08-05 08:18:16"
         },
         {
             "name": "symfony/symfony",
@@ -1845,12 +1847,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "b970d172cb969e83c62670d1dbe9a2fa9f4c7195"
+                "reference": "1a73b44df0241b924665effc8fefb12cda54a89b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/b970d172cb969e83c62670d1dbe9a2fa9f4c7195",
-                "reference": "b970d172cb969e83c62670d1dbe9a2fa9f4c7195",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/1a73b44df0241b924665effc8fefb12cda54a89b",
+                "reference": "1a73b44df0241b924665effc8fefb12cda54a89b",
                 "shasum": ""
             },
             "require": {
@@ -1936,7 +1938,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2013-07-28 20:42:16"
+            "time": "2013-08-08 12:01:00"
         },
         {
             "name": "twig/twig",
@@ -1944,12 +1946,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Twig.git",
-                "reference": "0e63ef04a00fb238ee457708f8b4e8918aa51d7e"
+                "reference": "fcf007e9a2e6c65594360ae7fa3c410ae8d56a11"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Twig/zipball/0e63ef04a00fb238ee457708f8b4e8918aa51d7e",
-                "reference": "0e63ef04a00fb238ee457708f8b4e8918aa51d7e",
+                "url": "https://api.github.com/repos/fabpot/Twig/zipball/fcf007e9a2e6c65594360ae7fa3c410ae8d56a11",
+                "reference": "fcf007e9a2e6c65594360ae7fa3c410ae8d56a11",
                 "shasum": ""
             },
             "require": {
@@ -1958,7 +1960,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.13-dev"
+                    "dev-master": "1.14-dev"
                 }
             },
             "autoload": {
@@ -1985,7 +1987,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2013-07-24 03:16:45"
+            "time": "2013-08-07 12:53:34"
         },
         {
             "name": "videlalvaro/php-amqplib",
@@ -2041,13 +2043,13 @@
         "doctrine/mongodb-odm-bundle": 20,
         "symfony/assetic-bundle": 20,
         "symfony/swiftmailer-bundle": 20,
-        "ac/transcoding-bundle": 20,
         "oldsound/rabbitmq-bundle": 20,
         "nelmio/api-doc-bundle": 20
     },
     "platform": {
         "php": ">=5.3.3",
-        "ext-curl": "*"
+        "ext-curl": "*",
+        "ext-fileinfo": "*"
     },
     "platform-dev": [
 

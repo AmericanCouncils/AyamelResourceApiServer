@@ -12,10 +12,6 @@ services:
         public: false
         arguments: [%ayamel.api.token_cache_dir%]
 
-    ayamel.api.dispatcher:
-        class: Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher
-        arguments: [@service_container]
-
     #provides the backend storage service for the resource manager in AyamelResourceBundle
     ayamel.resource.manager.backend:
         class: Ayamel\ApiBundle\Storage\MongoResourceStorage
@@ -25,4 +21,4 @@ services:
         class: Ayamel\ApiBundle\EventListener\UriContentSubscriber
         arguments: [@service_container]
         tags:
-            - { name: ayamel.api.dispatcher.event_subscriber }
+            - { name: ayamel.api.event_subscriber }

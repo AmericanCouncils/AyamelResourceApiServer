@@ -5,6 +5,11 @@ namespace Ayamel\TranscodingBundle\RabbitMQ;
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 use PhpAmqpLib\Message\AMQPMessage;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Ayamel\TranscodingBundle\Exception\ResourceLockedException;
+use Ayamel\TranscodingBundle\Exception\NoTranscodeableFilesException;
+use Ayamel\TranscodingBundle\Exception\ResourceNotFoundException;
+use Ayamel\TranscodingBundle\Exception\ResourceDeletedException;
+use Ayamel\TranscodingBundle\Exception\NoRelevantPresetsException;
 
 /**
  * Listens for Resource transcode jobs and processes accordingly.
@@ -55,16 +60,28 @@ class Consumer implements ConsumerInterface
         //try the transcode, if it fails, depending on how, either remove the job from the queue
         //or requeue for later
         try {
-            $this->container->get('ayamel.transcoding.manager')->transcodeResource($id, $appendFiles, $presetFilter, $mimeFilter);
+            echo "Transcoding $id ...".PHP_EOL;
+            $resource = $this->container->get('ayamel.transcoding.manager')->transcodeResource($id, $appendFiles, $presetFilter, $mimeFilter);
+            echo "Finished.".PHP_EOL;
         } catch (ResourceLockedException $e) {
+            echo get_class($e).PHP_EOL;
+
             return false;
         } catch (NoTranscodeableFilesException $e) {
+            echo get_class($e).PHP_EOL;
+
             return true;
         } catch (ResourceNotFoundException $e) {
+            echo get_class($e).PHP_EOL;
+
             return true;
         } catch (ResourceDeletedException $e) {
+            echo get_class($e).PHP_EOL;
+
             return true;
         } catch (NoRelevantPresetsException $e) {
+            echo get_class($e).PHP_EOL;
+
             return true;
         } catch (\Exception $e) {
             if ($notifyClient) {
@@ -74,7 +91,7 @@ class Consumer implements ConsumerInterface
                 //saying there was a problem
             }
 
-            //throw $e;
+            throw $e;
 
             //and try handling the message again
             return true;

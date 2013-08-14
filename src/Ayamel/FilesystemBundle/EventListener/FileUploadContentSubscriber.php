@@ -89,7 +89,7 @@ class FileUploadContentSubscriber implements EventSubscriberInterface
                 'quality' => $request->request->get('quality', 0),
                 'mime' => $request->request->get('mime', false),
                 'mimeType' => $request->request->get('mime', false),
-                'attributes' => $request->request->get('attributes', '{}'),
+                'attributes' => $request->request->get('attributes', '{}')
             );
 
             $e->setContentType('file_upload');
