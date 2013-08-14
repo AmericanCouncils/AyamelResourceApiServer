@@ -141,19 +141,22 @@ class BasicTranscodeTest extends ApiTestCase
     public function testTranscodeViaRabbitMQ()
     {
         //start the rabbitmq consumer, clear the queue
-        $rabbitProcess = new Process('ayamel --env=test rabbitmq:consumer transcoding --messages=1 --verbose');
-        $rabbitProcess->start();
+        $container = $this->getContainer();
         try {
-            $this->getContainer()->get('old_sound_rabbit_mq.transcoding_producer')->getChannel()->queue_purge('transcoding');
+            $container->get('old_sound_rabbit_mq.transcoding_producer')->getChannel()->queue_purge('transcoding');
         } catch (\PhpAmqpLib\Exception\AMQPProtocolChannelException $e) {
-            //just seeing if travis will build after this
+            //swallow this error because of travis
         }
         
-        usleep(500000); //wait half a second
+        //start rabbit process
+        $consolePath = $container->getParameter('kernel.root_dir').DIRECTORY_SEPARATOR."console";
+        $rabbitProcess = new Process(sprintf('%s --env=test rabbitmq:consumer transcoding --messages=1 --verbose', $consolePath));
+        $rabbitProcess->start();
+        usleep(500000); //wait half a second, check to make sure process is still up
         if (!$rabbitProcess->isRunning()) {
             throw new \RuntimeException(($rabbitProcess->isSuccessful()) ? $rabbitProcess->getOutput() : $rabbitProcess->getErrorOutput());
         }
-
+        
         //create resource
         $data = array(
             'title' => 'test',
