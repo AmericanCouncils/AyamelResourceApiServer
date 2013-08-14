@@ -57,7 +57,7 @@ abstract class ApiTestCase extends WebTestCase
     /**
      * Shortcut to make a request and get the returned Response instance.
      */
-    protected function getResponse($method, $uri, $params = array(), $files = array(), $server = array(), $content = null, $changehistory = true)
+    public function getResponse($method, $uri, $params = array(), $files = array(), $server = array(), $content = null, $changehistory = true)
     {
         $server['SERVER_NAME'] = '127.0.0.1';
         $client = static::createClient(array(
@@ -73,7 +73,7 @@ abstract class ApiTestCase extends WebTestCase
     /**
      * Shortcut to make a request and get the json_decoded response content
      */
-    protected function getJson($method, $uri, $params = array(), $files = array(), $server = array(), $content = null, $changehistory = true)
+    public function getJson($method, $uri, $params = array(), $files = array(), $server = array(), $content = null, $changehistory = true)
     {
         return json_decode($this->getResponse($method, $uri, $params, $files, $server, $content, $changehistory)->getContent(), true);
     }

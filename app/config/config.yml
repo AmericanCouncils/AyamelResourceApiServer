@@ -3,12 +3,7 @@ imports:
     - { resource: '@AyamelResourceBundle/Resources/config/config.yml' }
     - { resource: '@AyamelApiBundle/Resources/config/config.yml' }
     - { resource: '@AyamelFilesystemBundle/Resources/config/config.yml' }
-    - { resource: '@ACTranscodingBundle/Resources/config/services.core.yml' }
-#    - { resource: '@ACTranscodingBundle/Resources/config/services.ffmpeg.yml' }
-    - { resource: '@ACTranscodingBundle/Resources/config/services.handbrake.yml' }
     - { resource: '@AyamelTranscodingBundle/Resources/config/config.yml' }
-    - { resource: '@AyamelTranscodingBundle/Resources/config/config.preset_map.yml' }
-    - { resource: '@AyamelTranscodingBundle/Resources/config/config.rabbitmq.yml' }
     - { resource: '@AyamelYouTubeBundle/Resources/config/config.yml' }
     - { resource: '@AyamelMediaInfoBundle/Resources/config/config.yml' }
 
@@ -45,7 +40,7 @@ assetic:
         #yui_css:
         #    jar: %kernel.root_dir%/Resources/java/yuicompressor-2.4.7.jar
 
-## JMS Serializer, note that the actual serializer is a separate library finally
+## JMS Serializer
 jms_serializer:
     handlers:
         datetime:
@@ -106,6 +101,16 @@ nelmio_cors:
 
 ac_media_info:
     path: %mediainfo_path%
+
+ac_transcoding:
+    ffmpeg: 
+        enabled: true
+        path: %ffmpeg_path%
+        timeout: 0
+    handbrake:
+        enabled: true
+        path: %handbrake_path%
+        timeout: 0
 
 services:
     ac.webservices.object_validator:

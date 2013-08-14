@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
 use AC\TranscodingBundle\Console\OutputSubscriber;
-use AC\Component\Transcoding\Adapter\AbstractCliAdapter;
+use AC\Transcoding\Adapter\AbstractCliAdapter;
 
 /**
  * Run transcode jobs for a Resource by ID.
@@ -50,7 +50,7 @@ class TranscodeResourceCommand extends ContainerAwareCommand
             }
 
             //run transcode for Resource immediately
-            $this->getContainer()->get('ayamel.transcoding.manager')->transcodeResource($id);
+            $resource = $this->getContainer()->get('ayamel.transcoding.manager')->transcodeResource($id);
 
         } else {
             //otherwise publish message via RabbitMQ

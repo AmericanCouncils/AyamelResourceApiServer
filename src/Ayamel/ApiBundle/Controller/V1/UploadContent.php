@@ -21,7 +21,7 @@ class UploadContent extends ApiController
      * from a user of a client system in order to avoid having to send a file via multiple servers.  Because of this, the library
      * will allow clients to reserve one-time-use urls for sending content, which they can then expose to their internal users
      * as needed.
-     * 
+     *
      * For more specifics about uploading content, make sure to read through the documentation on the
      * [wiki](https://github.com/AmericanCouncils/AyamelResourceApiServer/wiki/Uploading-Content).
      *
@@ -134,7 +134,7 @@ class UploadContent extends ApiController
         //TODO: lock resource
 
         //get the api event dispatcher
-        $apiDispatcher = $this->container->get('ayamel.api.dispatcher');
+        $apiDispatcher = $this->container->get('event_dispatcher');
 
         //notify system to resolve uploaded content from the request
         $request = $this->getRequest();

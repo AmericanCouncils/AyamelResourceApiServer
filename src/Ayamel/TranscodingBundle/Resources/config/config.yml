@@ -1,21 +1,27 @@
+imports:
+    - { resource: '@AyamelTranscodingBundle/Resources/config/config.presets.yml' }
+    - { resource: '@AyamelTranscodingBundle/Resources/config/config.preset_map.yml' }
+    - { resource: '@AyamelTranscodingBundle/Resources/config/config.rabbitmq.yml' }
+
 parameters:
     ayamel.transcoding.temp_directory: %kernel.root_dir%/files/tmp
 
 services:
     ayamel.transcoding.mapper:
         class: Ayamel\TranscodingBundle\PresetMapper
-        arguments: [%ayamel.transcoding.preset_map%]
+        arguments: [%ayamel.transcoding.presets%, %ayamel.transcoding.preset_map%]
         scope: prototype
-
 
     ayamel.transcoding.manager:
         class: Ayamel\TranscodingBundle\TranscodeManager
         arguments:
+            - @service_container
             - @ayamel.api.filesystem
             - @doctrine.odm.mongodb.document_manager
             - @transcoder
             - %ayamel.transcoding.temp_directory%
             - @event_dispatcher
+            - %ayamel.transcoding.presets%
             - %ayamel.transcoding.preset_map%
 
     # This service listens for file uploads, then registers a resource to have it's uploaded file
@@ -24,9 +30,23 @@ services:
         class: Ayamel\TranscodingBundle\RabbitMQ\PublisherListener
         arguments: [@service_container]
         tags:
-            - { name: ayamel.api.dispatcher.event_listener , event: ayamel.api.handle_uploaded_content, method: onHandleUploadedContent, priority: 0}
+            - { name: ayamel.api.event_listener , event: ayamel.api.resolve_uploaded_content, method: onResolveUploadedContent, priority: 128 }
 
     # This service handles rabbitMQ for transcoding Resource files asyncronously
     ayamel.transcoding.consumer:
         class: Ayamel\TranscodingBundle\RabbitMQ\Consumer
         arguments: [@service_container, %ayamel.transcoding.preset_map%]
+
+################## PRESET TESTING ######################
+
+    ayamel.transcoding.preset.ffmpeg_generic_mp4:
+        class: Ayamel\TranscodingBundle\Preset\VideoToMp4
+        scope: prototype
+        tags:
+            - { name: transcoding.preset }
+
+    ayamel.transcoding.preset.ffmpeg_generic_webm:
+        class: Ayamel\TranscodingBundle\Preset\VideoToWebM
+        scope: prototype
+        tags:
+            - { name: transcoding.preset }

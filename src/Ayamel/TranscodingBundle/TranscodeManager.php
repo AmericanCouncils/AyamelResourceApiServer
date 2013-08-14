@@ -5,7 +5,7 @@ namespace Ayamel\TranscodingBundle;
 use Ayamel\ResourceBundle\Document\Resource;
 use Ayamel\ResourceBundle\Document\FileReference;
 use Ayamel\FilesystemBundle\Filesystem\FilesystemInterface;
-use AC\Component\Transcoding\Transcoder;
+use AC\Transcoding\Transcoder;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Ayamel\TranscodingBundle\Exception\NoRelevantPresetsException;
 use Ayamel\TranscodingBundle\Exception\NoTranscodeableFilesException;
@@ -15,6 +15,7 @@ use Ayamel\TranscodingBundle\Exception\ResourceLockedException;
 use Ayamel\ApiBundle\Event\Events as ApiEvents;
 use Ayamel\ApiBundle\Event\ApiEvent;
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * This class transcodes original files in a resource into multiple files
@@ -40,13 +41,14 @@ use Doctrine\ODM\MongoDB\DocumentManager;
  */
 class TranscodeManager
 {
-
+    private $container;
     private $filesystem;
     private $docManager;
     private $transcoder;
-    private $defaultMapperConfig;
     private $tmpDirectory;
     private $dispatcher;
+    private $presetConfig;
+    private $presetMap;
     //private $logger;
     //private $clientManager;
 
@@ -58,14 +60,16 @@ class TranscodeManager
      * @param Transcoder               $t
      * @param $defaulMapperConfig
      */
-    public function __construct(FilesystemInterface $fs, DocumentManager $dm, Transcoder $t, $tmpDirectory, EventDispatcherInterface $dispatcher, $defaultMapperConfig = array())
+    public function __construct(ContainerInterface $container, FilesystemInterface $fs, DocumentManager $dm, Transcoder $t, $tmpDirectory, EventDispatcherInterface $dispatcher, $presetConfig = array(), $presetMap = array())
     {
+        $this->container = $container;
         $this->filesystem = $fs;
         $this->docManager = $dm;
         $this->transcoder = $t;
         $this->dispatcher = $dispatcher;
-        $this->defaultMapperConfig = $defaultMapperConfig;
         $this->tmpDirectory = $tmpDirectory;
+        $this->presetConfig = $presetConfig;
+        $this->presetMap = $presetMap;
     }
 
     /**
@@ -115,7 +119,7 @@ class TranscodeManager
         //notify system that Resource was modified
         $this->dispatcher->dispatch(ApiEvents::RESOURCE_MODIFIED, new ApiEvent($resource));
 
-        return true;
+        return $resource;
     }
 
     /**
@@ -135,12 +139,17 @@ class TranscodeManager
         $newFiles = array();
         try {
             foreach ($presetDefinitions as $def) {
-                //TODO: check for $def['params'] and modify preset accordingly
+
+                $preset = $this->container->get($def['preset_service']);
+
+                if (isset($def['params'])) {
+                    $preset->mergeOptions($def['params']);
+                }
 
                 //run the transcode & create a FileReference from the resulting file
                 $transcodedFile = $this->transcoder->transcodeWithPreset(
                     $ref->getInternalUri(),
-                    $def['preset'],
+                    $preset,
                     $this->generateTemporaryOutputPath($resource->getId(), $def),
                     Transcoder::ONCONFLICT_DELETE,
                     Transcoder::ONDIR_CREATE,
@@ -205,7 +214,8 @@ class TranscodeManager
             $resource->content->addFile($newRef);
         }
 
-        //unlock & save
+        //unlock & save, note this is persisting the object including
+        //the changes
         $this->unlockResource($resource);
 
         //clean up the filesystem
@@ -263,7 +273,7 @@ class TranscodeManager
      */
     protected function createMapperForResource(Resource $resource)
     {
-        $mapper = new PresetMapper($this->defaultMapperConfig);
+        $mapper = new PresetMapper($this->presetConfig, $this->presetMap);
 
         //NOTE: eventually we'll check the client for custom preset and inject them here:
         //$mapper->addPresetDefinitions($this->apiClientManager->getClient($resource->getClient()->getId())->getPresetMappings());
@@ -350,14 +360,59 @@ class TranscodeManager
         }
 
         $filtered = array();
-        foreach ($mappings as $map) {
-            if (!empty($presetFilter) && !in_array($map['preset'], $presetFilter)) {
+        foreach ($mappings as $key => $data) {
+            if (!empty($presetFilter) && !in_array($key, $presetFilter)) {
                 continue;
             }
 
-            $filtered[] = $map;
+            $filtered[$key] = $data;
         }
-
+        
+        $filtered = $this->filterPresetMappingsByConfig($ref, $filtered);
+        
+        return $filtered;
+    }
+    
+    protected function filterPresetMappingsByConfig(FileReference $ref, array $presets)
+    {
+        $attrs = $ref->getAttributes();
+        $filtered = array();
+        
+        foreach ($presets as $key => $data) {
+            $include = true;
+            
+            //height
+            if (
+                isset($attrs['frameSize']['height']) && 
+                isset($data['filters']['height']) && 
+                $attrs['frameSize']['height'] > $data['filters']['height']
+            ) {
+                $include = false;
+            }
+        
+            //width
+            if (
+                isset($attrs['frameSize']['width']) && 
+                isset($data['filters']['width']) && 
+                $attrs['frameSize']['width'] > $data['filters']['width']
+            ) {
+                $include = false;
+            }
+        
+            //bitrate
+            if (
+                isset($attrs['bitrate']) && 
+                isset($data['filters']['bitrate']) && 
+                $attrs['bitrate'] > $data['filters']['bitrate']
+            ) {
+                $include = false;
+            }
+            
+            if ($include) {
+                $filtered[$key] = $data;
+            }
+        }
+        
         return $filtered;
     }
 }

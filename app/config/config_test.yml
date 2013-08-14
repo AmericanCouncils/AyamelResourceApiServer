@@ -10,20 +10,31 @@ web_profiler:
     toolbar: false
     intercept_redirects: false
 
+
+## TODO: once proper video presets are established and implemented, remove this transcode
+## specific test configuration - the real presets need to be tested in real-world scenarios
+
+
 services:
     # register test text transcoding adapters/presets for testing
     ayamel.test.transcoding_adapter:
-        class: AC\Component\Transcoding\Tests\Mock\PhpTextAdapter
+        class: AC\Transcoding\Tests\Mock\PhpTextAdapter
         tags:
             - { name: transcoding.adapter }
     ayamel.test.transcoding_preset:
-        class: AC\Component\Transcoding\Tests\Mock\TextToLowerCasePreset
+        class: AC\Transcoding\Tests\Mock\TextToLowerCasePreset
         tags:
             - { name: transcoding.preset }
     
 parameters:
     #transcode mapping for test
     ayamel.transcoding.preset_map:
-        text/plain:
-            - { preset: text_to_lower, tag: low, extension: txt, representation: transcoding, quality: 0 }
-        
+        text/plain: ['text_to_lower']
+
+    ayamel.transcoding.presets:
+        text_to_lower:
+            preset_service: ayamel.test.transcoding_preset
+            tag: low
+            extension: txt
+            representation: transcoding
+            quality: 0

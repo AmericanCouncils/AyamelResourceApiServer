@@ -37,7 +37,7 @@ class DeleteResource extends ApiController
 
         $this->requireResourceOwner($resource);
 
-        $apiDispatcher = $this->container->get('ayamel.api.dispatcher');
+        $apiDispatcher = $this->container->get('event_dispatcher');
 
         //notify system to remove content for resource
         $apiDispatcher->dispatch(Events::REMOVE_RESOURCE_CONTENT, new ApiEvent($resource));
