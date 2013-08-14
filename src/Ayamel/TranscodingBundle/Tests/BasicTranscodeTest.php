@@ -140,8 +140,14 @@ class BasicTranscodeTest extends ApiTestCase
      */
     public function testTranscodeViaRabbitMQ()
     {
-        //clear queue of any messages
+        //start the rabbitmq consumer, clear the queue
+        $rabbitProcess = new Process('ayamel --env=test rabbitmq:consumer transcoding --messages=1 --verbose');
+        $rabbitProcess->start();
         $this->getContainer()->get('old_sound_rabbit_mq.transcoding_producer')->getChannel()->queue_purge('transcoding');
+        usleep(500000); //wait half a second
+        if (!$rabbitProcess->isRunning()) {
+            throw new \RuntimeException(($rabbitProcess->isSuccessful()) ? $rabbitProcess->getOutput() : $rabbitProcess->getErrorOutput());
+        }
 
         //create resource
         $data = array(
@@ -156,13 +162,6 @@ class BasicTranscodeTest extends ApiTestCase
         $this->assertSame('awaiting_content', $response['resource']['status']);
         $resourceId = $response['resource']['id'];
         $uploadUrl = substr($response['contentUploadUrl'], strlen('http://localhost'));
-
-        //start the rabbitmq consumer
-        $rabbitProcess = new Process('ayamel --env=test rabbitmq:consumer transcoding --messages=1 --verbose');
-        $rabbitProcess->start();
-        if (!$rabbitProcess->isRunning()) {
-            throw new \RuntimeException(($rabbitProcess->isSuccessful()) ? $rabbitProcess->getOutput() : $rabbitProcess->getErrorOutput());
-        }
 
         //upload the test file
         $testFilePath = __DIR__."/sample_files/lorem.txt";
