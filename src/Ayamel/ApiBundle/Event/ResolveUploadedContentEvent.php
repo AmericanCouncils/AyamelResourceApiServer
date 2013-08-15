@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Evan Villemez
  */
-class ResolveUploadedContentEvent extends ApiEvent
+class ResolveUploadedContentEvent extends ResourceEvent
 {
     protected $request;
 

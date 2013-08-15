@@ -11,7 +11,7 @@ use Symfony\Component\EventDispatcher\Event;
  * @package AyamelApiBundle
  * @author Evan Villemez
  */
-class ApiEvent extends Event
+class ResourceEvent extends Event
 {
     protected $resource = false;
 

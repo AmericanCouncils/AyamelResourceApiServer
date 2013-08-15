@@ -3,7 +3,7 @@
 namespace Ayamel\ApiBundle\Controller\V1;
 
 use Ayamel\ApiBundle\Event\Events;
-use Ayamel\ApiBundle\Event\ApiEvent;
+use Ayamel\ApiBundle\Event\ResourceEvent;
 use Ayamel\ApiBundle\Controller\ApiController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
@@ -40,7 +40,7 @@ class DeleteResource extends ApiController
         $apiDispatcher = $this->container->get('event_dispatcher');
 
         //notify system to remove content for resource
-        $apiDispatcher->dispatch(Events::REMOVE_RESOURCE_CONTENT, new ApiEvent($resource));
+        $apiDispatcher->dispatch(Events::REMOVE_RESOURCE_CONTENT, new ResourceEvent($resource));
 
         //remove from storage (sort of), just clears data and marks as deleted
         $manager = $this->getDocManager();
@@ -51,7 +51,7 @@ class DeleteResource extends ApiController
         $this->getRepo('AyamelResourceBundle:Relation')->deleteRelationsForResource($resource->getId());
 
         //notify rest of system of deleted resource
-        $apiDispatcher->dispatch(Events::RESOURCE_DELETED, new ApiEvent($resource));
+        $apiDispatcher->dispatch(Events::RESOURCE_DELETED, new ResourceEvent($resource));
 
         //return ok
         return $this->createServiceResponse(array('resource' => $resource), 200);
