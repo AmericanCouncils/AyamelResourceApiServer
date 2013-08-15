@@ -15,7 +15,6 @@ monolog:
 
 #services:
 #    ayamel.client_loader:
-        
+
 #parameters:
 #    ayamel.clients:
-

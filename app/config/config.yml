@@ -47,7 +47,7 @@ jms_serializer:
             default_format: "Y-m-dTH:i:s" # ISO8601
             default_timezone: "UTC" # defaults to whatever timezone set in php.ini or via date_default_timezone_set
     property_naming:
-        separator:  
+        separator:
         lower_case: true
     metadata:
         cache: file
@@ -72,7 +72,7 @@ ac_web_services:
     include_response_data: true
     allow_code_suppression: true
     default_response_format: json
-    api_paths: 
+    api_paths:
         - "{^/api/}"
 
 nelmio_api_doc:
@@ -103,7 +103,7 @@ ac_media_info:
     path: %mediainfo_path%
 
 ac_transcoding:
-    ffmpeg: 
+    ffmpeg:
         enabled: true
         path: %ffmpeg_path%
         timeout: 0

@@ -111,6 +111,15 @@ class Resource
     protected $functionalDomains;
 
     /**
+     * An array of language registers present in the Resource.  Valid values include *formal*,
+     * *casual*, *intimate*, *static* and *consultative*.
+     *
+     * @MongoDB\Collection
+     * @JMS\Type("array<string>")
+     */
+    protected $registers;
+
+    /**
      * The generic type of resource.  Generic types are useful for sorting
      * search results into generally similar types of resources.
      *
@@ -356,6 +365,26 @@ class Resource
     public function getFunctionalDomains()
     {
         return $this->functionalDomains;
+    }
+
+    /**
+     * Get language registers present in the Resource.
+     *
+     * @return array<string>
+     */
+    public function getRegisters()
+    {
+        return $this->registers;
+    }
+
+    /**
+     * Set the language registers in the Resource.
+     *
+     * @param array $registers
+     */
+    public function setRegisters(array $registers = null)
+    {
+        $this->registers = $registers;
     }
 
     /**
