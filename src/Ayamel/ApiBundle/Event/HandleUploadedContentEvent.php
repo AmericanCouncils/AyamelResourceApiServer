@@ -9,7 +9,7 @@ use Ayamel\ResourceBundle\Document\Resource;
  *
  * @author Evan Villemez
  */
-class HandleUploadedContentEvent extends ApiEvent
+class HandleUploadedContentEvent extends ResourceEvent
 {
     protected $content;
 
