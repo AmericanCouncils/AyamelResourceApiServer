@@ -69,6 +69,7 @@ class ResourceIntegrationTest extends ApiTestCase
             ),
             'subjectDomains' => array('food', 'culture', 'history'),
             'functionalDomains' => array('verbs', 'adjectives', 'conjugation'),
+            'registers' => array('casual','intimate'),
             'visibility' => array('test_client', 'client1', 'client2'),
             'copyright' => "Copyright text 2013",
             'license' => 'Public Domain',

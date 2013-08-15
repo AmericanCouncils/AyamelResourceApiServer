@@ -4,7 +4,7 @@ parameters:
     mongodb_host: localhost
     mongodb_port: 27017
     mongodb_database: ayamel_test
-    
+
     rabbitmq_host: localhost
     rabbitmq_port: 5672
     rabbitmq_user: guest
@@ -18,23 +18,23 @@ parameters:
 
     locale: en
     secret: thisisnotasafesecret
-    
+
     ## File upload handling ##
     ayamel.filesystem.local_filesystem.root_dir: %kernel.root_dir%/files/resource_uploads
     ayamel.filesystem.local_filesystem.secret: zeroisnotanumber
     ayamel.filesystem.local_filesystem.base_uri: http://127.0.0.1/ayamel/web/files
     ayamel.transcoding.temp_directory: %kernel.root_dir%/files/tmp
-    
+
     ## API Docs
     nelmio_api_doc_endpoint: http://127.0.0.1/AyamelResourceApiServer/web/index_dev.php
 
     ## Transcoding support
     ffmpeg_path: /usr/bin/ffmpeg
     handbrake_path: /usr/local/bin/HandBrakeCLI
-    
+
     #if you use ffmpeg w/ libvpx to encode webm, it doesn't seem to let you specify "-threads 0" to maximize cpu usage, instead
     #you have to be specific in the number of threads, which should be the same as the number of cores on the machine
     libvpx_threads: 4
-    
+
     ## media info ##
     mediainfo_path: /usr/bin/mediainfo

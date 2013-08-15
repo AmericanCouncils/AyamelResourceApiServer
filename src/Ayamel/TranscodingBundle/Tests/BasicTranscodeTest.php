@@ -147,7 +147,7 @@ class BasicTranscodeTest extends ApiTestCase
         } catch (\PhpAmqpLib\Exception\AMQPProtocolChannelException $e) {
             //swallow this error because of travis
         }
-        
+
         //start rabbit process
         $consolePath = $container->getParameter('kernel.root_dir').DIRECTORY_SEPARATOR."console";
         $rabbitProcess = new Process(sprintf('%s --env=test rabbitmq:consumer transcoding --messages=1 --verbose', $consolePath));
@@ -156,7 +156,7 @@ class BasicTranscodeTest extends ApiTestCase
         if (!$rabbitProcess->isRunning()) {
             throw new \RuntimeException(($rabbitProcess->isSuccessful()) ? $rabbitProcess->getOutput() : $rabbitProcess->getErrorOutput());
         }
-        
+
         //create resource
         $data = array(
             'title' => 'test',

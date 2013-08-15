@@ -40,6 +40,12 @@ Ayamel\ResourceBundle\Document\Resource:
                     type: string
 #                - Choice:
 #                    choices: []
+        registers:
+            - All:
+                - Type:
+                    type: string
+                - Choice:
+                    choices: [formal, static, casual, intimate, consultative]
         visibility:
             - All:
                 - Type:
