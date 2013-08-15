@@ -2,7 +2,7 @@
 namespace Ayamel\TranscodingBundle\RabbitMQ;
 
 use Ayamel\ApiBundle\Event\Events as AyamelEvents;
-use Ayamel\ApiBundle\Event\ApiEvent;
+use Ayamel\ApiBundle\Event\ResourceEvent;
 use Ayamel\ApiBundle\Event\HandleUploadedContentEvent;
 use Ayamel\ApiBundle\Event\ResolveUploadedContentEvent;
 use AC\WebServicesBundle\EventListener\RestServiceSubscriber;
@@ -69,7 +69,7 @@ class PublisherListener implements EventSubscriberInterface
      * file, so compare the resource with the original uploaded data, to be sure
      * of which file should be transcoded.
      */
-    public function onResourceModified(ApiEvent $e)
+    public function onResourceModified(ResourceEvent $e)
     {
         $this->resource = $e->getResource();
         $uploadedFile = $this->uploadedData['file'];

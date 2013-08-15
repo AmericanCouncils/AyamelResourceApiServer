@@ -13,7 +13,7 @@ use Ayamel\TranscodingBundle\Exception\ResourceDeletedException;
 use Ayamel\TranscodingBundle\Exception\ResourceNotFoundException;
 use Ayamel\TranscodingBundle\Exception\ResourceLockedException;
 use Ayamel\ApiBundle\Event\Events as ApiEvents;
-use Ayamel\ApiBundle\Event\ApiEvent;
+use Ayamel\ApiBundle\Event\ResourceEvent;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -117,7 +117,7 @@ class TranscodeManager
         }
 
         //notify system that Resource was modified
-        $this->dispatcher->dispatch(ApiEvents::RESOURCE_MODIFIED, new ApiEvent($resource));
+        $this->dispatcher->dispatch(ApiEvents::RESOURCE_MODIFIED, new ResourceEvent($resource));
 
         return $resource;
     }

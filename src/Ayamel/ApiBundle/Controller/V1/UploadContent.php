@@ -6,7 +6,7 @@ use Ayamel\ResourceBundle\Document\Resource;
 use Ayamel\ResourceBundle\Document\ContentCollection;
 use Ayamel\ApiBundle\Controller\ApiController;
 use Ayamel\ApiBundle\Event\Events;
-use Ayamel\ApiBundle\Event\ApiEvent;
+use Ayamel\ApiBundle\Event\ResourceEvent;
 use Ayamel\ApiBundle\Event\ResolveUploadedContentEvent;
 use Ayamel\ApiBundle\Event\HandleUploadedContentEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -165,7 +165,7 @@ class UploadContent extends ApiController
                 if (!isset($resource->content)) {
                     $resource->content = new ContentCollection;
                 }
-                $apiDispatcher->dispatch(Events::REMOVE_RESOURCE_CONTENT, new ApiEvent($resource));
+                $apiDispatcher->dispatch(Events::REMOVE_RESOURCE_CONTENT, new ResourceEvent($resource));
                 $resource->content = new ContentCollection;
             }
 
@@ -192,7 +192,7 @@ class UploadContent extends ApiController
                 $manager->flush();
 
                 //notify system
-                $apiDispatcher->dispatch(Events::RESOURCE_MODIFIED, new ApiEvent($resource));
+                $apiDispatcher->dispatch(Events::RESOURCE_MODIFIED, new ResourceEvent($resource));
             } catch (\Exception $e) {
 
                 //TODO: unlock resource

@@ -3,7 +3,7 @@
 namespace Ayamel\ApiBundle\Controller\V1;
 
 use Ayamel\ApiBundle\Event\Events;
-use Ayamel\ApiBundle\Event\ApiEvent;
+use Ayamel\ApiBundle\Event\ResourceEvent;
 use Ayamel\ApiBundle\Controller\ApiController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
@@ -52,7 +52,7 @@ class ModifyResource extends ApiController
         }
 
         //notify rest of system of modified resource
-        $this->container->get('event_dispatcher')->dispatch(Events::RESOURCE_MODIFIED, new ApiEvent($modifiedResource));
+        $this->container->get('event_dispatcher')->dispatch(Events::RESOURCE_MODIFIED, new ResourceEvent($modifiedResource));
 
         //return it
         return $this->createServiceResponse(array('resource' => $modifiedResource), 200);

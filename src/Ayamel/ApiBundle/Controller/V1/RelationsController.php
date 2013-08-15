@@ -6,6 +6,8 @@ use Ayamel\ResourceBundle\Document\Resource;
 use Ayamel\ResourceBundle\Document\Relation;
 use Ayamel\ResourceBundle\Document\Client;
 use Ayamel\ApiBundle\Controller\ApiController;
+use Ayamel\ApiBundle\Event\Events as ApiEvents;
+use Ayamel\ApiBundle\Event\RelationEvent;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -222,6 +224,8 @@ class RelationsController extends ApiController
         $manager->persist($relation);
         $manager->flush();
 
+        $this->container->get('event_dispatcher')->dispatch(ApiEvents::RELATION_CREATED, new RelationEvent($relation, $subject, $object));
+
         //TODO: trigger 'modified' in resource - depending on what the relation is (search?)
         return $this->createServiceResponse(array('relation' => $relation), 201);
     }
@@ -249,12 +253,18 @@ class RelationsController extends ApiController
             throw $this->createHttpException(403, "You are not the owner of this Relation.");
         }
 
+        //get subject/object resources
+        $resourceRepo = $this->getRepo('AyamelResourceBundle:Resource');
+        $subject = $resourceRepo->find($relation->getSubjectId());
+        $object = $resourceRepo->find($relation->getObjectId());
+
         //remove the specific relation
         $manager = $this->getDocManager();
         $manager->remove($relation);
         $manager->flush();
 
-        //TODO: resource modified if relation === search ?
+        $this->container->get('event_dispatcher')->dispatch(ApiEvents::RELATION_DELETED, new RelationEvent($relation, $subject, $object));
+
         return $this->createServiceResponse(null, 200);
     }
 

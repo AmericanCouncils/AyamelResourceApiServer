@@ -5,7 +5,7 @@ namespace Ayamel\FilesystemBundle\EventListener;
 use Ayamel\ResourceBundle\Document\Resource;
 use Ayamel\ResourceBundle\Document\FileReference;
 use Ayamel\ApiBundle\Event\Events;
-use Ayamel\ApiBundle\Event\ApiEvent;
+use Ayamel\ApiBundle\Event\ResourceEvent;
 use Ayamel\ApiBundle\Event\ResolveUploadedContentEvent;
 use Ayamel\ApiBundle\Event\HandleUploadedContentEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -66,9 +66,9 @@ class FileUploadContentSubscriber implements EventSubscriberInterface
     /**
      * Tell filesystem to remove files for a given resource.
      *
-     * @param ApiEvent $e
+     * @param ResourceEvent $e
      */
-    public function onRemoveContent(ApiEvent $e)
+    public function onRemoveContent(ResourceEvent $e)
     {
         $this->container->get('ayamel.api.filesystem')->removeFilesForId($e->getResource()->getId());
     }

@@ -3,7 +3,7 @@ namespace Ayamel\ApiBundle\Controller\V1;
 
 use Ayamel\ApiBundle\Controller\ApiController;
 use Ayamel\ApiBundle\Event\Events;
-use Ayamel\ApiBundle\Event\ApiEvent;
+use Ayamel\ApiBundle\Event\ResourceEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Ayamel\ResourceBundle\Document\Resource;
 use Ayamel\ResourceBundle\Document\Client;
@@ -55,7 +55,7 @@ class CreateResource extends ApiController
         $uploadToken = $this->container->get('ayamel.api.upload_token_manager')->createTokenForId($newID);
 
         //notify rest of system of new resource
-        $this->container->get('event_dispatcher')->dispatch(Events::RESOURCE_CREATED, new ApiEvent($resource));
+        $this->container->get('event_dispatcher')->dispatch(Events::RESOURCE_CREATED, new ResourceEvent($resource));
 
         $uploadUrl = $this->container->get('router')->generate('api_v1_upload_content', array('id' => $resource->getId(), 'token' => $uploadToken), true);
 
