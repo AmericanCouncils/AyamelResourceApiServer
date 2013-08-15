@@ -25,7 +25,7 @@ services:
         class: AC\Transcoding\Tests\Mock\TextToLowerCasePreset
         tags:
             - { name: transcoding.preset }
-    
+
 parameters:
     #transcode mapping for test
     ayamel.transcoding.preset_map:
