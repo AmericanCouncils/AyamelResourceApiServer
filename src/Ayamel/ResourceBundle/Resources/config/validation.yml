@@ -294,7 +294,7 @@ Ayamel\ResourceBundle\Document\Relation:
         type:
             - NotBlank: ~
             - Choice:
-                choices: [based_on, references, requires, transcript_of, search, version_of, part_of, translation_of]
+                choices: [based_on, references, requires, transcript_of, search, version_of, part_of, translation_of, contains]
 
 ##
 ## FILE ATTRIBUTES
@@ -408,6 +408,14 @@ Ayamel\ResourceBundle\Validation\File\CaptionAttributes:
 ##
 
 Ayamel\ResourceBundle\Validation\Relation\PartOfAttributes:
+    properties:
+        index:
+            - Type:
+                type: integer
+            - Range:
+                min: 0
+
+Ayamel\ResourceBundle\Validation\Relation\ContainsAttributes:
     properties:
         index:
             - Type:

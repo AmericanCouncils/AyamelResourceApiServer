@@ -1,92 +1,26 @@
+imports:
+    - { resource: '@AyamelResourceBundle/Resources/config/validation_map.yml' }
+
 parameters:
-    ayamel.resource.type_extension_map:
+    ayamel.resource.provider.type_extension_map:
         video: [mp4,m4v,wmv,mov,avi,webm]
         audio: [mp3,wma,m4a,aac,wav]
         image: [jpg,jpeg,gif,png,tiff]
         document: [txt,rtf,doc,docx,xls,xlsx,ppt,pptx,odt,ods,pdf,csv,html,htm,pages,numbers,key]
         archive: [zip,tar,rar,iso,gz,tz]
         data: [xml,json,csv,yml]
-    ayamel.resource.null_extension_type: data
 
-    ayamel.resource.file_attribute_validation_map:
-        Ayamel\ResourceBundle\Validation\File\GenericVideoAttributes:
-            - video/mp4
-            - video/x-ms-wmv
-            - video/avi
-            - video/msvideo
-            - video/x-msvideo
-            - video/avs-video
-            - video/mpeg
-            - video/x-motion-jpeg
-            - video/x-mpeg
-            - video/quicktime
-            - video/webm
-            - video/ogg
-            - video/x-matroska
-            - video/x-flv
-        Ayamel\ResourceBundle\Validation\File\GenericAudioAttributes:
-            - audio/mp3
-            - audio/aac
-            - audio/x-aac
-            - audio/basic
-            - audio/L24
-            - audio/mp4
-            - audio/mpeg
-            - audio/ogg
-            - audio/vorbis
-            - audio/vnd.rn-realaudio
-            - audio/vnd.wave
-            - audio/webm
-        Ayamel\ResourceBundle\Validation\File\GenericImageAttributes:
-            - image/gif
-            - image/jpeg
-            - image/pjpeg
-            - image/svg+xml
-            - image/png
-            - image/tiff
-            - image/x-xcf
-        Ayamel\ResourceBundle\Validation\File\GenericDocumentAttributes:
-            - text/plain
-            - text/vcard
-            - application/pdf
-            - application/x-latex
-            - application/msword
-            - application/vnd.oasis.opendocument.text
-            - application/vnd.oasis.opendocument.spreadsheet
-            - application/vnd.oasis.opendocument.presentation
-            - application/vnd.oasis.opendocument.graphics
-            - application/vnd.ms-excel
-            - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
-            - application/vnd.ms-powerpoint
-            - application/vnd.openxmlformats-officedocument.presentationml.presentation
-            - application/vnd.openxmlformats-officedocument.wordprocessingml.document
-            - application/x-iwork-keynote-sffkey
-            - application/x-iwork-pages-sffpages
-            - application/x-iwork-numbers-sffnumbers
-        Ayamel\ResourceBundle\Validation\File\GenericDataAttributes:
-            - application/xml
-            - application/json
-            - text/csv
-            - application/x-yaml
-            - text/yaml
-        Ayamel\ResourceBundle\Validation\File\GenericArchiveAttributes:
-            - application/zip
-            - application/gzip
-            - application/x-rar-compressed
-            - application/x-tar
-        Ayamel\ResourceBundle\Validation\File\CaptionAttributes:
-            - text/vtt
-            - text/srt
+    ayamel.resource.provider.null_extension_type: data
 
-    ayamel.resource.relation_attribute_validation_map:
-        based_on: ~
-        references: ~
-        requires: ~
-        transcript_of: Ayamel\ResourceBundle\Validation\Relation\TranscriptOfAttributes
-        translation_of: ~
-        search: ~
-        version_of: Ayamel\ResourceBundle\Validation\Relation\VersionOfAttributes
-        part_of: Ayamel\ResourceBundle\Validation\Relation\PartOfAttributes
+    #this value describes which types of relations can be created for which types of subject Resources
+    ayamel.relation.resource_type_map:
+        audio: [search, based_on, references, version_of, part_of, translation_of]
+        video: [search, based_on, references, version_of, part_of, translation_of]
+        image: [search, based_on, references, version_of, part_of, translation_of]
+        data: [search, part_of, based_on, version_of, translation_of, transcript_of, requires, references]
+        collection: [search, contains, part_of, version_of, requires, references, based_on]
+        document: [search, part_of, version_of, translation_of, transcript_of, requires, references]
+        archive: [search, contains, part_of, version_of]
 
 services:
     ayamel.resource.relation_attributes_validator:
@@ -106,12 +40,12 @@ services:
 
     ayamel.resource.local_provider:
         class: Ayamel\ResourceBundle\Provider\LocalFilepathProvider
-        arguments: [%ayamel.resource.type_extension_map%, %ayamel.resource.null_extension_type%]
+        arguments: [%ayamel.resource.provider.type_extension_map%, %ayamel.resource.provider.null_extension_type%]
         tags:
             - { name: ayamel.resource.provider_delegate }
 
     ayamel.resource.http_provider:
         class: Ayamel\ResourceBundle\Provider\HttpProvider
-        arguments: [%ayamel.resource.type_extension_map%, %ayamel.resource.null_extension_type%]
+        arguments: [%ayamel.resource.provider.type_extension_map%, %ayamel.resource.provider.null_extension_type%]
         tags:
             - { name: ayamel.resource.provider_delegate }
