@@ -209,9 +209,16 @@ class RelationsController extends ApiController
             case 'based_on': $this->requireSubjectOwnershipAndObjectVisibility($subject, $object, $client); break;
             case 'translation_of': $this->requireSubjectOwnershipAndObjectVisibility($subject, $object, $client); break;
             case 'search': $this->requireSubjectOwnershipAndObjectVisibility($subject, $object, $client); break;
+            case 'contains': $this->requireSubjectOwnershipAndObjectVisibility($subject, $object, $client); break;
             case 'version_of': $this->requireSubjectAndObjectOwnership($subject, $object, $client); break;
             case 'part_of': $this->requireSubjectAndObjectOwnership($subject, $object, $client); break;
             default : $this->requireSubjectOwnershipAndObjectVisibility($subject, $object, $client);
+        }
+
+        //make sure this type of relation can be created for this type of subject resource
+        $map = $this->container->getParameter('ayamel.relation.resource_type_map');
+        if (!in_array($relation->getType(), $map[$subject->getType()])) {
+            throw $this->createHttpException(400, sprintf("Relations of type [%s] are not allowed for Resource type [%s].", $relation->getType(), $subject->getType()));
         }
 
         //fill in the other info
@@ -226,7 +233,6 @@ class RelationsController extends ApiController
 
         $this->container->get('event_dispatcher')->dispatch(ApiEvents::RELATION_CREATED, new RelationEvent($relation, $subject, $object));
 
-        //TODO: trigger 'modified' in resource - depending on what the relation is (search?)
         return $this->createServiceResponse(array('relation' => $relation), 201);
     }
 
