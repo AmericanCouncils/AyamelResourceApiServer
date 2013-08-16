@@ -1,0 +1,81 @@
+parameters:
+    ayamel.resource.relation_attribute_validation_map:
+        based_on: ~
+        references: ~
+        requires: ~
+        transcript_of: Ayamel\ResourceBundle\Validation\Relation\TranscriptOfAttributes
+        translation_of: ~
+        search: ~
+        version_of: Ayamel\ResourceBundle\Validation\Relation\VersionOfAttributes
+        part_of: Ayamel\ResourceBundle\Validation\Relation\PartOfAttributes
+        contains: Ayamel\ResourceBundle\Validation\Relation\ContainsAttributes
+
+    ayamel.resource.file_attribute_validation_map:
+        Ayamel\ResourceBundle\Validation\File\GenericVideoAttributes:
+            - video/mp4
+            - video/x-ms-wmv
+            - video/avi
+            - video/msvideo
+            - video/x-msvideo
+            - video/avs-video
+            - video/mpeg
+            - video/x-motion-jpeg
+            - video/x-mpeg
+            - video/quicktime
+            - video/webm
+            - video/ogg
+            - video/x-matroska
+            - video/x-flv
+        Ayamel\ResourceBundle\Validation\File\GenericAudioAttributes:
+            - audio/mp3
+            - audio/aac
+            - audio/x-aac
+            - audio/basic
+            - audio/L24
+            - audio/mp4
+            - audio/mpeg
+            - audio/ogg
+            - audio/vorbis
+            - audio/vnd.rn-realaudio
+            - audio/vnd.wave
+            - audio/webm
+        Ayamel\ResourceBundle\Validation\File\GenericImageAttributes:
+            - image/gif
+            - image/jpeg
+            - image/pjpeg
+            - image/svg+xml
+            - image/png
+            - image/tiff
+            - image/x-xcf
+        Ayamel\ResourceBundle\Validation\File\GenericDocumentAttributes:
+            - text/plain
+            - text/vcard
+            - application/pdf
+            - application/x-latex
+            - application/msword
+            - application/vnd.oasis.opendocument.text
+            - application/vnd.oasis.opendocument.spreadsheet
+            - application/vnd.oasis.opendocument.presentation
+            - application/vnd.oasis.opendocument.graphics
+            - application/vnd.ms-excel
+            - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+            - application/vnd.ms-powerpoint
+            - application/vnd.openxmlformats-officedocument.presentationml.presentation
+            - application/vnd.openxmlformats-officedocument.wordprocessingml.document
+            - application/x-iwork-keynote-sffkey
+            - application/x-iwork-pages-sffpages
+            - application/x-iwork-numbers-sffnumbers
+        Ayamel\ResourceBundle\Validation\File\GenericDataAttributes:
+            - application/xml
+            - application/json
+            - text/csv
+            - application/x-yaml
+            - text/yaml
+        Ayamel\ResourceBundle\Validation\File\GenericArchiveAttributes:
+            - application/zip
+            - application/gzip
+            - application/x-rar-compressed
+            - application/x-tar
+        Ayamel\ResourceBundle\Validation\File\CaptionAttributes:
+            - text/vtt
+            - text/srt

@@ -161,6 +161,7 @@ class ResourceIntegrationTest extends ApiTestCase
         $this->assertSame(201, $response['response']['code']);
         $this->assertSame('test_client', $response['resource']['client']['id']);
         $this->assertFalse(isset($response['resource']['dateDeleted']));
+        $this->assertFalse(isset($response['resource']['foooooo']));
     }
 
     public function testGetResource()

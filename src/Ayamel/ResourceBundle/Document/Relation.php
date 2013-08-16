@@ -55,6 +55,7 @@ class Relation
      * - **version_of** - The subject is a historical state or edition of the object resource.
      * - **part_of** - The subject is a physical or logical part of the object resource.
      * - **translation_of** - The subject content is a translation into another human language of the object resource's content.
+     * - **contains** - The subject resource contains the object resource.  This only applies to Resource of type "collection".
      *
      * @MongoDB\String
      * @JMS\Type("string")
