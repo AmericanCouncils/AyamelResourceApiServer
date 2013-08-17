@@ -23,6 +23,12 @@ parameters:
         archive: [search, contains, part_of, version_of]
 
 services:
+    ayamel.resource.sequence_validator:
+        class: Ayamel\ResourceBundle\Validation\ResourceSequenceValidator
+        arguments: [%ayamel.resource.allowed_sequence_types%]
+        tags:
+            - { name: validator.constraint_validator, alias: resource_sequence_validator }
+
     ayamel.resource.relation_attributes_validator:
         class: Ayamel\ResourceBundle\Validation\RelationAttributesValidator
         arguments: [@validator, %ayamel.resource.relation_attribute_validation_map%]

@@ -1,6 +1,8 @@
 # This is the validation mapping for all Resource documents - only values that can be set by API clients are validated
 
 Ayamel\ResourceBundle\Document\Resource:
+    constraints:
+        - Ayamel\ResourceBundle\Validation\ResourceSequenceConstraint: ~
     properties:
         title:
             - NotBlank: ~

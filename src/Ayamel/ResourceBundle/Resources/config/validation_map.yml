@@ -1,4 +1,6 @@
 parameters:
+    ayamel.resource.allowed_sequence_types: [video, audio, image, document]
+
     ayamel.resource.relation_attribute_validation_map:
         based_on: ~
         references: ~
