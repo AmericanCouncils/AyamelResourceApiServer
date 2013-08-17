@@ -139,6 +139,16 @@ class Resource
     protected $type;
 
     /**
+     * Whether or not the Resource is a sequence of other Resources.  Only Resources of type
+     * *video, audio, image* and *document* can be considered sequences.  Sequences are played
+     * in the embedded player as if they were one Resource.
+     *
+     * @MongoDB\Boolean
+     * @JMS\Type("boolean")
+     */
+    protected $sequence;
+
+    /**
      * An array of API Client IDs.  If present, only the specified clients will be allowed to view
      * the Resource object.
      *
@@ -408,9 +418,29 @@ class Resource
     }
 
     /**
+     * Get whether or not the Resource is a sequence of other Resources
+     *
+     * @return boolean
+     */
+    public function getSequence()
+    {
+        return $this->sequence;
+    }
+
+    /**
+     * Set whether or not the Resource is a sequence of other Resources.
+     *
+     * @param boolean $bool
+     */
+    public function setSequence($bool)
+    {
+        $this->sequence = (bool) $bool;
+    }
+
+    /**
      * Set visibility
      *
-     * @param boolean $public
+     * @param array $visibility Array of client system IDs which are allowed to view the Resource
      */
     public function setVisibility(array $visibility = null)
     {
@@ -420,7 +450,7 @@ class Resource
     /**
      * Get visibility
      *
-     * @return boolean $public
+     * @return array $visibility
      */
     public function getVisibility()
     {

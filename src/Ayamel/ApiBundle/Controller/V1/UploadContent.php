@@ -117,6 +117,11 @@ class UploadContent extends ApiController
             throw $this->createHttpException(400, "Resource of type [collection] cannot contain their own content, they may only contain Relations.");
         }
 
+        //sequences cannot contain content either
+        if ($resource->getSequence()) {
+            throw $this->createHttpException(400, "Resource sequences cannot contain their own content, they may only contain Relations.");
+        }
+
         //get the upload token manager
         $tm = $this->container->get('ayamel.api.upload_token_manager');
 
