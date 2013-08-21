@@ -33,6 +33,7 @@
         "jms/serializer-bundle": "0.13.*",
         "ac/web-services-bundle": "0.2.*",
         "ac/media-info-bundle": "1.2.*",
+        "friendsofsymfony/elastica-bundle": "3.0.*@dev",
         "ornicar/apc-bundle": "~1.0"
     },
     "require-dev": {
