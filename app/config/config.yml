@@ -96,9 +96,9 @@ nelmio_api_doc:
     sandbox:
         enabled:  true
         endpoint: %nelmio_api_doc_endpoint%
-        authentication: # default null, if set, the value of the api key is read from the query string and appended to every sandbox api call
+        authentication:
             name: _key
-            delivery: query # only query delivery is supported for now
+            delivery: query
 
 nelmio_cors:
     defaults:
@@ -124,6 +124,4 @@ ac_transcoding:
         path: %ffmpeg_path%
         timeout: 0
     handbrake:
-        enabled: true
-        path: %handbrake_path%
-        timeout: 0
+        enabled: false

@@ -33,11 +33,11 @@ parameters:
 
     ## Transcoding support
     ffmpeg_path: /usr/bin/ffmpeg
-    handbrake_path: /usr/local/bin/HandBrakeCLI
 
     #if you use ffmpeg w/ libvpx to encode webm, it doesn't seem to let you specify "-threads 0" to maximize cpu usage, instead
     #you have to be specific in the number of threads, which should be the same as the number of cores on the machine
     libvpx_threads: 4
+    libx264_threads: 4
 
     ## media info ##
     mediainfo_path: /usr/bin/mediainfo

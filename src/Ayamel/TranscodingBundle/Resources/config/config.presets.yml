@@ -1,7 +1,7 @@
 parameters:
     ayamel.transcoding.presets:
 ##################################
-## MP4
+## Video to MP4
 ##################################
         video_to_mp4_low:
             preset_service: transcoding.preset.ffmpeg.generic_mp4
@@ -10,7 +10,12 @@ parameters:
             extension: mp4
             representation: transcoding
             params:
-                "-s": 480x320
+                "-profile:v": "baseline"
+                "-vf": "scale=trunc(oh*a/2)*2:360"
+                "-b:v": "400k"
+                "-maxrate": "500k"
+                "-bufsize": "1000k"
+                "-threads": %libx264_threads%
             #filters: no filters - the low quality preset should always apply, regardless of original video quality
         video_to_mp4_sd:
             preset_service: transcoding.preset.ffmpeg.generic_mp4
@@ -19,7 +24,12 @@ parameters:
             extension: mp4
             representation: transcoding
             params:
-                "-s": 640x480
+                "-profile:v": "baseline"
+                "-vf": "scale=trunc(oh*a/2)*2:480"
+                "-b:v": "700k"
+                "-maxrate": "900k"
+                "-bufsize": "1800k"
+                "-threads": %libx264_threads%
             filters:
                 height: 480
                 width: 640
@@ -30,7 +40,12 @@ parameters:
             extension: mp4
             representation: transcoding
             params:
-                "-s": 1280x720
+                "-profile:v": "high"
+                "-vf": "scale=trunc(oh*a/2)*2:720"
+                "-b:v": "1500k"
+                "-maxrate": "2000k"
+                "-bufsize": "4000k"
+                "-threads": %libx264_threads%
             filters:
                 height: 720
                 width: 1280
@@ -41,13 +56,18 @@ parameters:
             extension: mp4
             representation: transcoding
             params:
-                "-s": 1920x1080
+                "-profile:v": "high"
+                "-vf": "scale=trunc(oh*a/2)*2:1080"
+                "-b:v": "300k"
+                "-maxrate": "4000k"
+                "-bufsize": "8000k"
+                "-threads": %libx264_threads%
             filters:
                 height: 1080
                 width: 1920
 
 ##################################
-## WEBM
+## Video to WEBM
 ##################################
 
         video_to_webm_low:
