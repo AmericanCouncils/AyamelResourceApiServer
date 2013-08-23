@@ -10,6 +10,19 @@ imports:
     # include parameters.yml last, git ignores it, so deployment specific overrides can go there safely
     - { resource: parameters.yml }
 
+services:
+    ayamel.apc_cache:
+        class: Doctrine\Common\Cache\ApcCache
+
+    ayamel.jms_metadata.cache:
+        class: Metadata\Cache\DoctrineCacheAdapter
+        arguments: ['ayamel.jms_metadata', @ayamel.apc_cache]
+
+    #temporarily overridden from ACWebServicesBundle
+    ac.webservices.object_validator:
+            class:      AC\WebServicesBundle\Util\ClientObjectValidator
+            arguments:  [@jms_serializer.metadata_factory, @serializer, @ac.webservices.jms_parser]
+
 framework:
     #esi:             ~
     #translator:      { fallback: %locale% }
@@ -50,10 +63,8 @@ jms_serializer:
         separator:
         lower_case: true
     metadata:
-        cache: file
+        cache: ayamel.jms_metadata.cache
         debug: "%kernel.debug%"
-        file_cache:
-            dir: "%kernel.cache_dir%/serializer"
         auto_detection: true
 
 doctrine_mongodb:
@@ -66,6 +77,7 @@ doctrine_mongodb:
     document_managers:
         default:
             auto_mapping: true
+            metadata_cache_driver: apc
 
 ac_web_services:
     include_dev_exceptions: true
@@ -111,8 +123,3 @@ ac_transcoding:
         enabled: true
         path: %handbrake_path%
         timeout: 0
-
-services:
-    ac.webservices.object_validator:
-            class:      AC\WebServicesBundle\Util\ClientObjectValidator
-            arguments:  [@jms_serializer.metadata_factory, @serializer, @ac.webservices.jms_parser]

@@ -16,12 +16,18 @@ if (!in_array(@$_SERVER['REMOTE_ADDR'], array(
 }
 */
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\ClassLoader\ApcClassLoader;
+
+ini_set('display_errors', 'on');
 $__start = microtime(true);
 
-require_once __DIR__.'/../app/bootstrap.php.cache';
-require_once __DIR__.'/../app/AppKernel.php';
+$loader = require_once __DIR__.'/../app/bootstrap.php.cache';
+$apcLoader = new ApcClassLoader('ayamel.autoload', $loader);
+$loader->unregister();
+$apcLoader->register(true);
 
-use Symfony\Component\HttpFoundation\Request;
+require_once __DIR__.'/../app/AppKernel.php';
 
 $kernel = new AppKernel('dev', true);
 $kernel->loadClassCache();

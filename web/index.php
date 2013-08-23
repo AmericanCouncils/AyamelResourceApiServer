@@ -1,12 +1,17 @@
 <?php
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\ClassLoader\ApcClassLoader;
+
 $__start = microtime(true);
 
-require_once __DIR__.'/../app/bootstrap.php.cache';
+$loader = require_once __DIR__.'/../app/bootstrap.php.cache';
+$apcLoader = new ApcClassLoader('ayamel.autoload', $loader);
+$loader->unregister();
+$apcLoader->register(true);
+
 require_once __DIR__.'/../app/AppKernel.php';
 require_once __DIR__.'/../app/AppCache.php';
-
-use Symfony\Component\HttpFoundation\Request;
 
 $kernel = new AppKernel('prod', false);
 $kernel->loadClassCache();
