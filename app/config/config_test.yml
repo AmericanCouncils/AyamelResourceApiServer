@@ -26,15 +26,15 @@ services:
         tags:
             - { name: transcoding.preset }
 
-parameters:
-    #transcode mapping for test
-    ayamel.transcoding.preset_map:
-        text/plain: ['text_to_lower']
-
-    ayamel.transcoding.presets:
-        text_to_lower:
-            preset_service: ayamel.test.transcoding_preset
-            tag: low
-            extension: txt
-            representation: transcoding
-            quality: 0
+#parameters:
+#    #transcode mapping for test
+#    ayamel.transcoding.preset_map:
+#        text/plain: ['text_to_lower']
+#
+#    ayamel.transcoding.presets:
+#        text_to_lower:
+#            preset_service: ayamel.test.transcoding_preset
+#            tag: low
+#            extension: txt
+#            representation: transcoding
+#            quality: 0

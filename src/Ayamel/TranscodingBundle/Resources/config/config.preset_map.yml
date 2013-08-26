@@ -8,7 +8,6 @@ parameters:
         - video_to_webm_sd
         - video_to_webm_hd
         - video_to_webm_full_hd
-        - video_to_thumbnail
 
     #maps sets of presets to file mime types
     ayamel.transcoding.preset_map:

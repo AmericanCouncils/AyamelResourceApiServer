@@ -24,13 +24,8 @@ class VideoToWebM extends BasePreset
             '-codec:v' => 'libvpx',
             '-deadline' => 'good',
             '-cpu-used' => '0',
-            '-vprofile' => '0',
-            '-qmax' => '51',
-            '-qmin' => '10',
-            '-slices' => '4',
             '-codec:a' => 'libvorbis',
-            '-b:a' => '112k',
-            '-ar' => '44100',
+            '-b:a' => '128k',
             '-f' => 'webm',
             '-threads' => "0"
         ));

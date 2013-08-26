@@ -39,13 +39,13 @@ services:
 
 ################## PRESET TESTING ######################
 
-    ayamel.transcoding.preset.ffmpeg_generic_mp4:
+    transcoding.preset.ffmpeg_generic_mp4:
         class: Ayamel\TranscodingBundle\Preset\VideoToMp4
         scope: prototype
         tags:
             - { name: transcoding.preset }
 
-    ayamel.transcoding.preset.ffmpeg_generic_webm:
+    transcoding.preset.ffmpeg_generic_webm:
         class: Ayamel\TranscodingBundle\Preset\VideoToWebM
         scope: prototype
         tags:
