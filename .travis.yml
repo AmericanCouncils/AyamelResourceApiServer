@@ -18,3 +18,5 @@ before_script:
     - sudo apt-get install -qq mediainfo
     - composer install --dev
     - app/console cache:clear --env=test
+
+script: phpunit --colors --verbose
