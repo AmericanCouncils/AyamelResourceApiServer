@@ -1,6 +1,4 @@
 imports:
-    - { resource: '@AyamelTranscodingBundle/Resources/config/config.presets.yml' }
-    - { resource: '@AyamelTranscodingBundle/Resources/config/config.preset_map.yml' }
     - { resource: '@AyamelTranscodingBundle/Resources/config/config.rabbitmq.yml' }
 
 parameters:
