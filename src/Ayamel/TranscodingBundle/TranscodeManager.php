@@ -147,14 +147,22 @@ class TranscodeManager
                 }
 
                 //run the transcode & create a FileReference from the resulting file
-                $transcodedFile = $this->transcoder->transcodeWithPreset(
-                    $ref->getInternalUri(),
-                    $preset,
-                    $this->generateTemporaryOutputPath($resource->getId(), $def),
-                    Transcoder::ONCONFLICT_DELETE,
-                    Transcoder::ONDIR_CREATE,
-                    Transcoder::ONFAIL_DELETE
-                );
+                try {
+                    $transcodedFile = $this->transcoder->transcodeWithPreset(
+                        $ref->getInternalUri(),
+                        $preset,
+                        $this->generateTemporaryOutputPath($resource->getId(), $def),
+                        Transcoder::ONCONFLICT_DELETE,
+                        Transcoder::ONDIR_CREATE,
+                        Transcoder::ONFAIL_DELETE
+                    );
+                } catch (\Exception $e) {
+                    if (isset($def['ignore_errors']) && true === $def['ignore_errors']) {
+                        continue;
+                    } else {
+                        throw $e;
+                    }
+                }
 
                 $newFileReference = FileReference::createFromLocalPath($transcodedFile->getRealPath());
 

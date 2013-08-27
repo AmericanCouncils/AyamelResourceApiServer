@@ -26,6 +26,7 @@ parameters:
     ayamel.filesystem.local_filesystem.secret: zeroisnotanumber
     ayamel.filesystem.local_filesystem.base_uri: http://127.0.0.1/ayamel/web/files
     ayamel.transcoding.temp_directory: %kernel.root_dir%/files/tmp
+    ayamel.transcoding.ffmpegthumbnailer_path: /usr/bin/ffmpegthumbnailer
 
     ## API Docs
     nelmio_api_doc_endpoint: http://127.0.0.1/AyamelResourceApiServer/web/index_dev.php

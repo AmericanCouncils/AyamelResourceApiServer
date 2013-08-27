@@ -1,3 +1,4 @@
+## Note: This file is loaded from a container extension, not imported directly.
 parameters:
     ayamel.transcoding.presets:
 ##################################
@@ -134,3 +135,38 @@ parameters:
                 "-threads": %libvpx_threads%
             filters:
                 minHeight: 1080
+
+##################################
+## Video thumbnails
+##################################
+        video_to_thumbnail_original:
+            preset_service: transcoding.preset.video_thumbnail
+            tag: original
+            extension: png
+            representation: summary
+            quality: 3
+            ignore_errors: true
+            params:
+                "-t": "50%"
+        video_to_thumbnail_sd: 
+            preset_service: transcoding.preset.video_thumbnail
+            tag: sd
+            extension: png
+            representation: summary
+            quality: 2
+            ignore_errors: true
+            params:
+                "-s": "854x480"
+                "-t": "50%"
+            filters:
+                minHeight: 480
+        video_to_thumbnail_low:
+            preset_service: transcoding.preset.video_thumbnail
+            tag: low
+            extension: png
+            representation: summary
+            quality: 1
+            ignore_errors: true
+            params:
+                "-s": "640x360"
+                "-t": "50%"

@@ -125,3 +125,16 @@ ac_transcoding:
         timeout: 0
     handbrake:
         enabled: false
+
+old_sound_rabbit_mq:
+    connections:
+        default:
+            host:      %rabbitmq_host%
+            port:      %rabbitmq_port%
+            user:      %rabbitmq_user%
+            password:  %rabbitmq_password%
+            vhost:     %rabbitmq_vhost%
+    producers:
+        transcoding: %ayamel.transcoding.rabbitmq_producer%
+    consumers:
+        transcoding: %ayamel.transcoding.rabbitmq_consumer%
