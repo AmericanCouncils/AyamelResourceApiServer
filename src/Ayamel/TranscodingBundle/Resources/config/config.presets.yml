@@ -148,7 +148,7 @@ parameters:
             ignore_errors: true
             params:
                 "-t": "50%"
-        video_to_thumbnail_sd: 
+        video_to_thumbnail_sd:
             preset_service: transcoding.preset.video_thumbnail
             tag: sd
             extension: png

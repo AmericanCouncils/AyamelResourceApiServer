@@ -394,10 +394,10 @@ class TranscodeManager
                 if (isset($data['filters']['maxHeight']) && $attrs['frameSize']['height'] > $data['filters']['maxHeight']) {
                     $include = false;
                 }
-                
+
                 if (isset($data['filters']['minHeight']) && $attrs['frameSize']['height'] < $data['filters']['minHeight']) {
                     $include = false;
-                }                
+                }
             }
 
             //width
@@ -405,7 +405,7 @@ class TranscodeManager
                 if (isset($data['filters']['maxWidth']) && $attrs['frameSize']['width'] > $data['filters']['maxWidth']) {
                     $include = false;
                 }
-                
+
                 if (isset($data['filters']['minWidth']) && $attrs['frameSize']['width'] < $data['filters']['minWidth']) {
                     $include = false;
                 }

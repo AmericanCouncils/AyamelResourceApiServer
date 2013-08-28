@@ -1,5 +1,5 @@
 #######
-## NOTE:  Transcoding presets and mappings are loaded separately via a Container extension, in order to 
+## NOTE:  Transcoding presets and mappings are loaded separately via a Container extension, in order to
 ## allow modifying those configurations during testing
 #######
 parameters:
@@ -11,7 +11,7 @@ parameters:
         connection: default
         exchange_options: { name: 'transcoding', type: direct }
 
-    ayamel.transcoding.rabbitmq_consumer: 
+    ayamel.transcoding.rabbitmq_consumer:
         connection: default
         exchange_options: { name: 'transcoding', type: direct }
         queue_options:    { name: 'transcoding' }

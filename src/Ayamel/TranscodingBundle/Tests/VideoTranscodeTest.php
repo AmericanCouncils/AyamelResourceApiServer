@@ -2,7 +2,6 @@
 
 use Ayamel\ApiBundle\ApiTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Process\Process;
 
 class VideoTranscodeTest extends ApiTestCase
 {

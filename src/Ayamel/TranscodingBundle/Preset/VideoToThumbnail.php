@@ -7,20 +7,20 @@ use AC\Transcoding\FileHandlerDefinition;
 
 class VideoToThumbnail extends Preset
 {
-	protected $requiredAdapter = 'ffmpegthumbnailer';
+    protected $requiredAdapter = 'ffmpegthumbnailer';
     protected $key = "ffmpegthumbnailer.thumbnail";
     protected $name = "Video to Thumbnail";
     protected $description = "Extracts a thumbnail from a video.";
 
-	protected function buildOutputDefinition()
-	{
+    protected function buildOutputDefinition()
+    {
         return new FileHandlerDefinition(array(
             'requiredType' => 'file',
             'allowedExtensions' => array('png','jpg','jpeg', 'gif','tiff')
         ));
-	}
+    }
 
-	protected function buildInputDefinition()
+    protected function buildInputDefinition()
     {
         return new FileHandlerDefinition(array(
             'requiredType' => 'file',

@@ -51,17 +51,17 @@
         },
         {
             "name": "ac/transcoding",
-            "version": "0.4.1",
+            "version": "0.4.2",
             "target-dir": "AC/Transcoding",
             "source": {
                 "type": "git",
                 "url": "https://github.com/AmericanCouncils/Transcoding.git",
-                "reference": "0.4.1"
+                "reference": "d8ceb71772dd9ba99657fe1d9057b0e44ff511d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AmericanCouncils/Transcoding/zipball/0.4.1",
-                "reference": "0.4.1",
+                "url": "https://api.github.com/repos/AmericanCouncils/Transcoding/zipball/d8ceb71772dd9ba99657fe1d9057b0e44ff511d4",
+                "reference": "d8ceb71772dd9ba99657fe1d9057b0e44ff511d4",
                 "shasum": ""
             },
             "require": {
@@ -101,7 +101,7 @@
                 "file",
                 "transcode"
             ],
-            "time": "2013-08-12 21:58:22"
+            "time": "2013-08-28 14:29:42"
         },
         {
             "name": "ac/transcoding-bundle",

@@ -22,7 +22,7 @@ class FFmpegThumbnailerAdapter extends AbstractCliAdapter
             'timeout' => 0
         ));
 
-		$this->thumbnailer_path = $thumbnailer_path;
+        $this->thumbnailer_path = $thumbnailer_path;
     }
 
     /**
