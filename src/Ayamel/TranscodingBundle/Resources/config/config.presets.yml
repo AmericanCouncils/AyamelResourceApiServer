@@ -1,113 +1,172 @@
+## Note: This file is loaded from a container extension, not imported directly.
 parameters:
     ayamel.transcoding.presets:
 ##################################
-## MP4
+## Video to MP4
 ##################################
         video_to_mp4_low:
-            preset_service: transcoding.preset.ffmpeg.generic_mp4
+            preset_service: transcoding.preset.ffmpeg_generic_mp4
             tag: low
             quality: 1
             extension: mp4
             representation: transcoding
             params:
-                "-s": 480x320
-            #filters: no filters - the low quality preset should always apply, regardless of original video quality
+                "-profile:v": "baseline"
+                "-vf": "scale=trunc(oh*a/2)*2:360"
+                "-b:v": "400k"
+                "-maxrate": "500k"
+                "-bufsize": "1000k"
+                "-threads": %libx264_threads%
+            #filters: none - the low quality preset should always apply, regardless of original video quality
         video_to_mp4_sd:
-            preset_service: transcoding.preset.ffmpeg.generic_mp4
+            preset_service: transcoding.preset.ffmpeg_generic_mp4
             tag: standard
             quality: 2
             extension: mp4
             representation: transcoding
             params:
-                "-s": 640x480
+                "-profile:v": "baseline"
+                "-vf": "scale=trunc(oh*a/2)*2:480"
+                "-b:v": "700k"
+                "-maxrate": "900k"
+                "-bufsize": "1800k"
+                "-threads": %libx264_threads%
             filters:
-                height: 480
-                width: 640
+                minHeight: 480
         video_to_mp4_hd:
-            preset_service: transcoding.preset.ffmpeg.generic_mp4
+            preset_service: transcoding.preset.ffmpeg_generic_mp4
             tag: high
             quality: 3
             extension: mp4
             representation: transcoding
             params:
-                "-s": 1280x720
+                "-profile:v": "high"
+                "-vf": "scale=trunc(oh*a/2)*2:720"
+                "-b:v": "1500k"
+                "-maxrate": "2000k"
+                "-bufsize": "4000k"
+                "-threads": %libx264_threads%
             filters:
-                height: 720
-                width: 1280
+                minHeight: 720
         video_to_mp4_full_hd:
-            preset_service: transcoding.preset.ffmpeg.generic_mp4
+            preset_service: transcoding.preset.ffmpeg_generic_mp4
             tag: highest
             quality: 4
             extension: mp4
             representation: transcoding
             params:
-                "-s": 1920x1080
+                "-profile:v": "high"
+                "-vf": "scale=trunc(oh*a/2)*2:1080"
+                "-b:v": "300k"
+                "-maxrate": "4000k"
+                "-bufsize": "8000k"
+                "-threads": %libx264_threads%
             filters:
-                height: 1080
-                width: 1920
+                minHeight: 1080
 
 ##################################
-## WEBM
+## Video to WEBM
 ##################################
 
         video_to_webm_low:
-            preset_service: transcoding.preset.ffmpeg.generic_webm
+            preset_service: transcoding.preset.ffmpeg_generic_webm
             tag: low
             quality: 1
             extension: webm
             representation: transcoding
             params:
-                "-s": 480x320
+                "-b:v": "400k"
+                "-maxrate": "500k"
+                "-bufsize": "1000k"
+                "-qmin": "10"
+                "-qmax": "63"
+                "-crf": "15"
+                "-vf": "scale=trunc(oh*a/2)*2:360"
                 "-threads": %libvpx_threads%
             #filters: no filters - the low quality preset should always apply, regardless of original video quality
         video_to_webm_sd:
-            preset_service: transcoding.preset.ffmpeg.generic_webm
+            preset_service: transcoding.preset.ffmpeg_generic_webm
             tag: standard
             quality: 2
             extension: webm
             representation: transcoding
             params:
-                "-s": 640x480
+                "-b:v": "700k"
+                "-maxrate": "900k"
+                "-bufsize": "1800k"
+                "-qmin": "10"
+                "-qmax": "63"
+                "-crf": "15"
+                "-vf": "scale=trunc(oh*a/2)*2:480"
                 "-threads": %libvpx_threads%
             filters:
-                height: 480
-                width: 640
+                minHeight: 480
         video_to_webm_hd:
-            preset_service: transcoding.preset.ffmpeg.generic_webm
+            preset_service: transcoding.preset.ffmpeg_generic_webm
             tag: high
             quality: 3
             extension: webm
             representation: transcoding
             params:
-                "-s": 1280x720
+                "-b:v": "1500k"
+                "-maxrate": "2000k"
+                "-bufsize": "4000k"
+                "-qmin": "5"
+                "-qmax": "63"
+                "-crf": "8"
+                "-vf": "scale=trunc(oh*a/2)*2:720"
                 "-threads": %libvpx_threads%
             filters:
-                height: 720
-                width: 1280
+                minHeight: 720
         video_to_webm_full_hd:
-            preset_service: transcoding.preset.ffmpeg.generic_webm
+            preset_service: transcoding.preset.ffmpeg_generic_webm
             tag: highest
             quality: 4
             extension: webm
             representation: transcoding
             params:
-                "-s": 1920x1080
+                "-b:v": "3000k"
+                "-maxrate": "4000k"
+                "-bufsize": "8000k"
+                "-qmin": "5"
+                "-qmax": "63"
+                "-crf": "8"
+                "-vf": "scale=trunc(oh*a/2)*2:1080"
                 "-threads": %libvpx_threads%
             filters:
-                height: 1080
-                width: 1920
+                minHeight: 1080
 
 ##################################
-## VIDEO THUMBNAILS
+## Video thumbnails
 ##################################
-
-        video_to_thumbnail:
-            preset_service: transcoding.preset.ffmpeg.thumbnail
-            tag: thumbnail_square_medium
-            quality: 1
-            extension: jpg
+        video_to_thumbnail_original:
+            preset_service: transcoding.preset.video_thumbnail
+            tag: original
+            extension: png
             representation: summary
+            quality: 3
+            ignore_errors: true
             params:
-                height: 100
-                width: 100
-                preserve_ratio: true
+                "-t": "50%"
+        video_to_thumbnail_sd:
+            preset_service: transcoding.preset.video_thumbnail
+            tag: sd
+            extension: png
+            representation: summary
+            quality: 2
+            ignore_errors: true
+            params:
+                "-s": "854x480"
+                "-t": "50%"
+            filters:
+                minHeight: 480
+        video_to_thumbnail_low:
+            preset_service: transcoding.preset.video_thumbnail
+            tag: low
+            extension: png
+            representation: summary
+            quality: 1
+            ignore_errors: true
+            params:
+                "-s": "640x360"
+                "-t": "50%"
