@@ -16,7 +16,7 @@ before_script:
     - cp app/config/parameters.default.yml app/config/parameters.yml
     - sudo apt-get update -qq
     - sudo apt-get install -q mediainfo 
-    - sudo util/install_ffmpeg.sh
+    - util/install_ffmpeg.sh
     - sudo apt-get install -q ffmpegthumbnailer
     - composer install --dev
     - app/console cache:clear --env=test
