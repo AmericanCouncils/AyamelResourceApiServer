@@ -147,14 +147,22 @@ class TranscodeManager
                 }
 
                 //run the transcode & create a FileReference from the resulting file
-                $transcodedFile = $this->transcoder->transcodeWithPreset(
-                    $ref->getInternalUri(),
-                    $preset,
-                    $this->generateTemporaryOutputPath($resource->getId(), $def),
-                    Transcoder::ONCONFLICT_DELETE,
-                    Transcoder::ONDIR_CREATE,
-                    Transcoder::ONFAIL_DELETE
-                );
+                try {
+                    $transcodedFile = $this->transcoder->transcodeWithPreset(
+                        $ref->getInternalUri(),
+                        $preset,
+                        $this->generateTemporaryOutputPath($resource->getId(), $def),
+                        Transcoder::ONCONFLICT_DELETE,
+                        Transcoder::ONDIR_CREATE,
+                        Transcoder::ONFAIL_DELETE
+                    );
+                } catch (\Exception $e) {
+                    if (isset($def['ignore_errors']) && true === $def['ignore_errors']) {
+                        continue;
+                    } else {
+                        throw $e;
+                    }
+                }
 
                 $newFileReference = FileReference::createFromLocalPath($transcodedFile->getRealPath());
 
@@ -382,31 +390,29 @@ class TranscodeManager
             $include = true;
 
             //height
-            if (
-                isset($attrs['frameSize']['height']) &&
-                isset($data['filters']['height']) &&
-                $attrs['frameSize']['height'] > $data['filters']['height']
-            ) {
-                $include = false;
+            if (isset($attrs['frameSize']['height']) && (isset($data['filters']['maxHeight']) || isset($data['filters']['minHeight']))) {
+                if (isset($data['filters']['maxHeight']) && $attrs['frameSize']['height'] > $data['filters']['maxHeight']) {
+                    $include = false;
+                }
+
+                if (isset($data['filters']['minHeight']) && $attrs['frameSize']['height'] < $data['filters']['minHeight']) {
+                    $include = false;
+                }
             }
 
             //width
-            if (
-                isset($attrs['frameSize']['width']) &&
-                isset($data['filters']['width']) &&
-                $attrs['frameSize']['width'] > $data['filters']['width']
-            ) {
-                $include = false;
+            if (isset($attrs['frameSize']['width']) && (isset($data['filters']['maxWidth']) || isset($data['filters']['minWidth']))) {
+                if (isset($data['filters']['maxWidth']) && $attrs['frameSize']['width'] > $data['filters']['maxWidth']) {
+                    $include = false;
+                }
+
+                if (isset($data['filters']['minWidth']) && $attrs['frameSize']['width'] < $data['filters']['minWidth']) {
+                    $include = false;
+                }
             }
 
-            //bitrate
-            if (
-                isset($attrs['bitrate']) &&
-                isset($data['filters']['bitrate']) &&
-                $attrs['bitrate'] > $data['filters']['bitrate']
-            ) {
-                $include = false;
-            }
+            //NOTE: bitrate filter removed, in practice it isn't very practical - for now we'll have to depend on resolution and risk
+            //transcoding marginally higher bitrate files than originals; in practice this shouldn't happen often
 
             if ($include) {
                 $filtered[$key] = $data;

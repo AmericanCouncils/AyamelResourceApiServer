@@ -1,10 +1,21 @@
-imports:
-    - { resource: '@AyamelTranscodingBundle/Resources/config/config.presets.yml' }
-    - { resource: '@AyamelTranscodingBundle/Resources/config/config.preset_map.yml' }
-    - { resource: '@AyamelTranscodingBundle/Resources/config/config.rabbitmq.yml' }
-
+#######
+## NOTE:  Transcoding presets and mappings are loaded separately via a Container extension, in order to
+## allow modifying those configurations during testing
+#######
 parameters:
     ayamel.transcoding.temp_directory: %kernel.root_dir%/files/tmp
+
+    ayamel.transcoding.ffmpegthumbnailer_path: /usr/bin/ffmpegthumbnailer
+
+    ayamel.transcoding.rabbitmq_producer:
+        connection: default
+        exchange_options: { name: 'transcoding', type: direct }
+
+    ayamel.transcoding.rabbitmq_consumer:
+        connection: default
+        exchange_options: { name: 'transcoding', type: direct }
+        queue_options:    { name: 'transcoding' }
+        callback:         ayamel.transcoding.consumer
 
 services:
     ayamel.transcoding.mapper:
@@ -37,15 +48,30 @@ services:
         class: Ayamel\TranscodingBundle\RabbitMQ\Consumer
         arguments: [@service_container, %ayamel.transcoding.preset_map%]
 
-################## PRESET TESTING ######################
+    #########################################################################
+    ## Presets and Adapters
+    ## Note: Eventually these should be moved into the AC\Transcoding library
+    #########################################################################
 
-    ayamel.transcoding.preset.ffmpeg_generic_mp4:
+    transcoding.adapter.ffmpegthumbnailer:
+        class: Ayamel\TranscodingBundle\Adapter\FFmpegThumbnailerAdapter
+        arguments: [%ayamel.transcoding.ffmpegthumbnailer_path%]
+        tags:
+            - { name: transcoding.adapter }
+
+    transcoding.preset.video_thumbnail:
+        class: Ayamel\TranscodingBundle\Preset\VideoToThumbnail
+        scope: prototype
+        tags:
+            - { name: transcoding.preset }
+
+    transcoding.preset.ffmpeg_generic_mp4:
         class: Ayamel\TranscodingBundle\Preset\VideoToMp4
         scope: prototype
         tags:
             - { name: transcoding.preset }
 
-    ayamel.transcoding.preset.ffmpeg_generic_webm:
+    transcoding.preset.ffmpeg_generic_webm:
         class: Ayamel\TranscodingBundle\Preset\VideoToWebM
         scope: prototype
         tags:

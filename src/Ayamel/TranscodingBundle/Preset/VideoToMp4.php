@@ -21,17 +21,13 @@ class VideoToMp4 extends BasePreset
     public function configure()
     {
         $this->setOptions(array(
-            '-acodec' => 'aac',
+            '-codec:a' => 'aac',
             '-ac' => '2',
             '-strict' => 'experimental',
-            '-ab' => '160k',
-            '-vcodec' => 'libx264',
-            '-preset' => 'medium',
+            '-b:a' => '128k',
+            '-codec:v' => 'libx264',
+            '-preset' => 'slow',
             '-profile:v' => 'high',
-            '-level' => '30',
-            '-maxrate' => '10000000',
-            '-bufsize' => '10000000',
-            '-b' => '1200k',
             '-f' => 'mp4',
             '-threads' => "0"
         ));
