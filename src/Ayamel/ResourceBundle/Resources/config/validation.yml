@@ -236,10 +236,10 @@ Ayamel\ResourceBundle\Document\OEmbed:
 
 Ayamel\ResourceBundle\Document\FileReference:
     constraints:
+        - Ayamel\ResourceBundle\Validation\FileUriConstraint: ~
         - Ayamel\ResourceBundle\Validation\FileAttributesConstraint: ~
     properties:
         downloadUri:
-            - NotBlank: ~
             - Url: ~
             - Type:
                 type: string
