@@ -11,15 +11,20 @@ use Symfony\Component\Process\Process;
  * - running the TranscodeResourceCommand from the CLI
  * - asynchronously via the RabbitMQ consumer
  *
+ * These tests are not part of the "transcoding" group ignored on Travis for a reason. Underlying these
+ * transcodes are relying on overridden config that just transcodes text files, so the overhead is low, wheras
+ * the "transcoding" grouped tests all require installation of software that may take a long time, and the tests
+ * themselves are very slow.
+ *
+ * This group of tests ensures the the transcoding system is architecturally sound without require
+ * extreme overhead.
+ *
  * @package AyamelTranscodingBundle
  * @author Evan Villemez
  */
 class BasicTranscodeTest extends ApiTestCase
 {
 
-    /**
-     * @group transcoding
-     */
     public function testTranscodeManagerTranscodeResource()
     {
         $data = array(
@@ -64,9 +69,6 @@ class BasicTranscodeTest extends ApiTestCase
         $this->assertSame(2, count($files));
     }
 
-    /**
-     * @group transcoding
-     */
     public function testTranscodeResourceCommand()
     {
         $data = array(
@@ -135,9 +137,6 @@ class BasicTranscodeTest extends ApiTestCase
         $this->assertTrue(isset($transcoded['downloadUri']));
     }
 
-    /**
-     * @group transcoding
-     */
     public function testTranscodeViaRabbitMQ()
     {
         //start the rabbitmq consumer, clear the queue

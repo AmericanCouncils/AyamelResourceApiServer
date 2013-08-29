@@ -252,4 +252,39 @@ class FileReferenceValidationTest extends ApiTestCase
         $errors = $v->validate($ref);
         $this->assertSame(0, count($errors));
     }
+
+    public function testValidateFileUri()
+    {
+        $v = $this->getContainer()->get('validator');
+
+        //download uri set, no errors
+        $ref = new FileReference();
+        $ref->setDownloadUri("http://example.org/foo.vtt");
+        $ref->setBytes(100);
+        $ref->setRepresentation('original');
+        $ref->setQuality(0);
+        $ref->setMimeType('text/vtt');
+        $errors = $v->validate($ref);
+        $this->assertSame(0, count($errors));
+
+        //stream uri set, no errors
+        $ref = new FileReference();
+        $ref->setStreamUri("http://example.org/foo.vtt");
+        $ref->setBytes(100);
+        $ref->setRepresentation('original');
+        $ref->setQuality(0);
+        $ref->setMimeType('text/vtt');
+        $errors = $v->validate($ref);
+        $this->assertSame(0, count($errors));
+
+        //neither set, errors
+        $ref = new FileReference();
+        $ref->setBytes(100);
+        $ref->setRepresentation('original');
+        $ref->setQuality(0);
+        $ref->setMimeType('text/vtt');
+        $errors = $v->validate($ref);
+        $this->assertSame(1, count($errors));
+
+    }
 }
