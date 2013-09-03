@@ -82,3 +82,5 @@ make
 make install
 make distclean
 hash -r
+
+sudo mv $HOME/bin/ffmpeg /usr/local/bin/ffmpeg
