@@ -146,14 +146,4 @@ fos_elastica:
         callback_class: FOS\ElasticaBundle\Serializer\Callback
         serializer: serializer
     indexes:
-        ayamel_resources:
-            client: default
-#            persistence: 
-#            settings:
-            types:
-                resource:
-                    mappings:
-                        title: { boost: 5 }
-                        description: { boost: 3 }
-                        keywords: { boost: 3 }
-                        content: { boost: 2 }
+        ayamel_resources: %ayamel.search.resource_index%
