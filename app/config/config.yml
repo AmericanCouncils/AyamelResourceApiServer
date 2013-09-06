@@ -146,4 +146,4 @@ fos_elastica:
         callback_class: FOS\ElasticaBundle\Serializer\Callback
         serializer: serializer
     indexes:
-        ayamel_resources: %ayamel.search.resource_index%
+        ayamel: %ayamel.search.ayamel_index%
