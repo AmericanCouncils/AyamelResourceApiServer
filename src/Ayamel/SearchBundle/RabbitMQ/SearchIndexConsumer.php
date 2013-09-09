@@ -32,7 +32,7 @@ class SearchIndexConsumer implements ConsumerInterface
         $body = unserialize($msg->body);
 
 
-
+            throw new \RuntimeException("Not implemented.");
 
 
         return true;

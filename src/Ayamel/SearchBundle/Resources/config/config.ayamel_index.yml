@@ -1,97 +1,36 @@
 parameters:
     ayamel.search.ayamel_index:
         client: default
-        #    persistence: 
         settings:
             index:
                 analysis:
                     analyzer:
-                        snow_eng:
+                        snow_en:
                             type: snowball
                             language: English
-                        snow_eng:
+                        snow_ru:
                             type: snowball
-                            language: English
-                        snow_eng:
-                            type: snowball
-                            language: English
-                        snow_eng:
-                            type: snowball
-                            language: English
-                        snow_eng:
-                            type: snowball
-                            language: English
-                        snow_eng:
-                            type: snowball
-                            language: English
-                        snow_eng:
-                            type: snowball
-                            language: English
-                        snow_eng:
-                            type: snowball
-                            language: English
-                        snow_eng:
-                            type: snowball
-                            language: English
-                        snow_eng:
-                            type: snowball
-                            language: English
-                        snow_eng:
-                            type: snowball
-                            language: English
-                        snow_eng:
-                            type: snowball
-                            language: English
-
+                            language: Russian
+                        # ... more of this for other languages
 
         types:
             resource:
                 mappings:
                     title:
                         boost: 5
-                        analyzer: 
+                        analyzer: default
                     description:
                         boost: 3
-                        analyzer: 
+                        analyzer: default
                     keywords:
                         boost: 3
-                        analyzer: 
+                        analyzer: default
                     content_canonical:
                         boost: 1
-                        analyzer: 
+                        analyzer: default
                     content_eng:
                         boost: 2
-                        analyzer: snow_XXXX
-                    content_eng:
+                        analyzer: snow_en
+                    content_ru:
                         boost: 2
-                        analyzer: snow_XXXX
-                    content_eng:
-                        boost: 2
-                        analyzer: snow_XXXX
-                    content_eng:
-                        boost: 2
-                        analyzer: snow_XXXX
-                    content_eng:
-                        boost: 2
-                        analyzer: snow_XXXX
-                    content_eng:
-                        boost: 2
-                        analyzer: snow_XXXX
-                    content_eng:
-                        boost: 2
-                        analyzer: snow_XXXX
-                    content_eng:
-                        boost: 2
-                        analyzer: snow_XXXX
-                    content_eng:
-                        boost: 2
-                        analyzer: snow_XXXX
-                    content_eng:
-                        boost: 2
-                        analyzer: snow_XXXX
-                    content_eng:
-                        boost: 2
-                        analyzer: snow_XXXX
-                    content_eng:
-                        boost: 2
-                        analyzer: snow_XXXX
+                        analyzer: snow_ru

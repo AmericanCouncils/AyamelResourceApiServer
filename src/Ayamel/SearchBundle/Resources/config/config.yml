@@ -1,3 +1,6 @@
+imports:
+    - { resource: "@AyamelSearchBundle/resources/config/config.ayamel_index.yml" }
+
 parameters:
     ayamel.search.rabbitmq_producer:
         connection: default
@@ -21,3 +24,12 @@ services:
     ayamel.search_index.consumer:
         class: Ayamel\SearchBundle\RabbitMQ\SearchIndexConsumer
         arguments: [@service_container]
+
+    ayamel.search.elastica_resource_provider:
+        class: Ayamel\SearchBundle\Provider\ResourceProvider
+        arguments: [@ayamel.search.resource_indexer, @fos_elastica.index.ayamel.resource]
+        tags:
+            - { name: fos_elastica.provider, index: ayamel, type: resource }
+
+    ayamel.search.resource_indexer:
+        class: Ayamel\SearchBundle\ResourceIndexer
