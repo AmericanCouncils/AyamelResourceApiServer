@@ -2,6 +2,9 @@ imports:
     - { resource: "@AyamelSearchBundle/resources/config/config.ayamel_index.yml" }
 
 parameters:
+    ayamel.search.elastica_resource_provider.batch: 100
+    ayamel.search.indexable_mime_types: ['text/plain']
+    ayamel.search.indexable_resource_types: ['document','collection','audio','video','image']
     ayamel.search.rabbitmq_producer:
         connection: default
         exchange_options: { name: 'search_index', type: direct }
@@ -12,7 +15,6 @@ parameters:
         queue_options:    { name: 'search_index' }
         callback:         ayamel.search_index.consumer
 
-
 services:
     ayamel.search_index.subscriber:
         class: Ayamel\SearchBundle\RabbitMQ\SearchIndexSubscriber
@@ -20,16 +22,26 @@ services:
         tags:
             - { name: ayamel.api.event_subscriber }
 
-    # This service handles rabbitMQ for transcoding Resource files asyncronously
     ayamel.search_index.consumer:
         class: Ayamel\SearchBundle\RabbitMQ\SearchIndexConsumer
         arguments: [@service_container]
 
+    ayamel.search.resource_indexer:
+        class: Ayamel\SearchBundle\ResourceIndexer
+        arguments: 
+            - @doctrine.odm.mongodb.document_manager
+            - @fos_elastica.index.ayamel.resource
+            - @serializer
+            - %ayamel.search.indexable_mime_types%
+            - %ayamel.search.indexable_resource_types%
+            - @logger
+            - %ayamel.search.content_field_names%
+
     ayamel.search.elastica_resource_provider:
         class: Ayamel\SearchBundle\Provider\ResourceProvider
-        arguments: [@ayamel.search.resource_indexer, @fos_elastica.index.ayamel.resource]
+        arguments: 
+            - @ayamel.search.resource_indexer
+            - %ayamel.search.elastica_resource_provider.batch%
         tags:
             - { name: fos_elastica.provider, index: ayamel, type: resource }
 
-    ayamel.search.resource_indexer:
-        class: Ayamel\SearchBundle\ResourceIndexer

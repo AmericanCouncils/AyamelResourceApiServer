@@ -2,33 +2,47 @@
 
 namespace Ayamel\SearchBundle\Provider;
 
+use Ayamel\SearchBundle\ResourceIndexer;
 use FOS\ElasticaBundle\Provider\ProviderInterface;
 use Elastica\Type;
-use Elastica\Document;
-use Ayamel\SearchBundle\ResourceIndexer;
 
+/**
+ * The ResourceProvider implements the necessary interface from FOSElasticaBundle to populate the search
+ * index with Resources.  It uses the ResourceIndexer to convert Resources into Elastica Documents.
+ * 
+ * @package AyamelSearchBundle
+ * @author Evan Villemez
+ **/
 class ResourceProvider implements ProviderInterface
 {
 	private $indexer;
     private $type;
 
-	public function __construct(ResourceIndexer $indexer, Type $resourceType)
+	public function __construct(ResourceIndexer $indexer, $batch = 100)
 	{
 		$this->indexer = $indexer;
         $this->type = $resourceType;
+        $this->batch = 100;
 	}
 
-	public function populate(\Closure $loggerClosure = null)
+	public function populate(\Closure $loggerClosure = null, array $options = array())
     {
-        //TODO: query for ids, loop and update, with batching
-        $this->indexer->indexResourceById(23);
 
         if ($loggerClosure) {
             $loggerClosure('Indexing resources...');
         }
 
-        $document = new Document();
-        $document->setData(array('username' => 'Bob'));
-        $this->type->addDocuments(array($document));
+        //TODO: get all ids from mongo
+        $ids = array();
+
+        if ($loggerClosure) {
+            $loggerClosure(sprintf("Indexing %s resources.", count($ids)));
+        }
+
+        $this->indexer->indexResources($ids, $this->batch);
+
+        if ($loggerClosure) {
+            $loggerClosure("Finished indexing resources.");
+        }
     }
 }

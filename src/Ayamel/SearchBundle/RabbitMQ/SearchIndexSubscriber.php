@@ -42,8 +42,12 @@ class SearchIndexSubscriber implements EventSubscriberInterface
      */
     public function onResourceEvent(ResourceEvent $e)
     {
-        // TODO: append new message
+        if ('awaiting_content' === $e->getResource()->getStatus()) {
+            return;
+        }
         
+        // TODO: append new message
+
         $this->container->get('event_dispatcher')->addListener(RestServiceSubscriber::API_TERMINATE, array($this, 'onApiTerminate'));
     }
     
