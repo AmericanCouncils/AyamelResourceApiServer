@@ -82,10 +82,13 @@ class RemoteFilesContentSubscriber implements EventSubscriberInterface
         //make sure the files defined actually exist by trying to derive a new resource from them
         $failed = array();
         foreach ($remoteFiles as $ref) {
-            if (!$this->container->get('ayamel.resource.provider')->createResourceFromUri($ref->getDownloadUri())) {
-                $failed[] = $ref->getDownloadUri();
+            if ($ref->getDownloadUri()) {
+                if (!$this->container->get('ayamel.resource.provider')->createResourceFromUri($ref->getDownloadUri())) {
+                    $failed[] = $ref->getDownloadUri();
+                }
             }
         }
+        
         if (!empty($failed)) {
             throw new HttpException(400, sprintf("The following files could not be reached: [%s]", implode(', ', $failed)));
         }
