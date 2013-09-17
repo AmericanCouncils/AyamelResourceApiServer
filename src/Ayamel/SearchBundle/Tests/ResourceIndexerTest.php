@@ -74,15 +74,12 @@ class ResourceIndexerTest extends ApiTestCase
         $this->assertSame(201, $response['response']['code']);
         $resourceId = $response['resource']['id'];
         $uploadUrl = substr($response['contentUploadUrl'], strlen('http://localhost'));
-        $testFilePath = __DIR__."/files/hamlet.en.txt";
-        $uploadedFile = new UploadedFile(
-            $testFilePath,
-            'hamlet.en.txt',
-            'text/plain',
-            filesize($testFilePath)
-        );
-        $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', array(), array('file' => $uploadedFile));
-        $this->assertSame(202, $content['response']['code']);
+        $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), json_encode(array(
+            'uri' => 'http://www.google.com/'
+        )));
+        $this->assertSame(200, $content['response']['code']);
 
         //expect 404 from elastic search, not indexed yet
         try {
@@ -125,21 +122,114 @@ class ResourceIndexerTest extends ApiTestCase
 
     public function testIndexerIndexesContentFromFiles()
     {
-        $this->markTestSkipped();
-
+        $container = $this->getContainer();
+        $indexer = $container->get('ayamel.search.resource_indexer');
+        $client = new Client('http://127.0.0.1:9200');
+        
+        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), json_encode(array(
+            'title' => 'Hamlet pwnz!',
+            'type' => 'document',
+            'languages' => array(
+                'iso639_3' => array('eng'),
+                'bcp47' => array('en')
+            )
+        )));
+        $this->assertSame(201, $response['response']['code']);
+        $resourceId = $response['resource']['id'];
+        $uploadUrl = substr($response['contentUploadUrl'], strlen('http://localhost'));
+        $testFilePath = __DIR__."/files/hamlet.en.txt";
+        $uploadedFile = new UploadedFile(
+            $testFilePath,
+            'hamlet.en.txt',
+            'text/plain',
+            filesize($testFilePath)
+        );
+        $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', array(), array('file' => $uploadedFile));
+        $this->assertSame(202, $content['response']['code']);
+        
+        //index it
+        $indexer->indexResource($resourceId);
+        
+        //make sure record exists
+        $response = $client->get('/ayamel/resource/'.$resourceId)->send();
+        $this->assertSame(200, $response->getStatusCode());
+        $body = json_decode($response->getBody(), true);
+        
         //check for content_canonical
+        $this->assertTrue(isset($body['_source']['content_canonical']));
+        $this->assertSame(1, count($body['_source']['content_canonical']));
+        $this->assertSame(0, strpos($body['_source']['content_canonical'][0], "To be, or not to be"));
+        
+        return $resourceId;
     }
 
     /**
      * @depends testIndexerIndexesContentFromFiles
      **/
-    public function testIndexerIndexesContentFromRelatedResources()
+    public function testIndexerIndexesContentFromRelatedResources($id)
     {
-        $this->markTestSkipped();
+        $container = $this->getContainer();
+        $indexer = $container->get('ayamel.search.resource_indexer');
+        $client = new Client('http://127.0.0.1:9200');
 
-        //create new resource w/ russian
+        //create a new resource w/ Russian
+        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), json_encode(array(
+            'title' => 'Гамлет круто!',
+            'type' => 'document',
+            'languages' => array(
+                'iso639_3' => array('rus'),
+                'bcp47' => array('ru')
+            )
+        )));
+        $this->assertSame(201, $response['response']['code']);
+        $resourceId = $response['resource']['id'];
+        $uploadUrl = substr($response['contentUploadUrl'], strlen('http://localhost'));
+        $testFilePath = __DIR__."/files/hamlet.en.txt";
+        $uploadedFile = new UploadedFile(
+            $testFilePath,
+            'hamlet.ru.txt',
+            'text/plain',
+            filesize($testFilePath)
+        );
+        $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', array(), array('file' => $uploadedFile));
+        $this->assertSame(202, $content['response']['code']);
+        $objectId = $content['resource']['id'];
+        
         //create relations
-        //index original
-        //check for specific content_rus
+        $response = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), json_encode(array(
+            'subjectId' => $id,
+            'objectId' => $objectId,
+            'type' => 'search'
+        )));
+        $this->assertSame(201, $response['response']['code']);
+        
+        //reindex the subject resource
+        $indexer->indexResource($id);
+        
+        //check for new content fields imported from related resource
+        $response = $client->get('/ayamel/resource/'.$id)->send();
+        $this->assertSame(200, $response->getStatusCode());
+        $body = json_decode($response->getBody(), true);
+        $this->assertTrue(isset($body['_source']['content_canonical']));
+        $this->assertSame(1, count($body['_source']['content_canonical']));
+        $this->assertSame(0, strpos($body['_source']['content_canonical'][0], "To be, or not to be"));
+        $this->assertTrue(isset($body['_source']['content_rus']));
+        $this->assertSame(1, count($body['_source']['content_rus']));
+        $this->assertSame(0, strpos($body['_source']['content_rus'][0], "Быть иль не быть"));
+        
+        //index the object resource
+        $indexer->indexResource($objectId);
+        $response = $client->get('/ayamel/resource/'.$objectId)->send();
+        $this->assertSame(200, $response->getStatusCode());
+        $body = json_decode($response->getBody(), true);
+        $this->assertTrue(isset($body['_source']['content_canonical']));
+        $this->assertSame(1, count($body['_source']['content_canonical']));
+        $this->assertSame(0, strpos($body['_source']['content_canonical'][0], "Быть иль не быть"));
     }
 }

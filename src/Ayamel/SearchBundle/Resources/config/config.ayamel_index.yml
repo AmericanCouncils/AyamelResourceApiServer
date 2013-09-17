@@ -1,35 +1,66 @@
 parameters:
-    ayamel.search.content_field_names: 
-        content_ara: []  # arabic
-        content_arm: []  # armenian
-        content_baq: []  # basque
-        content_brz: []  # brazilian portuguese
-        content_bul: []  # bulgarian
-        content_cat: []  # catalan
-        content_zho: []  # chinese
-        content_cjk: []  # loosely defined asian scripts (chinese, japanese, korean, pin yin...)
-        content_ces: []  # czech
-        content_dan: []  # danish
-        content_dut: []  # dutch
-        content_eng: []  # english
-        content_fin: []  # finnish
-        content_fra: []  # french
-        content_glg: []  # galician
-        content_deu: []  # german
-        content_gre: []  # greek
-        content_hin: []  # hindi
-        content_hun: []  # hungarian
-        content_ind: []  # indonesian
-        content_ita: []  # italian
-        content_nor: []  # norwegian
-        content_fas: []  # persian
-        content_por: []  # portuguese
-        content_ron: []  # romanian
-        content_rus: []  # russian
-        content_spa: []  # spanish
-        content_swe: []  # swedish
-        content_tur: []  # turkish
-        content_tha: []  # thai
+    ayamel.search.language_field_map:
+        # arabic
+        ara: ['ar']
+        # arabic
+        arm: []
+        # basque
+        baq: []
+        # brazilian portuguese  
+        brz: []
+        # bulgarian  
+        bul: []
+        # catalan  
+        cat: []
+        # chinese  
+        zho: []
+        # loosely defined asian scripts (chinese, japanese, korean, pin yin...)  
+        cjk: []
+        # czech  
+        ces: []
+        # danish  
+        dan: []
+        # dutch  
+        dut: []
+        # english  
+        eng: ['en']
+        # finnish  
+        fin: []
+        # french  
+        fra: []
+        # galician  
+        glg: []
+        # german  
+        deu: []
+        # greek  
+        gre: []
+        # hindi  
+        hin: []
+        # hungarian  
+        hun: []
+        # indonesian  
+        ind: []
+        # italian  
+        ita: []
+        # norwegian  
+        nor: []
+        # persian  
+        fas: []
+        # portuguese  
+        por: []
+        # romanian  
+        ron: []
+        # russian  
+        rus: ['ru']
+        # spanish  
+        spa: []
+        # swedish  
+        swe: []
+        # turkish  
+        tur: []
+        # thai  
+        tha: []  
+        
     ayamel.search.ayamel_index:
         client: default
         types:

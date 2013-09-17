@@ -181,6 +181,9 @@ class ResourceIndexer
         //check related resources for indexable text
         foreach ($relatedResources as $resource) {
             $lang = $this->parseLanguage($resource->languages);
+            if (!$lang) {
+                $lang = 'canonical';
+            }
             $field = 'content_'.$lang;
             if (!isset($contentFields[$field])) {
                 $contentFields[$field] = array();
@@ -218,9 +221,41 @@ class ResourceIndexer
         return false;
     }
 
+    /**
+     * Note, it's assumed that the first language in any list is the primary language.
+     *
+     * @param Languages $langs
+     * @return string|false
+     */
     protected function parseLanguage(Languages $langs)
     {
-        //TODO: parse language fields to get generic language
-        return 'eng';
+        if ($langs->iso639_9) {
+            $tag = $langs->iso639_9[0];
+
+            if (isset($this->languageFieldMap[$tag])) {
+                return $tag;
+            }
+            
+            return $this->searchLanguageMapForTag($tag);
+            
+        } else if ($langs->bcp47) {
+            $exp = explode('-', $langs->iso639_9[0]);
+            $tag = $exp[0];
+            
+            return $this->searchLanguageMapForTag($tag);
+        }
+        
+        return false;
+    }
+    
+    protected function searchLanguageMapForTag($tag)
+    {
+        foreach ($this->languageFieldMap as $key => $vals) {
+            if (in_array($tag, $vals)) {
+                return $key;
+            }
+        }
+        
+        return false;
     }
 }
