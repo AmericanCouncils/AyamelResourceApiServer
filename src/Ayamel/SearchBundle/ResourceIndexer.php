@@ -86,6 +86,14 @@ class ResourceIndexer
             throw new IndexException(sprintf("Resource [%s] cannot be indexed until it has content.", $resource->getId()));
         }
 
+        //fill in relations if any
+        $relations = $this->manager->getRepository('AyamelResourceBundle:Relation')->getRelationsForResource($id, array(
+            'type' => 'search'
+        ));
+        if (count($relations) > 0) {
+            $resource->setRelations(iterator_to_array($relations));
+        }
+
         $this->type->addDocument($this->createResourceSearchDocument($resource));
         $this->type->getIndex()->refresh();
 
@@ -131,7 +139,9 @@ class ResourceIndexer
     {
         //meh, stupidly inefficient
         $data = json_decode($this->serializer->serialize($resource, 'json'), true);
-
+        
+        var_dump($resource->getRelations());
+        
         //now check search relations and get relevant file content
         $relatedResourceIds = array();
         $relatedResources = array();
@@ -142,7 +152,8 @@ class ResourceIndexer
         }
 
         if (!empty($relatedResourceIds)) {
-            $relatedResources = $this->manager->getRepository('AyamelResourceBundle:Resource')->find($relatedResourceIds);
+            $relatedResources = $this->manager->getRepository('AyamelResourceBundle:Resource')->findBy(array('id' => $relatedResourceIds));
+            $relatedResources = count($relatedResources) > 0 ? iterator_to_array($relatedResources) : array();
         }
 
         $contentFields = $this->generateContentFields($resource, $relatedResources);
@@ -152,7 +163,7 @@ class ResourceIndexer
     }
 
     /**
-     * This actuall imports file content for the main resource and related resource to populate all the "content_*" fields.
+     * This actually imports file content for the main resource and related resource to populate all the "content_*" fields.
      *
      * Note: Currently this is very inefficient, it's triggering requests one-by-one and can be refactored to make requests
      * for file content in parallel using a library like Guzzle.

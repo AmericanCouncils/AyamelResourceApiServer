@@ -186,7 +186,7 @@ class ResourceIndexerTest extends ApiTestCase
             )
         )));
         $this->assertSame(201, $response['response']['code']);
-        $resourceId = $response['resource']['id'];
+        $objectId = $response['resource']['id'];
         $uploadUrl = substr($response['contentUploadUrl'], strlen('http://localhost'));
         $testFilePath = __DIR__."/files/hamlet.en.txt";
         $uploadedFile = new UploadedFile(
@@ -197,7 +197,6 @@ class ResourceIndexerTest extends ApiTestCase
         );
         $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', array(), array('file' => $uploadedFile));
         $this->assertSame(202, $content['response']['code']);
-        $objectId = $content['resource']['id'];
         
         //create relations
         $response = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
