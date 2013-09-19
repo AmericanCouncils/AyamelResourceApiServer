@@ -32,7 +32,7 @@ class ResourceProvider implements ProviderInterface
             $loggerClosure('Indexing resources...');
         }
 
-        //TODO: get all ids from mongo
+        throw new \RuntimeException("Need query for available IDs...");
         $ids = array();
 
         if ($loggerClosure) {

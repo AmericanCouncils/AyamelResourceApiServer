@@ -46,7 +46,9 @@ class SearchIndexSubscriber implements EventSubscriberInterface
             return;
         }
         
-        // TODO: append new message
+        $this->messages[] = array(
+            'id' => $e->getResource()->getId()
+        );
 
         $this->container->get('event_dispatcher')->addListener(RestServiceSubscriber::API_TERMINATE, array($this, 'onApiTerminate'));
     }
@@ -61,7 +63,9 @@ class SearchIndexSubscriber implements EventSubscriberInterface
             return;
         }
         
-        // TODO: append new message
+        $this->messages[] = array(
+            'id' => $e->getSubjectResource()->getId()
+        );
         
         $this->container->get('event_dispatcher')->addListener(RestServiceSubscriber::API_TERMINATE, array($this, 'onApiTerminate'));
     }

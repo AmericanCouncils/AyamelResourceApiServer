@@ -11,6 +11,8 @@ use JMS\Serializer\SerializerInterface;
 use Elastica\Document;
 use Elastica\Type;
 use Psr\Log\LoggerInterface;
+use Ayamel\SearchBundle\Exception\IndexException;
+use Ayamel\SearchBundle\Exception\BulkIndexException;
 
 /**
  * This class implements the logic for creating Elastica search documents from
@@ -63,6 +65,65 @@ class ResourceIndexer
      **/
     public function indexResource($id)
     {
+        $doc = $this->createResourceSearchDocumentForId($id);
+
+        if ($doc instanceof Document) {
+            $this->type->addDocument($doc);
+            $this->type->getIndex()->refresh();
+            return true;
+        }
+        
+        return false;
+    }
+
+    public function indexResources(array $ids, $batch = 100)
+    {
+        $count = 0;
+        $failed = array();
+        foreach ($ids as $id) {
+            try {
+                $count++;
+                $this->type->addDocument($this->createResourceSearchDocumentForId($id));
+            } catch (IndexException $e) {
+                $failed[] = $id;
+                continue;
+            }
+            
+            if ($count >= $batch) {
+                $count = 0;
+                $this->type->getIndex()->refresh();
+            }
+        }
+        
+        $this->type->getIndex()->refresh();
+        
+        if (!empty($failed)) {
+            throw new BulkIndexException($failed);
+        }
+        
+        return true;
+    }
+    
+    public function indexResourcesByFields(array $fields = array(), $batch = 100)
+    {
+        throw new \RuntimeException('not implemented');
+        
+        $ids = array(); //query for ids;
+        
+        $this->indexResources($ids, $batch);
+
+        return true;
+    }
+    
+    /**
+     * Given an ID, this will create a corresponding search document IF POSSIBLE.
+     * If the Resource was deleted, it will be immediately removed from the index.
+     *
+     * @param string $id 
+     * @return Elastca\Document
+     */
+    protected function createResourceSearchDocumentForId($id)
+    {
         $resource = $this->manager->getRepository('AyamelResourceBundle:Resource')->find($id);
 
         if (!$resource) {
@@ -95,30 +156,17 @@ class ResourceIndexer
         if (count($relations) > 0) {
             $resource->setRelations(iterator_to_array($relations));
         }
-
-        $this->type->addDocument($this->createResourceSearchDocument($resource));
-        $this->type->getIndex()->refresh();
-
-        return true;
-    }
-
-    public function indexResourcesByFields(array $fields = array(), $batch = 100)
-    {
-        throw new \RuntimeException('not implemented');
-    }
-
-    public function indexResources(array $ids, $batch = 100)
-    {
-        throw new \RuntimeException("Not yet implemented.");
+        
+        return $this->createResourceSearchDocument($resource);
     }
 
     /**
      * Creates an Elastica document from a Resource.  This will search the database
      * for related Resources to find text content that should be indexed.
      *
-     * @return Document
+     * @return Elastica\Document
      **/
-    public function createResourceSearchDocument(Resource $resource)
+    protected function createResourceSearchDocument(Resource $resource)
     {
         //meh, stupidly inefficient
         $data = json_decode($this->serializer->serialize($resource, 'json'), true);

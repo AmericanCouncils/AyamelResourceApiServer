@@ -24,7 +24,7 @@ class ResourceIndexerTest extends ApiTestCase
 
     public function testThrowsExceptionOnNonExistingResource()
     {
-        $this->setExpectedException('Ayamel\SearchBundle\IndexException');
+        $this->setExpectedException('Ayamel\SearchBundle\Exception\IndexException');
         $this->getContainer()->get('ayamel.search.resource_indexer')->indexResource('123456');
     }
 
@@ -39,7 +39,7 @@ class ResourceIndexerTest extends ApiTestCase
         $this->assertSame(201, $response['response']['code']);
         $resourceId = $response['resource']['id'];
 
-        $this->setExpectedException('Ayamel\SearchBundle\IndexException');
+        $this->setExpectedException('Ayamel\SearchBundle\Exception\IndexException');
         $this->getContainer()->get('ayamel.search.resource_indexer')->indexResource($resourceId);
     }
 
@@ -54,7 +54,7 @@ class ResourceIndexerTest extends ApiTestCase
         $this->assertSame(201, $response['response']['code']);
         $resourceId = $response['resource']['id'];
 
-        $this->setExpectedException('Ayamel\SearchBundle\IndexException');
+        $this->setExpectedException('Ayamel\SearchBundle\Exception\IndexException');
         $this->getContainer()->get('ayamel.search.resource_indexer')->indexResource($resourceId);
     }
 
@@ -230,5 +230,10 @@ class ResourceIndexerTest extends ApiTestCase
         $this->assertTrue(isset($body['_source']['content_canonical']));
         $this->assertSame(1, count($body['_source']['content_canonical']));
         $this->assertSame(0, strpos($body['_source']['content_canonical'][0], "Быть иль не быть"));
+    }
+    
+    public function testBulkIndexResources()
+    {
+        $this->markTestSkipped();
     }
 }
