@@ -87,9 +87,11 @@ class ResourceIndexer
         }
 
         //fill in relations if any
-        $relations = $this->manager->getRepository('AyamelResourceBundle:Relation')->getRelationsForResource($id, array(
-            'type' => 'search'
-        ));
+        $relations = $this->manager->getRepository('AyamelResourceBundle:Relation')->getQBForRelations(array(
+            'subjectId' => $id,
+            'client.id' => $resource->getClient()->getId()
+        ))->getQuery()->execute();
+
         if (count($relations) > 0) {
             $resource->setRelations(iterator_to_array($relations));
         }
@@ -107,26 +109,7 @@ class ResourceIndexer
 
     public function indexResources(array $ids, $batch = 100)
     {
-        $newDocs = array();
-        $deletedDocs = array();
-
         throw new \RuntimeException("Not yet implemented.");
-    }
-
-    public function createSearchDocumentById($id)
-    {
-        throw new \RuntimeException("not implemented");
-
-        $resource = $this->manager->getRepository('AyamelResourceBundle:Resource')->find($id);
-        $relations = $this->manager->getRepository('AyamelResourceBundle:Relation')->getRelationsForResource($id, array(
-            'type' => 'search'
-        ));
-
-        if (count($relations) > 0) {
-            $resource->setRelations(iterator_to_array($relations));
-        }
-
-        return $this->createResourceSearchDocument($resource);
     }
 
     /**
@@ -139,9 +122,7 @@ class ResourceIndexer
     {
         //meh, stupidly inefficient
         $data = json_decode($this->serializer->serialize($resource, 'json'), true);
-        
-        var_dump($resource->getRelations());
-        
+                
         //now check search relations and get relevant file content
         $relatedResourceIds = array();
         $relatedResources = array();
@@ -152,8 +133,11 @@ class ResourceIndexer
         }
 
         if (!empty($relatedResourceIds)) {
-            $relatedResources = $this->manager->getRepository('AyamelResourceBundle:Resource')->findBy(array('id' => $relatedResourceIds));
-            $relatedResources = count($relatedResources) > 0 ? iterator_to_array($relatedResources) : array();
+            $relatedResources = $this->manager->getRepository('AyamelResourceBundle:Resource')
+                ->getQBForResources(array('id' => $relatedResourceIds))
+                ->getQuery()
+                ->execute();
+            $relatedResources = count($relatedResources) > 0 ? iterator_to_array($relatedResources) : array();            
         }
 
         $contentFields = $this->generateContentFields($resource, $relatedResources);
@@ -190,18 +174,20 @@ class ResourceIndexer
         }
 
         //check related resources for indexable text
-        foreach ($relatedResources as $resource) {
-            $lang = $this->parseLanguage($resource->languages);
+        foreach ($relatedResources as $related) {
+            $lang = $this->parseLanguage($related->languages);
+                        
             if (!$lang) {
                 $lang = 'canonical';
             }
+            
             $field = 'content_'.$lang;
             if (!isset($contentFields[$field])) {
                 $contentFields[$field] = array();
             }
 
-            if ($resource->content) {
-                foreach ($resource->content->getFiles() as $fileReference) {
+            if ($related->content) {
+                foreach ($related->content->getFiles() as $fileReference) {
                     if (in_array($fileReference->getMimeType(), $this->indexableMimeTypes)) {
                         if ($content = $this->retrieveContent($fileReference)) {
                             $contentFields[$field][] = $content;
@@ -240,8 +226,8 @@ class ResourceIndexer
      */
     protected function parseLanguage(Languages $langs)
     {
-        if ($langs->iso639_9) {
-            $tag = $langs->iso639_9[0];
+        if ($langs->iso639_3) {
+            $tag = $langs->iso639_3[0];
 
             if (isset($this->languageFieldMap[$tag])) {
                 return $tag;
@@ -250,7 +236,7 @@ class ResourceIndexer
             return $this->searchLanguageMapForTag($tag);
             
         } else if ($langs->bcp47) {
-            $exp = explode('-', $langs->iso639_9[0]);
+            $exp = explode('-', $langs->bcp47[0]);
             $tag = $exp[0];
             
             return $this->searchLanguageMapForTag($tag);

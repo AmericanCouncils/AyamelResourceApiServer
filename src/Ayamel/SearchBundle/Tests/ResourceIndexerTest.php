@@ -188,7 +188,7 @@ class ResourceIndexerTest extends ApiTestCase
         $this->assertSame(201, $response['response']['code']);
         $objectId = $response['resource']['id'];
         $uploadUrl = substr($response['contentUploadUrl'], strlen('http://localhost'));
-        $testFilePath = __DIR__."/files/hamlet.en.txt";
+        $testFilePath = __DIR__."/files/hamlet.ru.txt";
         $uploadedFile = new UploadedFile(
             $testFilePath,
             'hamlet.ru.txt',
