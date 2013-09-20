@@ -17,7 +17,8 @@ class SearchApiTest extends ApiTestCase
     public function testSetupDummyResources()
     {
         $ids = array();
-
+        
+        
         $this->markTestSkipped();
 
         return $ids;

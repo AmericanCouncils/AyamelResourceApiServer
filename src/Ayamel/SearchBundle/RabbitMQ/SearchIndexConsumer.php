@@ -54,6 +54,8 @@ class SearchIndexConsumer implements ConsumerInterface
 
                 return true;
             }
+            
+            $logger->warning(sprintf('Indexing failed [%s]: %s', $body['id'], $e->getMessage()));
 
             return false;
         }
