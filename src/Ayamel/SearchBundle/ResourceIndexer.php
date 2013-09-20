@@ -17,7 +17,7 @@ use Ayamel\SearchBundle\Exception\BulkIndexException;
 /**
  * This class implements the logic for creating Elastica search documents from
  * Resource objects.
- * 
+ *
  * NOTE: This implementation currently contains a bit of a hack using the serializer - once the serializer
  * supports serializing to arrays, it can be made more efficient: https://github.com/schmittjoh/serializer/pull/20/
  *
@@ -40,8 +40,8 @@ class ResourceIndexer
      **/
     public function __construct(
         DocumentManager $manager,
-        Type $resourceType, 
-        SerializerInterface $serializer, 
+        Type $resourceType,
+        SerializerInterface $serializer,
         array $indexableMimeTypes = array('text/plain'),
         array $indexableResourceTypes = array('audio','video','image'),
         LoggerInterface $logger = null,
@@ -60,8 +60,8 @@ class ResourceIndexer
      * Update a Resource's search index document.  If the Resource was deleted,
      * this will take care of removing it from the search index as well.
      *
-     * @return boolean Returns true when operation was successful, false otherwise
-     * @throws  IndexException Thrown when a Resource could not be indexed.
+     * @return boolean        Returns true when operation was successful, false otherwise
+     * @throws IndexException Thrown when a Resource could not be indexed.
      **/
     public function indexResource($id)
     {
@@ -70,9 +70,10 @@ class ResourceIndexer
         if ($doc instanceof Document) {
             $this->type->addDocument($doc);
             $this->type->getIndex()->refresh();
+
             return true;
         }
-        
+
         return false;
     }
 
@@ -83,43 +84,46 @@ class ResourceIndexer
         foreach ($ids as $id) {
             try {
                 $count++;
-                $this->type->addDocument($this->createResourceSearchDocumentForId($id));
+                $doc = $this->createResourceSearchDocumentForId($id);
+                if ($doc) {
+                    $this->type->addDocument($doc);
+                }
             } catch (IndexException $e) {
-                $failed[] = $id;
+                $failed[$id] = $e->getMessage();
                 continue;
             }
-            
+
             if ($count >= $batch) {
                 $count = 0;
                 $this->type->getIndex()->refresh();
             }
         }
-        
+
         $this->type->getIndex()->refresh();
-        
+
         if (!empty($failed)) {
             throw new BulkIndexException($failed);
         }
-        
+
         return true;
     }
-    
+
     public function indexResourcesByFields(array $fields = array(), $batch = 100)
     {
         throw new \RuntimeException('not implemented');
-        
+
         $ids = array(); //query for ids;
-        
+
         $this->indexResources($ids, $batch);
 
         return true;
     }
-    
+
     /**
      * Given an ID, this will create a corresponding search document IF POSSIBLE.
      * If the Resource was deleted, it will be immediately removed from the index.
      *
-     * @param string $id 
+     * @param  string           $id
      * @return Elastca\Document
      */
     protected function createResourceSearchDocumentForId($id)
@@ -130,13 +134,14 @@ class ResourceIndexer
             if ($this->logger) {
                 $this->logger->warning(sprintf("Tried indexing a non-exiting resource [%s]", $id));
             }
-            
+
             throw new IndexException("The Resource could not be found in order to index.");
         }
 
         if ($resource->isDeleted()) {
             $this->type->deleteById($id);
-            return true;
+
+            return false;
         }
 
         if (!in_array($resource->getType(), $this->indexableResourceTypes)) {
@@ -156,7 +161,7 @@ class ResourceIndexer
         if (count($relations) > 0) {
             $resource->setRelations(iterator_to_array($relations));
         }
-        
+
         return $this->createResourceSearchDocument($resource);
     }
 
@@ -170,7 +175,7 @@ class ResourceIndexer
     {
         //meh, stupidly inefficient
         $data = json_decode($this->serializer->serialize($resource, 'json'), true);
-                
+
         //now check search relations and get relevant file content
         $relatedResourceIds = array();
         $relatedResources = array();
@@ -185,7 +190,7 @@ class ResourceIndexer
                 ->getQBForResources(array('id' => $relatedResourceIds))
                 ->getQuery()
                 ->execute();
-            $relatedResources = count($relatedResources) > 0 ? iterator_to_array($relatedResources) : array();            
+            $relatedResources = count($relatedResources) > 0 ? iterator_to_array($relatedResources) : array();
         }
 
         $contentFields = $this->generateContentFields($resource, $relatedResources);
@@ -224,11 +229,11 @@ class ResourceIndexer
         //check related resources for indexable text
         foreach ($relatedResources as $related) {
             $lang = $this->parseLanguage($related->languages);
-                        
+
             if (!$lang) {
                 $lang = 'canonical';
             }
-            
+
             $field = 'content_'.$lang;
             if (!isset($contentFields[$field])) {
                 $contentFields[$field] = array();
@@ -258,7 +263,7 @@ class ResourceIndexer
                 if ($this->logger) {
                     $this->logger->warning(sprintf("Failed getting search index content at [%s]", $uri));
                 }
-                
+
                 return false;
             }
         }
@@ -269,30 +274,34 @@ class ResourceIndexer
     /**
      * Note, it's assumed that the first language in any list is the primary language.
      *
-     * @param Languages $langs
+     * @param  Languages    $langs
      * @return string|false
      */
-    protected function parseLanguage(Languages $langs)
+    protected function parseLanguage(Languages $langs = null)
     {
+        if (!$langs) {
+            return false;
+        }
+
         if ($langs->iso639_3) {
             $tag = $langs->iso639_3[0];
 
             if (isset($this->languageFieldMap[$tag])) {
                 return $tag;
             }
-            
+
             return $this->searchLanguageMapForTag($tag);
-            
-        } else if ($langs->bcp47) {
+
+        } elseif ($langs->bcp47) {
             $exp = explode('-', $langs->bcp47[0]);
             $tag = $exp[0];
-            
+
             return $this->searchLanguageMapForTag($tag);
         }
-        
+
         return false;
     }
-    
+
     protected function searchLanguageMapForTag($tag)
     {
         foreach ($this->languageFieldMap as $key => $vals) {
@@ -300,7 +309,7 @@ class ResourceIndexer
                 return $key;
             }
         }
-        
+
         return false;
     }
 }

@@ -6,61 +6,61 @@ parameters:
         arm: []
         # basque
         baq: []
-        # brazilian portuguese  
+        # brazilian portuguese
         brz: []
-        # bulgarian  
+        # bulgarian
         bul: []
-        # catalan  
+        # catalan
         cat: []
-        # chinese  
+        # chinese
         zho: []
-        # loosely defined asian scripts (chinese, japanese, korean, pin yin...)  
+        # loosely defined asian scripts (chinese, japanese, korean, pin yin...)
         cjk: []
-        # czech  
+        # czech
         ces: []
-        # danish  
+        # danish
         dan: []
-        # dutch  
+        # dutch
         dut: []
-        # english  
+        # english
         eng: ['en']
-        # finnish  
+        # finnish
         fin: []
-        # french  
+        # french
         fra: []
-        # galician  
+        # galician
         glg: []
-        # german  
+        # german
         deu: []
-        # greek  
+        # greek
         gre: []
-        # hindi  
+        # hindi
         hin: []
-        # hungarian  
+        # hungarian
         hun: []
-        # indonesian  
+        # indonesian
         ind: []
-        # italian  
+        # italian
         ita: []
-        # norwegian  
+        # norwegian
         nor: []
-        # persian  
+        # persian
         fas: []
-        # portuguese  
+        # portuguese
         por: []
-        # romanian  
+        # romanian
         ron: []
-        # russian  
+        # russian
         rus: ['ru']
-        # spanish  
+        # spanish
         spa: []
-        # swedish  
+        # swedish
         swe: []
-        # turkish  
+        # turkish
         tur: []
-        # thai  
-        tha: []  
-        
+        # thai
+        tha: []
+
     ayamel.search.ayamel_index:
         client: default
         types:
@@ -174,5 +174,4 @@ parameters:
                     analyzer:
                         default:
                             type: standard
-                    #filter: 
-
+                    #filter:

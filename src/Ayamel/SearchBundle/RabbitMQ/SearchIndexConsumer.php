@@ -32,23 +32,29 @@ class SearchIndexConsumer implements ConsumerInterface
     public function execute(AMQPMessage $msg)
     {
         $body = unserialize($msg->body);
-        $batch = $this->container->get('ayamel.search.elastica_resource_provider.batch');
+        $batch = $this->container->getParameter('ayamel.search.elastica_resource_provider.batch');
 
         try {
             if (isset($body['id'])) {
-                $this->container->get('ayamel.search.indexer')->indexResource($body['id']);
+                $this->container->get('ayamel.search.resource_indexer')->indexResource($body['id']);
             }
-            
+
             if (isset($body['ids'])) {
-                $this->container->get('ayamel.search.indexer')->indexResources($body['ids'], $batch);
+                $this->container->get('ayamel.search.resource_indexer')->indexResources($body['ids'], $batch);
             }
-            
+
             return true;
         } catch (IndexException $e) {
+            $logger = $this->container->get('logger');
+
             if ($e instanceof BulkIndexException) {
+                foreach ($e->getMessages() as $id => $message) {
+                    $logger->warning(sprintf('Indexing failed [%s]: %s', $id, $message));
+                }
+
                 return true;
             }
-            
+
             return false;
         }
     }

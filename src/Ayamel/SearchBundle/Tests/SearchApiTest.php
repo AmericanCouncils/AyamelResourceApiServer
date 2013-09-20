@@ -13,16 +13,16 @@ use Ayamel\ApiBundle\ApiTestCase;
  */
 class SearchApiTest extends ApiTestCase
 {
-    
+
     public function testSetupDummyResources()
     {
         $ids = array();
-        
+
         $this->markTestSkipped();
-        
+
         return $ids;
     }
-    
+
     /**
      * @depends testSetupDummyResources
      */
@@ -30,7 +30,7 @@ class SearchApiTest extends ApiTestCase
     {
         $this->markTestSkipped();
     }
-    
+
     /**
      * @depends testSetupDummyResources
      */
@@ -38,7 +38,7 @@ class SearchApiTest extends ApiTestCase
     {
         $this->markTestSkipped();
     }
-    
+
     /**
      * @depends testSetupDummyResources
      */
@@ -46,7 +46,7 @@ class SearchApiTest extends ApiTestCase
     {
         $this->markTestSkipped();
     }
-    
+
     /**
      * @depends testSetupDummyResources
      */

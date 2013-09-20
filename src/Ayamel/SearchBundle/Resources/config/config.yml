@@ -28,7 +28,7 @@ services:
 
     ayamel.search.resource_indexer:
         class: Ayamel\SearchBundle\ResourceIndexer
-        arguments: 
+        arguments:
             - @doctrine.odm.mongodb.document_manager
             - @fos_elastica.index.ayamel.resource
             - @serializer
@@ -39,9 +39,8 @@ services:
 
     ayamel.search.elastica_resource_provider:
         class: Ayamel\SearchBundle\Provider\ResourceProvider
-        arguments: 
+        arguments:
             - @ayamel.search.resource_indexer
             - %ayamel.search.elastica_resource_provider.batch%
         tags:
             - { name: fos_elastica.provider, index: ayamel, type: resource }
-

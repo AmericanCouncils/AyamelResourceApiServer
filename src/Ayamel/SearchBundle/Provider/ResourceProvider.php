@@ -9,21 +9,21 @@ use Elastica\Type;
 /**
  * The ResourceProvider implements the necessary interface from FOSElasticaBundle to populate the search
  * index with Resources.  It uses the ResourceIndexer to convert Resources into Elastica Documents.
- * 
+ *
  * @package AyamelSearchBundle
  * @author Evan Villemez
  **/
 class ResourceProvider implements ProviderInterface
 {
-	private $indexer;
+    private $indexer;
     private $type;
 
-	public function __construct(ResourceIndexer $indexer, $batch = 100)
-	{
-		$this->indexer = $indexer;
+    public function __construct(ResourceIndexer $indexer, $batch = 100)
+    {
+        $this->indexer = $indexer;
         $this->type = $resourceType;
         $this->batch = 100;
-	}
+    }
 
 	public function populate(\Closure $loggerClosure = null, array $options = array())
     {

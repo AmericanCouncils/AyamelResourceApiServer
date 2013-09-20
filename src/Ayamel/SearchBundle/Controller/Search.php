@@ -16,7 +16,7 @@ class Search extends ApiController
     {
         throw $this->createHttpException(501, 'Not implemented.');
     }
-    
+
     public function advancedSearchAction()
     {
         throw $this->createHttpException(501, 'Not implemented.');
