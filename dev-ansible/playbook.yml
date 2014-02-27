@@ -7,10 +7,14 @@
       vars:
         small_files: true
     - include: common/tasks/install_symfony_reqs.yml
-    - include: common/tasks/install_rabbitmq_server.yml
+    # - include: common/tasks/install_rabbitmq_server.yml
+    - copy:
+        src: ../app/config/parameters.default.yml
+        dest: /vagrant/app/config/parameters.yml
     - include: common/tasks/dev_service_symfony.yml
       vars:
         name: ayamel-dev
+        symfony_env: dev
         dir: /vagrant
     - file: src=/vagrant/app/console dest=/usr/local/bin/ayamel state=link
     - file: src=/vagrant dest=/home/vagrant/ayamel-server state=link
@@ -18,8 +22,8 @@
     - include: common/handlers/sys.yml
     - name: restart ayamel-dev
       supervisorctl: name=ayamel-dev state=restarted
-    - name: restart rabbitmq-server
-      supervisorctl: name=rabbitmq-server state=restarted      
+    # - name: restart rabbitmq-server
+    #   supervisorctl: name=rabbitmq-server state=restarted      
 
 
 
