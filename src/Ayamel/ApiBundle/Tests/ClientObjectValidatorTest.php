@@ -17,6 +17,10 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ClientObjectValidatorTest extends ApiTestCase
 {
+    public function testNothing()
+    {
+        $this->assertEqual(true,true);
+    }
     public function testGetService()
     {
         $c = $this->getContainer();
