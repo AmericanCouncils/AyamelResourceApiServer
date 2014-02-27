@@ -1,0 +1,23 @@
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = "raring64"
+  config.vm.box_url = "http://cloud-images.ubuntu.com/vagrant/raring/current/raring-server-cloudimg-amd64-vagrant-disk1.box"
+
+  config.vm.hostname = "ayamel-dev"
+  config.vm.define "ayamel-dev"
+
+  config.vm.provision "ansible" do |a|
+    a.playbook = "dev-ansible/playbook.yml"
+    a.host_key_checking = false
+    a.sudo = true
+  end
+
+  # Create a private network, which allows host-only access to the machine
+  # using a specific IP.
+  config.vm.network :private_network, ip: "192.168.13.38"
+
+  #forcing NFS for slightly better performance
+  config.vm.synced_folder ".", "/vagrant", nfs: true
+
+end

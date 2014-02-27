@@ -9,4 +9,10 @@ app/files/*
 web/examples/
 app/config/parameters.yml
 web/files
+*~
+*.DS-Store
+app/bootstrap.php.cache
+bin
+.vagrant
+vagrant_ansible_inventory_*
 
