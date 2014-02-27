@@ -1,0 +1,29 @@
+- hosts: all
+  vars:
+    production: false
+  tasks:
+    - include: common/tasks/sys.yml
+    - include: common/tasks/install_mongodb.yml
+      vars:
+        small_files: true
+    - include: common/tasks/install_symfony_reqs.yml
+    - include: common/tasks/install_rabbitmq_server.yml
+    - include: common/tasks/dev_service_symfony.yml
+      vars:
+        name: ayamel-dev
+        dir: /vagrant
+    - file: src=/vagrant/app/console dest=/usr/local/bin/ayamel state=link
+    - file: src=/vagrant dest=/home/vagrant/ayamel-server state=link
+  handlers:
+    - include: common/handlers/sys.yml
+    - name: restart ayamel-dev
+      supervisorctl: name=ayamel-dev state=restarted
+    - name: restart rabbitmq-server
+      supervisorctl: name=rabbitmq-server state=restarted      
+
+
+
+# ln -fs /vagrant/app/console /usr/local/bin/ayamel
+# ln -fs /vagrant /home/vagrant/ayamel-server
+
+# echo 'Environment configured for ayamel-server. Run "vagrant ssh" to log into the dev machine, then cd to /vagrant and run app/console server:run 0.0.0.0:8000'
