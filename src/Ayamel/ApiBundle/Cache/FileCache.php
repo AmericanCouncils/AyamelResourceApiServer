@@ -19,6 +19,7 @@ class FileCache extends CacheProvider
      * Must receive a root directory to use for file storage.
      * Will attempt to create the given directory if it doesn't exist.
      *
+     *
      * @param string $dir
      */
     public function __construct($dir)
