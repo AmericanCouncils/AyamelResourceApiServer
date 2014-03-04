@@ -35,6 +35,9 @@
         "ac/media-info-bundle": "1.2.*",
         "ornicar/apc-bundle": "dev-master"
     },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*"
+    },
     "scripts": {
         "post-install-cmd": [
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
