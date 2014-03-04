@@ -24,7 +24,7 @@
     - name: restart ayamel-dev
       supervisorctl: name=ayamel-dev state=restarted
     - name: restart rabbitmq-server
-      supervisorctl: name=rabbitmq-server state=restarted      
+      supervisorctl: name=rabbitmq-server state=restarted
 
 
 
