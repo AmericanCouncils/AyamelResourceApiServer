@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class ContentUploadIntegrationTest extends ApiTestCase
 {
 
-    //a series of test as this is a one-time-use url
+    //a series of tests as this is a one-time-use url
     public function testGetUploadUrl()
     {
         $data = array(
@@ -158,7 +158,6 @@ class ContentUploadIntegrationTest extends ApiTestCase
         );
 
         $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', array(), array('file' => $uploadedFile));
-
         $this->assertSame(202, $content['response']['code']);
         $this->assertSame('awaiting_processing', $content['resource']['status']);
         $this->assertSame($data['title'], $content['resource']['title']);
