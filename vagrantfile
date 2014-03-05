@@ -7,6 +7,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.hostname = "ayamel.vagrant.dev"
   config.vm.define "ayamel.vagrant.dev"
 
+  config.vm.provider "virtualbox" do |v|
+    v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+    v.memory = 1024
+  end
+
   config.vm.provision "ansible" do |a|
     a.playbook = "dev-ansible/playbook.yml"
     a.host_key_checking = false
