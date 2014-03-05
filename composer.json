@@ -27,13 +27,13 @@
         "sensio/distribution-bundle": "2.3.*",
         "sensio/generator-bundle": "2.3.*",
         "ac/transcoding-bundle": "0.4.*",
-        "oldsound/rabbitmq-bundle": "dev-master",
+        "oldsound/rabbitmq-bundle": "~1.1",
         "nelmio/api-doc-bundle": "2.3.*",
         "nelmio/cors-bundle": "1.1.*",
-        "jms/serializer-bundle": "dev-master",
+        "jms/serializer-bundle": "0.13.*",
         "ac/web-services-bundle": "0.1.*",
         "ac/media-info-bundle": "1.2.*",
-        "ornicar/apc-bundle": "dev-master"
+        "ornicar/apc-bundle": "~1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*"

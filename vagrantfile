@@ -13,11 +13,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     a.sudo = true
   end
 
+  #up memory a little bit
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 1024
+  end
+
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
   config.vm.network :private_network, ip: "192.168.13.38"
 
   #forcing NFS for slightly better performance
   config.vm.synced_folder ".", "/vagrant", nfs: true
-
 end
