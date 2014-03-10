@@ -21,9 +21,10 @@ class Search extends ApiController
 {
     public function simpleSearchAction(Request $request)
     {
-        throw $this->createHttpException(501, 'Not implemented.');
+        // throw $this->createHttpException(501, 'Not implemented.');
         
         if ($q = $request->query->get('q', false)) {
+            print_r($request);
             throw $this->createHttpException(400, "Searches must include a string query via the [q] parameter.");
         }
         

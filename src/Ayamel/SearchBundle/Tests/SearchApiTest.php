@@ -14,14 +14,36 @@ use Ayamel\ApiBundle\ApiTestCase;
 class SearchApiTest extends ApiTestCase
 {
 
+    public function setUp()
+    {
+        // add some dummy resources to query
+        $json = $this->getJson('POST', '/api/v1/resources?_key='.'1', array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), json_encode(array(
+            'title' => 'Russia House',
+            'type' => 'video',
+            'description' => 'An expatriate British publisher unexpectedly finds himself working for British intelligence to investigate people in Russia.'
+        )));
+
+        $json = $this->getJson('POST', '/api/v1/resources?_key='.'2', array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), json_encode(array(
+            'title' => 'Dire Dire Docks',
+            'type' => 'uri',
+            'description' => 'An original vocal arrangement of the Super Mario 64 song Dire Dire Docks.',
+            'uri' => 'https://www.youtube.com/watch?v=GBBlLeqKaf4'
+        )));             
+    }
+
     public function testSetupDummyResources()
     {
-        $ids = array();
-        
-        
-        // $this->markTestSkipped();
 
-        return $ids;
+        $response = $this->getJson('GET', '/api/v1/resources', array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), json_encode(['id' => [1,2]]));
+        // $this->markTestIncomplete();
+        // query db to make sure that the dummy resources are present
+
     }
 
     /**
@@ -29,21 +51,14 @@ class SearchApiTest extends ApiTestCase
      */
     public function testSimpleSearchApi($ids)
     {
-        
-        $requestData = json_encode([
-            'query_string' => 'Russia',
-        ]);
-        $this->getClient()->request('GET', '/api/search', [], [], [
+        $response = $this->getJson('GET', '/api/v1/resources/search',  array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
-        ], $requestData);
-        $crawler = $this->getClient()->request('GET', '/api/search');
-        $this->assertFalse(empty($this->getClient()->getResponse()));
-
-
-        // $content = json_decode($this->getClient()->getResponse()->getContent(), True);
-        // print_r($content);
-        // $this->assertSame(200, $content['response']['code']);
-        // $this->assertFalse(500 != $content['response']['code']);
+        ), json_encode(['q' => 'russia']));
+        $code = $response['response']['code'];
+        if (200 != $code) {
+            print_r($response);
+        }
+        $this->assertSame(200, $code);
     }
 
     /**

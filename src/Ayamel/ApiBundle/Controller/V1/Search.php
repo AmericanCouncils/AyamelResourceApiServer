@@ -5,6 +5,7 @@ namespace Ayamel\ApiBundle\Controller\V1;
 use Ayamel\ApiBundle\Controller\ApiController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Request;
+use Ayamel\SearchBundle\Controller\Search as SearchBundle;
 
 class Search extends ApiController
 {
@@ -23,7 +24,8 @@ class Search extends ApiController
      */
     public function searchForResources(Request $request)
     {
-        throw $this->createHttpException(501, sprintf("Not yet implemented [%s]", __METHOD__));
+        $searchBundle = new SearchBundle();
+        return $searchBundle->simpleSearchAction($request);
     }
 
 }
