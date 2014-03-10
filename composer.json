@@ -20,7 +20,7 @@
         "ext-fileinfo": "*",
         "ext-pcntl": "*",
         "symfony/symfony": "2.3.*",
-        "doctrine/mongodb-odm-bundle": "dev-master",
+        "doctrine/mongodb-odm-bundle": "3.0.*@dev",
         "symfony/assetic-bundle": "2.3.*",
         "symfony/swiftmailer-bundle": "2.3.*",
         "symfony/monolog-bundle": "2.3.*",
