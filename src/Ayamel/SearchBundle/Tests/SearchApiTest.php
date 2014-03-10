@@ -19,7 +19,7 @@ class SearchApiTest extends ApiTestCase
         $ids = array();
         
         
-        $this->markTestSkipped();
+        // $this->markTestSkipped();
 
         return $ids;
     }
@@ -29,7 +29,21 @@ class SearchApiTest extends ApiTestCase
      */
     public function testSimpleSearchApi($ids)
     {
-        $this->markTestSkipped();
+        
+        $requestData = json_encode([
+            'query_string' => 'Russia',
+        ]);
+        $this->getClient()->request('GET', '/api/search', [], [], [
+            'CONTENT_TYPE' => 'application/json'
+        ], $requestData);
+        $crawler = $this->getClient()->request('GET', '/api/search');
+        $this->assertFalse(empty($this->getClient()->getResponse()));
+
+
+        // $content = json_decode($this->getClient()->getResponse()->getContent(), True);
+        // print_r($content);
+        // $this->assertSame(200, $content['response']['code']);
+        // $this->assertFalse(500 != $content['response']['code']);
     }
 
     /**
