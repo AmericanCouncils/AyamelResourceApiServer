@@ -4,6 +4,7 @@ namespace Ayamel\ApiBundle;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Process\Process;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\NullOutput;
 
@@ -15,6 +16,29 @@ abstract class ApiTestCase extends WebTestCase
         $db = $c->get('doctrine_mongodb.odm.default_connection')->selectDatabase($c->getParameter('mongodb_database'));
         $db->dropCollection('resources');
         $db->dropCollection('relations');
+    }
+
+    protected function startRabbitListener($numMessages = 1)
+    {
+        $container = $this->getContainer();
+
+        //clear rabbitmq message queue
+        try {
+            $container->get('old_sound_rabbit_mq.search_index_producer')->getChannel()->queue_purge('search_index');
+        } catch (\PhpAmqpLib\Exception\AMQPProtocolChannelException $e) {
+            //swallow this error because of travis
+        }
+
+        //start index listener
+        $consolePath = $container->getParameter('kernel.root_dir').DIRECTORY_SEPARATOR."console";
+        $rabbitProcess = new Process(sprintf('%s --env=test rabbitmq:consumer search_index --messages='.$numMessages.' --verbose', $consolePath));
+        $rabbitProcess->start();
+        usleep(500000); //wait half a second, check to make sure process is still up
+        if (!$rabbitProcess->isRunning()) {
+            throw new \RuntimeException(($rabbitProcess->isSuccessful()) ? $rabbitProcess->getOutput() : $rabbitProcess->getErrorOutput());
+        }
+
+        return $rabbitProcess;
     }
 
     /**
