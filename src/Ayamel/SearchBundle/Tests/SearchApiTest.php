@@ -18,34 +18,26 @@ class SearchApiTest extends ApiTestCase
     {
         // add some dummy resources to query
         $this->clearDatabase();
-        $json = $this->getJson('POST', '/api/v1/resources', array(), array(), array(
+
+        $json = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array(
             'title' => 'Russia House',
-            'type' => 'video',
-            'description' => 'An expatriate British publisher unexpectedly finds himself working for British intelligence to investigate people in Russia.'
+            'type' => 'data',
         )));
 
-        $json = $this->getJson('POST', '/api/v1/resources', array(), array(), array(
+        $json = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array(
-            'title' => 'Dire Dire Docks',
-            'type' => 'uri',
-            'description' => 'An original vocal arrangement of the Super Mario 64 song Dire Dire Docks.',
-            'uri' => 'https://www.youtube.com/watch?v=GBBlLeqKaf4'
-        )));             
+            'title' => 'Sealand House',
+            'type' => 'data',
+        )));     
     }
 
     public function testSetupDummyResources()
     {
-
         $response = $this->getJson('GET', '/api/v1/resources');
-        $this->assertFalse(empty($response['resources']));
-
-        print_r($response);
-        // $this->markTestIncomplete();
-        // query db to make sure that the dummy resources are present
-
+        $this->assertSame(2, (count($response['resources'])));
     }
 
     /**
@@ -53,12 +45,10 @@ class SearchApiTest extends ApiTestCase
      */
     public function testSimpleSearchApi($ids)
     {
-        $response = $this->getJson('GET', '/api/v1/resources/search',  array(), array(), array(
-            'CONTENT_TYPE' => 'application/json'
-        ), json_encode(['q' => 'russia']));
+        $response = $this->getJson('GET', '/api/v1/resources/search?q=russia');
         $code = $response['response']['code'];
         if (200 != $code) {
-            // print_r($response);
+            print_r($response);
         }
         $this->assertSame(200, $code);
     }
