@@ -1,8 +1,8 @@
 language: php
 
 php:
-    - 5.3
     - 5.4
+    - 5.5
 
 env:
     - MONGO_VERSION=1.2.12
@@ -21,4 +21,4 @@ before_script:
     - composer install --dev
     - app/console cache:clear --env=test
 
-script: phpunit --exclude-group=transcoding
+script: bin/phpunit --exclude-group=transcoding

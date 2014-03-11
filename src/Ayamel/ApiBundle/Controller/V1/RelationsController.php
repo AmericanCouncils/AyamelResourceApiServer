@@ -186,7 +186,7 @@ class RelationsController extends ApiController
         $request = $this->getRequest();
 
         //create the relation submitted by the client
-        $relation = $this->container->get('ac.webservices.object_validator')->createObjectFromRequest('Ayamel\ResourceBundle\Document\Relation', $this->getRequest());
+        $relation = $this->decodeRequest('Ayamel\ResourceBundle\Document\Relation');
 
         //retrieve the related resources
         $subject = $this->getRequestedResourceById($relation->getSubjectId());

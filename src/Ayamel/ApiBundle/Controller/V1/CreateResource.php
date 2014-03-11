@@ -31,7 +31,7 @@ class CreateResource extends ApiController
         $this->requireAuthentication();
 
         //create object from client request
-        $resource = $this->container->get('ac.webservices.object_validator')->createObjectFromRequest('Ayamel\ResourceBundle\Document\Resource', $this->getRequest());
+        $resource = $this->decodeRequest('Ayamel\ResourceBundle\Document\Resource');
 
         //set the properties controlled by the resource library
         $resource->setStatus(Resource::STATUS_AWAITING_CONTENT);

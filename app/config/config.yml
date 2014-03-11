@@ -1,5 +1,4 @@
 imports:
-    - { resource: '@ACWebServicesBundle/Resources/config/config.yml' }
     - { resource: '@AyamelResourceBundle/Resources/config/config.yml' }
     - { resource: '@AyamelApiBundle/Resources/config/config.yml' }
     - { resource: '@AyamelFilesystemBundle/Resources/config/config.yml' }
@@ -17,11 +16,6 @@ services:
     ayamel.jms_metadata.cache:
         class: Metadata\Cache\DoctrineCacheAdapter
         arguments: ['ayamel.jms_metadata', @ayamel.apc_cache]
-
-    #temporarily overridden from ACWebServicesBundle
-    ac.webservices.object_validator:
-            class:      AC\WebServicesBundle\Util\ClientObjectValidator
-            arguments:  [@jms_serializer.metadata_factory, @serializer, @ac.webservices.jms_parser]
 
 framework:
     #esi:             ~
@@ -84,12 +78,15 @@ doctrine_mongodb:
             metadata_cache_driver: apc
 
 ac_web_services:
-    include_dev_exceptions: true
-    include_response_data: true
-    allow_code_suppression: true
-    default_response_format: json
-    api_paths:
-        - "{^/api/}"
+    serializer:
+        allow_deserialize_into_target: true
+    paths:
+        "{^/api/}":
+            include_exception_data: %include_api_exception_data%
+            include_response_data: true
+            allow_code_suppression: true
+            default_response_format: json
+            allow_jsonp: true
 
 nelmio_api_doc:
     name:   Ayamel Media API Documentation

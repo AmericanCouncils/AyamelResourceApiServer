@@ -5,7 +5,7 @@ use Ayamel\ApiBundle\Event\Events as AyamelEvents;
 use Ayamel\ApiBundle\Event\ResourceEvent;
 use Ayamel\ApiBundle\Event\HandleUploadedContentEvent;
 use Ayamel\ApiBundle\Event\ResolveUploadedContentEvent;
-use AC\WebServicesBundle\EventListener\RestServiceSubscriber;
+use AC\WebServicesBundle\EventListener\WebServiceSubscriber;
 use AC\Transcoding\File;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -34,7 +34,7 @@ class PublisherListener implements EventSubscriberInterface
         return array(
             AyamelEvents::HANDLE_UPLOADED_CONTENT => array('onHandleUploadedContent', 255),
             AyamelEvents::RESOURCE_MODIFIED => 'onResourceModified',
-            RestServiceSubscriber::API_TERMINATE => 'onApiTerminate'
+            WebServiceSubscriber::API_TERMINATE => 'onApiTerminate'
         );
     }
 

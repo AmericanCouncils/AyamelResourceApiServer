@@ -2,9 +2,9 @@
 
 namespace Ayamel\ApiBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Ayamel\ResourceBundle\Document\Resource;
 use AC\WebServicesBundle\ServiceResponse;
+use AC\WebServicesBundle\Controller;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**

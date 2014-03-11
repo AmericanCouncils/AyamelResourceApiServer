@@ -6,6 +6,7 @@ use Ayamel\ApiBundle\Event\Events;
 use Ayamel\ApiBundle\Event\ResourceEvent;
 use Ayamel\ApiBundle\Controller\ApiController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use AC\WebServicesBundle\Serializer\DeserializationContext;
 
 class ModifyResource extends ApiController
 {
@@ -40,7 +41,8 @@ class ModifyResource extends ApiController
         $this->requireResourceOwner($resource);
 
         //use object validation service to modify the existing object
-        $modifiedResource = $this->container->get('ac.webservices.object_validator')->modifyObjectFromRequest('Ayamel\ResourceBundle\Document\Resource', $this->getRequest(), $resource);
+        $ctx = DeserializationContext::create()->setTarget($resource);
+        $modifiedResource = $this->decodeRequest('Ayamel\ResourceBundle\Document\Resource', $ctx);
         $this->validateObject($modifiedResource);
 
         //save it

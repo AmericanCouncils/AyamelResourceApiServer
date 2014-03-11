@@ -14,8 +14,8 @@
     "minimum-stability": "beta",
     "prefer-stable": true,
     "require": {
-        "php": ">=5.3.3",
-        "ext-apc": "*",
+        "php": ">=5.4.0",
+        "ext-apcu": "*",
         "ext-curl": "*",
         "ext-fileinfo": "*",
         "ext-pcntl": "*",
@@ -31,7 +31,7 @@
         "nelmio/api-doc-bundle": "2.3.*",
         "nelmio/cors-bundle": "1.1.*",
         "jms/serializer-bundle": "0.13.*",
-        "ac/web-services-bundle": "0.1.*",
+        "ac/web-services-bundle": "0.2.*",
         "ac/media-info-bundle": "1.2.*",
         "ornicar/apc-bundle": "~1.0"
     },
