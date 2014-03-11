@@ -56,16 +56,24 @@ class Search extends ApiController
         $queryString->setDefaultOperator('AND');
         $queryString->setQuery($q);
         
-        //enforce client visibility
-        $apiClient = $this->getApiClient();
-        $publiclyVisibleFilter = new TermFilter();
-        $publiclyVisibleFilter->setTerm('visibility', null);
-        if ($apiClient) {
-            $visibilityFilter = new BoolOrFilter();
-            $visibilityFilter->addFilter($publiclyVisibleFilter);
+        $index = $this->container->get('fos_elastica.index.ayamel');
+        // $index = $elasticaClient->getIndex('ayamel_index');
+        
+        $results = $index->search($query);
+        // TODO: turn this result set into something more useful that can be returned to the client
+        return $this->createServiceResponse(array('results' => $results), 200);
+
+
+        //TODO enforce client visibility
+        // $apiClient = $this->getApiClient();
+        // $publiclyVisibleFilter = new TermFilter();
+        // $publiclyVisibleFilter->setTerm('visibility', null);
+        // if ($apiClient) {
+        //     $visibilityFilter = new BoolOrFilter();
+        //     $visibilityFilter->addFilter($publiclyVisibleFilter);
             
-        } else {   
-        }
+        // } else {   
+        // }
     }
 
     public function advancedSearchAction()

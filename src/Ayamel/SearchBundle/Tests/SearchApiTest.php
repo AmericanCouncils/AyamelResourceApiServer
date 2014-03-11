@@ -32,12 +32,18 @@ class SearchApiTest extends ApiTestCase
             'title' => 'Sealand House',
             'type' => 'data',
         )));     
+        $json = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), json_encode(array(
+            'title' => 'Maxwell House',
+            'type' => 'data',
+        )));             
     }
 
     public function testSetupDummyResources()
     {
         $response = $this->getJson('GET', '/api/v1/resources');
-        $this->assertSame(2, (count($response['resources'])));
+        $this->assertSame(3, (count($response['resources'])));
     }
 
     /**
@@ -50,6 +56,7 @@ class SearchApiTest extends ApiTestCase
         if (200 != $code) {
             print_r($response);
         }
+        // print_r($response);
         $this->assertSame(200, $code);
     }
 
