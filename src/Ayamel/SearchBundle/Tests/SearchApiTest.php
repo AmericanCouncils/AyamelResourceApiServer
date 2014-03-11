@@ -51,6 +51,7 @@ class SearchApiTest extends ApiTestCase
      */
     public function testSimpleSearchApi($ids)
     {
+        $proc = $this->startRabbitListener(1);
         $response = $this->getJson('GET', '/api/v1/resources/search?q=russia');
         $code = $response['response']['code'];
         if (200 != $code) {
