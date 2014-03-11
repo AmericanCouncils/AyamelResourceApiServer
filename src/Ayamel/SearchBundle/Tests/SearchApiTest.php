@@ -23,20 +23,20 @@ class SearchApiTest extends ApiTestCase
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array(
             'title' => 'Russia House',
-            'type' => 'data',
+            'type' => 'document',
         )));
 
         $json = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array(
             'title' => 'Sealand House',
-            'type' => 'data',
+            'type' => 'document',
         )));     
         $json = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array(
             'title' => 'Maxwell House',
-            'type' => 'data',
+            'type' => 'document',
         )));             
     }
 
@@ -56,7 +56,7 @@ class SearchApiTest extends ApiTestCase
         if (200 != $code) {
             print_r($response);
         }
-        // print_r($response);
+        print_r($response);
         $this->assertSame(200, $code);
     }
 
