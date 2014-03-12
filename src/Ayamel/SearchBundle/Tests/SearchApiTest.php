@@ -2,7 +2,7 @@
 
 namespace Ayamel\SearchBundle\Tests;
 
-use Ayamel\ApiBundle\ApiTestCase;
+use Ayamel\SearchBundle\AsynchronousSearchTest;
 
 /**
  * This set of tests makes sure the API search routes perform as expected.  Most importantly
@@ -11,9 +11,8 @@ use Ayamel\ApiBundle\ApiTestCase;
  * @package AyamelSearchBundle
  * @author Evan Villemez
  */
-class SearchApiTest extends ApiTestCase
+class SearchApiTest extends AsynchronousSearchTest
 {
-
     public function setUp()
     {
         // add some dummy resources to query

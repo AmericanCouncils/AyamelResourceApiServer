@@ -2,7 +2,7 @@
 
 namespace Ayamel\SearchBundle\Tests;
 
-use Ayamel\ApiBundle\ApiTestCase;
+use Ayamel\SearchBundle\AsynchronousSearchTest;
 use Symfony\Component\Process\Process;
 use Guzzle\Http\Client;
 use Guzzle\Http\Exception\ClientErrorResponseException;
@@ -14,35 +14,12 @@ use Guzzle\Http\Exception\ClientErrorResponseException;
  * @package AyamelSearchBundle
  * @author Evan Villemez
  */
-class AsynchronousSearchIndexerTest extends ApiTestCase
+class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
 {
-    // protected function startRabbitListener($numMessages = 1)
-    // {
-    //     $container = $this->getContainer();
-
-    //     //clear rabbitmq message queue
-    //     try {
-    //         $container->get('old_sound_rabbit_mq.search_index_producer')->getChannel()->queue_purge('search_index');
-    //     } catch (\PhpAmqpLib\Exception\AMQPProtocolChannelException $e) {
-    //         //swallow this error because of travis
-    //     }
-
-    //     //start index listener
-    //     $consolePath = $container->getParameter('kernel.root_dir').DIRECTORY_SEPARATOR."console";
-    //     $rabbitProcess = new Process(sprintf('%s --env=test rabbitmq:consumer search_index --messages='.$numMessages.' --verbose', $consolePath));
-    //     $rabbitProcess->start();
-    //     usleep(500000); //wait half a second, check to make sure process is still up
-    //     if (!$rabbitProcess->isRunning()) {
-    //         throw new \RuntimeException(($rabbitProcess->isSuccessful()) ? $rabbitProcess->getOutput() : $rabbitProcess->getErrorOutput());
-    //     }
-
-    //     return $rabbitProcess;
-    // }
-
     public function testCreateResourceTriggersIndex()
     {
-        $proc = $this->startRabbitListener(1);
         $client = new Client('http://127.0.0.1:9200');
+        $proc = $this->startRabbitListener(1);
 
         //create resource
         $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
@@ -98,8 +75,8 @@ class AsynchronousSearchIndexerTest extends ApiTestCase
      */
     public function testModifyResourceTriggersIndex($id)
     {
-        $proc = $this->startRabbitListener(1);
         $client = new Client('http://127.0.0.1:9200');
+        $proc = $this->startRabbitListener(1);
 
         $content = $this->getJson('PUT', '/api/v1/resources/'.$id.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
@@ -194,8 +171,8 @@ class AsynchronousSearchIndexerTest extends ApiTestCase
      */
     public function testDeleteRelatedResourceTriggersIndex($relation)
     {
-        $proc = $this->startRabbitListener(1);
         $client = new Client('http://127.0.0.1:9200');
+        $proc = $this->startRabbitListener(1);
 
         $content = $this->getJson('DELETE', '/api/v1/resources/'.$relation['objectId'].'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
@@ -232,8 +209,8 @@ class AsynchronousSearchIndexerTest extends ApiTestCase
      */
     public function testDeleteResourceTriggersIndex($id)
     {
-        $proc = $this->startRabbitListener(1);
         $client = new Client('http://127.0.0.1:9200');
+        $proc = $this->startRabbitListener(1);
 
         $content = $this->getJson('DELETE', '/api/v1/resources/'.$id.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
