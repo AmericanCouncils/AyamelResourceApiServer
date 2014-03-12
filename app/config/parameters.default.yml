@@ -21,6 +21,8 @@ parameters:
 
     apc_web_domain: http://127.0.0.1/AyamelResourceApiServer/web
 
+    include_api_exception_data: true
+
     ## File upload handling ##
     ayamel.filesystem.local_filesystem.root_dir: %kernel.root_dir%/files/resource_uploads
     ayamel.filesystem.local_filesystem.secret: zeroisnotanumber
