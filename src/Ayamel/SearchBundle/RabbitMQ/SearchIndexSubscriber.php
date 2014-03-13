@@ -5,7 +5,7 @@ namespace Ayamel\SearchBundle\RabbitMQ;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Ayamel\ApiBundle\Event\Events as ApiEvents;
-use AC\WebServicesBundle\EventListener\RestServiceSubscriber;
+use AC\WebServicesBundle\EventListener\WebServiceSubscriber;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Ayamel\ApiBundle\Event\ResourceEvent;
 use Ayamel\ApiBundle\Event\RelationEvent;
@@ -120,7 +120,7 @@ class SearchIndexSubscriber implements EventSubscriberInterface
     {
         if (!$this->registered) {
             $this->registered = true;
-            $this->container->get('event_dispatcher')->addListener(RestServiceSubscriber::API_TERMINATE, array($this, 'onApiTerminate'));
+            $this->container->get('event_dispatcher')->addListener(WebServiceSubscriber::API_TERMINATE, array($this, 'onApiTerminate'));
         }
     }
 }

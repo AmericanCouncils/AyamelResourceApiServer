@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "f8e233d9db17c1b0d2ad90eb9ebb753b",
+    "hash": "19b0f072400a2527cf748b3aa7616003",
     "packages": [
         {
             "name": "ac/media-info-bundle",
@@ -148,27 +148,31 @@
         },
         {
             "name": "ac/web-services-bundle",
-            "version": "0.2.1",
+            "version": "0.3.0",
             "target-dir": "AC/WebServicesBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/AmericanCouncils/WebServicesBundle.git",
-                "reference": "8555fd1f7412f8653697ad7fed1762e24eca33db"
+                "reference": "c0206c9b3cd5ca8a0b16744577309014a0dc9bc3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AmericanCouncils/WebServicesBundle/zipball/8555fd1f7412f8653697ad7fed1762e24eca33db",
-                "reference": "8555fd1f7412f8653697ad7fed1762e24eca33db",
+                "url": "https://api.github.com/repos/AmericanCouncils/WebServicesBundle/zipball/c0206c9b3cd5ca8a0b16744577309014a0dc9bc3",
+                "reference": "c0206c9b3cd5ca8a0b16744577309014a0dc9bc3",
                 "shasum": ""
             },
             "require": {
-                "jms/serializer-bundle": "~0.12",
+                "fzaninotto/faker": "1.3.0",
+                "jms/serializer": "~0.15.0",
+                "jms/serializer-bundle": "~0.13.0",
+                "mockery/mockery": "0.9.0",
+                "php": ">=5.4.0",
                 "symfony/framework-bundle": "~2.2",
                 "willdurand/negotiation": "~1.2"
             },
             "conflict": {
-                "jms/serializer": "<0.12",
-                "jms/serializer-bundle": "<0.11"
+                "jms/serializer": "<0.15",
+                "jms/serializer-bundle": "<0.13"
             },
             "require-dev": {
                 "sensio/framework-extra-bundle": "~2.2",
@@ -195,7 +199,7 @@
                 "rest",
                 "web services"
             ],
-            "time": "2014-02-12 19:35:14"
+            "time": "2014-03-12 18:40:37"
         },
         {
             "name": "dflydev/markdown",
@@ -951,6 +955,52 @@
             "time": "2014-02-19 02:52:43"
         },
         {
+            "name": "fzaninotto/faker",
+            "version": "v1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fzaninotto/Faker.git",
+                "reference": "1d143fd8caf4d264602450bc01d7484af788706b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/1d143fd8caf4d264602450bc01d7484af788706b",
+                "reference": "1d143fd8caf4d264602450bc01d7484af788706b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.3.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Faker": "src/",
+                    "Faker\\PHPUnit": "test/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "François Zaninotto"
+                }
+            ],
+            "description": "Faker is a PHP library that generates fake data for you.",
+            "keywords": [
+                "data",
+                "faker",
+                "fixtures"
+            ],
+            "time": "2013-12-16 21:56:48"
+        },
+        {
             "name": "jms/metadata",
             "version": "1.5.0",
             "source": {
@@ -1249,6 +1299,71 @@
             "time": "2013-07-19 00:03:27"
         },
         {
+            "name": "mockery/mockery",
+            "version": "0.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/padraic/mockery.git",
+                "reference": "0fd49fd3f6c984409802004b1dd7b55d0f35ce4a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/padraic/mockery/zipball/0fd49fd3f6c984409802004b1dd7b55d0f35ce4a",
+                "reference": "0fd49fd3f6c984409802004b1dd7b55d0f35ce4a",
+                "shasum": ""
+            },
+            "require": {
+                "lib-pcre": ">=7.0",
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "hamcrest/hamcrest-php": "~1.1",
+                "satooshi/php-coveralls": "dev-master"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.9.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Mockery": "library/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Pádraic Brady",
+                    "email": "padraic.brady@gmail.com",
+                    "homepage": "http://blog.astrumfutura.com"
+                },
+                {
+                    "name": "Dave Marshall",
+                    "email": "dave.marshall@atstsolutions.co.uk",
+                    "homepage": "http://davedevelopment.co.uk"
+                }
+            ],
+            "description": "Mockery is a simple yet flexible PHP mock object framework for use in unit testing with PHPUnit, PHPSpec or any other testing framework. Its core goal is to offer a test double framework with a succint API capable of clearly defining all possible object operations and interactions using a human readable Domain Specific Language (DSL). Designed as a drop in alternative to PHPUnit's phpunit-mock-objects library, Mockery is easy to integrate with PHPUnit and can operate alongside phpunit-mock-objects without the World ending.",
+            "homepage": "http://github.com/padraic/mockery",
+            "keywords": [
+                "BDD",
+                "TDD",
+                "library",
+                "mock",
+                "mock objects",
+                "mockery",
+                "stub",
+                "test",
+                "test double",
+                "testing"
+            ],
+            "time": "2014-02-05 21:30:08"
+        },
+        {
             "name": "monolog/monolog",
             "version": "1.7.0",
             "source": {
@@ -1446,17 +1561,17 @@
         },
         {
             "name": "oldsound/rabbitmq-bundle",
-            "version": "v1.3.0",
+            "version": "v1.3.1",
             "target-dir": "OldSound/RabbitMqBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/videlalvaro/RabbitMqBundle.git",
-                "reference": "4ea8166e8b5d689d6a0a9511ade62bbd39e2e6e5"
+                "reference": "df867351a833ed7db9c045af788ec7cd0720d1f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/videlalvaro/RabbitMqBundle/zipball/4ea8166e8b5d689d6a0a9511ade62bbd39e2e6e5",
-                "reference": "4ea8166e8b5d689d6a0a9511ade62bbd39e2e6e5",
+                "url": "https://api.github.com/repos/videlalvaro/RabbitMqBundle/zipball/df867351a833ed7db9c045af788ec7cd0720d1f0",
+                "reference": "df867351a833ed7db9c045af788ec7cd0720d1f0",
                 "shasum": ""
             },
             "require": {
@@ -1495,7 +1610,7 @@
                 "queue",
                 "rabbitmq"
             ],
-            "time": "2014-02-27 15:43:24"
+            "time": "2014-03-11 19:06:47"
         },
         {
             "name": "ornicar/apc-bundle",
@@ -2848,8 +2963,8 @@
         "friendsofsymfony/elastica-bundle": 20
     },
     "platform": {
-        "php": ">=5.3.3",
-        "ext-apc": "*",
+        "php": ">=5.4.0",
+        "ext-apcu": "*",
         "ext-curl": "*",
         "ext-fileinfo": "*",
         "ext-pcntl": "*"
