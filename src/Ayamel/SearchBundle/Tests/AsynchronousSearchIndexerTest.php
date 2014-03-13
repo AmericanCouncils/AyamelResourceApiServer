@@ -18,6 +18,7 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
 {
     public function testCreateResourceTriggersIndex()
     {
+        $this->markTestIncomplete();
         $client = new Client('http://127.0.0.1:9200');
         $proc = $this->startRabbitListener(1);
 

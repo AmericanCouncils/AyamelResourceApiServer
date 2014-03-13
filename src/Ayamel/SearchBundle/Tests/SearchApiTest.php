@@ -60,6 +60,7 @@ class SearchApiTest extends AsynchronousSearchTest
      */
     public function testSimpleSearchApi($ids)
     {
+        $this->markTestIncomplete();
         $client = new Client('http://127.0.0.1:9200');
         $response = $client->get('/ayamel/resource/')->send();
         var_dump($response->getBody());

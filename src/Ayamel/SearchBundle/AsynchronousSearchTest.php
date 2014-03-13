@@ -14,7 +14,7 @@ use Guzzle\Http\Exception\ClientErrorResponseException;
  * @package AyamelSearchBundle
  * @author Evan Villemez
  */
-class AsynchronousSearchTest extends ApiTestCase
+abstract class AsynchronousSearchTest extends ApiTestCase
 {
     protected function startRabbitListener($numMessages = 1)
     {
