@@ -29,8 +29,9 @@ class AsynchronousSearchTest extends ApiTestCase
 
         //start index listener
         $consolePath = $container->getParameter('kernel.root_dir').DIRECTORY_SEPARATOR."console";
-        $rabbitProcess = new Process(sprintf('%s --env=test rabbitmq:consumer search_index --messages='.$numMessages.' --verbose', $consolePath));
+        $rabbitProcess = new Process(sprintf('%s --env=test rabbitmq:consumer search_index --messages='.$numMessages.' --vvv', $consolePath));
         $rabbitProcess->start();
+
         usleep(500000); //wait half a second, check to make sure process is still up
         if (!$rabbitProcess->isRunning()) {
             throw new \RuntimeException(($rabbitProcess->isSuccessful()) ? $rabbitProcess->getOutput() : $rabbitProcess->getErrorOutput());

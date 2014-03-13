@@ -55,6 +55,11 @@ class Search extends ApiController
         $queryString = new QueryString();
         $queryString->setDefaultOperator('AND');
         $queryString->setQuery($q);
+
+        // There are a couple things that I could do here - use Elastica\Type, query->refesh() or query->optimize, all of which are used in the elastica tests.
+
+        $query->setQuery($queryString);
+        print_r($query);
         
         $index = $this->container->get('fos_elastica.index.ayamel');
         // $index = $elasticaClient->getIndex('ayamel_index');
