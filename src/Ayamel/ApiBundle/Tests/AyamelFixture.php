@@ -39,37 +39,37 @@ class AyamelFixture extends CachedMongoFixture
     protected function fixture()
     {
         $this->generate(10, 'AyamelResourceBundle:OEmbed',[
-            'type' => function($f) {return $this->fake()->word();},
+            'type' => function($f) {return $f->fake()->word();},
             'version' => function($f) {return "1.0";},
-            'title' => function($f) {return $this->fake()->sentence(5);},
-            'author_name' => function($f) {return $this->fake()->name();},
-            'author_url' => function($f) {return $this->fake()->url();},
-            'provider_name' => function($f) {return $this->fake()->sentence(3);},
-            'provider_url' => function($f) {return $this->fake()->url();},
-            'thumbnail_url' => function($f) {return $this->fake()->url();},
-            'thumbnail_height' => function($f) {return $this->fake()->randomDigit(3);},
-            'thumbnail_width' => function($f) {return $this->fake()->randomDigit(3);},
-            'cache_age' => function($f) {return $this->fake()->randomDigit(5);},
-            // 'html' => function($f) {return $this->fake()->something();},
-            'url' => function($f) {return $this->fake()->url();},
-            'height' => function($f) {return $this->fake()->randomDigit(6);},
-            'width' => function($f) {return $this->fake()->randomDigit(6);}
+            'title' => function($f) {return $f->fake()->sentence(5);},
+            'author_name' => function($f) {return $f->fake()->name();},
+            'author_url' => function($f) {return $f->fake()->url();},
+            'provider_name' => function($f) {return $f->fake()->sentence(3);},
+            'provider_url' => function($f) {return $f->fake()->url();},
+            'thumbnail_url' => function($f) {return $f->fake()->url();},
+            'thumbnail_height' => function($f) {return $f->fake()->randomDigit(3);},
+            'thumbnail_width' => function($f) {return $f->fake()->randomDigit(3);},
+            'cache_age' => function($f) {return $f->fake()->randomDigit(5);},
+            // 'html' => function($f) {return $f->fake()->something();},
+            'url' => function($f) {return $f->fake()->url();},
+            'height' => function($f) {return $f->fake()->randomDigit(6);},
+            'width' => function($f) {return $f->fake()->randomDigit(6);}
         ]);
         $this->generate(10, "AyamelResourceBundle:FileReference", [
             'downloadUri' => function($f) {return $f->fake()->url();},
             'streamUri' => function($f) {return $f->fake()->url();},
             'internalUri' => function($f) {return $f->fake()->url();},
-            'bytes' => function($f) {return $this->fake()->randomDigit(10);},
-            'representation' => function($f) {return $this->fake()->randomElement(['original', 'transcoding', 'summary']);},
-            'quality' => function($f) {return $this->fake()->randomDigit();},
-            'mime' => function($f) {return $this->fake()->mimeType();},
-            'mimeType' => function($f) {return $this->fake()->mimeType();},
+            'bytes' => function($f) {return $f->fake()->randomDigit(10);},
+            'representation' => function($f) {return $f->fake()->randomElement(['original', 'transcoding', 'summary']);},
+            'quality' => function($f) {return $f->fake()->randomDigit();},
+            'mime' => function($f) {return $f->fake()->mimeType();},
+            'mimeType' => function($f) {return $f->fake()->mimeType();},
             'attributes' => function($f) {return [];},
             ]);
         $this->generate(10, "AyamelResourceBundle:ContentCollection", [
             'canonicalUri' => function ($f) {return $f->fake()->url();},
+            'files' => function ($f) {return [$f->fetchCorresponding("AyamelResourceBundle:FileReference")];},
             'oembed' => function ($f) {return $f->fetchCorresponding("AyamelResourceBundle:OEmbed");},
-            'files' => function ($f) {return [$f->fetchCorresponding("AyamelResourceBundle:FileReference")];}
         ]);
         $this->generate(10, "AyamelResourceBundle:Resource", [
             'title' => function ($f) {return $f->fake()->sentence(3);},

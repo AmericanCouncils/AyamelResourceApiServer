@@ -13,6 +13,12 @@
     },
     "minimum-stability": "beta",
     "prefer-stable": true,
+        "repositories": [
+        {
+            "type":"vcs",
+            "url":"https://github.com/AmericanCouncils/model-traits"
+        }
+    ],
     "require": {
         "php": ">=5.4.0",
         "ext-apcu": "*",
@@ -34,7 +40,8 @@
         "ac/web-services-bundle": "0.3.*",
         "ac/media-info-bundle": "1.2.*",
         "friendsofsymfony/elastica-bundle": "3.0.*@dev",
-        "ornicar/apc-bundle": "~1.0"
+        "ornicar/apc-bundle": "~1.0",
+        "ac/model-traits-bundle": "0.1.*"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*",
@@ -60,6 +67,7 @@
          "github.com":"4ea51a5e6d7241957ee2be481376bc06e1641447"
       }
     },
+    "minimum-stability": "dev",
     "extra": {
         "symfony-app-dir": "app",
         "symfony-web-dir": "web"

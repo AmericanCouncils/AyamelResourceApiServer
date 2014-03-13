@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "75e5fba714f7ae0b72511a0ce9734ef1",
+    "hash": "bafd370b9627f6bb054b531a18fbfb71",
     "packages": [
         {
             "name": "ac/media-info-bundle",
@@ -48,6 +48,96 @@
                 "multimedia"
             ],
             "time": "2013-07-31 14:47:46"
+        },
+        {
+            "name": "ac/model-traits",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/AmericanCouncils/model-traits.git",
+                "reference": "10be154863bbdfd29d486a738f50164eacc7ff3a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/AmericanCouncils/model-traits/zipball/10be154863bbdfd29d486a738f50164eacc7ff3a",
+                "reference": "10be154863bbdfd29d486a738f50164eacc7ff3a",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/annotations": ">=1.1.2",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "AC\\ModelTraits\\": ""
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Evan Villemez",
+                    "email": "evan.villemez@americancouncils.org"
+                }
+            ],
+            "description": "Traits to reduce boilerplate when creating models.",
+            "keywords": [
+                "factory",
+                "getter",
+                "model",
+                "setter",
+                "trait"
+            ],
+            "support": {
+                "source": "https://github.com/AmericanCouncils/model-traits/tree/master",
+                "issues": "https://github.com/AmericanCouncils/model-traits/issues"
+            },
+            "time": "2014-02-06 16:29:30"
+        },
+        {
+            "name": "ac/model-traits-bundle",
+            "version": "0.1.5",
+            "target-dir": "AC/ModelTraitsBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/AmericanCouncils/model-traits-bundle.git",
+                "reference": "3cc884b0ffff79a47ee2655c9ad73d699dbb9be2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/AmericanCouncils/model-traits-bundle/zipball/3cc884b0ffff79a47ee2655c9ad73d699dbb9be2",
+                "reference": "3cc884b0ffff79a47ee2655c9ad73d699dbb9be2",
+                "shasum": ""
+            },
+            "require": {
+                "ac/model-traits": "dev-master",
+                "symfony/symfony": "2.*"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-0": {
+                    "AC\\ModelTraitsBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "David Simon",
+                    "email": "david.mike.simon@gmail.com"
+                }
+            ],
+            "description": "Convenient traits for models in your Symfony2 app",
+            "keywords": [
+                "model",
+                "model-traits",
+                "traits"
+            ],
+            "time": "2014-02-06 15:57:56"
         },
         {
             "name": "ac/transcoding",
@@ -2957,7 +3047,7 @@
     "aliases": [
 
     ],
-    "minimum-stability": "beta",
+    "minimum-stability": "dev",
     "stability-flags": {
         "doctrine/mongodb-odm-bundle": 20,
         "friendsofsymfony/elastica-bundle": 20
