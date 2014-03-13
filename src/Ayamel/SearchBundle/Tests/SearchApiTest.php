@@ -5,6 +5,7 @@ namespace Ayamel\SearchBundle\Tests;
 use Ayamel\SearchBundle\AsynchronousSearchTest;
 use Guzzle\Http\Client;
 use Guzzle\Http\Exception\ClientErrorResponseException;
+use Ayamel\ApiBundle\Tests\FixturedTestCase;
 
 /**
  * This set of tests makes sure the API search routes perform as expected.  Most importantly
@@ -13,50 +14,25 @@ use Guzzle\Http\Exception\ClientErrorResponseException;
  * @package AyamelSearchBundle
  * @author Evan Villemez
  */
-class SearchApiTest extends AsynchronousSearchTest
+class SearchApiTest extends FixturedTestCase
 {
     public function setUp()
     {
-        $this->clearDatabase();
-        $container = $this->getContainer();
-        // clear rabbit queue
-        try {
-            $container->get('old_sound_rabbit_mq.search_index_producer')->getChannel()->queue_purge('search_index');
-        } catch (\PhpAmqpLib\Exception\AMQPProtocolChannelException $e) {
-            //swallow this error because of travis
-        }
-
-        $uploadUrls = [];
-        $titles = ['The Russia House','The Sealand House','The Maxwell House'];
-
-        foreach ($titles as $title) {
-            $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
-                'CONTENT_TYPE' => 'application/json'
-            ), json_encode(array(
-                'title' => $title,
-                'type' => 'document',
-            )));
-
-            $uploadUrls[] = substr($response['contentUploadUrl'], strlen('http://localhost'));
-        }
-        foreach ($uploadUrls as $uploadUrl) {
-            $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
-                'CONTENT_TYPE' => 'application/json'
-            ), json_encode(array(
-                'uri' => 'http://www.google.com/'
-            )));
-        }
+        parent::setUp();
     }
 
-    public function testSetupDummyResources()
+    public function testFixtures()
     {
-        $response = $this->getJson('GET', '/api/v1/resources');
-        // print_r($response);
-        $this->assertSame(3, (count($response['resources'])));
+        // check that fixtures are present
+        $this->assertTrue(!empty($this->fixtureData));
+        $id = $this->fixtureData['ACFlagshipBundle:Resource'][0]->getId();
+        $content = $this->callJsonApi('GET', "/api/v1/resources/$id?_key=45678isafgd56789asfgdhf4567", ['auth' => [ 'user' => $this->user ]]);
+        print_r($content);
+        $this->assertArrayHasKey('resource', $content); 
     }
 
     /**
-     * @depends testSetupDummyResources
+     * @depends testFixtures
      */
     public function testSimpleSearchApi($ids)
     {
@@ -89,7 +65,7 @@ class SearchApiTest extends AsynchronousSearchTest
     }
 
     /**
-     * @depends testSetupDummyResources
+     * @depends testFixtures
      */
     public function testSimpleSearchApiHidesUnauthorizedResources($ids)
     {
@@ -97,7 +73,7 @@ class SearchApiTest extends AsynchronousSearchTest
     }
 
     /**
-     * @depends testSetupDummyResources
+     * @depends testFixtures
      */
     public function testAdvancedSearchApi($ids)
     {
@@ -105,7 +81,7 @@ class SearchApiTest extends AsynchronousSearchTest
     }
 
     /**
-     * @depends testSetupDummyResources
+     * @depends testFixtures
      */
     public function testAdvancedSearchApiHidesUnauthorizedResources($ids)
     {
@@ -120,3 +96,35 @@ class SearchApiTest extends AsynchronousSearchTest
             // } catch (ClientErrorResponseException $exception) {
             // }
             // $this->assertSame(404, $exception->getResponse()->getStatusCode());
+
+        // shouldn't need any of this with fixtures, in theory, although I might have to index the database
+        
+        // $this->clearDatabase();
+        // $container = $this->getContainer();
+        // // clear rabbit queue
+        // try {
+        //     $container->get('old_sound_rabbit_mq.search_index_producer')->getChannel()->queue_purge('search_index');
+        // } catch (\PhpAmqpLib\Exception\AMQPProtocolChannelException $e) {
+        //     //swallow this error because of travis
+        // }
+
+        // $uploadUrls = [];
+        // $titles = ['The Russia House','The Sealand House','The Maxwell House'];
+
+        // foreach ($titles as $title) {
+        //     $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        //         'CONTENT_TYPE' => 'application/json'
+        //     ), json_encode(array(
+        //         'title' => $title,
+        //         'type' => 'document',
+        //     )));
+
+        //     $uploadUrls[] = substr($response['contentUploadUrl'], strlen('http://localhost'));
+        // }
+        // foreach ($uploadUrls as $uploadUrl) {
+        //     $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        //         'CONTENT_TYPE' => 'application/json'
+        //     ), json_encode(array(
+        //         'uri' => 'http://www.google.com/'
+        //     )));
+        // }
