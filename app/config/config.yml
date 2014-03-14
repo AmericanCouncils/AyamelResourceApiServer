@@ -5,6 +5,7 @@ imports:
     - { resource: '@AyamelTranscodingBundle/Resources/config/config.yml' }
     - { resource: '@AyamelYouTubeBundle/Resources/config/config.yml' }
     - { resource: '@AyamelMediaInfoBundle/Resources/config/config.yml' }
+    - { resource: '@AyamelSearchBundle/Resources/config/config.yml' }
 
     # include parameters.yml last, git ignores it, so deployment specific overrides can go there safely
     - { resource: parameters.yml }
@@ -133,5 +134,16 @@ old_sound_rabbit_mq:
             vhost:     %rabbitmq_vhost%
     producers:
         transcoding: %ayamel.transcoding.rabbitmq_producer%
+        search_index: %ayamel.search.rabbitmq_producer%
     consumers:
         transcoding: %ayamel.transcoding.rabbitmq_consumer%
+        search_index: %ayamel.search.rabbitmq_consumer%
+
+fos_elastica:
+    clients:
+        default: { host: %elasticsearch_host%, port: %elasticsearch_port% }
+    serializer:
+        callback_class: FOS\ElasticaBundle\Serializer\Callback
+        serializer: serializer
+    indexes:
+        ayamel: %ayamel.search.ayamel_index%

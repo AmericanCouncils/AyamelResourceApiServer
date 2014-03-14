@@ -88,7 +88,7 @@ class RemoteFilesContentSubscriber implements EventSubscriberInterface
                 }
             }
         }
-        
+
         if (!empty($failed)) {
             throw new HttpException(400, sprintf("The following files could not be reached: [%s]", implode(', ', $failed)));
         }

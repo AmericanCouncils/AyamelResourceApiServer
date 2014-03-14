@@ -10,6 +10,7 @@ env:
 services:
     - mongodb
     - rabbitmq
+    - elasticsearch
 
 before_script:
     - sh -c "if [ `php-config --vernum` -ge 50500 ] ; then pecl config-set preferred_state beta; printf "yes\n" | pecl install apcu ; else echo 'extension="apc.so"' >> ./travis.php.ini ;fi"

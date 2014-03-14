@@ -678,6 +678,16 @@ class Resource
     }
 
     /**
+     * Get relations
+     *
+     * @return Doctrine\Common\Collections\Collection $relations
+     */
+    public function getRelations()
+    {
+        return !empty($this->relations) ? $this->relations : array();
+    }
+
+    /**
      * Add a relation
      *
      * @param  Ayamel\ResourceBundle\Document\Relation $relation
@@ -709,16 +719,6 @@ class Resource
         $this->setRelations($new);
 
         return $this;
-    }
-
-    /**
-     * Get relations
-     *
-     * @return Doctrine\Common\Collections\Collection $relations
-     */
-    public function getRelations()
-    {
-        return $this->relations;
     }
 
     /**

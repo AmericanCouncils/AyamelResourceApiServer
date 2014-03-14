@@ -51,5 +51,4 @@ class ResourceRepository extends DocumentRepository
 
         return $resource;
     }
-
 }

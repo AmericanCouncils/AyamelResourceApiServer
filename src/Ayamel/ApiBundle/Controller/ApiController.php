@@ -57,6 +57,10 @@ abstract class ApiController extends Controller
      */
     protected function getApiClient()
     {
+        if (!is_object($this->container)) {
+            var_dump($this->container);
+        }
+
         if (!$key = $this->container->get('request')->get('_key', false)) {
             return false;
         }

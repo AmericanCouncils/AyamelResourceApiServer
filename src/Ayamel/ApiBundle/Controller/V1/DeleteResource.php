@@ -42,13 +42,16 @@ class DeleteResource extends ApiController
         //notify system to remove content for resource
         $apiDispatcher->dispatch(Events::REMOVE_RESOURCE_CONTENT, new ResourceEvent($resource));
 
+        //delete relations for resource
+        $this->deleteRelations($resource);
+
         //remove from storage (sort of), just clears data and marks as deleted
         $manager = $this->getDocManager();
         $resource = $manager->getRepository('AyamelResourceBundle:Resource')->deleteResource($resource);
         $manager->flush();
 
         //delete all relations for this resource
-        $this->getRepo('AyamelResourceBundle:Relation')->deleteRelationsForResource($resource->getId());
+
 
         //notify rest of system of deleted resource
         $apiDispatcher->dispatch(Events::RESOURCE_DELETED, new ResourceEvent($resource));
@@ -57,4 +60,12 @@ class DeleteResource extends ApiController
         return $this->createServiceResponse(array('resource' => $resource), 200);
     }
 
+    protected function deleteRelations($subject)
+    {
+        // * get all relations
+        // * set relations on subject
+
+        $this->getRepo('AyamelResourceBundle:Relation')->deleteRelationsForResource($subject->getId());
+
+    }
 }
