@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "19b0f072400a2527cf748b3aa7616003",
+    "hash": "dd920b4d6387e75d795ae0459f2b2a03",
     "packages": [
         {
             "name": "ac/media-info-bundle",
