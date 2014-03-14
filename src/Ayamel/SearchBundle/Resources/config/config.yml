@@ -1,5 +1,5 @@
 imports:
-    - { resource: "@AyamelSearchBundle/resources/config/config.ayamel_index.yml" }
+    - { resource: "@AyamelSearchBundle/Resources/config/config.ayamel_index.yml" }
 
 parameters:
     ayamel.search.elastica_resource_provider.batch: 100
