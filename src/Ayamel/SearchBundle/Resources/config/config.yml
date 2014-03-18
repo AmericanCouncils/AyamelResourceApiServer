@@ -1,0 +1,23 @@
+parameters:
+    ayamel.search.rabbitmq_producer:
+        connection: default
+        exchange_options: { name: 'search_index', type: direct }
+
+    ayamel.search.rabbitmq_consumer:
+        connection: default
+        exchange_options: { name: 'search_index', type: direct }
+        queue_options:    { name: 'search_index' }
+        callback:         ayamel.search_index.consumer
+
+
+services:
+    ayamel.search_index.subscriber:
+        class: Ayamel\SearchBundle\RabbitMQ\SearchIndexSubscriber
+        arguments: [@service_container]
+        tags:
+            - { name: ayamel.api.event_subscriber }
+
+    # This service handles rabbitMQ for transcoding Resource files asyncronously
+    ayamel.search_index.consumer:
+        class: Ayamel\SearchBundle\RabbitMQ\SearchIndexConsumer
+        arguments: [@service_container]
