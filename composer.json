@@ -20,7 +20,7 @@
         "ext-fileinfo": "*",
         "ext-pcntl": "*",
         "symfony/symfony": "2.3.*",
-        "doctrine/mongodb-odm-bundle": "dev-master",
+        "doctrine/mongodb-odm-bundle": "3.0.*@dev",
         "symfony/assetic-bundle": "2.3.*",
         "symfony/swiftmailer-bundle": "2.3.*",
         "symfony/monolog-bundle": "2.3.*",
@@ -31,27 +31,34 @@
         "nelmio/api-doc-bundle": "2.3.*",
         "nelmio/cors-bundle": "1.1.*",
         "jms/serializer-bundle": "0.13.*",
-        "ac/web-services-bundle": "0.2.*",
+        "ac/web-services-bundle": "0.3.*",
         "ac/media-info-bundle": "1.2.*",
+        "friendsofsymfony/elastica-bundle": "3.0.*@dev",
         "ornicar/apc-bundle": "~1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "3.7.*"
+        "phpunit/phpunit": "3.7.*",
+        "guzzle/guzzle": "~3.7"
     },
     "scripts": {
         "post-install-cmd": [
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets"
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
         ],
         "post-update-cmd": [
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets"
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
         ]
     },
     "config": {
-        "bin-dir": "bin"
+        "bin-dir": "bin",
+      "github-oauth":{
+         "github.com":"4ea51a5e6d7241957ee2be481376bc06e1641447"
+      }
     },
     "extra": {
         "symfony-app-dir": "app",

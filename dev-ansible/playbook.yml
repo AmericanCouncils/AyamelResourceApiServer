@@ -9,6 +9,7 @@
     - include: common/tasks/install_symfony_reqs.yml
     - include: common/tasks/install_rabbitmq_server.yml
     - include: common/tasks/install_mediainfo.yml
+    - include: common/tasks/install_elasticsearch.yml
     #- include: common/tasks/install_ffmpeg.yml
     #- include: common/tasks/install_ffmpegthumbnailer.yml
     - copy:

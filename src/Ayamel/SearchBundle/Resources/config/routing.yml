@@ -1,0 +1,13 @@
+#simplified query string API for searching
+api_v1_simple_search:
+    pattern: /resources/search
+    defaults: { _controller: Ayamel\SearchBundle\Controller\Search::simpleSearchAction }
+    requirements:
+        _method:  GET
+
+#pass-through POST api for elasticsearch
+api_v1_advanced_search:
+    pattern: /resources/search
+    defaults: { _controller: Ayamel\SearchBundle\Controller\Search::advancedSearchAction }
+    requirements:
+        _method:  POST

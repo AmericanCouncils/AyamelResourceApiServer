@@ -30,7 +30,9 @@ class AppKernel extends Kernel
             new Ayamel\YouTubeBundle\AyamelYouTubeBundle(),
             new AC\MediaInfoBundle\ACMediaInfoBundle(),
             new Ayamel\MediaInfoBundle\AyamelMediaInfoBundle(),
-            new Ornicar\ApcBundle\OrnicarApcBundle()
+            new Ornicar\ApcBundle\OrnicarApcBundle(),
+            new FOS\ElasticaBundle\FOSElasticaBundle(),
+            new Ayamel\SearchBundle\AyamelSearchBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

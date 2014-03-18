@@ -1,0 +1,177 @@
+parameters:
+    ayamel.search.language_field_map:
+        # arabic
+        ara: ['ar']
+        # arabic
+        arm: []
+        # basque
+        baq: []
+        # brazilian portuguese
+        brz: []
+        # bulgarian
+        bul: []
+        # catalan
+        cat: []
+        # chinese
+        zho: []
+        # loosely defined asian scripts (chinese, japanese, korean, pin yin...)
+        cjk: []
+        # czech
+        ces: []
+        # danish
+        dan: []
+        # dutch
+        dut: []
+        # english
+        eng: ['en']
+        # finnish
+        fin: []
+        # french
+        fra: []
+        # galician
+        glg: []
+        # german
+        deu: []
+        # greek
+        gre: []
+        # hindi
+        hin: []
+        # hungarian
+        hun: []
+        # indonesian
+        ind: []
+        # italian
+        ita: []
+        # norwegian
+        nor: []
+        # persian
+        fas: []
+        # portuguese
+        por: []
+        # romanian
+        ron: []
+        # russian
+        rus: ['ru']
+        # spanish
+        spa: []
+        # swedish
+        swe: []
+        # turkish
+        tur: []
+        # thai
+        tha: []
+
+    ayamel.search.ayamel_index:
+        client: default
+        types:
+            resource:
+                mappings:
+                    title:
+                        boost: 5
+                        analyzer: default
+                    description:
+                        boost: 4
+                        analyzer: default
+                    keywords:
+                        boost: 3
+                        analyzer: default
+                    content_canonical:
+                        boost: 2
+                        analyzer: default
+                    content_ara:
+                        boost: 1
+                        analyzer: default
+                    content_arm:
+                        boost: 1
+                        analyzer: default
+                    content_baq:
+                        boost: 1
+                        analyzer: default
+                    content_brz:
+                        boost: 1
+                        analyzer: default
+                    content_bul:
+                        boost: 1
+                        analyzer: default
+                    content_cat:
+                        boost: 1
+                        analyzer: default
+                    content_zho:
+                        boost: 1
+                        analyzer: default
+                    content_cjk:
+                        boost: 1
+                        analyzer: default
+                    content_ces:
+                        boost: 1
+                        analyzer: default
+                    content_dan:
+                        boost: 1
+                        analyzer: default
+                    content_dut:
+                        boost: 1
+                        analyzer: default
+                    content_eng:
+                        boost: 1
+                        analyzer: default
+                    content_fin:
+                        boost: 1
+                        analyzer: default
+                    content_fra:
+                        boost: 1
+                        analyzer: default
+                    content_glg:
+                        boost: 1
+                        analyzer: default
+                    content_deu:
+                        boost: 1
+                        analyzer: default
+                    content_gre:
+                        boost: 1
+                        analyzer: default
+                    content_hin:
+                        boost: 1
+                        analyzer: default
+                    content_hun:
+                        boost: 1
+                        analyzer: default
+                    content_ind:
+                        boost: 1
+                        analyzer: default
+                    content_ita:
+                        boost: 1
+                        analyzer: default
+                    content_nor:
+                        boost: 1
+                        analyzer: default
+                    content_fas:
+                        boost: 1
+                        analyzer: default
+                    content_por:
+                        boost: 1
+                        analyzer: default
+                    content_ron:
+                        boost: 1
+                        analyzer: default
+                    content_rus:
+                        boost: 1
+                        analyzer: default
+                    content_spa:
+                        boost: 1
+                        analyzer: default
+                    content_swe:
+                        boost: 1
+                        analyzer: default
+                    content_tur:
+                        boost: 1
+                        analyzer: default
+                    content_tha:
+                        boost: 1
+                        analyzer: default
+        settings:
+            index:
+                analysis:
+                    analyzer:
+                        default:
+                            type: standard
+                    #filter:

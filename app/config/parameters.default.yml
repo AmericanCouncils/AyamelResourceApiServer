@@ -11,6 +11,9 @@ parameters:
     rabbitmq_password: guest
     rabbitmq_vhost: '/'
 
+    elasticsearch_host: 127.0.0.1
+    elasticsearch_port: 9200
+
     #mailer_transport: smtp
     #mailer_host: localhost
     #mailer_user: null
