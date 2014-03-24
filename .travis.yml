@@ -1,7 +1,6 @@
 language: php
 
 php:
-    - 5.4
     - 5.5
 
 env:
@@ -20,6 +19,7 @@ before_script:
     - sudo apt-get install -qq mediainfo 
 #    - util/install_ffmpeg.sh
 #    - sudo apt-get install -qq ffmpegthumbnailer
+    - composer self-update
     - composer install --dev
     - app/console cache:clear --env=test
 
