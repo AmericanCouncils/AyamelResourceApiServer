@@ -6,39 +6,10 @@ use AC\WebServicesBundle\Fixture\CachedMongoFixture;
 
 class AyamelFixture extends CachedMongoFixture
 {
-    // protected function getIds($model, $number)
-    // {
-    //     return function ($f) use ($model, $number) {
-    //         $ids = [];
-    //         foreach (range(0, $number) as $number) {
-    //             $ids[] = $f->fetchCorresponding($model)->getId();
-    //         }
-
-    //         return $ids;
-    //     };
-    // }
-
-    /**
-     * returns $number of strings concatenated into a comma-delimited string
-     *
-     */
-    protected function commaDelimitedString($number)
-    {
-        $r = "";
-        foreach (range(0, $number) as $number) {
-            if ($r === "") {
-                $r = $f->fake()->word();
-            } else {
-                $r = $r . ", " . $f->fake()->word();                
-            }
-        return function ($f) use ($r) {return $r;};
-        }
-    }
-
     // should we perhaps validate this fixture against the model constraints?
     protected function fixture()
     {
-        $this->generate(10, 'AyamelResourceBundle:OEmbed',[
+        $this->describe('AyamelResourceBundle:OEmbed',[
             'type' => function($f) {return $f->fake()->word();},
             'version' => function($f) {return "1.0";},
             'title' => function($f) {return $f->fake()->sentence(5);},
@@ -55,7 +26,7 @@ class AyamelFixture extends CachedMongoFixture
             'height' => function($f) {return $f->fake()->randomDigit(6);},
             'width' => function($f) {return $f->fake()->randomDigit(6);}
         ]);
-        $this->generate(10, "AyamelResourceBundle:FileReference", [
+        $this->describe("AyamelResourceBundle:FileReference", [
             'downloadUri' => function($f) {return $f->fake()->url();},
             'streamUri' => function($f) {return $f->fake()->url();},
             'internalUri' => function($f) {return $f->fake()->url();},
@@ -66,19 +37,20 @@ class AyamelFixture extends CachedMongoFixture
             'mimeType' => function($f) {return $f->fake()->mimeType();},
             'attributes' => function($f) {return [];},
             ]);
-        $this->generate(10, "AyamelResourceBundle:ContentCollection", [
+        $this->describe("AyamelResourceBundle:ContentCollection", [
             'canonicalUri' => function ($f) {return $f->fake()->url();},
-            'files' => function ($f) {return [$f->fetchCorresponding("AyamelResourceBundle:FileReference")];},
-            'oembed' => function ($f) {return $f->fetchCorresponding("AyamelResourceBundle:OEmbed");},
+            'files' => function ($f) {return $f->build(1, "AyamelResourceBundle:FileReference");},
+            'oembed' => function ($f) {return $f->buildOne("AyamelResourceBundle:OEmbed");},
         ]);
         $this->generate(10, "AyamelResourceBundle:Resource", [
             'title' => function ($f) {return $f->fake()->sentence(3);},
             'description' => function ($f) {return $f->fake()->sentence(20);},
-            'keywords' => function ($f) {return $this->commaDelimitedString(5);},
-            'subjectDomains' => function ($f) {return $f->fake()->randomElements(["Arts", "Entertainment", "Culture", "Economy", "Education", "Food", "Geography", "History", "News", "Politics", "Religion", "Sports", "Technology", "Weather", "Other"]);},
-            'functionalDomains' => function ($f) {return $f->fake()->randomElements(['Foo','Bar','Baz']);},
-            'registers' => function ($f) {return $f->fake()->randomElements(['formal', 'casual', 'intimate', 'static', 'consultative']);},
-            'type' => function ($f) {return $f->fake()->randomElements(['video', 'audio', 'image', 'document', 'archive', 'collection', 'data']);},
+            // 'keywords' => function ($f) {return $this->commaDelimitedString($f, 5);},
+            'keywords' => function ($f) {return $f->fake()->word() . ',' . $f->fake()->word() . ',' . $f->fake()->word();},
+            'subjectDomains' => function ($f) {return [$f->fake()->randomElement(["Arts", "Entertainment", "Culture", "Economy", "Education", "Food", "Geography", "History", "News", "Politics", "Religion", "Sports", "Technology", "Weather", "Other"])];},
+            'functionalDomains' => function ($f) {return [$f->fake()->randomElement(['Foo','Bar','Baz'])];},
+            'registers' => function ($f) {return [$f->fake()->randomElement(['formal', 'casual', 'intimate', 'static', 'consultative'])];},
+            'type' => function ($f) {return $f->fake()->randomElement(['video', 'audio', 'image', 'document', 'archive', 'collection', 'data']);},
             'sequence' => function ($f) {return $f->fake()->boolean();}, //really this should be conditional on type
             'visibility' => function ($f) {return [];}, //empty array, visible to everyone
             'dateAdded' => function ($f) {return $f->fake()->dateTimeBetween('-2 years','-1 years');},
@@ -86,13 +58,13 @@ class AyamelFixture extends CachedMongoFixture
             'copyright' => function ($f) {return $f->fake()->catchPhrase();},
             'license' => function ($f) {return $f->fake()->bs();},
             'status' => function ($f) {return $f->fake()->randomElement(['normal','awaiting_processing','awaiting_content','processing','deleted']);},
-            'content' => function ($f) {return $f->fetchCorresponding("ACFlagshipBundle:ContentCollection");},
+            'content' => function ($f) {return $f->buildOne("AyamelResourceBundle:ContentCollection");},
             // 'dateDeleted' => function ($f) {return $f->fake()->dateTimeBetween('now','+5 years');},
             // 'relations' => function ($f) {return $f->fake()->something();},
         ]);
         $this->generate(10, "AyamelResourceBundle:Relation", [
-            'subjectId' => function ($f) {return $f->fetchCorresponding("ACFlagshipBundle:Resource")->getId();},
-            'objectId' => function ($f) {return $f->fetchCorresponding("ACFlagshipBundle:Resource")->getId();},
+            'subjectId' => function ($f) {return $f->fetchCorresponding("AyamelResourceBundle:Resource")->getId();},
+            'objectId' => function ($f) {return $f->fetchCorresponding("AyamelResourceBundle:Resource")->getId();},
             'type' => function ($f) {return $f->fake()->randomElement(['based_on', 'references', 'requires', 'transcript_of', 'search', 'version_of', 'part_of', 'translation_of', 'contains']);},
             'attributes' => function ($f) {return [];}  // valid values conditional on type - could do this properly, for now just leave as empty array
             // how is client set? Should I use one of the Test Clients?

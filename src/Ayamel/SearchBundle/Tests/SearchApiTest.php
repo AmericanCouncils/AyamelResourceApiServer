@@ -25,9 +25,8 @@ class SearchApiTest extends FixturedTestCase
     {
         // check that fixtures are present
         $this->assertTrue(!empty($this->fixtureData));
-        $id = $this->fixtureData['ACFlagshipBundle:Resource'][0]->getId();
-        $content = $this->callJsonApi('GET', "/api/v1/resources/$id?_key=45678isafgd56789asfgdhf4567", ['auth' => [ 'user' => $this->user ]]);
-        print_r($content);
+        $id = $this->fixtureData['AyamelResourceBundle:Resource'][0]->getId();
+        $content = $this->callJsonApi('GET', "/api/v1/resources/$id?_key=45678isafgd56789asfgdhf4567");
         $this->assertArrayHasKey('resource', $content); 
     }
 
