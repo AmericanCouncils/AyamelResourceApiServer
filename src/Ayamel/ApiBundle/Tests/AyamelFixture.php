@@ -42,6 +42,11 @@ class AyamelFixture extends CachedMongoFixture
             'files' => function ($f) {return $f->build(1, "AyamelResourceBundle:FileReference");},
             'oembed' => function ($f) {return $f->buildOne("AyamelResourceBundle:OEmbed");},
         ]);
+        $this->describe("AyamelResourceBundle:Client", [
+            'id' => function ($f) {return "another-test-client";},
+            'name' => function ($f) {return "Another Test Client";},
+            'uri' => function ($f) {return "http://www.anothertestclient.com";},
+        ]);
         $this->generate(10, "AyamelResourceBundle:Resource", [
             'title' => function ($f) {return $f->fake()->sentence(3);},
             'description' => function ($f) {return $f->fake()->sentence(20);},
@@ -57,8 +62,9 @@ class AyamelFixture extends CachedMongoFixture
             'dateModified' => function ($f) {return $f->fake()->dateTimeBetween('-1 years','now');},
             'copyright' => function ($f) {return $f->fake()->catchPhrase();},
             'license' => function ($f) {return $f->fake()->bs();},
-            'status' => function ($f) {return $f->fake()->randomElement(['normal','awaiting_processing','awaiting_content','processing','deleted']);},
+            'status' => function ($f) {return $f->fake()->randomElement(['normal','awaiting_processing','awaiting_content','processing']);},
             'content' => function ($f) {return $f->buildOne("AyamelResourceBundle:ContentCollection");},
+            'client' => function ($f) {return $f->buildOne("AyamelResourceBundle:Client");}
             // 'dateDeleted' => function ($f) {return $f->fake()->dateTimeBetween('now','+5 years');},
             // 'relations' => function ($f) {return $f->fake()->something();},
         ]);
@@ -66,9 +72,8 @@ class AyamelFixture extends CachedMongoFixture
             'subjectId' => function ($f) {return $f->fetchCorresponding("AyamelResourceBundle:Resource")->getId();},
             'objectId' => function ($f) {return $f->fetchCorresponding("AyamelResourceBundle:Resource")->getId();},
             'type' => function ($f) {return $f->fake()->randomElement(['based_on', 'references', 'requires', 'transcript_of', 'search', 'version_of', 'part_of', 'translation_of', 'contains']);},
-            'attributes' => function ($f) {return [];}  // valid values conditional on type - could do this properly, for now just leave as empty array
+            'attributes' => function ($f) {return [];},  // valid values conditional on type - could do this properly, for now just leave as empty array
             // how is client set? Should I use one of the Test Clients?
-            // 'client' => function ($f) {return $f->fake()->something();},            
             // 'clientUser' => function ($f) {return $f->fake()->something();},
         ]);
     }

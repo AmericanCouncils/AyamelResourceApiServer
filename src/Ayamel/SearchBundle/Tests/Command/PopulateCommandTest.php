@@ -5,13 +5,15 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use FOS\ElasticaBundle\Command\PopulateCommand;
 use AC\WebServicesBundle\TestCase;
+use Ayamel\ApiBundle\Tests\FixturedTestCase;
 
 
-class PopulateCommandTest extends TestCase
+class PopulateCommandTest extends FixturedTestCase
 {
 
     public function setUp()
     {
+        parent::setUp();
         $k = $this->createKernel();
         $k->boot();
         $app = new Application($k);
