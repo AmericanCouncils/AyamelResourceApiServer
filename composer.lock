@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "bafd370b9627f6bb054b531a18fbfb71",
+    "hash": "b2eea5a5704470aa4356b6b1e356b496",
     "packages": [
         {
             "name": "ac/media-info-bundle",
@@ -238,17 +238,17 @@
         },
         {
             "name": "ac/web-services-bundle",
-            "version": "0.3.0",
+            "version": "dev-master",
             "target-dir": "AC/WebServicesBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/AmericanCouncils/WebServicesBundle.git",
-                "reference": "c0206c9b3cd5ca8a0b16744577309014a0dc9bc3"
+                "reference": "8e24fc20da88714a99e6a1906ed4f1301128587e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AmericanCouncils/WebServicesBundle/zipball/c0206c9b3cd5ca8a0b16744577309014a0dc9bc3",
-                "reference": "c0206c9b3cd5ca8a0b16744577309014a0dc9bc3",
+                "url": "https://api.github.com/repos/AmericanCouncils/WebServicesBundle/zipball/8e24fc20da88714a99e6a1906ed4f1301128587e",
+                "reference": "8e24fc20da88714a99e6a1906ed4f1301128587e",
                 "shasum": ""
             },
             "require": {
@@ -289,7 +289,7 @@
                 "rest",
                 "web services"
             ],
-            "time": "2014-03-12 18:40:37"
+            "time": "2014-03-21 19:36:38"
         },
         {
             "name": "dflydev/markdown",
@@ -897,12 +897,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/DoctrineMongoDBBundle.git",
-                "reference": "037e4d054364abd5ece804440fd8242639b021d6"
+                "reference": "3b0b678497a3536cf85b2679d179c0a8a6f96690"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineMongoDBBundle/zipball/037e4d054364abd5ece804440fd8242639b021d6",
-                "reference": "037e4d054364abd5ece804440fd8242639b021d6",
+                "url": "https://api.github.com/repos/doctrine/DoctrineMongoDBBundle/zipball/3b0b678497a3536cf85b2679d179c0a8a6f96690",
+                "reference": "3b0b678497a3536cf85b2679d179c0a8a6f96690",
                 "shasum": ""
             },
             "require": {
@@ -959,27 +959,27 @@
                 "persistence",
                 "symfony"
             ],
-            "time": "2014-03-10 15:20:26"
+            "time": "2014-03-17 23:33:24"
         },
         {
             "name": "friendsofsymfony/elastica-bundle",
-            "version": "v3.0.0-alpha1",
+            "version": "v3.0.0-alpha2",
             "target-dir": "FOS/ElasticaBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfSymfony/FOSElasticaBundle.git",
-                "reference": "af70cf779a9234c79a945b00356bb3b3f00d7a71"
+                "reference": "cdd6e3af45a7fb9f97b53887416e0b3511763452"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSElasticaBundle/zipball/af70cf779a9234c79a945b00356bb3b3f00d7a71",
-                "reference": "af70cf779a9234c79a945b00356bb3b3f00d7a71",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSElasticaBundle/zipball/cdd6e3af45a7fb9f97b53887416e0b3511763452",
+                "reference": "cdd6e3af45a7fb9f97b53887416e0b3511763452",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2",
                 "psr/log": "~1.0",
-                "ruflin/elastica": "~0.20",
+                "ruflin/elastica": ">=0.20, <1.1-dev",
                 "symfony/console": "~2.1",
                 "symfony/form": "~2.1",
                 "symfony/framework-bundle": "~2.1",
@@ -1042,7 +1042,7 @@
                 "propel",
                 "search"
             ],
-            "time": "2014-02-19 02:52:43"
+            "time": "2014-03-13 21:59:59"
         },
         {
             "name": "fzaninotto/faker",
@@ -1455,16 +1455,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.7.0",
+            "version": "1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "6225b22de9dcf36546be3a0b2fa8e3d986153f57"
+                "reference": "392ef35fd470638e08d0160d6b1cbab63cb23174"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/6225b22de9dcf36546be3a0b2fa8e3d986153f57",
-                "reference": "6225b22de9dcf36546be3a0b2fa8e3d986153f57",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/392ef35fd470638e08d0160d6b1cbab63cb23174",
+                "reference": "392ef35fd470638e08d0160d6b1cbab63cb23174",
                 "shasum": ""
             },
             "require": {
@@ -1472,11 +1472,11 @@
                 "psr/log": "~1.0"
             },
             "require-dev": {
-                "aws/aws-sdk-php": "~2.4.8",
-                "doctrine/couchdb": "dev-master",
-                "mlehner/gelf-php": "1.0.*",
+                "aws/aws-sdk-php": "~2.4, >2.4.8",
+                "doctrine/couchdb": "~1.0@dev",
+                "graylog2/gelf-php": "~1.0",
                 "phpunit/phpunit": "~3.7.0",
-                "raven/raven": "0.5.*",
+                "raven/raven": "~0.5",
                 "ruflin/elastica": "0.90.*"
             },
             "suggest": {
@@ -1484,19 +1484,20 @@
                 "doctrine/couchdb": "Allow sending log messages to a CouchDB server",
                 "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
                 "ext-mongo": "Allow sending log messages to a MongoDB server",
-                "mlehner/gelf-php": "Allow sending log messages to a GrayLog2 server",
+                "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
                 "raven/raven": "Allow sending log messages to a Sentry server",
+                "rollbar/rollbar": "Allow sending log messages to Rollbar",
                 "ruflin/elastica": "Allow sending log messages to an Elastic Search server"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.7.x-dev"
+                    "dev-master": "1.8.x-dev"
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "Monolog": "src/"
+                "psr-4": {
+                    "Monolog\\": "src/Monolog"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1518,7 +1519,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2013-11-14 19:48:31"
+            "time": "2014-03-23 19:50:26"
         },
         {
             "name": "nelmio/api-doc-bundle",
@@ -1651,17 +1652,17 @@
         },
         {
             "name": "oldsound/rabbitmq-bundle",
-            "version": "v1.3.1",
+            "version": "v1.3.2",
             "target-dir": "OldSound/RabbitMqBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/videlalvaro/RabbitMqBundle.git",
-                "reference": "df867351a833ed7db9c045af788ec7cd0720d1f0"
+                "reference": "f21d8698129486a3b569a155d4d8d18ee403fbba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/videlalvaro/RabbitMqBundle/zipball/df867351a833ed7db9c045af788ec7cd0720d1f0",
-                "reference": "df867351a833ed7db9c045af788ec7cd0720d1f0",
+                "url": "https://api.github.com/repos/videlalvaro/RabbitMqBundle/zipball/f21d8698129486a3b569a155d4d8d18ee403fbba",
+                "reference": "f21d8698129486a3b569a155d4d8d18ee403fbba",
                 "shasum": ""
             },
             "require": {
@@ -1700,7 +1701,7 @@
                 "queue",
                 "rabbitmq"
             ],
-            "time": "2014-03-11 19:06:47"
+            "time": "2014-03-17 14:38:17"
         },
         {
             "name": "ornicar/apc-bundle",
@@ -1893,16 +1894,16 @@
         },
         {
             "name": "ruflin/elastica",
-            "version": "v0.90.10.0",
+            "version": "v1.0.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ruflin/Elastica.git",
-                "reference": "bb03eb21b96ea88fc6fefb97a7b2c2d7708fdfe2"
+                "reference": "6297d827be2f4c589eee846e26f67a7ab213bcf6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/bb03eb21b96ea88fc6fefb97a7b2c2d7708fdfe2",
-                "reference": "bb03eb21b96ea88fc6fefb97a7b2c2d7708fdfe2",
+                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/6297d827be2f4c589eee846e26f67a7ab213bcf6",
+                "reference": "6297d827be2f4c589eee846e26f67a7ab213bcf6",
                 "shasum": ""
             },
             "require": {
@@ -1941,7 +1942,7 @@
                 "client",
                 "search"
             ],
-            "time": "2014-02-02 07:44:29"
+            "time": "2014-03-08 12:13:09"
         },
         {
             "name": "sensio/distribution-bundle",
@@ -2157,17 +2158,17 @@
         },
         {
             "name": "symfony/icu",
-            "version": "v1.2.0",
+            "version": "v1.2.1",
             "target-dir": "Symfony/Component/Icu",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Icu.git",
-                "reference": "7299cd3d8d6602103d1ebff5d0a9917b7bc6de72"
+                "reference": "98e197da54df1f966dd5e8a4992135703569c987"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Icu/zipball/7299cd3d8d6602103d1ebff5d0a9917b7bc6de72",
-                "reference": "7299cd3d8d6602103d1ebff5d0a9917b7bc6de72",
+                "url": "https://api.github.com/repos/symfony/Icu/zipball/98e197da54df1f966dd5e8a4992135703569c987",
+                "reference": "98e197da54df1f966dd5e8a4992135703569c987",
                 "shasum": ""
             },
             "require": {
@@ -2201,7 +2202,7 @@
                 "icu",
                 "intl"
             ],
-            "time": "2013-06-03 18:32:58"
+            "time": "2013-10-04 10:06:38"
         },
         {
             "name": "symfony/monolog-bundle",
@@ -3050,6 +3051,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "doctrine/mongodb-odm-bundle": 20,
+        "ac/web-services-bundle": 20,
         "friendsofsymfony/elastica-bundle": 20
     },
     "platform": {
