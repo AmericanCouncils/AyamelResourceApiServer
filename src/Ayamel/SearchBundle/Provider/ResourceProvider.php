@@ -18,22 +18,35 @@ class ResourceProvider implements ProviderInterface
     private $indexer;
     private $type;
 
-    public function __construct(ResourceIndexer $indexer, $batch = 100)
+    protected static function pluck($field, $values)
     {
-        $this->indexer = $indexer;
-        $this->type = $resourceType;
-        $this->batch = 100;
+        return array_map(function ($v) use ($field) {
+            return $v[$field];
+        }, $values);
     }
 
-	public function populate(\Closure $loggerClosure = null, array $options = array())
+    public function __construct(ResourceIndexer $indexer, $batch = 100, $documentManager)
+    {
+        $this->indexer = $indexer;
+        $this->type = "Ayamel\ResourceBundle\Document\Resource";
+        $this->batch = $batch;
+        $this->documentManager = $documentManager;
+    }
+
+    public function populate(\Closure $loggerClosure = null, array $options = array())
     {
 
         if ($loggerClosure) {
             $loggerClosure('Indexing resources...');
         }
 
-        throw new \RuntimeException("Need query for available IDs...");
-        $ids = array();
+        $resourceRepo = $this->documentManager->getRepository("Ayamel\ResourceBundle\Document\Resource");
+        $resources = $resourceRepo->findBy([]);
+
+        $ids = [];
+        foreach ($resources as $resource) {
+            $ids[] = $resource->getId();
+        }
 
         if ($loggerClosure) {
             $loggerClosure(sprintf("Indexing %s resources.", count($ids)));
@@ -46,3 +59,6 @@ class ResourceProvider implements ProviderInterface
         }
     }
 }
+
+// fos:elastica:populate [--index[="..."]] [--type[="..."]] [--no-reset] 
+// [--offset="..."] [--sleep="..."] [--batch-size="..."] [--ignore-errors]

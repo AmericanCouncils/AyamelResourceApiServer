@@ -6,6 +6,8 @@ use Ayamel\SearchBundle\AsynchronousSearchTest;
 use Guzzle\Http\Client;
 use Guzzle\Http\Exception\ClientErrorResponseException;
 use Ayamel\ApiBundle\Tests\FixturedTestCase;
+use Symfony\Component\Console\Input\StringInput;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 
 /**
  * This set of tests makes sure the API search routes perform as expected.  Most importantly
@@ -19,19 +21,47 @@ class SearchApiTest extends FixturedTestCase
     public function setUp()
     {
         parent::setUp();
-    }
+        $this->runCommand("fos:elastica:populate");
+        $this->index = $this->getClient()->getContainer()->get('fos_elastica.index.ayamel');
+        $type = $this->index->getType('test');
+        print_r($type);
 
+        $this->index->refresh();
+        $this->index->flush();
+
+        // $k = $this->createKernel();
+        // $k->boot();
+    }
+    
+    /**
+     * Make sure the fixtures were loaded
+     *
+     */
     public function testFixtures()
     {
-        // check that fixtures are present
         $this->assertTrue(!empty($this->fixtureData));
         $id = $this->fixtureData['AyamelResourceBundle:Resource'][0]->getId();
         $content = $this->callJsonApi('GET', "/api/v1/resources/$id?_key=45678isafgd56789asfgdhf4567");
         $this->assertArrayHasKey('resource', $content); 
     }
+    /**
+     * Make sure that the search index actually knows about the fixtures
+     *
+     */
+    public function testSearchIndex()
+    {
+        
+
+        print_r($this->index->count());
+        // $results = $index->search();
+        // return $this->assertTrue(false);
+        // get the index, search it, check that it's not empty
+        
+    }
 
     /**
      * @depends testFixtures
+     * @depends testSearchIndex
      */
     public function testSimpleSearchApi($ids)
     {
