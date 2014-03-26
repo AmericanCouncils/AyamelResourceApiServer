@@ -102,7 +102,19 @@ class ResourceIndexer
         $this->type->getIndex()->refresh();
 
         if (!empty($failed)) {
-            throw new BulkIndexException($failed);
+             $e = new BulkIndexException($failed);
+
+             // TODO: ad-hoc debug, if needed should implement logging
+             
+             // $messages = $e->getMessages();
+             // $indices = array_keys($messages);
+             // print_r("\nFailed to index " . count($messages) . " resources.\n");
+             // print_r("ResourceIndexer failure messages:\n");
+             // foreach ($indices as $index) {
+             //     print_r("id: $index; message: " . $messages[$index] . "\n");
+             // }
+
+             throw $e;
         }
 
         return true;

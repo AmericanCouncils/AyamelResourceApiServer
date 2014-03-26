@@ -4,8 +4,6 @@ namespace Ayamel\SearchBundle;
 
 use Ayamel\ApiBundle\ApiTestCase;
 use Symfony\Component\Process\Process;
-use Guzzle\Http\Client;
-use Guzzle\Http\Exception\ClientErrorResponseException;
 
 /**
  * This test ensures that the indexer is invoked via RabbitMQ when

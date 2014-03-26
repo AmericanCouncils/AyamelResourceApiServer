@@ -30,7 +30,7 @@ class SearchIndexConsumer implements ConsumerInterface
      * @param AMQPMessage $msg
      */
     public function execute(AMQPMessage $msg)
-    {        
+    {
         $body = unserialize($msg->body);
         $batch = $this->container->getParameter('ayamel.search.elastica_resource_provider.batch');
         try {
@@ -44,7 +44,6 @@ class SearchIndexConsumer implements ConsumerInterface
                 echo 'INDEXED MULTI'.PHP_EOL;
             }
 
-
             return true;
         } catch (IndexException $e) {
             $logger = $this->container->get('logger');
@@ -56,7 +55,7 @@ class SearchIndexConsumer implements ConsumerInterface
 
                 return true;
             }
-            
+
             $logger->warning(sprintf('Indexing failed [%s]: %s', $body['id'], $e->getMessage()));
 
             return false;

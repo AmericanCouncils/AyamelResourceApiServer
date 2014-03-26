@@ -42,3 +42,6 @@ parameters:
         test_client2:
             name: Another Test Client
             apiKey: 55678isafgd56789asfgdhf4568
+
+doctrine_mongodb:
+    default_database: ayamel_dev

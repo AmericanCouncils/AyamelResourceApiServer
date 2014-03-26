@@ -2,9 +2,8 @@
 
 namespace Ayamel\SearchBundle\Tests;
 
-use Ayamel\SearchBundle\AsynchronousSearchTest;
 use Guzzle\Http\Client;
-use Guzzle\Http\Exception\ClientErrorResponseException;
+use Ayamel\ApiBundle\Tests\FixturedTestCase;
 
 /**
  * This set of tests makes sure the API search routes perform as expected.  Most importantly
@@ -13,50 +12,46 @@ use Guzzle\Http\Exception\ClientErrorResponseException;
  * @package AyamelSearchBundle
  * @author Evan Villemez
  */
-class SearchApiTest extends AsynchronousSearchTest
+class SearchApiTest extends FixturedTestCase
 {
     public function setUp()
     {
-        $this->clearDatabase();
-        $container = $this->getContainer();
-        // clear rabbit queue
-        try {
-            $container->get('old_sound_rabbit_mq.search_index_producer')->getChannel()->queue_purge('search_index');
-        } catch (\PhpAmqpLib\Exception\AMQPProtocolChannelException $e) {
-            //swallow this error because of travis
-        }
+        parent::setUp();
+        $this->runCommand("fos:elastica:populate");
+        $this->index = $this->getClient()->getContainer()->get('fos_elastica.index.ayamel');
+        $type = $this->index->getType('test');
 
-        $uploadUrls = [];
-        $titles = ['The Russia House','The Sealand House','The Maxwell House'];
-
-        foreach ($titles as $title) {
-            $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
-                'CONTENT_TYPE' => 'application/json'
-            ), json_encode(array(
-                'title' => $title,
-                'type' => 'document',
-            )));
-
-            $uploadUrls[] = substr($response['contentUploadUrl'], strlen('http://localhost'));
-        }
-        foreach ($uploadUrls as $uploadUrl) {
-            $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
-                'CONTENT_TYPE' => 'application/json'
-            ), json_encode(array(
-                'uri' => 'http://www.google.com/'
-            )));
-        }
-    }
-
-    public function testSetupDummyResources()
-    {
-        $response = $this->getJson('GET', '/api/v1/resources');
-        // print_r($response);
-        $this->assertSame(3, (count($response['resources'])));
+        $this->index->refresh();
+        $this->index->flush();
     }
 
     /**
-     * @depends testSetupDummyResources
+     * Make sure the fixtures were loaded
+     *
+     */
+    public function testFixtures()
+    {
+        $this->assertTrue(!empty($this->fixtureData));
+        $id = $this->fixtureData['AyamelResourceBundle:Resource'][0]->getId();
+        $content = $this->callJsonApi('GET', "/api/v1/resources/$id?_key=45678isafgd56789asfgdhf4567");
+        $this->assertArrayHasKey('resource', $content);
+    }
+    /**
+     * Make sure that the search index actually knows about the fixtures
+     *
+     */
+    public function testSearchIndex()
+    {
+        $this->assertSame(10, $this->index->count());
+        $results = $this->index->search();
+        // The search results seem to come back in an indeterminate order,
+        // so just check that some fields are present in the returned data.
+        $this->assertFalse(empty(($results[0]->getData()['functionalDomains'])));
+    }
+
+    /**
+     * @depends testFixtures
+     * @depends testSearchIndex
      */
     public function testSimpleSearchApi($ids)
     {
@@ -64,13 +59,14 @@ class SearchApiTest extends AsynchronousSearchTest
         $client = new Client('http://127.0.0.1:9200');
         $response = $client->get('/ayamel/resource/')->send();
         var_dump($response->getBody());
+
         return;
-        
+
         $proc = $this->startRabbitListener(3);
         $tester = $this;
         $proc->setTimeout(5);
         $b = [];
-        $proc->wait(function($type, $buffer) use ($tester, $proc) {
+        $proc->wait(function ($type, $buffer) use ($tester, $proc) {
             $b[] = $buffer;
             while ($proc->isRunning()) {
                 usleep(50000); //wait a tiny bit to make sure the process actually quit (... meh)
@@ -89,7 +85,7 @@ class SearchApiTest extends AsynchronousSearchTest
     }
 
     /**
-     * @depends testSetupDummyResources
+     * @depends testFixtures
      */
     public function testSimpleSearchApiHidesUnauthorizedResources($ids)
     {
@@ -97,7 +93,7 @@ class SearchApiTest extends AsynchronousSearchTest
     }
 
     /**
-     * @depends testSetupDummyResources
+     * @depends testFixtures
      */
     public function testAdvancedSearchApi($ids)
     {
@@ -105,18 +101,10 @@ class SearchApiTest extends AsynchronousSearchTest
     }
 
     /**
-     * @depends testSetupDummyResources
+     * @depends testFixtures
      */
     public function testAdvancedSearchApiHidesUnauthorizedResources($ids)
     {
         $this->markTestSkipped();
     }
 }
-
-
-            //object should not be in the index
-            // try {
-            //     $response = $client->get('/ayamel/resource/'.$relation['objectId'])->send();
-            // } catch (ClientErrorResponseException $exception) {
-            // }
-            // $this->assertSame(404, $exception->getResponse()->getStatusCode());

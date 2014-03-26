@@ -42,5 +42,6 @@ services:
         arguments:
             - @ayamel.search.resource_indexer
             - %ayamel.search.elastica_resource_provider.batch%
+            - @doctrine.odm.mongodb.document_manager
         tags:
             - { name: fos_elastica.provider, index: ayamel, type: resource }
