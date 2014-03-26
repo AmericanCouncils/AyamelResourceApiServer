@@ -24,7 +24,6 @@ class SearchApiTest extends FixturedTestCase
         $this->runCommand("fos:elastica:populate");
         $this->index = $this->getClient()->getContainer()->get('fos_elastica.index.ayamel');
         $type = $this->index->getType('test');
-        print_r($type);
 
         $this->index->refresh();
         $this->index->flush();
@@ -50,13 +49,11 @@ class SearchApiTest extends FixturedTestCase
      */
     public function testSearchIndex()
     {
-        
-
-        print_r($this->index->count());
-        // $results = $index->search();
-        // return $this->assertTrue(false);
-        // get the index, search it, check that it's not empty
-        
+        $this->assertSame(10, $this->index->count());
+        $results = $this->index->search();
+        // The search results seem to come back in an indeterminate order, 
+        // so just check that some fields are present in the returned data.
+        $this->assertFalse(empty(($results[0]->getData()['functionalDomains'])));
     }
 
     /**
