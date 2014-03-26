@@ -41,8 +41,6 @@ class ResourceProvider implements ProviderInterface
             $loggerClosure('Indexing resources...');
         }
 
-        $resourceRepo = $this->documentManager->getRepository("Ayamel\ResourceBundle\Document\Resource");
-        $resources = $resourceRepo->findBy([]);
         $rawMongoDb = $this->documentManager->getConnection()->getMongo()->selectDB('ayamel_test');
         $cursor = $rawMongoDb->resources->find([], ['_id']);
 
