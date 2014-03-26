@@ -105,9 +105,10 @@ class ResourceIndexer
              $e = new BulkIndexException($failed);
              $messages = $e->getMessages();
              $indices = array_keys($messages);
-             print_r("\nResourceIndexer failure messages:\n");
+             print_r("\nFailed to index " . count($messages) . " resources.\n");
+             print_r("ResourceIndexer failure messages:\n");
              foreach ($indices as $index) {
-                 print_r($messages[$index] . "\n");
+                 print_r("id: $index; message: " . $messages[$index] . "\n");
              }
 
              

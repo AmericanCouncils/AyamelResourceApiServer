@@ -55,14 +55,14 @@ class AyamelFixture extends CachedMongoFixture
             'subjectDomains' => function ($f) {return [$f->fake()->randomElement(["Arts", "Entertainment", "Culture", "Economy", "Education", "Food", "Geography", "History", "News", "Politics", "Religion", "Sports", "Technology", "Weather", "Other"])];},
             'functionalDomains' => function ($f) {return [$f->fake()->randomElement(['Foo','Bar','Baz'])];},
             'registers' => function ($f) {return [$f->fake()->randomElement(['formal', 'casual', 'intimate', 'static', 'consultative'])];},
-            'type' => function ($f) {return $f->fake()->randomElement(['video', 'audio', 'image', 'document', 'archive', 'collection', 'data']);},
+            'type' => function ($f) {return $f->fake()->randomElement(['video', 'audio', 'image', 'document', 'collection']);},
             'sequence' => function ($f) {return $f->fake()->boolean();}, //really this should be conditional on type
             'visibility' => function ($f) {return [];}, //empty array, visible to everyone
             'dateAdded' => function ($f) {return $f->fake()->dateTimeBetween('-2 years','-1 years');},
             'dateModified' => function ($f) {return $f->fake()->dateTimeBetween('-1 years','now');},
             'copyright' => function ($f) {return $f->fake()->catchPhrase();},
             'license' => function ($f) {return $f->fake()->bs();},
-            'status' => function ($f) {return $f->fake()->randomElement(['normal','awaiting_processing','awaiting_content','processing']);},
+            'status' => function ($f) {return $f->fake()->randomElement(['normal','awaiting_processing','processing']);},
             'content' => function ($f) {return $f->buildOne("AyamelResourceBundle:ContentCollection");},
             'client' => function ($f) {return $f->buildOne("AyamelResourceBundle:Client");}
             // 'dateDeleted' => function ($f) {return $f->fake()->dateTimeBetween('now','+5 years');},

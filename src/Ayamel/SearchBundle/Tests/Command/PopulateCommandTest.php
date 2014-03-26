@@ -26,6 +26,6 @@ class PopulateCommandTest extends FixturedTestCase
     public function testCommand()
     {
         $this->commandTester->execute(['command' => $this->command->getName()]);
-        $this->assertRegExp('...', $this->commandTester->getDisplay());
+        $this->assertRegExp('/Populating ayamel\/resource, Finished indexing resources./', $this->commandTester->getDisplay());
     }
 }

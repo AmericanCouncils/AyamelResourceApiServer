@@ -17,6 +17,7 @@ class ResourceProvider implements ProviderInterface
 {
     private $indexer;
     private $type;
+    private $documentManager;
 
     protected static function pluck($field, $values)
     {
