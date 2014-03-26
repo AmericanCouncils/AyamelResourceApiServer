@@ -102,7 +102,16 @@ class ResourceIndexer
         $this->type->getIndex()->refresh();
 
         if (!empty($failed)) {
-            throw new BulkIndexException($failed);
+             $e = new BulkIndexException($failed);
+             $messages = $e->getMessages();
+             $indices = array_keys($messages);
+             print_r("\nResourceIndexer failure messages:\n");
+             foreach ($indices as $index) {
+                 print_r($messages[$index] . "\n");
+             }
+
+             
+             throw $e;
         }
 
         return true;
