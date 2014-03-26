@@ -50,7 +50,6 @@ class AyamelFixture extends CachedMongoFixture
         $this->generate(10, "AyamelResourceBundle:Resource", [
             'title' => function ($f) {return $f->fake()->sentence(3);},
             'description' => function ($f) {return $f->fake()->sentence(20);},
-            // 'keywords' => function ($f) {return $this->commaDelimitedString($f, 5);},
             'keywords' => function ($f) {return $f->fake()->word() . ',' . $f->fake()->word() . ',' . $f->fake()->word();},
             'subjectDomains' => function ($f) {return [$f->fake()->randomElement(["Arts", "Entertainment", "Culture", "Economy", "Education", "Food", "Geography", "History", "News", "Politics", "Religion", "Sports", "Technology", "Weather", "Other"])];},
             'functionalDomains' => function ($f) {return [$f->fake()->randomElement(['Foo','Bar','Baz'])];},

@@ -13,12 +13,6 @@
     },
     "minimum-stability": "beta",
     "prefer-stable": true,
-        "repositories": [
-        {
-            "type":"vcs",
-            "url":"https://github.com/AmericanCouncils/model-traits"
-        }
-    ],
     "require": {
         "php": ">=5.4.0",
         "ext-apcu": "*",

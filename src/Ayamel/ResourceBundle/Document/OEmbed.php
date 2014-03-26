@@ -17,7 +17,7 @@ use AC\ModelTraits\Annotation as MT;
  */
 class OEmbed
 {
-use AutoGetterSetterTrait;
+    use AutoGetterSetterTrait;
 
     /**
      * The resource type.

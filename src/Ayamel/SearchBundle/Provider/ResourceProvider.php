@@ -43,10 +43,12 @@ class ResourceProvider implements ProviderInterface
 
         $resourceRepo = $this->documentManager->getRepository("Ayamel\ResourceBundle\Document\Resource");
         $resources = $resourceRepo->findBy([]);
+        $rawMongoDb = $this->documentManager->getConnection()->getMongo()->selectDB('ayamel_test');
+        $cursor = $rawMongoDb->resources->find([], ['_id']);
 
         $ids = [];
-        foreach ($resources as $resource) {
-            $ids[] = $resource->getId();
+        foreach ($cursor as $resource) {
+            $ids[] = $resource['_id']->{'$id'};
         }
 
         if ($loggerClosure) {
@@ -60,6 +62,3 @@ class ResourceProvider implements ProviderInterface
         }
     }
 }
-
-// fos:elastica:populate [--index[="..."]] [--type[="..."]] [--no-reset]
-// [--offset="..."] [--sleep="..."] [--batch-size="..."] [--ignore-errors]
