@@ -61,5 +61,5 @@ class ResourceProvider implements ProviderInterface
     }
 }
 
-// fos:elastica:populate [--index[="..."]] [--type[="..."]] [--no-reset] 
+// fos:elastica:populate [--index[="..."]] [--type[="..."]] [--no-reset]
 // [--offset="..."] [--sleep="..."] [--batch-size="..."] [--ignore-errors]

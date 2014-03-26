@@ -107,7 +107,6 @@ class SearchIndexSubscriber implements EventSubscriberInterface
             return;
         }
 
-
         $producer = $this->container->get('old_sound_rabbit_mq.search_index_producer');
         foreach ($this->messages as $message) {
             $producer->publish(serialize($message));

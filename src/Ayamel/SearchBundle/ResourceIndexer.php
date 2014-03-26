@@ -111,7 +111,7 @@ class ResourceIndexer
                  print_r("id: $index; message: " . $messages[$index] . "\n");
              }
 
-             
+
              throw $e;
         }
 

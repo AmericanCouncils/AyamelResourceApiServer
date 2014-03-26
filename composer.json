@@ -37,7 +37,7 @@
         "nelmio/api-doc-bundle": "2.3.*",
         "nelmio/cors-bundle": "1.1.*",
         "jms/serializer-bundle": "0.13.*",
-        "ac/web-services-bundle": "dev-master",
+        "ac/web-services-bundle": "0.3.*",
         "ac/media-info-bundle": "1.2.*",
         "friendsofsymfony/elastica-bundle": "3.0.*@dev",
         "ornicar/apc-bundle": "~1.0",

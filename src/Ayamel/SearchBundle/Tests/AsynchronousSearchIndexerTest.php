@@ -51,7 +51,7 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
 
         //the listener should index after content was uploaded
         $tester = $this;
-        $proc->wait(function($type, $buffer) use ($tester, $proc, $resourceId, $client) {
+        $proc->wait(function ($type, $buffer) use ($tester, $proc, $resourceId, $client) {
             while ($proc->isRunning()) {
                 usleep(50000); //wait a tiny bit to make sure the process actually quit (... meh)
             }
@@ -87,7 +87,7 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
         $this->assertSame(200, $content['response']['code']);
 
         $tester = $this;
-        $proc->wait(function($type, $buffer) use ($id, $tester, $proc) {
+        $proc->wait(function ($type, $buffer) use ($id, $tester, $proc) {
             while ($proc->isRunning()) {
                 usleep(50000); //wait a tiny bit to make sure the process actually quit (... meh)
             }
@@ -141,7 +141,7 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
 
         //check for relations
         $tester = $this;
-        $proc->wait(function($type, $buffer) use ($id, $tester, $proc, $objectId) {
+        $proc->wait(function ($type, $buffer) use ($id, $tester, $proc, $objectId) {
             while ($proc->isRunning()) {
                 usleep(50000); //wait a tiny bit to make sure the process actually quit (... meh)
             }
@@ -181,7 +181,7 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
         $this->assertSame(200, $content['response']['code']);
 
         $tester = $this;
-        $proc->wait(function($type, $buffer) use ($relation, $tester, $proc) {
+        $proc->wait(function ($type, $buffer) use ($relation, $tester, $proc) {
             while ($proc->isRunning()) {
                 usleep(50000); //wait a tiny bit to make sure the process actually quit (... meh)
             }
@@ -219,7 +219,7 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
         $this->assertSame(200, $content['response']['code']);
 
         $tester = $this;
-        $proc->wait(function($type, $buffer) use ($id, $tester, $proc) {
+        $proc->wait(function ($type, $buffer) use ($id, $tester, $proc) {
             while ($proc->isRunning()) {
                 usleep(50000); //wait a tiny bit to make sure the process actually quit (... meh)
             }

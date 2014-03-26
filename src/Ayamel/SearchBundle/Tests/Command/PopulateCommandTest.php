@@ -4,9 +4,7 @@ namespace AC\Ayamel\SearchBundle\Tests\Command;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use FOS\ElasticaBundle\Command\PopulateCommand;
-use AC\WebServicesBundle\TestCase;
 use Ayamel\ApiBundle\Tests\FixturedTestCase;
-
 
 class PopulateCommandTest extends FixturedTestCase
 {
