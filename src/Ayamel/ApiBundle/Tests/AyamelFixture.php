@@ -65,6 +65,7 @@ class AyamelFixture extends CachedMongoFixture
             'status' => function ($f) {return $f->fake()->randomElement(['normal','awaiting_processing','processing']);},
             'content' => function ($f) {return $f->buildOne("AyamelResourceBundle:ContentCollection");},
             'client' => function ($f) {return $f->buildOne("AyamelResourceBundle:Client");}
+            // 'clientUser' => function ($f) {return $f->fake()->something();},
             // 'dateDeleted' => function ($f) {return $f->fake()->dateTimeBetween('now','+5 years');},
             // 'relations' => function ($f) {return $f->fake()->something();},
         ]);
@@ -73,8 +74,6 @@ class AyamelFixture extends CachedMongoFixture
             'objectId' => function ($f) {return $f->fetchCorresponding("AyamelResourceBundle:Resource")->getId();},
             'type' => function ($f) {return $f->fake()->randomElement(['based_on', 'references', 'requires', 'transcript_of', 'search', 'version_of', 'part_of', 'translation_of', 'contains']);},
             'attributes' => function ($f) {return [];},  // valid values conditional on type - could do this properly, for now just leave as empty array
-            // how is client set? Should I use one of the Test Clients?
-            // 'clientUser' => function ($f) {return $f->fake()->something();},
         ]);
     }
 }
