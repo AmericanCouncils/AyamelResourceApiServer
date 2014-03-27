@@ -171,7 +171,7 @@ class ResourceIndexer
         ))->getQuery()->execute();
 
         if (count($relations) > 0) {
-            $resource->setRelations(iterator_to_array($relations));
+            $resource->setRelations($relations->toArray());
         }
 
         return $this->createResourceSearchDocument($resource);

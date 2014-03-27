@@ -41,31 +41,34 @@ class DeleteResource extends ApiController
 
         //notify system to remove content for resource
         $apiDispatcher->dispatch(Events::REMOVE_RESOURCE_CONTENT, new ResourceEvent($resource));
+        $manager = $this->getDocManager();
+
 
         //delete relations for resource
-        $this->deleteRelations($resource);
+        $relations = $this->getRepo('AyamelResourceBundle:Relation')->getRelationsForResource($resource->getId());
+        foreach ($relations as $relation) {
+            $manager->remove($relation);
+        }
 
         //remove from storage (sort of), just clears data and marks as deleted
-        $manager = $this->getDocManager();
-        $resource = $manager->getRepository('AyamelResourceBundle:Resource')->deleteResource($resource);
+        $resource = $this->getRepo('AyamelResourceBundle:Resource')->deleteResource($resource);
+//$r = clone $relations;
+exit(print_r($relations->toArray(), true));
         $manager->flush();
+exit(print_r($relations->toArray(), true));
 
-        //delete all relations for this resource
+//TODO: flushing the doc manager wipes out the relations, so they don't get passed downstream
+//to listeners that need to know about the removal, like search
+//
+//TODO: a better way to handle this is with a separate "DeletedRelations" event
 
+        //set relations on deleted resource, to pass around to subsystems
+        $resource->setRelations($relations->toArray());
 
         //notify rest of system of deleted resource
         $apiDispatcher->dispatch(Events::RESOURCE_DELETED, new ResourceEvent($resource));
 
         //return ok
         return $this->createServiceResponse(array('resource' => $resource), 200);
-    }
-
-    protected function deleteRelations($subject)
-    {
-        // * get all relations
-        // * set relations on subject
-
-        $this->getRepo('AyamelResourceBundle:Relation')->deleteRelationsForResource($subject->getId());
-
     }
 }

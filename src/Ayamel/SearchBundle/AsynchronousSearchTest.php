@@ -14,7 +14,7 @@ use Symfony\Component\Process\Process;
  */
 abstract class AsynchronousSearchTest extends ApiTestCase
 {
-    protected function startRabbitListener($numMessages = 1)
+    protected function startRabbitListener($numMessages = 1, $timeout = 5)
     {
         $container = $this->getContainer();
 
@@ -27,7 +27,8 @@ abstract class AsynchronousSearchTest extends ApiTestCase
 
         //start index listener
         $consolePath = $container->getParameter('kernel.root_dir').DIRECTORY_SEPARATOR."console";
-        $rabbitProcess = new Process(sprintf('%s --env=test rabbitmq:consumer search_index --messages='.$numMessages.' --vvv', $consolePath));
+        $rabbitProcess = new Process(sprintf('%s rabbitmq:consumer search_index --messages='.$numMessages.' --env=test -vvv', $consolePath));
+        $rabbitProcess->setTimeout($timeout);
         $rabbitProcess->start();
 
         usleep(500000); //wait half a second, check to make sure process is still up
