@@ -36,7 +36,7 @@ class AyamelFixture extends CachedMongoFixture
             'mime' => function($f) {return $f->fake()->mimeType();},
             'mimeType' => function($f) {return $f->fake()->mimeType();},
             'attributes' => function($f) {return [];},
-            ]);
+        ]);
         $this->describe("AyamelResourceBundle:ContentCollection", [
             'canonicalUri' => function ($f) {return $f->fake()->url();},
             'files' => function ($f) {return $f->build(1, "AyamelResourceBundle:FileReference");},
@@ -63,7 +63,7 @@ class AyamelFixture extends CachedMongoFixture
             'license' => function ($f) {return $f->fake()->bs();},
             'status' => function ($f) {return $f->fake()->randomElement(['normal','awaiting_processing','processing']);},
             'content' => function ($f) {return $f->buildOne("AyamelResourceBundle:ContentCollection");},
-            'client' => function ($f) {return $f->buildOne("AyamelResourceBundle:Client");}
+            'client' => function ($f) {return $f->buildOne("AyamelResourceBundle:Client");},
             // 'clientUser' => function ($f) {return $f->fake()->something();},
             // 'dateDeleted' => function ($f) {return $f->fake()->dateTimeBetween('now','+5 years');},
             // 'relations' => function ($f) {return $f->fake()->something();},

@@ -14,20 +14,18 @@ use Ayamel\ApiBundle\Tests\FixturedTestCase;
  */
 class SearchApiTest extends FixturedTestCase
 {
-    public function setUp()
+    protected function createDummyResources()
     {
         parent::setUp();
         $this->runCommand("fos:elastica:populate");
         $this->index = $this->getClient()->getContainer()->get('fos_elastica.index.ayamel');
         $type = $this->index->getType('test');
-
         $this->index->refresh();
         $this->index->flush();
     }
 
     /**
      * Make sure the fixtures were loaded
-     *
      */
     public function testFixtures()
     {
@@ -38,50 +36,39 @@ class SearchApiTest extends FixturedTestCase
     }
     /**
      * Make sure that the search index actually knows about the fixtures
-     *
      */
     public function testSearchIndex()
     {
+        $this->createDummyResources();
         $this->assertSame(10, $this->index->count());
+
         $results = $this->index->search();
+
         // The search results seem to come back in an indeterminate order,
         // so just check that some fields are present in the returned data.
-        $this->assertFalse(empty(($results[0]->getData()['functionalDomains'])));
+        $this->assertFalse(empty($results[0]->getData()['functionalDomains']));
     }
 
     /**
-     * @depends testFixtures
      * @depends testSearchIndex
      */
-    public function testSimpleSearchApi($ids)
+    public function testSimpleSearchApi()
     {
-        $this->markTestIncomplete();
+        $this->createDummyResources();
+
+        //hit raw ES api
         $client = new Client('http://127.0.0.1:9200');
-        $response = $client->get('/ayamel/resource/')->send();
-        var_dump($response->getBody());
+        $response = $client->get('/ayamel/resource/_search')->send();
+        $body = json_decode($response->getBody());
+        $this->assertSame(10, count($body['hits']['hits']));
 
-        return;
-
-        $proc = $this->startRabbitListener(3);
-        $tester = $this;
-        $proc->setTimeout(5);
-        $b = [];
-        $proc->wait(function ($type, $buffer) use ($tester, $proc) {
-            $b[] = $buffer;
-            while ($proc->isRunning()) {
-                usleep(50000); //wait a tiny bit to make sure the process actually quit (... meh)
-            }
-
-            if (!$proc->isSuccessful()) {
-                throw new \RuntimeException($proc->getErrorOutput());
-            }
-
-            $response = $tester->getJson('GET', '/api/v1/resources/search?q=House');
-            $code = $response['response']['code'];
-            $tester->assertSame(200, $code);
-            print_r($response);
-            $tester->assertFalse(empty($response['results']['_results']));
-        });
+        //hit ayamel api
+        $response = $this->getJson('GET', '/api/v1/resources/search?q=House');
+        $code = $response['response']['code'];
+        $this->assertSame(200, $code);
+        $this->assertFalse(empty($response['results']['_results']));
+        $this->assertSame(10, count($response['results']['_results']));
+        $this->assertSame(10, count($response['results']['_response']['_response']['hits']['hits']));
     }
 
     /**

@@ -525,8 +525,9 @@ class RelationsIntegrationTest extends ApiTestCase
         $object = $this->getJson('GET', '/api/v1/resources/'.$objectId.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ));
-        $this->assertFalse(isset($subject['resource']['relations']));
-        $this->assertFalse(isset($object['resource']['relations']));
+
+        $this->assertTrue(empty($subject['resource']['relations']));
+        $this->assertTrue(empty($object['resource']['relations']));
     }
 
     public function testDeleteResourceAlsoDeletesRelations()
@@ -563,6 +564,7 @@ class RelationsIntegrationTest extends ApiTestCase
         $data = $this->getJson('DELETE', '/api/v1/resources/'.$subjectId.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ));
+
         $this->assertSame(200, $data['response']['code']);
 
         //check the relations for both subject and object
@@ -586,6 +588,6 @@ class RelationsIntegrationTest extends ApiTestCase
             'CONTENT_TYPE' => 'application/json'
         ));
         $this->assertSame(200, $data['response']['code']);
-        $this->assertFalse(isset($data['resource']['relations']));
+        $this->assertTrue(empty($data['resource']['relations']));
     }
 }
