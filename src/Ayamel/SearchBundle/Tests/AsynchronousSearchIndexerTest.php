@@ -203,8 +203,7 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
             $response = $client->get('/ayamel/resource/'.$relation['subjectId'])->send();
             $tester->assertSame(200, $response->getStatusCode());
             $data = json_decode($response->getBody(), true);
-var_dump($data['_source']['relations']);
-            $tester->assertTrue(empty($data['_source']['relations']));
+            $tester->assertFalse(isset($data['_source']['relations']));
         });
     }
 

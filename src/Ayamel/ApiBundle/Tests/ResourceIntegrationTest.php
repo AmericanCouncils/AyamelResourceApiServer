@@ -407,7 +407,7 @@ class ResourceIntegrationTest extends ApiTestCase
         $this->assertFalse(isset($modified['resource']['client']));
         $this->assertFalse(isset($modified['resource']['dateModified']));
         $this->assertFalse(isset($modified['resource']['content']));
-        $this->assertFalse(isset($modified['resource']['relations']));
+        $this->assertTrue(empty($modified['resource']['relations']));
     }
 
     public function testGetDeletedResource()

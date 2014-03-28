@@ -671,8 +671,11 @@ class Resource
     public function setRelations(array $relations = null)
     {
         $this->relations = new ArrayCollection();
-        foreach ($relations as $relation) {
-            $this->addRelation($relation);
+
+        if (!is_null($relations)) {
+            foreach ($relations as $relation) {
+                $this->addRelation($relation);
+            }
         }
 
         return $this;
@@ -681,7 +684,7 @@ class Resource
     /**
      * Get relations
      *
-     * @return Doctrine\Common\Collections\Collection $relations
+     * @return Doctrine\Common\Collections\ArrayCollection $relations
      */
     public function getRelations()
     {

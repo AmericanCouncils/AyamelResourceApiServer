@@ -140,6 +140,7 @@ class ResourceIndexer
      */
     protected function createResourceSearchDocumentForId($id)
     {
+        $this->manager->flush();
         $resource = $this->manager->getRepository('AyamelResourceBundle:Resource')->find($id);
 
         if (!$resource) {
@@ -185,13 +186,15 @@ class ResourceIndexer
      **/
     protected function createResourceSearchDocument(Resource $resource)
     {
-        //meh, stupidly inefficient
+        //TODO: change how the Resource gets loaded and force array hydration so we can
+        //get rid of this silly hack
         $data = json_decode($this->serializer->serialize($resource, 'json'), true);
 
         //now check search relations and get relevant file content
         $relatedResourceIds = array();
         $relatedResources = array();
-        foreach ($resource->getRelations() as $relation) {
+
+        foreach ($resource->getRelations()->toArray() as $relation) {
             if ('search' === $relation->getType() && $resource->getId() === $relation->getSubjectId()) {
                 $relatedResourceIds[] = $relation->getObjectId();
             }

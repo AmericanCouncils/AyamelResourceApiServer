@@ -52,18 +52,18 @@ class DeleteResource extends ApiController
 
         //remove from storage (sort of), just clears data and marks as deleted
         $resource = $this->getRepo('AyamelResourceBundle:Resource')->deleteResource($resource);
-//$r = clone $relations;
-exit(print_r($relations->toArray(), true));
+    
+        //make a copy of the relations that are about to deleted    
+        $r = clone $relations;
+        $r = $r->toArray();
         $manager->flush();
-exit(print_r($relations->toArray(), true));
 
-//TODO: flushing the doc manager wipes out the relations, so they don't get passed downstream
-//to listeners that need to know about the removal, like search
-//
-//TODO: a better way to handle this is with a separate "DeletedRelations" event
+        //TODO: There's probably a better way to handle passing the deleted relations around
+        //to the rest of the system than setting them on a deleted resource
+        //...maybe the event should have separate relation-centric methods?
 
         //set relations on deleted resource, to pass around to subsystems
-        $resource->setRelations($relations->toArray());
+        $resource->setRelations($r);
 
         //notify rest of system of deleted resource
         $apiDispatcher->dispatch(Events::RESOURCE_DELETED, new ResourceEvent($resource));
