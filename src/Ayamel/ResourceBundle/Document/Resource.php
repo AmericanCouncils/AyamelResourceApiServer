@@ -269,6 +269,16 @@ class Resource
 
     public function __construct()
     {
+        $this->init();
+    }
+
+    public function __wakeup()
+    {
+        $this->init();
+    }
+
+    private function init()
+    {
         $this->relations = new ArrayCollection();
     }
 

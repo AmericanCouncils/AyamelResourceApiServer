@@ -57,7 +57,7 @@ class ResourceIndexerTest extends ApiTestCase
     public function testIndexResource()
     {
         $container = $this->getContainer();
-        $indexer = $container->get('ayamel.search.resource_indexer');
+        //$indexer = $container->get('ayamel.search.resource_indexer');
         $client = new Client('http://127.0.0.1:9200');
 
         //create resource
@@ -85,7 +85,7 @@ class ResourceIndexerTest extends ApiTestCase
         $this->assertSame(404, $exception->getResponse()->getStatusCode());
 
         //index new resource
-        $indexer->indexResource($resourceId);
+        $container->get('ayamel.search.resource_indexer')->indexResource($resourceId);
 
         //query the specific search document
         $response = $client->get('/ayamel/resource/'.$resourceId)->send();

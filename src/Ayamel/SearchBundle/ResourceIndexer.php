@@ -105,7 +105,7 @@ class ResourceIndexer
              $e = new BulkIndexException($failed);
 
              // TODO: ad-hoc debug, if needed should implement logging
-             
+
              // $messages = $e->getMessages();
              // $indices = array_keys($messages);
              // print_r("\nFailed to index " . count($messages) . " resources.\n");
@@ -140,7 +140,6 @@ class ResourceIndexer
      */
     protected function createResourceSearchDocumentForId($id)
     {
-        $this->manager->flush();
         $resource = $this->manager->getRepository('AyamelResourceBundle:Resource')->find($id);
 
         if (!$resource) {

@@ -6,8 +6,6 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use JMS\Serializer\Annotation as JMS;
 use Doctrine\Common\Collections\ArrayCollection;
 
-use Ayamel\ResourceBundle\Document\FileReference;
-
 /**
  * Content container object, contains several types of fields for referencing the content of a resource object
  *
@@ -41,7 +39,16 @@ class ContentCollection
 
     public function __construct()
     {
-        //TODO: don't set this in constructor, make it null when possible
+        $this->init();
+    }
+
+    public function __wakeup()
+    {
+        $this->init();
+    }
+
+    private function init()
+    {
         $this->files = new ArrayCollection();
     }
 

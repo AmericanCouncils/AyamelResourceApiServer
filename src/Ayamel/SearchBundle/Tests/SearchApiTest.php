@@ -59,13 +59,15 @@ class SearchApiTest extends FixturedTestCase
         //hit raw ES api
         $client = new Client('http://127.0.0.1:9200');
         $response = $client->get('/ayamel/resource/_search')->send();
-        $body = json_decode($response->getBody());
+        $body = json_decode($response->getBody(), true);
         $this->assertSame(10, count($body['hits']['hits']));
 
         //hit ayamel api
-        $response = $this->getJson('GET', '/api/v1/resources/search?q=House');
+        $response = $this->callJsonApi('GET', '/api/v1/resources/search?q=House');
         $code = $response['response']['code'];
         $this->assertSame(200, $code);
+
+        $this->markTestIncomplete();
         $this->assertFalse(empty($response['results']['_results']));
         $this->assertSame(10, count($response['results']['_results']));
         $this->assertSame(10, count($response['results']['_response']['_response']['hits']['hits']));

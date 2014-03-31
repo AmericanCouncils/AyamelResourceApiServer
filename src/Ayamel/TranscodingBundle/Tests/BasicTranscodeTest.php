@@ -1,5 +1,7 @@
 <?php
 
+namespace Ayamel\TranscodingBundle\Tests;
+
 use Ayamel\ApiBundle\ApiTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Process\Process;
@@ -194,7 +196,7 @@ class BasicTranscodeTest extends ApiTestCase
         //wait for the rabbit process to exit after it has
         //transcoded the resource, then make some assertions
         $tester = $this;
-        $rabbitProcess->wait(function($type, $output) use ($tester, $resourceId, $rabbitProcess) {
+        $rabbitProcess->wait(function ($type, $output) use ($tester, $resourceId, $rabbitProcess) {
             //I'm not sure why I have to wait here in this loop... theoretically this should have only
             //been triggered if the process was actually done... ?
             while ($rabbitProcess->isRunning()) {

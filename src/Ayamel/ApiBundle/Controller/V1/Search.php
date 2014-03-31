@@ -9,7 +9,6 @@ use Elastica\Query\QueryString;
 use Elastica\Query;
 use Elastica\Filter\Term as TermFilter;
 use Elastica\Filter\BoolOr as BoolOrFilter;
-use Elastica\Filter\BoolAnd as BoolAndFilter;
 
 /**
  * Search controller for querying ElasticSearch.
@@ -37,12 +36,12 @@ class Search extends ApiController
         if (!$q = $request->query->get('q', false)) {
             throw $this->createHttpException(400, "Searches must include a string query via the [q] parameter.");
         }
-        
+
         //limit and skip, with some internally enforced ranges
         $limit = ($l = $request->query->get('limit', 20)) > 100 ? 100 : $l;
         $skip = ($s = $request->query->get('skip', 0)) > 1000 ? 1000 : $s;
         $query = array('size' => $limit, 'from' => $skip);
-        
+
         //create query and set limit/skip
         $query = new Query();
         $query->setFrom($limit);
@@ -61,7 +60,7 @@ class Search extends ApiController
         //  * subjectDomains
         //  * functionalDomains
         //  * registers
-        
+
         //TODO: facets
         //  * resource.type
         //  * resource.client
@@ -77,9 +76,9 @@ class Search extends ApiController
         // There are a couple things that I could do here - use Elastica\Type, query->refesh() or query->optimize, all of which are used in the elastica tests.
 
         $query->setQuery($queryString);
-        
+
         $index = $this->container->get('fos_elastica.index.ayamel');
-        
+
         $results = $index->search($query);
 
         // TODO: turn this result set into something more useful that can be returned to the client
@@ -97,8 +96,8 @@ class Search extends ApiController
         // if ($apiClient) {
         //     $visibilityFilter = new BoolOrFilter();
         //     $visibilityFilter->addFilter($publiclyVisibleFilter);
-            
-        // } else {   
+
+        // } else {
         // }
     }
 
@@ -107,4 +106,3 @@ class Search extends ApiController
         throw $this->createHttpException(501, 'Not implemented.');
     }
 }
-

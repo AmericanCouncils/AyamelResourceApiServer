@@ -147,7 +147,7 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
             if (!$proc->isSuccessful()) {
                 throw new \RuntimeException($proc->getErrorOutput());
             }
-    
+
             $client = new Client('http://127.0.0.1:9200');
 
             //new resource should be in the index, no relations
@@ -155,13 +155,13 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
             $tester->assertSame(200, $response->getStatusCode());
             $data = json_decode($response->getBody(), true);
             $tester->assertSame('Hamlet strikes back!', $data['_source']['title']);
-            $tester->assertFalse(isset($data['_source']['relations']));
+            $tester->assertTrue(empty($data['_source']['relations']));
 
             //subject should have new relations
             $response = $client->get('/ayamel/resource/'.$id)->send();
             $tester->assertSame(200, $response->getStatusCode());
             $data = json_decode($response->getBody(), true);
-            $tester->assertTrue(isset($data['_source']['relations']));
+            $tester->assertFalse(empty($data['_source']['relations']));
             $tester->assertSame(1, count($data['_source']['relations']));
         });
 
@@ -189,7 +189,7 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
             if (!$proc->isSuccessful()) {
                 throw new \RuntimeException($proc->getErrorOutput());
             }
-            
+
             $client = new Client('http://127.0.0.1:9200');
 
             //object should not be in the index
@@ -203,7 +203,7 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
             $response = $client->get('/ayamel/resource/'.$relation['subjectId'])->send();
             $tester->assertSame(200, $response->getStatusCode());
             $data = json_decode($response->getBody(), true);
-            $tester->assertFalse(isset($data['_source']['relations']));
+            $tester->assertTrue(empty($data['_source']['relations']));
         });
     }
 

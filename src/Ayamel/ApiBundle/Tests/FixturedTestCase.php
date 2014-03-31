@@ -12,7 +12,7 @@ class FixturedTestCase extends TestCase
         parent::setUp();
 
         // Do I need to worry about authentication here?
-        
+
         // $container = $this->getClient()->getContainer();
         // $doc = $container->get('doctrine_mongodb');
         // $repo = $doc->getRepository('ACFlagshipBundle:User');
