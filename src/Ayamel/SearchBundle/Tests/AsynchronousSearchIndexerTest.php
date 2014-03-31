@@ -18,7 +18,6 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
 {
     public function testCreateResourceTriggersIndex()
     {
-        $this->markTestIncomplete();
         $client = new Client('http://127.0.0.1:9200');
         $proc = $this->startRabbitListener(1);
 
@@ -76,7 +75,6 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
      */
     public function testModifyResourceTriggersIndex($id)
     {
-        $client = new Client('http://127.0.0.1:9200');
         $proc = $this->startRabbitListener(1);
 
         $content = $this->getJson('PUT', '/api/v1/resources/'.$id.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
@@ -96,6 +94,7 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
                 throw new \RuntimeException($proc->getErrorOutput());
             }
 
+            $client = new Client('http://127.0.0.1:9200');
             $response = $client->get('/ayamel/resource/'.$id)->send();
             $tester->assertSame(200, $response->getStatusCode());
             $data = json_decode($response->getBody(), true);
@@ -109,7 +108,6 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
     public function testCreateRelatedResourceTriggersIndex($id)
     {
         $proc = $this->startRabbitListener(2);  //this test should trigger 2 resources to index
-        $client = new Client('http://127.0.0.1:9200');
 
         //create resource
         $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
@@ -150,18 +148,21 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
                 throw new \RuntimeException($proc->getErrorOutput());
             }
 
+            $client = new Client('http://127.0.0.1:9200');
+
             //new resource should be in the index, no relations
             $response = $client->get('/ayamel/resource/'.$objectId)->send();
             $tester->assertSame(200, $response->getStatusCode());
             $data = json_decode($response->getBody(), true);
             $tester->assertSame('Hamlet strikes back!', $data['_source']['title']);
-            $tester->assertFalse(isset($data['_source']['relations']));
+            $tester->assertTrue(empty($data['_source']['relations']));
 
             //subject should have new relations
             $response = $client->get('/ayamel/resource/'.$id)->send();
             $tester->assertSame(200, $response->getStatusCode());
             $data = json_decode($response->getBody(), true);
-            $tester->assertTrue(isset($data['_source']['relations']));
+            $tester->assertFalse(empty($data['_source']['relations']));
+            $tester->assertSame(1, count($data['_source']['relations']));
         });
 
         return $relation;
@@ -172,7 +173,6 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
      */
     public function testDeleteRelatedResourceTriggersIndex($relation)
     {
-        $client = new Client('http://127.0.0.1:9200');
         $proc = $this->startRabbitListener(1);
 
         $content = $this->getJson('DELETE', '/api/v1/resources/'.$relation['objectId'].'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
@@ -190,6 +190,8 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
                 throw new \RuntimeException($proc->getErrorOutput());
             }
 
+            $client = new Client('http://127.0.0.1:9200');
+
             //object should not be in the index
             try {
                 $response = $client->get('/ayamel/resource/'.$relation['objectId'])->send();
@@ -201,7 +203,7 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
             $response = $client->get('/ayamel/resource/'.$relation['subjectId'])->send();
             $tester->assertSame(200, $response->getStatusCode());
             $data = json_decode($response->getBody(), true);
-            $tester->assertFalse(isset($data['_source']['relations']));
+            $tester->assertTrue(empty($data['_source']['relations']));
         });
     }
 
@@ -210,7 +212,6 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
      */
     public function testDeleteResourceTriggersIndex($id)
     {
-        $client = new Client('http://127.0.0.1:9200');
         $proc = $this->startRabbitListener(1);
 
         $content = $this->getJson('DELETE', '/api/v1/resources/'.$id.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
@@ -230,6 +231,7 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
 
             //object should not be in the index
             try {
+                $client = new Client('http://127.0.0.1:9200');
                 $response = $client->get('/ayamel/resource/'.$id)->send();
             } catch (ClientErrorResponseException $exception) {
             }

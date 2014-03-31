@@ -105,7 +105,7 @@ class ResourceIndexer
              $e = new BulkIndexException($failed);
 
              // TODO: ad-hoc debug, if needed should implement logging
-             
+
              // $messages = $e->getMessages();
              // $indices = array_keys($messages);
              // print_r("\nFailed to index " . count($messages) . " resources.\n");
@@ -171,7 +171,7 @@ class ResourceIndexer
         ))->getQuery()->execute();
 
         if (count($relations) > 0) {
-            $resource->setRelations(iterator_to_array($relations));
+            $resource->setRelations($relations->toArray());
         }
 
         return $this->createResourceSearchDocument($resource);
@@ -185,13 +185,15 @@ class ResourceIndexer
      **/
     protected function createResourceSearchDocument(Resource $resource)
     {
-        //meh, stupidly inefficient
+        //TODO: change how the Resource gets loaded and force array hydration so we can
+        //get rid of this silly hack
         $data = json_decode($this->serializer->serialize($resource, 'json'), true);
 
         //now check search relations and get relevant file content
         $relatedResourceIds = array();
         $relatedResources = array();
-        foreach ($resource->getRelations() as $relation) {
+
+        foreach ($resource->getRelations()->toArray() as $relation) {
             if ('search' === $relation->getType() && $resource->getId() === $relation->getSubjectId()) {
                 $relatedResourceIds[] = $relation->getObjectId();
             }

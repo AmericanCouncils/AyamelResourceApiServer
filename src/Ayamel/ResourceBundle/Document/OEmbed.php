@@ -5,7 +5,6 @@ namespace Ayamel\ResourceBundle\Document;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use JMS\Serializer\Annotation as JMS;
 use AC\ModelTraits\AutoGetterSetterTrait;
-use AC\ModelTraits\Annotation as MT;
 
 /**
  * OEmbed document.  For more on OEmbed, see the full spec at [http://oembed.com](http://oembed.com/).

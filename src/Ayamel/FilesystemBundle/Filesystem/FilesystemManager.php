@@ -5,7 +5,6 @@ namespace Ayamel\FilesystemBundle\Filesystem;
 use Ayamel\ResourceBundle\Document\FileReference;
 use Ayamel\FilesystemBundle\Event\FilesystemEvent;
 use Ayamel\FilesystemBundle\Event\Events;
-use Ayamel\FilesystemBundle\Filesystem\FilesystemInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**

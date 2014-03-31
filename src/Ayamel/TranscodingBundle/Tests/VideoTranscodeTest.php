@@ -1,5 +1,7 @@
 <?php
 
+namespace Ayamel\TranscodingBundle\Tests;
+
 use Ayamel\ApiBundle\ApiTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 

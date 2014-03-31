@@ -69,8 +69,8 @@ class RelationsIntegrationTest extends ApiTestCase
         $r1 = $this->createTestResource();
         $r2 = $this->createTestResource();
 
-        $this->assertFalse(isset($r1['resource']['relations']));
-        $this->assertFalse(isset($r2['resource']['relations']));
+        $this->assertTrue(empty($r1['resource']['relations']));
+        $this->assertTrue(empty($r2['resource']['relations']));
         $subjectId = $r1['resource']['id'];
         $objectId = $r2['resource']['id'];
 
@@ -128,7 +128,7 @@ class RelationsIntegrationTest extends ApiTestCase
             'CONTENT_TYPE' => 'application/json'
         ));
 
-        $this->assertTrue(isset($res2['resource']['relations']));
+        $this->assertFalse(empty($res2['resource']['relations']));
         $this->assertSame(1, count($res2['resource']['relations']));
         $this->assertSame($subjectId, $res2['resource']['relations'][0]['subjectId']);
         $this->assertSame($objectId, $res2['resource']['relations'][0]['objectId']);
@@ -525,8 +525,9 @@ class RelationsIntegrationTest extends ApiTestCase
         $object = $this->getJson('GET', '/api/v1/resources/'.$objectId.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ));
-        $this->assertFalse(isset($subject['resource']['relations']));
-        $this->assertFalse(isset($object['resource']['relations']));
+
+        $this->assertTrue(empty($subject['resource']['relations']));
+        $this->assertTrue(empty($object['resource']['relations']));
     }
 
     public function testDeleteResourceAlsoDeletesRelations()
@@ -563,6 +564,7 @@ class RelationsIntegrationTest extends ApiTestCase
         $data = $this->getJson('DELETE', '/api/v1/resources/'.$subjectId.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ));
+
         $this->assertSame(200, $data['response']['code']);
 
         //check the relations for both subject and object
@@ -586,6 +588,6 @@ class RelationsIntegrationTest extends ApiTestCase
             'CONTENT_TYPE' => 'application/json'
         ));
         $this->assertSame(200, $data['response']['code']);
-        $this->assertFalse(isset($data['resource']['relations']));
+        $this->assertTrue(empty($data['resource']['relations']));
     }
 }

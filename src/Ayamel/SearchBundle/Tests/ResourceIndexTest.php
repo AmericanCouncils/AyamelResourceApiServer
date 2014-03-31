@@ -1,5 +1,7 @@
 <?php
 
+namespace Ayamel\SearchBundle\Tests;
+
 use Ayamel\ApiBundle\ApiTestCase;
 use Guzzle\Http\Client;
 

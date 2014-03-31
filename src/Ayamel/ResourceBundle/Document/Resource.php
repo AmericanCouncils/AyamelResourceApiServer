@@ -262,10 +262,25 @@ class Resource
      * An array of Relation objects that describe the relationship between this Resource and
      * other Resources.  Relations are critical to the search indexing process.
      *
-     * @JMS\Type("array<Ayamel\ResourceBundle\Document\Relation>")
+     * @JMS\Type("ArrayCollection<Ayamel\ResourceBundle\Document\Relation>")
      * @JMS\ReadOnly
      */
     protected $relations;
+
+    public function __construct()
+    {
+        $this->init();
+    }
+
+    public function __wakeup()
+    {
+        $this->init();
+    }
+
+    private function init()
+    {
+        $this->relations = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -665,13 +680,12 @@ class Resource
      */
     public function setRelations(array $relations = null)
     {
-        if ($relations) {
-            $this->relations = new ArrayCollection();
+        $this->relations = new ArrayCollection();
+
+        if (!is_null($relations)) {
             foreach ($relations as $relation) {
                 $this->addRelation($relation);
             }
-        } else {
-            $this->relations = null;
         }
 
         return $this;
@@ -680,11 +694,11 @@ class Resource
     /**
      * Get relations
      *
-     * @return Doctrine\Common\Collections\Collection $relations
+     * @return Doctrine\Common\Collections\ArrayCollection $relations
      */
     public function getRelations()
     {
-        return !empty($this->relations) ? $this->relations : array();
+        return $this->relations;
     }
 
     /**
@@ -695,7 +709,7 @@ class Resource
      */
     public function addRelation(Relation $relation)
     {
-        $this->relations[] = $relation;
+        $this->relations->add($relation);
 
         return $this;
     }
@@ -708,15 +722,7 @@ class Resource
      */
     public function removeRelation(Relation $relation)
     {
-        $new = array();
-
-        foreach ($this->relations as $instance) {
-            if (!$instance->equals($relation)) {
-                $new[] = $instance;
-            }
-        }
-
-        $this->setRelations($new);
+        $this->relations->removeElement($relation);
 
         return $this;
     }
