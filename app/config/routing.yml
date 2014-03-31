@@ -1,6 +1,15 @@
-AyamelApiBundle:
-    resource: "@AyamelApiBundle/Resources/config/routing.yml"
+home:
+    pattern:   /
+    defaults:  { _controller: Ayamel\ApiBundle\Controller\Home::buildHomePage }
 
-ApiDocs:
+api_v1_search:
+    resource: "@AyamelSearchBundle/Resources/config/routing.v1.yml"
+    prefix: /api/v1
+
+api_v1:
+    resource: "@AyamelApiBundle/Resources/config/routing.v1.yml"
+    prefix:   /api/v1
+
+api_docs:
     resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
     prefix:   /api/v1/docs

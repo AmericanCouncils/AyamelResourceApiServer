@@ -1,6 +1,6 @@
 <?php
 
-namespace Ayamel\ApiBundle\Controller\V1;
+namespace Ayamel\SearchBundle\Controller;
 
 use Ayamel\ApiBundle\Controller\ApiController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
@@ -11,27 +11,33 @@ use Elastica\Filter\Term as TermFilter;
 use Elastica\Filter\BoolOr as BoolOrFilter;
 
 /**
- * Search controller for querying ElasticSearch.
+ * Search controller for querying ElasticSearch, which implements two APIs for searching.
  *
  * @package AyamelSearchBundle
  */
-class Search extends ApiController
+class SearchV1 extends ApiController
 {
     /**
-     * This controller implements two APIs for searching.
-     * Search for Resource objects based on many, potentially loosely-defined, criteria.  By default searches include
-     * all publicly available resources, including resources visible to the requesting client.
+     * Search for Resource objects based on many, potentially loosely-defined, criteria.  By
+     * default searches include all publicly available resources, including resources visible
+     * to the requesting client.
      *
      * @ApiDoc(
      *      resource=true,
      *      description="Search for resources",
      *      filters={
-     *          {"name"="foo", "description"="bar"},
-     *          {"name"="baz", "description"="barf"}
+     *          {"name"="limit", "default"="10", "description"="bar"},
+     *          {"name"="skip", "default"="0", "description"="bar"},
+     *          {"name"="filter:type", "description"="bar"},
+     *          {"name"="filter:client", "description"="barf"}
+     *          {"name"="filter:language", "description"="bar"},
+     *          {"name"="facet:type", "description"="barf"}
+     *          {"name"="facet:client", "description"="barf"}
+     *          {"name"="facet:language", "description"="barf"}
      *      }
      * )
      */
-    public function searchForResources(Request $request)
+    public function simpleSearchAction(Request $request)
     {
         if (!$q = $request->query->get('q', false)) {
             throw $this->createHttpException(400, "Searches must include a string query via the [q] parameter.");
@@ -40,7 +46,6 @@ class Search extends ApiController
         //limit and skip, with some internally enforced ranges
         $limit = ($l = $request->query->get('limit', 20)) > 100 ? 100 : $l;
         $skip = ($s = $request->query->get('skip', 0)) > 1000 ? 1000 : $s;
-        $query = array('size' => $limit, 'from' => $skip);
 
         //create query and set limit/skip
         $query = new Query();

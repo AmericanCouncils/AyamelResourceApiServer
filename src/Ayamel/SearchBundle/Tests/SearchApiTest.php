@@ -67,7 +67,8 @@ class SearchApiTest extends FixturedTestCase
         $code = $response['response']['code'];
         $this->assertSame(200, $code);
 
-        $this->markTestIncomplete();
+$this->markTestIncomplete();
+var_dump($response);
         $this->assertFalse(empty($response['results']['_results']));
         $this->assertSame(10, count($response['results']['_results']));
         $this->assertSame(10, count($response['results']['_response']['_response']['hits']['hits']));
