@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "b2eea5a5704470aa4356b6b1e356b496",
+    "hash": "1c46eadd3c8b2a233a142b6823a801ac",
     "packages": [
         {
             "name": "ac/media-info-bundle",
@@ -238,24 +238,24 @@
         },
         {
             "name": "ac/web-services-bundle",
-            "version": "dev-master",
+            "version": "0.3.2",
             "target-dir": "AC/WebServicesBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/AmericanCouncils/WebServicesBundle.git",
-                "reference": "8e24fc20da88714a99e6a1906ed4f1301128587e"
+                "reference": "b7ab90df5f015d5c7f226c86e98bf9cea80f9175"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AmericanCouncils/WebServicesBundle/zipball/8e24fc20da88714a99e6a1906ed4f1301128587e",
-                "reference": "8e24fc20da88714a99e6a1906ed4f1301128587e",
+                "url": "https://api.github.com/repos/AmericanCouncils/WebServicesBundle/zipball/b7ab90df5f015d5c7f226c86e98bf9cea80f9175",
+                "reference": "b7ab90df5f015d5c7f226c86e98bf9cea80f9175",
                 "shasum": ""
             },
             "require": {
-                "fzaninotto/faker": "1.3.0",
+                "fzaninotto/faker": "~1.3",
                 "jms/serializer": "~0.15.0",
                 "jms/serializer-bundle": "~0.13.0",
-                "mockery/mockery": "0.9.0",
+                "mockery/mockery": "~0.9",
                 "php": ">=5.4.0",
                 "symfony/framework-bundle": "~2.2",
                 "willdurand/negotiation": "~1.2"
@@ -289,7 +289,7 @@
                 "rest",
                 "web services"
             ],
-            "time": "2014-03-21 19:36:38"
+            "time": "2014-04-01 17:58:22"
         },
         {
             "name": "dflydev/markdown",
@@ -388,7 +388,7 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan H. Wage",
+                    "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com",
                     "homepage": "http://www.jwage.com/",
                     "role": "Creator"
@@ -757,16 +757,16 @@
         },
         {
             "name": "doctrine/mongodb",
-            "version": "1.0.5",
+            "version": "1.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/mongodb.git",
-                "reference": "cb0253987458dfb2fd3950c28163a4a5eabdaec2"
+                "reference": "24f3a543469720cebeff114dd25fce04625fd2f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/mongodb/zipball/cb0253987458dfb2fd3950c28163a4a5eabdaec2",
-                "reference": "cb0253987458dfb2fd3950c28163a4a5eabdaec2",
+                "url": "https://api.github.com/repos/doctrine/mongodb/zipball/24f3a543469720cebeff114dd25fce04625fd2f8",
+                "reference": "24f3a543469720cebeff114dd25fce04625fd2f8",
                 "shasum": ""
             },
             "require": {
@@ -814,7 +814,7 @@
                 "mongodb",
                 "persistence"
             ],
-            "time": "2014-01-09 21:16:38"
+            "time": "2014-03-28 19:11:56"
         },
         {
             "name": "doctrine/mongodb-odm",
@@ -864,7 +864,7 @@
                     "homepage": "http://avalanche123.com"
                 },
                 {
-                    "name": "Jonathan H. Wage",
+                    "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com",
                     "homepage": "http://www.jwage.com/",
                     "role": "Creator"
@@ -897,12 +897,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/DoctrineMongoDBBundle.git",
-                "reference": "3b0b678497a3536cf85b2679d179c0a8a6f96690"
+                "reference": "30be111a948a661d42a1008a11847702e8d6e4aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineMongoDBBundle/zipball/3b0b678497a3536cf85b2679d179c0a8a6f96690",
-                "reference": "3b0b678497a3536cf85b2679d179c0a8a6f96690",
+                "url": "https://api.github.com/repos/doctrine/DoctrineMongoDBBundle/zipball/30be111a948a661d42a1008a11847702e8d6e4aa",
+                "reference": "30be111a948a661d42a1008a11847702e8d6e4aa",
                 "shasum": ""
             },
             "require": {
@@ -959,21 +959,21 @@
                 "persistence",
                 "symfony"
             ],
-            "time": "2014-03-17 23:33:24"
+            "time": "2014-03-28 00:31:22"
         },
         {
             "name": "friendsofsymfony/elastica-bundle",
-            "version": "v3.0.0-alpha2",
+            "version": "v3.0.0-alpha3",
             "target-dir": "FOS/ElasticaBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfSymfony/FOSElasticaBundle.git",
-                "reference": "cdd6e3af45a7fb9f97b53887416e0b3511763452"
+                "reference": "5855ac6fbddc53959b4f1191029f72d80627e51b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSElasticaBundle/zipball/cdd6e3af45a7fb9f97b53887416e0b3511763452",
-                "reference": "cdd6e3af45a7fb9f97b53887416e0b3511763452",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSElasticaBundle/zipball/5855ac6fbddc53959b4f1191029f72d80627e51b",
+                "reference": "5855ac6fbddc53959b4f1191029f72d80627e51b",
                 "shasum": ""
             },
             "require": {
@@ -982,7 +982,7 @@
                 "ruflin/elastica": ">=0.20, <1.1-dev",
                 "symfony/console": "~2.1",
                 "symfony/form": "~2.1",
-                "symfony/framework-bundle": "~2.1",
+                "symfony/framework-bundle": "~2.3",
                 "symfony/property-access": "~2.2"
             },
             "require-dev": {
@@ -1042,20 +1042,20 @@
                 "propel",
                 "search"
             ],
-            "time": "2014-03-13 21:59:59"
+            "time": "2014-03-31 22:11:31"
         },
         {
             "name": "fzaninotto/faker",
-            "version": "v1.3.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fzaninotto/Faker.git",
-                "reference": "1d143fd8caf4d264602450bc01d7484af788706b"
+                "reference": "991e39d280afc34a91684e5789023f1b276e4618"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/1d143fd8caf4d264602450bc01d7484af788706b",
-                "reference": "1d143fd8caf4d264602450bc01d7484af788706b",
+                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/2fc67a37bdb32300080dee7a14b902c7a012837a",
+                "reference": "991e39d280afc34a91684e5789023f1b276e4618",
                 "shasum": ""
             },
             "require": {
@@ -1064,7 +1064,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.3.0-dev"
+                    "dev-master": "1.4.x-dev"
                 }
             },
             "autoload": {
@@ -1088,7 +1088,7 @@
                 "faker",
                 "fixtures"
             ],
-            "time": "2013-12-16 21:56:48"
+            "time": "2014-03-26 17:22:53"
         },
         {
             "name": "jms/metadata",
@@ -1302,7 +1302,7 @@
                 {
                     "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -1894,16 +1894,16 @@
         },
         {
             "name": "ruflin/elastica",
-            "version": "v1.0.1.1",
+            "version": "v1.0.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ruflin/Elastica.git",
-                "reference": "6297d827be2f4c589eee846e26f67a7ab213bcf6"
+                "reference": "81f339d9a813e3ba9eca6a9f06bb03f50639a1d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/6297d827be2f4c589eee846e26f67a7ab213bcf6",
-                "reference": "6297d827be2f4c589eee846e26f67a7ab213bcf6",
+                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/81f339d9a813e3ba9eca6a9f06bb03f50639a1d1",
+                "reference": "81f339d9a813e3ba9eca6a9f06bb03f50639a1d1",
                 "shasum": ""
             },
             "require": {
@@ -1942,7 +1942,7 @@
                 "client",
                 "search"
             ],
-            "time": "2014-03-08 12:13:09"
+            "time": "2014-03-25 19:34:57"
         },
         {
             "name": "sensio/distribution-bundle",
@@ -2679,16 +2679,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "1.2.16",
+            "version": "1.2.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "69e55e68481cf708a6db43aff0b504e31402fe27"
+                "reference": "6ef2bf3a1c47eca07ea95f0d8a902a6340390b34"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/69e55e68481cf708a6db43aff0b504e31402fe27",
-                "reference": "69e55e68481cf708a6db43aff0b504e31402fe27",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/6ef2bf3a1c47eca07ea95f0d8a902a6340390b34",
+                "reference": "6ef2bf3a1c47eca07ea95f0d8a902a6340390b34",
                 "shasum": ""
             },
             "require": {
@@ -2736,7 +2736,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2014-02-25 03:34:05"
+            "time": "2014-03-28 10:53:45"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -2923,16 +2923,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "3.7.32",
+            "version": "3.7.34",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "2752cbb9ea5bd84c2811b34b6953f76965ec7a2f"
+                "reference": "248d6ce95e6ca7f0e3135252c0b984bbe1f52f19"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/2752cbb9ea5bd84c2811b34b6953f76965ec7a2f",
-                "reference": "2752cbb9ea5bd84c2811b34b6953f76965ec7a2f",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/248d6ce95e6ca7f0e3135252c0b984bbe1f52f19",
+                "reference": "248d6ce95e6ca7f0e3135252c0b984bbe1f52f19",
                 "shasum": ""
             },
             "require": {
@@ -2941,11 +2941,11 @@
                 "ext-reflection": "*",
                 "ext-spl": "*",
                 "php": ">=5.3.3",
-                "phpunit/php-code-coverage": "~1.2.1",
-                "phpunit/php-file-iterator": ">=1.3.1",
-                "phpunit/php-text-template": ">=1.1.1",
-                "phpunit/php-timer": ">=1.0.4",
-                "phpunit/phpunit-mock-objects": "~1.2.0",
+                "phpunit/php-code-coverage": "~1.2",
+                "phpunit/php-file-iterator": "~1.3",
+                "phpunit/php-text-template": "~1.1",
+                "phpunit/php-timer": "~1.0",
+                "phpunit/phpunit-mock-objects": "~1.2",
                 "symfony/yaml": "~2.0"
             },
             "require-dev": {
@@ -2955,7 +2955,7 @@
                 "ext-json": "*",
                 "ext-simplexml": "*",
                 "ext-tokenizer": "*",
-                "phpunit/php-invoker": ">=1.1.0,<1.2.0"
+                "phpunit/php-invoker": "~1.1"
             },
             "bin": [
                 "composer/bin/phpunit"
@@ -2993,7 +2993,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2014-02-25 03:47:29"
+            "time": "2014-03-28 11:04:36"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -3051,8 +3051,8 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "doctrine/mongodb-odm-bundle": 20,
-        "ac/web-services-bundle": 20,
-        "friendsofsymfony/elastica-bundle": 20
+        "friendsofsymfony/elastica-bundle": 20,
+        "fzaninotto/faker": 20
     },
     "platform": {
         "php": ">=5.4.0",

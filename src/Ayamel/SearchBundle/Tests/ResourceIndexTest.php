@@ -32,7 +32,7 @@ class ResourceIndexTest extends FixturedTestCase
         $this->index = $this->getClient()->getContainer()->get('fos_elastica.index.ayamel');
         $this->index->refresh();
         $this->index->flush();
-        $this->assertSame(10, $this->index->count());
+        $this->assertSame(50, $this->index->count());
 
         // The search results seem to come back in an indeterminate order,
         // so just check that some fields are present in the returned data.
@@ -43,6 +43,8 @@ class ResourceIndexTest extends FixturedTestCase
         $client = new Client('http://127.0.0.1:9200');
         $response = $client->get('/ayamel/resource/_search')->send();
         $body = json_decode($response->getBody(), true);
+
+        //10 is the default ES limit
         $this->assertSame(10, count($body['hits']['hits']));
     }
 }

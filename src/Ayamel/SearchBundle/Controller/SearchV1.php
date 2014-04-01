@@ -34,6 +34,9 @@ class SearchV1 extends ApiController
      *          {"name"="filter:type", "description"="bar"},
      *          {"name"="filter:client", "description"="barf"}
      *          {"name"="filter:language", "description"="bar"},
+     *          {"name"="filter:subjectDomains", "description"="bar"},
+     *          {"name"="filter:functionalDomains", "description"="barf"}
+     *          {"name"="filter:registers", "description"="bar"},
      *          {"name"="facet:type", "description"="barf"}
      *          {"name"="facet:client", "description"="barf"}
      *          {"name"="facet:language", "description"="barf"}
@@ -78,6 +81,21 @@ class SearchV1 extends ApiController
         if ($filterValue = $q->get('filter:type', false)) {
             $queryFilters[] = new TermsFilter('type', explode(',', strtolower($filterValue)));
         }
+        if ($filterValue = $q->get('filter:subjectDomains', false)) {
+            foreach ((array) $filterValue as $val) {
+                $queryFilters[] = new TermsFilter('subjectDomains', explode(',', strtolower($val)));
+            }
+        }
+        if ($filterValue = $q->get('filter:functionalDomains', false)) {
+            foreach ((array) $filterValue as $val) {
+                $queryFilters[] = new TermsFilter('functionalDomains', explode(',', strtolower($val)));
+            }
+        }
+        if ($filterValue = $q->get('filter:registers', false)) {
+            foreach ((array) $filterValue as $val) {
+                $queryFilters[] = new TermsFilter('registers', explode(',', strtolower($val)));
+            }
+        }
         if ($filterValue = $q->get('filter:client', false)) {
             $f = new NestedFilter();
             $f->setPath('client');
@@ -109,7 +127,6 @@ class SearchV1 extends ApiController
         //  * subjectDomains
         //  * functionalDomains
         //  * registers
-
 
         // There are a couple things that I could do here
         //  - use Elastica\Type, query->refesh() or query->optimize, all of which are used in the elastica tests.
@@ -161,6 +178,7 @@ class SearchV1 extends ApiController
     private function filterResultFields(array $result)
     {
         //TODO: filter out "content_*" fields
+        //or possibly deserialize into a Resource model
         return $result;
     }
 

@@ -25,8 +25,9 @@ class SimpleSearchApiTest extends FixturedTestCase
 
     public function testQueryStringRequired()
     {
-        //assert that "q" param is required
-        $this->markTestSkipped();
+        $res = $this->callJsonApi('GET', '/api/v1/resources/search?filter:type=audio', ['expectedCode' => 400]);
+        $res = $this->callJsonApi('GET', '/api/v1/resources/search?q&filter:type=audio', ['expectedCode' => 400]);
+        $res = $this->callJsonApi('GET', '/api/v1/resources/search?q=&filter:type=audio', ['expectedCode' => 400]);
     }
 
     public function testSimpleSearchApi()
@@ -35,7 +36,7 @@ class SimpleSearchApiTest extends FixturedTestCase
         $response = $this->callJsonApi('GET', '/api/v1/resources/search?q=dolor');
         $code = $response['response']['code'];
         $this->assertSame(200, $code);
-        $this->assertSame(3, count($response['hits']));
+        $this->assertSame(14, count($response['hits']));
     }
 
     /**
@@ -44,13 +45,13 @@ class SimpleSearchApiTest extends FixturedTestCase
     public function testTypeFilter()
     {
         $response = $this->callJsonApi('GET', '/api/v1/resources/search?q=dolor&filter:type=audio');
-        $this->assertSame(2, count($response['hits']));
+        $this->assertSame(4, count($response['hits']));
 
         $response = $this->callJsonApi('GET', '/api/v1/resources/search?q=dolor&filter:type=video');
-        $this->assertSame(1, count($response['hits']));
+        $this->assertSame(4, count($response['hits']));
 
         $response = $this->callJsonApi('GET', '/api/v1/resources/search?q=dolor&filter:type=video,audio');
-        $this->assertSame(3, count($response['hits']));
+        $this->assertSame(8, count($response['hits']));
     }
 
     /**
@@ -58,6 +59,7 @@ class SimpleSearchApiTest extends FixturedTestCase
      */
     public function testClientFilter()
     {
+        $this->markTestSkipped();
         $response = $this->callJsonApi('GET', '/api/v1/resources/search?q=dolor&filter:client=another-test-client');
         $this->assertSame(3, count($response['hits']));
     }
@@ -75,7 +77,19 @@ class SimpleSearchApiTest extends FixturedTestCase
      */
     public function testSubjectDomainsFilter()
     {
-        $this->markTestSkipped();
+        $response = $this->callJsonApi('GET', '/api/v1/resources/search?q=dolor&filter:subjectDomains=science');
+        $this->assertSame(1, count($response['hits']));
+
+        $response = $this->callJsonApi('GET', '/api/v1/resources/search?q=dolor&filter:subjectDomains=weather');
+        $this->assertSame(3, count($response['hits']));
+
+        //OR
+        $response = $this->callJsonApi('GET', '/api/v1/resources/search?q=dolor&filter:subjectDomains=science,weather');
+        $this->assertSame(4, count($response['hits']));
+
+        //AND
+        $response = $this->callJsonApi('GET', '/api/v1/resources/search?q=dolor&filter:subjectDomains[]=science&filter:subjectDomains[]=weather');
+        $this->assertSame(0, count($response['hits']));
     }
 
     /**
@@ -83,13 +97,45 @@ class SimpleSearchApiTest extends FixturedTestCase
      */
     public function testFunctionalDomainsFilter()
     {
-        $this->markTestSkipped();
+        $response = $this->callJsonApi('GET', '/api/v1/resources/search?q=dolor&filter:functionalDomains=informative');
+        $this->assertSame(7, count($response['hits']));
+
+        $response = $this->callJsonApi('GET', '/api/v1/resources/search?q=dolor&filter:functionalDomains=presentational');
+        $this->assertSame(7, count($response['hits']));
+
+        //OR
+        $response = $this->callJsonApi('GET', '/api/v1/resources/search?q=dolor&filter:functionalDomains=presentational,informative');
+        $this->assertSame(11, count($response['hits']));
+
+        //AND
+        $response = $this->callJsonApi('GET', '/api/v1/resources/search?q=dolor&filter:functionalDomains[]=presentational&filter:functionalDomains[]=informative');
+        $this->assertSame(3, count($response['hits']));
     }
 
     /**
      * @depends testSimpleSearchApi
      */
     public function testRegistersFilter()
+    {
+        $response = $this->callJsonApi('GET', '/api/v1/resources/search?q=dolor&filter:registers=formal');
+        $this->assertSame(5, count($response['hits']));
+
+        $response = $this->callJsonApi('GET', '/api/v1/resources/search?q=dolor&filter:registers=intimate');
+        $this->assertSame(5, count($response['hits']));
+
+        //OR
+        $response = $this->callJsonApi('GET', '/api/v1/resources/search?q=dolor&filter:registers=formal,intimate');
+        $this->assertSame(10, count($response['hits']));
+
+        //AND
+        $response = $this->callJsonApi('GET', '/api/v1/resources/search?q=dolor&filter:registers[]=formal&filter:registers[]=intimate');
+        $this->assertSame(0, count($response['hits']));
+    }
+
+    /**
+     * @depends testSimpleSearchApi
+     */
+    public function testMultipleFilters()
     {
         $this->markTestSkipped();
     }
