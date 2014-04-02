@@ -12,6 +12,7 @@ use Elastica\Filter\Nested as NestedFilter;
 use Elastica\Filter\Missing as MissingFilter;
 use Elastica\Filter\BoolOr as BoolOrFilter;
 use Elastica\Filter\BoolAnd as BoolAndFilter;
+use Elastica\Facet\Terms as TermsFacet;
 
 /**
  * Search controller for querying ElasticSearch, which implements two APIs for searching.
@@ -50,6 +51,10 @@ class SearchV1 extends ApiController
             throw $this->createHttpException(400, "Searches must include a string query via the [q] parameter.");
         }
 
+        if ($val = $q->get('facet:foo')) {
+            throw new \Exception($val);
+        }
+
         //create query, and set the text to query
         $query = new Query();
         $queryString = new QueryString();
@@ -63,7 +68,7 @@ class SearchV1 extends ApiController
         $query->setFrom($skip);
         $query->setLimit($limit);
 
-        //TODO: filters
+        //TODO: nested filters
         //  * resource.client.id
         //  * resource.clientUser.id
         //  * resource.language
@@ -115,9 +120,14 @@ class SearchV1 extends ApiController
         //  * subjectDomains
         //  * functionalDomains
         //  * registers
+        $queryFacets = [];
+        if ($facetValue = $q->get('facet:type', false)) {
+            $queryFacets[] = $this->createFacet('type', $facetValue);
+        }
 
-        // There are a couple things that I could do here
-        //  - use Elastica\Type, query->refesh() or query->optimize, all of which are used in the elastica tests.
+        foreach ($queryFacets as $facet) {
+            $query->addFacet($facet);
+        }
 
         //perform query
         $type = $this->container->get('fos_elastica.index.ayamel')->getType('resource');
@@ -132,10 +142,19 @@ class SearchV1 extends ApiController
                 'time' => $resultSet->getTotalTime()
             ],
             'hits' => $this->filterResults($resultSet->getResults()),
-            'facets' => []
+            'facets' => $resultSet->getFacets()
         ];
 
         return $this->createServiceResponse($results, 200);
+    }
+
+    private function createFacet($fieldName, $value)
+    {
+        $facet = (new TermsFacet($fieldName))->setField($fieldName);
+
+        //TODO: other properties: size, exclusions?
+
+        return $facet;
     }
 
     /**
