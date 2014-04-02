@@ -64,7 +64,7 @@ class AyamelFixture extends CachedMongoFixture
             'registers' => function ($f) {return array_unique($f->fake()->randomElements(['formal', 'casual', 'intimate', 'static', 'consultative'], $f->fake()->randomNumber(1,3)));},
             'type' => function ($f) {return $f->fake()->randomElement(['video', 'audio', 'image', 'document', 'collection']);},
             'sequence' => function ($f) {return $f->fake()->boolean();}, //really this should be conditional on type
-            'visibility' => function ($f) {return [];}, //empty array, visible to everyone
+            'visibility' => function ($f) {return $f->fake()->randomElement([[], ['test_client2'], ['test_client2','test_client']]); },
             'dateAdded' => function ($f) {return $f->fake()->dateTimeBetween('-2 years','-1 years');},
             'dateModified' => function ($f) {return $f->fake()->dateTimeBetween('-1 years','now');},
             'copyright' => function ($f) {return $f->fake()->catchPhrase();},

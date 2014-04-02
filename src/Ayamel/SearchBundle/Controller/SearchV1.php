@@ -7,9 +7,9 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Request;
 use Elastica\Query\QueryString;
 use Elastica\Query;
-use Elastica\Filter\Term as TermFilter;
 use Elastica\Filter\Terms as TermsFilter;
 use Elastica\Filter\Nested as NestedFilter;
+use Elastica\Filter\Missing as MissingFilter;
 use Elastica\Filter\BoolOr as BoolOrFilter;
 use Elastica\Filter\BoolAnd as BoolAndFilter;
 
@@ -58,25 +58,21 @@ class SearchV1 extends ApiController
         $query->setQuery($queryString);
 
         //limit and skip, with some internally enforced ranges
-        $limit = ($l = $q->get('limit', 20)) > 100 ? 100 : $l;
-        $skip = ($s = $q->get('skip', 0)) > 1000 ? 1000 : $s;
+        $limit = ($l = $q->get('limit', 20)) > 100 ? 100 : (int) $l;
+        $skip = ($s = $q->get('skip', 0)) > 1000 ? 1000 : (int) $s;
         $query->setFrom($skip);
         $query->setLimit($limit);
 
         //TODO: filters
-        //  * resource.type
-        //  * resource.client
+        //  * resource.client.id
+        //  * resource.clientUser.id
         //  * resource.language
         //    * languages.iso639_3 OR langauges.bcp47
-        //  * subjectDomains
-        //  * functionalDomains
-        //  * registers
-        $queryFilters = [];
 
-        //TODO: enforce proper client visibility filter
-        //  * if anon, where resource.visibility null
-        //  * if known, where resource.visibility null OR currentClient in resource.visibility
-        //$queryFilters[] = $this->createVisibilityFilter();
+        //create query filters, always enforcing a visibility filter
+        $queryFilters = [$this->createVisibilityFilter()];
+
+        //TODO: enforce filters derived from future AuthorizationPolicy
 
         if ($filterValue = $q->get('filter:type', false)) {
             $queryFilters[] = new TermsFilter('type', explode(',', strtolower($filterValue)));
@@ -110,15 +106,7 @@ class SearchV1 extends ApiController
             ;
         }
 
-        //apply filters to query
-        if (!empty($queryFilters)) {
-            $filter = new BoolAndFilter();
-            foreach ($queryFilters as $f) {
-                $filter->addFilter($f);
-            }
-
-            $query->setFilter($filter);
-        }
+        $query->setFilter((new BoolAndFilter())->setFilters($queryFilters));
 
         //TODO: facets
         //  * resource.type
@@ -184,15 +172,25 @@ class SearchV1 extends ApiController
 
     protected function createVisibilityFilter()
     {
-        // $apiClient = $this->getApiClient();
-        // $publiclyVisibleFilter = new TermFilter();
-        // $publiclyVisibleFilter->setTerm('visibility', null);
-        // if ($apiClient) {
-        //     $visibilityFilter = new BoolOrFilter();
-        //     $visibilityFilter->addFilter($publiclyVisibleFilter);
 
-        // } else {
-        // }
+        //if known, where resource.visibility null OR currentClient in resource.visibility
+        $apiClient = $this->getApiClient();
+
+        //if anonymous, only search public resources with no visibility
+        //restrictions (the field may be missing or null)
+        $publiclyVisibleFilter = new MissingFilter('visibility');
+        if (!$apiClient) {
+            return $publiclyVisibleFilter;
+        }
+
+        //if we have a client, include results where the
+        //visibility is public (missing), OR
+        //where client id is in the visibility array
+        $visibilityFilter = new BoolOrFilter();
+        $visibilityFilter->addFilter($publiclyVisibleFilter);
+        $visibilityFilter->addFilter(new TermsFilter('visibility', [$apiClient->getId()]));
+
+        return $visibilityFilter;
     }
 
     /**
