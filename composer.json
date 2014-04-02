@@ -34,12 +34,13 @@
         "ac/web-services-bundle": "0.3.*",
         "ac/media-info-bundle": "1.2.*",
         "friendsofsymfony/elastica-bundle": "3.0.*@dev",
-        "ornicar/apc-bundle": "~1.0",
+        "ornicar/apc-bundle": "1.0.*",
         "ac/model-traits-bundle": "0.1.*"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*",
-        "guzzle/guzzle": "~3.7"
+        "guzzle/guzzle": "~3.7",
+        "fzaninotto/faker": "dev-master#991e39d280afc34a91684e5789023f1b276e4618"
     },
     "scripts": {
         "post-install-cmd": [

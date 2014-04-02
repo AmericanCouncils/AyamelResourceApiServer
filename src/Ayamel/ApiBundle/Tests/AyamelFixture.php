@@ -43,32 +43,39 @@ class AyamelFixture extends CachedMongoFixture
             'oembed' => function ($f) {return $f->buildOne("AyamelResourceBundle:OEmbed");},
         ]);
         $this->describe("AyamelResourceBundle:Client", [
-            'id' => function ($f) {return "another-test-client";},
-            'name' => function ($f) {return "Another Test Client";},
+            'id' => function ($f) {return $f->fake()->randomElement(["test-client", "another-test-client"]);},
+            'name' => function ($f) {return $f->fake()->randomElement(["Test Client 1","Test Client 2"]);},
             'uri' => function ($f) {return "http://www.anothertestclient.com";},
         ]);
-        $this->generate(10, "AyamelResourceBundle:Resource", [
+        $clients = $this->build(5, 'AyamelResourceBundle:Client');
+
+        $this->describe("AyamelResourceBundle:ClientUser", [
+            'id' => function ($f) { return 'user-'.$f->fake()->randomElement(range(1,10)); },
+            'url' => function ($f) { return 'http://example.com/users/'.$f->curObject()->getId(); }
+        ]);
+        $clientUsers = $this->build(10, 'AyamelResourceBundle:ClientUser');
+
+        $this->generate(50, "AyamelResourceBundle:Resource", [
             'title' => function ($f) {return $f->fake()->sentence(3);},
             'description' => function ($f) {return $f->fake()->sentence(20);},
             'keywords' => function ($f) {return $f->fake()->word() . ',' . $f->fake()->word() . ',' . $f->fake()->word();},
-            'subjectDomains' => function ($f) {return [$f->fake()->randomElement(["Arts", "Entertainment", "Culture", "Economy", "Education", "Food", "Geography", "History", "News", "Politics", "Religion", "Sports", "Technology", "Weather", "Other"])];},
-            'functionalDomains' => function ($f) {return [$f->fake()->randomElement(['Foo','Bar','Baz'])];},
-            'registers' => function ($f) {return [$f->fake()->randomElement(['formal', 'casual', 'intimate', 'static', 'consultative'])];},
+            'subjectDomains' => function ($f) {return array_unique($f->fake()->randomElements(["arts", "science", "literature", "entertainment", "culture", "economy", "education", "food", "geography", "history", "news", "politics", "religion", "sports", "technology", "weather", "other"], $f->fake()->randomNumber(1,7)));},
+            'functionalDomains' => function ($f) {return array_unique($f->fake()->randomElements(['informative','presentational','interactive'], $f->fake()->randomNumber(1,2)));},
+            'registers' => function ($f) {return array_unique($f->fake()->randomElements(['formal', 'casual', 'intimate', 'static', 'consultative'], $f->fake()->randomNumber(1,3)));},
             'type' => function ($f) {return $f->fake()->randomElement(['video', 'audio', 'image', 'document', 'collection']);},
             'sequence' => function ($f) {return $f->fake()->boolean();}, //really this should be conditional on type
             'visibility' => function ($f) {return [];}, //empty array, visible to everyone
             'dateAdded' => function ($f) {return $f->fake()->dateTimeBetween('-2 years','-1 years');},
             'dateModified' => function ($f) {return $f->fake()->dateTimeBetween('-1 years','now');},
             'copyright' => function ($f) {return $f->fake()->catchPhrase();},
-            'license' => function ($f) {return $f->fake()->bs();},
+            'license' => function ($f) {return $f->fake()->randomElement(['CC BY', 'CC BY-SA', 'CC BY-NC', 'CC BY-ND', 'CC BY-NC-SA', 'CC BY-NC-ND']);},
             'status' => function ($f) {return $f->fake()->randomElement(['normal','awaiting_processing','processing']);},
             'content' => function ($f) {return $f->buildOne("AyamelResourceBundle:ContentCollection");},
-            'client' => function ($f) {return $f->buildOne("AyamelResourceBundle:Client");},
-            // 'clientUser' => function ($f) {return $f->fake()->something();},
+            'client' => function ($f) use ($clients) {return $f->fake()->randomElement($clients);},
+            'clientUser' => function ($f) use ($clientUsers) {return $f->fake()->randomElement($clientUsers);},
             // 'dateDeleted' => function ($f) {return $f->fake()->dateTimeBetween('now','+5 years');},
-            // 'relations' => function ($f) {return $f->fake()->something();},
         ]);
-        $this->generate(10, "AyamelResourceBundle:Relation", [
+        $this->generate(50, "AyamelResourceBundle:Relation", [
             'subjectId' => function ($f) {return $f->fetchCorresponding("AyamelResourceBundle:Resource")->getId();},
             'objectId' => function ($f) {return $f->fetchCorresponding("AyamelResourceBundle:Resource")->getId();},
             'type' => function ($f) {return $f->fake()->randomElement(['based_on', 'references', 'requires', 'transcript_of', 'search', 'version_of', 'part_of', 'translation_of', 'contains']);},
