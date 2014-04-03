@@ -4,7 +4,6 @@ namespace Ayamel\ResourceBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use JMS\Serializer\Annotation as JMS;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Content container object, contains several types of fields for referencing the content of a resource object
@@ -35,22 +34,7 @@ class ContentCollection
      * @MongoDB\EmbedMany(targetDocument="Ayamel\ResourceBundle\Document\FileReference")
      * @JMS\Type("array<Ayamel\ResourceBundle\Document\FileReference>")
      */
-    protected $files;
-
-    public function __construct()
-    {
-        $this->init();
-    }
-
-    public function __wakeup()
-    {
-        $this->init();
-    }
-
-    private function init()
-    {
-        $this->files = new ArrayCollection();
-    }
+    protected $files = [];
 
     /**
      * Set canonicalUri
@@ -152,13 +136,12 @@ class ContentCollection
      */
     public function setFiles(array $files = null)
     {
-        if ($files !== null) {
-            $this->files = new ArrayCollection();
+        $this->files = [];
+
+        if (!is_null($files)) {
             foreach ($files as $file) {
                 $this->addFile($file);
             }
-        } else {
-            $this->files = new ArrayCollection();
         }
 
         return $this;
@@ -223,7 +206,7 @@ class ContentCollection
      */
     public function getFiles()
     {
-        return $this->files->toArray();
+        return $this->files;
     }
 
 }

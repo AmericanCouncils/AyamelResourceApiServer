@@ -22,7 +22,7 @@ class Relation
      *
      * @MongoDB\Id
      * @JMS\Type("string")
-     * @JMS\ReadOnly
+     * @JMS\Groups({"search-decode"})
      */
     protected $id;
 

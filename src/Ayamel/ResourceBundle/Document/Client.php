@@ -20,7 +20,7 @@ class Client
      * @MongoDB\String
      * @JMS\SerializedName("id")
      * @JMS\Type("string")
-     * @JMS\ReadOnly
+     * @JMS\Groups({"search-decode"})
      */
     protected $id;
 
@@ -30,7 +30,7 @@ class Client
      * @MongoDB\String
      * @JMS\SerializedName("name")
      * @JMS\Type("string")
-     * @JMS\ReadOnly
+     * @JMS\Groups({"search-decode"})
      */
     protected $name;
 
@@ -40,7 +40,7 @@ class Client
      * @MongoDB\String
      * @JMS\SerializedName("uri")
      * @JMS\Type("string")
-     * @JMS\ReadOnly
+     * @JMS\Groups({"search-decode"})
      */
     protected $uri;
 
