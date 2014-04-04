@@ -29,29 +29,63 @@ use Elastica\Facet\Terms as TermsFacet;
 class SearchV1 extends ApiController
 {
     /**
-     * Search for Resource objects based on many, potentially loosely-defined, criteria.  By
-     * default searches include all publicly available resources, including resources visible
-     * to the requesting client.
+     * Search for Resource objects based on a text query, filtering by criteria.  Searches include all publicly
+     * available resources, as well as resources visible to the requesting client.  Searches may contain a variety
+     * of filters and facets, described below.
+     *
+     * ### Filters ###
+     *
+     * When searching, you may filter results on certain fields.  All filters are specified in the format
+     * `filter:<fieldName>=<values>`. Values can be passed as comma-delimited, to specify multiple allowed
+     * values.  For example:
+     *
+     * * `/api/v1/resources/search?q=colorless%20green%20dreams&filter:type=video` - will return matches only where
+     *     the resource is of type `video`
+     * * `/api/v1/resources/search?q=colorless%20green%20dreams&filter:type=video,audio` - will return matches where
+     *     the resource is either video, or audio
+     *
+     * For fields that can contain multiple values, such as `subjectDomains`, there are additional ways to specify a filter.
+     *
+     * * `/api/v1/resources/search?q=colorless%20green%20dreams&filter:subjectDomains=language,science` - will return matches
+     *     where the resource contains either "language" or "science", or possibly both, as one of the values.
+     * * `/api/v1/resources/search?q=colorless%20green%20dreams&filter:subjectDomains[]=language&filter:subjectDomains[]=science` -
+     *     will contain matches where `subjectDomains` contains *both* "language" and "science".
+     *
+     * Any field that contains multiple values can be passed as an array shown above to specify an "AND" requirement.  Otherwise, a
+     * comma-delimited list of values is interpreted as an "OR" requirement.
+     *
+     * ### Facets ###
+     *
+     * Facets allow you see the count of potential hits containing values for certain fields.  Facets are available for the same
+     * fields that you are allowed to filter on, and are specified in the format `facet:<fieldName>`, or `facet:<fieldName>=<size>`.
+     * By default, facets will contain a max of 10 values.  You may increase the size by specifying a larger facet size.  Also, note
+     * that facet values are always ordered by the highest number of hits first.  So, if a particular facet potentially contains
+     * many values, you will need to increase the size of the facet to see values with lower counts.  A few examples:
+     *
+     * * `/api/v1/resources/search?q=colorless%20green%20dreams&facet:type` - show the type facet
+     * * `/api/v1/resources/search?q=colorless%20green%20dreams&facet:subjectDomains=20` - show the subject domains, including
+     *     value counts for the top 20 most used values
      *
      * @ApiDoc(
      *      resource=true,
      *      description="Search for resources",
+     *      output="Ayamel\SearchBundle\Model\Result",
      *      filters={
      *          {"name"="limit", "default"="10", "description"="How many results to return.  Max 100."},
      *          {"name"="skip", "default"="0", "description"="Which result to start at. This in combination with `limit` can be used for paginating results.  Max 1000."},
      *          {"name"="filter:type", "description"="comma-delimited list of Resource types."},
      *          {"name"="filter:client", "description"="comma-delimited list of API Client ids."}
      *          {"name"="filter:clientUser", "description"="comma-delimited list of API Client User ids."}
-     *          {"name"="filter:language", "description"="comma-delimited list of langauge codes.  Can be passed as an array to specify AND."},
-     *          {"name"="filter:subjectDomains", "description"="comma-delimited list of subject domains.  Can be passed as an array."},
-     *          {"name"="filter:functionalDomains", "description"="n/a"}
-     *          {"name"="filter:registers", "description"="bar"},
-     *          {"name"="facet:type", "description"="n/a"}
-     *          {"name"="facet:client", "description"="n/a"}
-     *          {"name"="facet:language", "description"="n/a"}
-     *          {"name"="facet:subjectDomains", "description"="n/a"}
-     *          {"name"="facet:functionalDomains", "description"="n/a"}
-     *          {"name"="facet:registers", "description"="n/a"}
+     *          {"name"="filter:language", "description"="comma-delimited list of langauge codes.  Can be specified as an array."},
+     *          {"name"="filter:subjectDomains", "description"="comma-delimited list of subject domains.  Can be specified as an array."},
+     *          {"name"="filter:functionalDomains", "description"="comma-delimited list of functional domains.  Can be specified as an array."}
+     *          {"name"="filter:registers", "description"="comma-delimited list of registers.  Can be specified as an array."},
+     *          {"name"="facet:type", "description"="Include facet for type."}
+     *          {"name"="facet:client", "description"="Include facet for client."}
+     *          {"name"="facet:language", "description"="Include facet for language."}
+     *          {"name"="facet:subjectDomains", "description"="Include facet for subject domains."}
+     *          {"name"="facet:functionalDomains", "description"="Include facet for functional domains."}
+     *          {"name"="facet:registers", "description"="Include facet for registers."}
      *      }
      * )
      */
@@ -62,7 +96,7 @@ class SearchV1 extends ApiController
             throw $this->createHttpException(400, "Searches must include a string query via the [q] parameter.");
         }
 
-        //create query, and set the text to query
+        //create an Elastica query, and set the text to query
         $query = new ESQuery();
         $queryString = new ESQueryString();
         $queryString->setQuery($queryText);
@@ -105,17 +139,22 @@ class SearchV1 extends ApiController
             }
         }
         if ($filterValue = $q->get('filter:client', false)) {
-            $f = new NestedFilter();
-            $f->setPath('client');
-            $f->setFilter(new TermsFilter('client.id', explode(',', strtolower($filterValue))));
-            $queryFilters[] = $f;
+            //TODO
+            // $f = new NestedFilter();
+            // $f->setPath('client');
+            // $f->setFilter(new TermsFilter('client.id', explode(',', strtolower($filterValue))));
+            // $queryFilters[] = $f;
+        }
+        if ($filterValue = $q->get('clientUser', false)) {
+            //TODO
         }
         if ($filterValue = $q->get('filter:language', false)) {
-            $filterValue = explode(',', strtolower($filterValue));
-            $queryFilters[] = (new BoolOrFilter())
-                ->addFilter(new TermsFilter('languages.iso639_3', $langs))
-                ->addFilter(new TermsFilter('languages.bcp47', $langs))
-            ;
+            //TODO
+            // $filterValue = explode(',', strtolower($filterValue));
+            // $queryFilters[] = (new BoolOrFilter())
+            //     ->addFilter(new TermsFilter('languages.iso639_3', $langs))
+            //     ->addFilter(new TermsFilter('languages.bcp47', $langs))
+            // ;
         }
 
         //add all the filters to the query
@@ -152,7 +191,7 @@ class SearchV1 extends ApiController
         $resultSet = $type->search($query);
 
         //transform raw result into API result
-        $results = Result::createFromArray([
+        $result = Result::createFromArray([
             'query' => Query::createFromArray([
                 'limit' => $limit,
                 'skip' => $skip,
@@ -163,7 +202,7 @@ class SearchV1 extends ApiController
             'facets' => $this->filterFacets($resultSet->getFacets())
         ]);
 
-        return $this->createServiceResponse(['result' => $results], 200);
+        return $this->createServiceResponse(['result' => $result], 200);
     }
 
     /**
@@ -191,9 +230,9 @@ class SearchV1 extends ApiController
     {
         $serializer = $this->container->get('serializer');
 
-        $arr = [];
+        $hits = [];
         foreach ($results as $result) {
-            $arr[] = Hit::createFromArray([
+            $hits[] = Hit::createFromArray([
                 'score' => $result->getScore(),
 
                 //This looks funny, but it's basically just saying "deserialize this object
@@ -213,7 +252,7 @@ class SearchV1 extends ApiController
             ]);
         }
 
-        return $arr;
+        return $hits;
     }
 
     /**
@@ -259,19 +298,6 @@ class SearchV1 extends ApiController
         }
 
         return $values;
-    }
-
-    /**
-     * Filters out unwanted data from each ES result
-     *
-     * @param  array $result raw es result array
-     * @return array filtered data array
-     */
-    private function filterResultFields(array $result)
-    {
-        //TODO: filter out "content_*" fields
-        //or possibly deserialize into a Resource model
-        return $result;
     }
 
     /**
