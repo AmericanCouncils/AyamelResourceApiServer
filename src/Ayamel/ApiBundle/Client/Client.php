@@ -3,9 +3,12 @@
 namespace Ayamel\ApiBundle\Client;
 
 use Ayamel\ResourceBundle\Document\Client as ClientDoc;
+use AC\ModelTraits\AutoGetterSetterTrait;
 
 class Client
 {
+    use AutoGetterSetterTrait;
+
     public $id;
 
     public $name;

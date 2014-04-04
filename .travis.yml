@@ -23,4 +23,6 @@ before_script:
     - composer install --dev
     - app/console cache:clear --env=test
 
-script: bin/phpunit --exclude-group=transcoding
+#memory limit seems to run out on some machines, setting it high to try and avoid
+#unpredictable failures
+script: bin/phpunit --exclude-group=transcoding -d memory_limit=512M

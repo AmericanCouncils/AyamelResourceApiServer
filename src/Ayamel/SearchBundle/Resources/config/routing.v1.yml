@@ -1,13 +1,6 @@
 #browse the search index for resources w/ a simplified GET api
 api_v1_search:
     pattern: /resources/search
-    defaults: { _controller: Ayamel\SearchBundle\Controller\SearchV1::simpleSearchAction }
+    defaults: { _controller: Ayamel\SearchBundle\Controller\SearchV1::searchAction }
     requirements:
         _method:  GET
-
-#pass-through POST api for elasticsearch
-api_v1_advanced_search:
-    pattern: /resources/search
-    defaults: { _controller: Ayamel\SearchBundle\Controller\SearchV1::advancedSearchAction }
-    requirements:
-        _method:  POST

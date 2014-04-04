@@ -193,7 +193,7 @@ class ResourceIndexer
         $relatedResourceIds = array();
         $relatedResources = array();
 
-        foreach ($resource->getRelations()->toArray() as $relation) {
+        foreach ($resource->getRelations() as $relation) {
             if ('search' === $relation->getType() && $resource->getId() === $relation->getSubjectId()) {
                 $relatedResourceIds[] = $relation->getObjectId();
             }
