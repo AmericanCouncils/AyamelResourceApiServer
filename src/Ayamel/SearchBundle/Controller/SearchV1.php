@@ -39,17 +39,15 @@ class SearchV1 extends ApiController
      * `filter:<fieldName>=<values>`. Values can be passed as comma-delimited, to specify multiple allowed
      * values.  For example:
      *
-     * * `/api/v1/resources/search?q=colorless%20green%20dreams&filter:type=video` - will return matches only where
+     * * **?q=colorless%20green%20dreams&filter:type=video** - will return matches only where
      *     the resource is of type `video`
-     * * `/api/v1/resources/search?q=colorless%20green%20dreams&filter:type=video,audio` - will return matches where
+     * * **?q=colorless%20green%20dreams&filter:type=video,audio** - will return matches where
      *     the resource is either video, or audio
      *
      * For fields that can contain multiple values, such as `subjectDomains`, there are additional ways to specify a filter.
      *
-     * * `/api/v1/resources/search?q=colorless%20green%20dreams&filter:subjectDomains=language,science` - will return matches
-     *     where the resource contains either "language" or "science", or possibly both, as one of the values.
-     * * `/api/v1/resources/search?q=colorless%20green%20dreams&filter:subjectDomains[]=language&filter:subjectDomains[]=science` -
-     *     will contain matches where `subjectDomains` contains *both* "language" and "science".
+     * * **?q=colorless%20green%20dreams&filter:subjectDomains=language,science** - will return matches where the resource contains either "language" or "science", or possibly both, as one of the values.
+     * * **?q=colorless%20green%20dreams&filter:subjectDomains[]=language&filter:subjectDomains[]=science** - will contain matches where `subjectDomains` contains *both* "language" and "science".
      *
      * Any field that contains multiple values can be passed as an array shown above to specify an "AND" requirement.  Otherwise, a
      * comma-delimited list of values is interpreted as an "OR" requirement.
@@ -62,29 +60,30 @@ class SearchV1 extends ApiController
      * that facet values are always ordered by the highest number of hits first.  So, if a particular facet potentially contains
      * many values, you will need to increase the size of the facet to see values with lower counts.  A few examples:
      *
-     * * `/api/v1/resources/search?q=colorless%20green%20dreams&facet:type` - show the type facet
-     * * `/api/v1/resources/search?q=colorless%20green%20dreams&facet:subjectDomains=20` - show the subject domains, including
-     *     value counts for the top 20 most used values
+     * * **?q=colorless%20green%20dreams&facet:type** - show the type facet
+     * * **?q=colorless%20green%20dreams&facet:subjectDomains=20** - show the subject domains, including value counts for the top 20 most used values
      *
      * @ApiDoc(
      *      resource=true,
      *      description="Search for resources",
      *      output="Ayamel\SearchBundle\Model\Result",
      *      filters={
+     *          {"name"="q", "required"="yes", "description"="The text to search on."},
      *          {"name"="limit", "default"="10", "description"="How many results to return.  Max 100."},
      *          {"name"="skip", "default"="0", "description"="Which result to start at. This in combination with `limit` can be used for paginating results.  Max 1000."},
      *          {"name"="filter:type", "description"="comma-delimited list of Resource types."},
-     *          {"name"="filter:client", "description"="comma-delimited list of API Client ids."}
-     *          {"name"="filter:clientUser", "description"="comma-delimited list of API Client User ids."}
-     *          {"name"="filter:language", "description"="comma-delimited list of langauge codes.  Can be specified as an array."},
-     *          {"name"="filter:subjectDomains", "description"="comma-delimited list of subject domains.  Can be specified as an array."},
-     *          {"name"="filter:functionalDomains", "description"="comma-delimited list of functional domains.  Can be specified as an array."}
-     *          {"name"="filter:registers", "description"="comma-delimited list of registers.  Can be specified as an array."},
-     *          {"name"="facet:type", "description"="Include facet for type."}
-     *          {"name"="facet:client", "description"="Include facet for client."}
-     *          {"name"="facet:language", "description"="Include facet for language."}
-     *          {"name"="facet:subjectDomains", "description"="Include facet for subject domains."}
-     *          {"name"="facet:functionalDomains", "description"="Include facet for functional domains."}
+     *          {"name"="filter:client", "description"="**Not yet implemented** Comma-delimited list of API Client ids."},
+     *          {"name"="filter:clientUser", "description"="**Not yet implemented** Comma-delimited list of API Client User ids."},
+     *          {"name"="filter:language", "description"="**Not yet implemented** Comma-delimited list of langauge codes.  Can be specified as an array."},
+     *          {"name"="filter:subjectDomains", "description"="Comma-delimited list of subject domains.  Can be specified as an array."},
+     *          {"name"="filter:functionalDomains", "description"="Comma-delimited list of functional domains.  Can be specified as an array."},
+     *          {"name"="filter:registers", "description"="Comma-delimited list of registers.  Can be specified as an array."},
+     *          {"name"="facet:type", "description"="Include facet for type."},
+     *          {"name"="facet:client", "description"="**Not yet implemented** Include facet for client."},
+     *          {"name"="facet:clientUser", "description"="**Not yet implemented** Include facet for client."},
+     *          {"name"="facet:language", "description"="**Not yet implemented** Include facet for language."},
+     *          {"name"="facet:subjectDomains", "description"="Include facet for subject domains."},
+     *          {"name"="facet:functionalDomains", "description"="Include facet for functional domains."},
      *          {"name"="facet:registers", "description"="Include facet for registers."}
      *      }
      * )
