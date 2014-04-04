@@ -81,6 +81,7 @@ doctrine_mongodb:
 ac_web_services:
     serializer:
         allow_deserialize_into_target: true
+        enable_form_deserialization: true
     paths:
         "{^/api/}":
             include_exception_data: %include_api_exception_data%

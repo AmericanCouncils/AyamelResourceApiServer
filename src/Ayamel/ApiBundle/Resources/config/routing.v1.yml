@@ -13,13 +13,6 @@ api_v1_create_resource:
     requirements:
         _method:  POST
 
-#browse the search index for resources, note this doesn't returns summary resources, not full resource structures
-api_v1_search:
-    pattern: /resources/search
-    defaults: { _controller: Ayamel\ApiBundle\Controller\V1\Search::searchForResources }
-    requirements:
-        _method:  GET
-
 #create a resource object structure (no id), from a given uri (if it's something special like youtube, we'll connect to the api to fill in the relevant fields for you)
 api_v1_scan_resource_uri:
     pattern: /resources/scan

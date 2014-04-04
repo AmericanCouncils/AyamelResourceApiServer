@@ -75,6 +75,12 @@ parameters:
                     keywords:
                         boost: 3
                         analyzer: default
+                    # client:
+                    #     type: nested
+                    #     include_in_parent: false
+                    #     properties:
+                    #         id:
+                    #             type: string
                     content_canonical:
                         boost: 2
                         analyzer: default

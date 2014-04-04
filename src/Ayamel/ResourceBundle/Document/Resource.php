@@ -4,7 +4,6 @@ namespace Ayamel\ResourceBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use JMS\Serializer\Annotation as JMS;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Base Resource persistence class
@@ -50,7 +49,7 @@ class Resource
      *
      * @MongoDB\Id
      * @JMS\Type("string")
-     * @JMS\ReadOnly
+     * @JMS\Groups({"search-decode"})
      */
     protected $id;
 
@@ -168,6 +167,7 @@ class Resource
      * @JMS\ReadOnly
      */
     protected $dateAdded;
+    //TODO: use groups, but requires format fix first
 
     /**
      * The last time the Resource was modified.
@@ -178,6 +178,7 @@ class Resource
      * @JMS\ReadOnly
      */
     protected $dateModified;
+    //TODO: use groups, but requires format fix first
 
     /**
      * The date the Resource was deleted from the database, if applicable.
@@ -219,7 +220,7 @@ class Resource
      *
      * @MongoDB\String
      * @JMS\Type("string")
-     * @JMS\ReadOnly
+     * @JMS\Groups({"search-decode"})
      */
     protected $status;
 
@@ -244,8 +245,8 @@ class Resource
      * An object containing information about the API client that created the Resource.
      *
      * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\Client")
-     * @JMS\ReadOnly
      * @JMS\Type("Ayamel\ResourceBundle\Document\Client")
+     * @JMS\Groups({"search-decode"})
      */
     public $client;
 
@@ -254,7 +255,7 @@ class Resource
      *
      * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\ContentCollection")
      * @JMS\Type("Ayamel\ResourceBundle\Document\ContentCollection")
-     * @JMS\ReadOnly
+     * @JMS\Groups({"search-decode"})
      */
     public $content;
 
@@ -262,25 +263,10 @@ class Resource
      * An array of Relation objects that describe the relationship between this Resource and
      * other Resources.  Relations are critical to the search indexing process.
      *
-     * @JMS\Type("ArrayCollection<Ayamel\ResourceBundle\Document\Relation>")
-     * @JMS\ReadOnly
+     * @JMS\Type("array<Ayamel\ResourceBundle\Document\Relation>")
+     * @JMS\Groups({"search-decode"})
      */
-    protected $relations;
-
-    public function __construct()
-    {
-        $this->init();
-    }
-
-    public function __wakeup()
-    {
-        $this->init();
-    }
-
-    private function init()
-    {
-        $this->relations = new ArrayCollection();
-    }
+    protected $relations = [];
 
     /**
      * Get id
@@ -680,7 +666,7 @@ class Resource
      */
     public function setRelations(array $relations = null)
     {
-        $this->relations = new ArrayCollection();
+        $this->relations = [];
 
         if (!is_null($relations)) {
             foreach ($relations as $relation) {
@@ -694,7 +680,7 @@ class Resource
     /**
      * Get relations
      *
-     * @return Doctrine\Common\Collections\ArrayCollection $relations
+     * @return array $relations
      */
     public function getRelations()
     {
@@ -709,7 +695,7 @@ class Resource
      */
     public function addRelation(Relation $relation)
     {
-        $this->relations->add($relation);
+        $this->relations[] = $relation;
 
         return $this;
     }
@@ -722,9 +708,15 @@ class Resource
      */
     public function removeRelation(Relation $relation)
     {
-        $this->relations->removeElement($relation);
+        $newRels = [];
 
-        return $this;
+        foreach ($this->relations as $r) {
+            if ($r->getId() != $relation->getId()) {
+                $newRels[] = $r;
+            }
+        }
+
+        return $this->setRelations($newRels);
     }
 
     /**
