@@ -100,7 +100,7 @@ class UploadContent extends ApiController
      */
     public function executeAction($id, $token)
     {
-        $this->requireAuthentication();
+        // $this->requireAuthentication();
 
         //get the resource
         $resource = $this->getRequestedResourceById($id);
