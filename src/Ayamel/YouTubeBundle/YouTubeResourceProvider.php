@@ -100,7 +100,7 @@ class YouTubeResourceProvider implements ProviderInterface
                 }
                 $ref->setMime($item['type']);
                 $ref->setMimeType($item['type']);
-                $ref->setDownloadUri($item['url']);
+                $ref->setStreamUri($item['url']);
                 $res->content->addFile($ref);
             }
 
