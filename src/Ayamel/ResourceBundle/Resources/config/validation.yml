@@ -262,7 +262,6 @@ Ayamel\ResourceBundle\Document\FileReference:
             - Length:
                 max: 100
         bytes:
-            - NotBlank: ~
             - Type:
                 type: integer
             - Range:
