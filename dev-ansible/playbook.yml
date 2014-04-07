@@ -10,6 +10,9 @@
     - include: common/tasks/install_rabbitmq_server.yml
     - include: common/tasks/install_mediainfo.yml
     - include: common/tasks/install_elasticsearch.yml
+    - include: common/tasks/create_swapfile.yml
+      vars:
+        swapsize: 512M
     #- include: common/tasks/install_ffmpeg.yml
     #- include: common/tasks/install_ffmpegthumbnailer.yml
     - copy:
