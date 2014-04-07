@@ -100,7 +100,7 @@ class UploadContent extends ApiController
      */
     public function executeAction($id, $token)
     {
-        $this->requireAuthentication();
+        // $this->requireAuthentication();
 
         //get the resource
         $resource = $this->getRequestedResourceById($id);
@@ -110,7 +110,7 @@ class UploadContent extends ApiController
             return $this->returnDeletedResource($resource);
         }
 
-        $this->requireResourceOwner($resource);
+        // $this->requireResourceOwner($resource);
 
         //collections can't contain content
         if ('collection' === $resource->getType()) {
