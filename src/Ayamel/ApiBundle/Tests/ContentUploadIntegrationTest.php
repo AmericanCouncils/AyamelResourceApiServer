@@ -63,12 +63,14 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $uploadUrl = substr($content['contentUploadUrl'], strlen('http://localhost'));
 
         //no apikey
-        $response = $this->getResponse('POST', $uploadUrl);
-        $this->assertSame(401, $response->getStatusCode());
+        // Test removed 2014-04-07 - we don't need an api key for content upload, we use a token for validation
+        // $response = $this->getResponse('POST', $uploadUrl);
+        // $this->assertSame(401, $response->getStatusCode());
 
         //invalid key
-        $response = $this->getResponse('POST', $uploadUrl.'?_key=55678isafgd56789asfgdhf4568');
-        $this->assertSame(403, $response->getStatusCode());
+        // Test removed 2014-04-07 - we don't need an api key for content upload, we use a token for validation
+        // $response = $this->getResponse('POST', $uploadUrl.'?_key=55678isafgd56789asfgdhf4568');
+        // $this->assertSame(403, $response->getStatusCode());
 
     }
 
