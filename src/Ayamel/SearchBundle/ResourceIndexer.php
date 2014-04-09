@@ -77,7 +77,7 @@ class ResourceIndexer
         return false;
     }
 
-    public function indexResources(array $ids, $batch = 100)
+    public function indexResources(array $ids, $batch = 100, $skipFailed = false)
     {
         $count = 0;
         $failed = array();
@@ -101,23 +101,11 @@ class ResourceIndexer
 
         $this->type->getIndex()->refresh();
 
-        if (!empty($failed)) {
-             $e = new BulkIndexException($failed);
-
-             // TODO: ad-hoc debug, if needed should implement logging
-
-             // $messages = $e->getMessages();
-             // $indices = array_keys($messages);
-             // print_r("\nFailed to index " . count($messages) . " resources.\n");
-             // print_r("ResourceIndexer failure messages:\n");
-             // foreach ($indices as $index) {
-             //     print_r("id: $index; message: " . $messages[$index] . "\n");
-             // }
-
-             throw $e;
+        if (!empty($failed) && !$skipFailed) {
+             throw new BulkIndexException($failed);
         }
 
-        return true;
+        return $failed;
     }
 
     public function indexResourcesByFields(array $fields = array(), $batch = 100)
@@ -144,12 +132,11 @@ class ResourceIndexer
 
         if (!$resource) {
             if ($this->logger) {
-                $this->logger->warning(sprintf("Tried indexing a non-exiting resource [%s]", $id));
+                $this->logger->warning(sprintf("Tried indexing a non-existing resource [%s]", $id));
             }
 
             throw new IndexException("The Resource could not be found in order to index.");
         }
-
         if ($resource->isDeleted()) {
             $this->type->deleteById($id);
 
