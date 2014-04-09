@@ -9,12 +9,12 @@ parameters:
 
     ayamel.transcoding.rabbitmq_producer:
         connection: default
-        exchange_options: { name: 'transcoding', type: direct }
+        exchange_options: { name: transcoding_%kernel.environment%, type: direct }
 
     ayamel.transcoding.rabbitmq_consumer:
         connection: default
-        exchange_options: { name: 'transcoding', type: direct }
-        queue_options:    { name: 'transcoding' }
+        exchange_options: { name: transcoding_%kernel.environment%, type: direct }
+        queue_options:    { name: transcoding_%kernel.environment% }
         callback:         ayamel.transcoding.consumer
 
 services:

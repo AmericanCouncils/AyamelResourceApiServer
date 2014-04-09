@@ -63,6 +63,7 @@ parameters:
 
     ayamel.search.ayamel_index:
         client: default
+        index_name: ayamel_%kernel.environment%
         types:
             resource:
                 mappings:
