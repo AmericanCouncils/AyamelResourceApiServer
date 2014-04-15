@@ -1,7 +1,7 @@
 parameters:
-    ayamel.filesystem.local_filesystem.root_dir: %kernel.root_dir%/files/resource_uploads
-    ayamel.filesystem.local_filesystem.secret: 34565dfg897jksksk4wk4ksdfkj34
-    ayamel.filesystem.local_filesystem.base_uri: http://ayamel.americancouncils.org/resources/files
+    ayamel.filesystem.local_filesystem.root_dir: %filesystem_root_dir%
+    ayamel.filesystem.local_filesystem.secret: %filesystem_secret%
+    ayamel.filesystem.local_filesystem.base_uri: %filesystem_base_url%
     ayamel.filesystem.analyzer.cache_results: true
     ayamel.filesystem.analyzer.cache_ttl: 604800 #1 week
     ayamel.filesystem.analyzer.cache_dir: %kernel.cache_dir%/filesystem_analyzer

@@ -45,6 +45,3 @@ parameters:
         test_client3:
             name: Flagship Media Library (Development)
             apiKey: tWZ35UyGaCNSnbMHANJf
-
-doctrine_mongodb:
-    default_database: ayamel_dev

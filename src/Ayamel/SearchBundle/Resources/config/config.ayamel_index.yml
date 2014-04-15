@@ -62,6 +62,7 @@ parameters:
         tha: []
 
     ayamel.search.ayamel_index:
+        index_name: %elasticsearch_index%
         client: default
         types:
             resource:

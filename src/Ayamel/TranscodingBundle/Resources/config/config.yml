@@ -3,18 +3,18 @@
 ## allow modifying those configurations during testing
 #######
 parameters:
-    ayamel.transcoding.temp_directory: %kernel.root_dir%/files/tmp
+    ayamel.transcoding.temp_directory: %transcoding_tmp_dir%
 
-    ayamel.transcoding.ffmpegthumbnailer_path: /usr/bin/ffmpegthumbnailer
+    ayamel.transcoding.ffmpegthumbnailer_path: %ffmpegthumbnailer_path%
 
     ayamel.transcoding.rabbitmq_producer:
         connection: default
-        exchange_options: { name: 'transcoding', type: direct }
+        exchange_options: { name: %transcoding_queue_name%, type: direct }
 
     ayamel.transcoding.rabbitmq_consumer:
         connection: default
-        exchange_options: { name: 'transcoding', type: direct }
-        queue_options:    { name: 'transcoding' }
+        exchange_options: { name: %transcoding_queue_name%, type: direct }
+        queue_options:    { name: %transcoding_queue_name% }
         callback:         ayamel.transcoding.consumer
 
 services:
