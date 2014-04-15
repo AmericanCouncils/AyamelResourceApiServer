@@ -7,20 +7,35 @@ use Ayamel\ApiBundle\Tests\FixturedTestCase;
 
 class ResourceIndexTest extends FixturedTestCase
 {
+    private $indexName;
+    private $guzzleClient;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $container = $this->getClient()->getContainer();
+        $this->guzzleClient = new Client(implode([
+            'http://',
+            $container->getParameter('elasticsearch_host'),
+            ":",
+            $container->getParameter('elasticsearch_port')
+        ]));
+
+        $this->indexName = $container->getParameter('elasticsearch_index');
+    }
+
     public function testCreateIndex()
     {
         $this->runCommand('fos:elastica:reset');
 
         //index should exist
-        $client = new Client('http://127.0.0.1:9200');
-        $response = $client->get('/ayamel/resource/_mapping')->send();
+        $response = $this->guzzleClient->get("/$this->indexName/resource/_mapping")->send();
         $this->assertSame(200, $response->getStatusCode());
     }
 
     public function testPopulateIndex()
     {
-        parent::setUp();
-
         //ensure fixtures loaded
         $this->assertTrue(!empty($this->fixtureData));
         $id = $this->fixtureData['AyamelResourceBundle:Resource'][0]->getId();
@@ -40,8 +55,7 @@ class ResourceIndexTest extends FixturedTestCase
         $this->assertFalse(empty($results[0]->getData()['functionalDomains']));
 
         //hit raw ES API, expect fixtures
-        $client = new Client('http://127.0.0.1:9200');
-        $response = $client->get('/ayamel/resource/_search')->send();
+        $response = $this->guzzleClient->get("/$this->indexName/resource/_search")->send();
         $body = json_decode($response->getBody(), true);
 
         //10 is the default ES limit
