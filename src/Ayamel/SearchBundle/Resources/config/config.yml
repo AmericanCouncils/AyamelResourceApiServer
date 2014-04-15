@@ -7,12 +7,12 @@ parameters:
     ayamel.search.indexable_resource_types: ['document','collection','audio','video','image']
     ayamel.search.rabbitmq_producer:
         connection: default
-        exchange_options: { name: 'search_index', type: direct }
+        exchange_options: { name: %search_index_queue_name%, type: direct }
 
     ayamel.search.rabbitmq_consumer:
         connection: default
-        exchange_options: { name: 'search_index', type: direct }
-        queue_options:    { name: 'search_index' }
+        exchange_options: { name: %search_index_queue_name%, type: direct }
+        queue_options:    { name: %search_index_queue_name% }
         callback:         ayamel.search_index.consumer
 
 services:

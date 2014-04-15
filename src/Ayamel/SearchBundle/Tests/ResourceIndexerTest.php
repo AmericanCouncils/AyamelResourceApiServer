@@ -11,6 +11,21 @@ use Guzzle\Http\Exception\ClientErrorResponseException;
 
 class ResourceIndexerTest extends ApiTestCase
 {
+    private $guzzleClient;
+    private $indexName;
+
+    private function setUpGuzzle()
+    {
+        $container = $this->getClient()->getContainer();
+        $this->guzzleClient = new Client(implode([
+            'http://',
+            $container->getParameter('elasticsearch_host'),
+            ":",
+            $container->getParameter('elasticsearch_port')
+        ]));
+
+        $this->indexName = $container->getParameter('elasticsearch_index');
+    }
 
     public function testLoadIndexer()
     {
@@ -57,8 +72,6 @@ class ResourceIndexerTest extends ApiTestCase
     public function testIndexResource()
     {
         $container = $this->getContainer();
-        //$indexer = $container->get('ayamel.search.resource_indexer');
-        $client = new Client('http://127.0.0.1:9200');
 
         //create resource
         $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
@@ -78,8 +91,9 @@ class ResourceIndexerTest extends ApiTestCase
         $this->assertSame(200, $content['response']['code']);
 
         //expect 404 from elastic search, not indexed yet
+        $this->setUpGuzzle();
         try {
-            $response = $client->get('/ayamel/resource/'.$resourceId)->send();
+            $response = $this->guzzleClient->get("/$this->indexName/resource/".$resourceId)->send();
         } catch (ClientErrorResponseException $exception) {
         }
         $this->assertSame(404, $exception->getResponse()->getStatusCode());
@@ -88,7 +102,7 @@ class ResourceIndexerTest extends ApiTestCase
         $container->get('ayamel.search.resource_indexer')->indexResource($resourceId);
 
         //query the specific search document
-        $response = $client->get('/ayamel/resource/'.$resourceId)->send();
+        $response = $this->guzzleClient->get("/$this->indexName/resource/".$resourceId)->send();
         $this->assertSame(200, $response->getStatusCode());
 
         return $resourceId;
@@ -108,9 +122,9 @@ class ResourceIndexerTest extends ApiTestCase
         //reindex deleted resource
         $this->getContainer()->get('ayamel.search.resource_indexer')->indexResource($id);
 
-        $client = new Client('http://127.0.0.1:9200');
+        $this->setUpGuzzle();
         try {
-            $response = $client->get('/ayamel/resource/'.$id)->send();
+            $response = $this->guzzleClient->get("/$this->indexName/resource/".$id)->send();
         } catch (ClientErrorResponseException $exception) {
         }
         $this->assertSame(404, $exception->getResponse()->getStatusCode());
@@ -120,7 +134,6 @@ class ResourceIndexerTest extends ApiTestCase
     {
         $container = $this->getContainer();
         $indexer = $container->get('ayamel.search.resource_indexer');
-        $client = new Client('http://127.0.0.1:9200');
 
         $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
@@ -149,7 +162,8 @@ class ResourceIndexerTest extends ApiTestCase
         $indexer->indexResource($resourceId);
 
         //make sure record exists
-        $response = $client->get('/ayamel/resource/'.$resourceId)->send();
+        $this->setUpGuzzle();
+        $response = $this->guzzleClient->get("/$this->indexName/resource/".$resourceId)->send();
         $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody(), true);
 
@@ -168,7 +182,6 @@ class ResourceIndexerTest extends ApiTestCase
     {
         $container = $this->getContainer();
         $indexer = $container->get('ayamel.search.resource_indexer');
-        $client = new Client('http://127.0.0.1:9200');
 
         //create a new resource w/ Russian
         $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
@@ -206,9 +219,10 @@ class ResourceIndexerTest extends ApiTestCase
 
         //reindex the subject resource
         $indexer->indexResource($id);
+        $this->setUpGuzzle();
 
         //check for new content fields imported from related resource
-        $response = $client->get('/ayamel/resource/'.$id)->send();
+        $response = $this->guzzleClient->get("/$this->indexName/resource/".$id)->send();
         $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody(), true);
         $this->assertTrue(isset($body['_source']['content_canonical']));
@@ -220,7 +234,7 @@ class ResourceIndexerTest extends ApiTestCase
 
         //index the object resource
         $indexer->indexResource($objectId);
-        $response = $client->get('/ayamel/resource/'.$objectId)->send();
+        $response = $this->guzzleClient->get("/$this->indexName/resource/".$objectId)->send();
         $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody(), true);
         $this->assertTrue(isset($body['_source']['content_canonical']));

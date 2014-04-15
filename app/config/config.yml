@@ -72,7 +72,7 @@ doctrine_mongodb:
             server: mongodb://%mongodb_host%:%mongodb_port%
             options:
                 connect: true
-    # default_database: ayamel # This is set in config_prod, config_dev and config_test, to keep database name dependent on environment
+    default_database: %mongodb_database%
     document_managers:
         default:
             auto_mapping: true
