@@ -2,7 +2,6 @@
 
 namespace Ayamel\SearchBundle\Tests;
 
-use Guzzle\Http\Client;
 use Ayamel\ApiBundle\Tests\FixturedTestCase;
 
 /**
@@ -12,7 +11,7 @@ use Ayamel\ApiBundle\Tests\FixturedTestCase;
  * @package AyamelSearchBundle
  * @author Evan Villemez
  */
-class SimpleSearchApiTest extends FixturedTestCase
+class SearchApiTest extends FixturedTestCase
 {
     public function setUp()
     {

@@ -2,30 +2,14 @@
 
 namespace Ayamel\SearchBundle\Tests;
 
-use Ayamel\ApiBundle\ApiTestCase;
 use Ayamel\SearchBundle\ResourceIndexer;
+use Ayamel\SearchBundle\SearchTest;
 use Ayamel\ResourceBundle\Document\Resource;
-use Guzzle\Http\Client;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Guzzle\Http\Exception\ClientErrorResponseException;
 
-class ResourceIndexerTest extends ApiTestCase
+class ResourceIndexerTest extends SearchTest
 {
-    private $guzzleClient;
-    private $indexName;
-
-    private function setUpGuzzle()
-    {
-        $container = $this->getClient()->getContainer();
-        $this->guzzleClient = new Client(implode([
-            'http://',
-            $container->getParameter('elasticsearch_host'),
-            ":",
-            $container->getParameter('elasticsearch_port')
-        ]));
-
-        $this->indexName = $container->getParameter('elasticsearch_index');
-    }
 
     public function testLoadIndexer()
     {

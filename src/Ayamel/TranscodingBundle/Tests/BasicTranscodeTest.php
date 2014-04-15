@@ -143,8 +143,9 @@ class BasicTranscodeTest extends ApiTestCase
     {
         //start the rabbitmq consumer, clear the queue
         $container = $this->getContainer();
+        $queueName = $container->getParameter('transcoding_queue_name');
         try {
-            $container->get('old_sound_rabbit_mq.transcoding_producer')->getChannel()->queue_purge('transcoding');
+            $container->get('old_sound_rabbit_mq.transcoding_producer')->getChannel()->queue_purge($queueName);
         } catch (\PhpAmqpLib\Exception\AMQPProtocolChannelException $e) {
             //swallow this error because of travis
         }
@@ -202,8 +203,6 @@ class BasicTranscodeTest extends ApiTestCase
             while ($rabbitProcess->isRunning()) {
                 usleep(500000); //wait half a second
             }
-
-            //var_dump($output);
 
             if (!$rabbitProcess->isSuccessful()) {
                 throw new \RuntimeException($rabbitProcess->getErrorOutput());
