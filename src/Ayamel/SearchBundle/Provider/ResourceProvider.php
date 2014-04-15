@@ -54,11 +54,10 @@ class ResourceProvider implements ProviderInterface
             $loggerClosure(sprintf("Indexing %s resources.", count($ids)));
         }
 
-        # 3rd arg: true to skip unindexable resources
-        $failed = $this->indexer->indexResources($ids, $this->batch, true);
+        $this->indexer->indexResources($ids, $this->batch);
 
         if ($loggerClosure) {
-            $loggerClosure("Finished indexing resources; skipped " . count($failed));
+            $loggerClosure("Finished indexing resources.");
         }
     }
 }

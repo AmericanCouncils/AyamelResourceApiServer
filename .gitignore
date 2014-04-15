@@ -1,5 +1,4 @@
 web/bundles/
-web/resource_uploads/
 web/examples/
 web/files
 app/cache/*

@@ -35,8 +35,8 @@ class SearchIndexConsumer implements ConsumerInterface
         $batch = $this->container->getParameter('ayamel.search.elastica_resource_provider.batch');
         try {
             if (isset($body['id'])) {
-                $this->container->get('ayamel.search.resource_indexer')->indexResource($body['id']);
                 echo 'INDEXED ONE'.PHP_EOL;
+                $this->container->get('ayamel.search.resource_indexer')->indexResource($body['id']);
             }
 
             if (isset($body['ids'])) {
@@ -52,12 +52,13 @@ class SearchIndexConsumer implements ConsumerInterface
                 foreach ($e->getMessages() as $id => $message) {
                     $logger->warning(sprintf('Indexing failed [%s]: %s', $id, $message));
                 }
+
+                return true;
             }
 
             $logger->warning(sprintf('Indexing failed [%s]: %s', $body['id'], $e->getMessage()));
 
-            # NOTE: Evan, is it safe to always return true here to avoid queue-thrashing?
-            return true;
+            return false;
         }
     }
 }

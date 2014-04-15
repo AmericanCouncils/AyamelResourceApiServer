@@ -79,7 +79,7 @@ class ResourceIndexerTest extends ApiTestCase
 
         //expect 404 from elastic search, not indexed yet
         try {
-            $response = $client->get('/ayamel_test/resource/'.$resourceId)->send();
+            $response = $client->get('/ayamel/resource/'.$resourceId)->send();
         } catch (ClientErrorResponseException $exception) {
         }
         $this->assertSame(404, $exception->getResponse()->getStatusCode());
@@ -88,7 +88,7 @@ class ResourceIndexerTest extends ApiTestCase
         $container->get('ayamel.search.resource_indexer')->indexResource($resourceId);
 
         //query the specific search document
-        $response = $client->get('/ayamel_test/resource/'.$resourceId)->send();
+        $response = $client->get('/ayamel/resource/'.$resourceId)->send();
         $this->assertSame(200, $response->getStatusCode());
 
         return $resourceId;
@@ -110,7 +110,7 @@ class ResourceIndexerTest extends ApiTestCase
 
         $client = new Client('http://127.0.0.1:9200');
         try {
-            $response = $client->get('/ayamel_test/resource/'.$id)->send();
+            $response = $client->get('/ayamel/resource/'.$id)->send();
         } catch (ClientErrorResponseException $exception) {
         }
         $this->assertSame(404, $exception->getResponse()->getStatusCode());
@@ -149,7 +149,7 @@ class ResourceIndexerTest extends ApiTestCase
         $indexer->indexResource($resourceId);
 
         //make sure record exists
-        $response = $client->get('/ayamel_test/resource/'.$resourceId)->send();
+        $response = $client->get('/ayamel/resource/'.$resourceId)->send();
         $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody(), true);
 
@@ -208,7 +208,7 @@ class ResourceIndexerTest extends ApiTestCase
         $indexer->indexResource($id);
 
         //check for new content fields imported from related resource
-        $response = $client->get('/ayamel_test/resource/'.$id)->send();
+        $response = $client->get('/ayamel/resource/'.$id)->send();
         $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody(), true);
         $this->assertTrue(isset($body['_source']['content_canonical']));
@@ -220,7 +220,7 @@ class ResourceIndexerTest extends ApiTestCase
 
         //index the object resource
         $indexer->indexResource($objectId);
-        $response = $client->get('/ayamel_test/resource/'.$objectId)->send();
+        $response = $client->get('/ayamel/resource/'.$objectId)->send();
         $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody(), true);
         $this->assertTrue(isset($body['_source']['content_canonical']));

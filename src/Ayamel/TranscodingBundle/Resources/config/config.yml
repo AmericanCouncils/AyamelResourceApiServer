@@ -9,13 +9,13 @@ parameters:
 
     ayamel.transcoding.rabbitmq_producer:
         connection: default
-        exchange_options: { name: transcoding_%kernel.environment%, type: direct }
+        exchange_options: { name: 'transcoding', type: direct }
 
     ayamel.transcoding.rabbitmq_consumer:
         connection: default
-        exchange_options: { name: transcoding_%kernel.environment%, type: direct }
-        queue_options:    { name: transcoding_%kernel.environment% }
-        callback:         ayamel.transcoding_%kernel.environment%.consumer
+        exchange_options: { name: 'transcoding', type: direct }
+        queue_options:    { name: 'transcoding' }
+        callback:         ayamel.transcoding.consumer
 
 services:
     ayamel.transcoding.mapper:
@@ -44,15 +44,7 @@ services:
             - { name: ayamel.api.event_listener , event: ayamel.api.resolve_uploaded_content, method: onResolveUploadedContent, priority: 128 }
 
     # This service handles rabbitMQ for transcoding Resource files asyncronously
-    ayamel.transcoding_test.consumer:
-        class: Ayamel\TranscodingBundle\RabbitMQ\Consumer
-        arguments: [@service_container, %ayamel.transcoding.preset_map%]
-
-    ayamel.transcoding_dev.consumer:
-        class: Ayamel\TranscodingBundle\RabbitMQ\Consumer
-        arguments: [@service_container, %ayamel.transcoding.preset_map%]
-
-    ayamel.transcoding_prod.consumer:
+    ayamel.transcoding.consumer:
         class: Ayamel\TranscodingBundle\RabbitMQ\Consumer
         arguments: [@service_container, %ayamel.transcoding.preset_map%]
 

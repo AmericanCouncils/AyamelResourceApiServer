@@ -13,7 +13,7 @@ class ResourceIndexTest extends FixturedTestCase
 
         //index should exist
         $client = new Client('http://127.0.0.1:9200');
-        $response = $client->get('/ayamel_test/resource/_mapping')->send();
+        $response = $client->get('/ayamel/resource/_mapping')->send();
         $this->assertSame(200, $response->getStatusCode());
     }
 
@@ -41,7 +41,7 @@ class ResourceIndexTest extends FixturedTestCase
 
         //hit raw ES API, expect fixtures
         $client = new Client('http://127.0.0.1:9200');
-        $response = $client->get('/ayamel_test/resource/_search')->send();
+        $response = $client->get('/ayamel/resource/_search')->send();
         $body = json_decode($response->getBody(), true);
 
         //10 is the default ES limit

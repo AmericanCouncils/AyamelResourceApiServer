@@ -26,22 +26,6 @@ use Symfony\Component\Process\Process;
  */
 class BasicTranscodeTest extends ApiTestCase
 {
-    public function tearDown()
-    {
-        $container = $this->getContainer();
-
-        //clear rabbitmq message queue
-        try {
-            $container->get('old_sound_rabbit_mq.transcoding_producer')->getChannel()->queue_purge('transcoding');
-        } catch (\PhpAmqpLib\Exception\AMQPProtocolChannelException $e) {
-            //swallow this error because of travis
-        }
-
-        // print_r("vagrant@ayamel:/vagrant$ app/console rabbitmq:purge transcoding_test --env=test --no-confirmation");
-        // $command = sprintf('%s --quiet --env=test --no-confirmation rabbitmq:purge transcoding_test');    
-        // return self::getApplication()->run(new StringInput($command));
-        // $container->get('old_sound_rabbit_mq.search_index_producer')->getChannel()->queue_purge('search_index');
-    }
 
     public function testTranscodeManagerTranscodeResource()
     {
@@ -157,9 +141,6 @@ class BasicTranscodeTest extends ApiTestCase
 
     public function testTranscodeViaRabbitMQ()
     {
-        $this->markTestSkipped(); 
-        // this test may no longer be valid, given the changes to how queues work in different environments.
-        // Basically, testing rabbitmq-dependent functionality is hard.        
         //start the rabbitmq consumer, clear the queue
         $container = $this->getContainer();
         try {

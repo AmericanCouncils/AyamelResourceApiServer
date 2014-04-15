@@ -18,9 +18,6 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
 {
     public function testCreateResourceTriggersIndex()
     {
-        $this->markTestSkipped(); 
-        // this test may no longer be valid, given the changes to how queues work in different environments.
-        // Basically, testing rabbitmq-dependent functionality is hard.
         $client = new Client('http://127.0.0.1:9200');
         $proc = $this->startRabbitListener(1);
 
@@ -38,7 +35,7 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
         //search document should not exist yet
         usleep(500000); //wait a bit, to give it the chance to index, even though it shouldn't
         try {
-            $response = $client->get('/ayamel_test/resource/'.$resourceId)->send();
+            $response = $client->get('/ayamel/resource/'.$resourceId)->send();
         } catch (ClientErrorResponseException $exception) {
         }
         $this->assertSame(404, $exception->getResponse()->getStatusCode());
@@ -63,11 +60,11 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
             }
 
             //check that the resource was indexed
-            $response = $client->get('/ayamel_test/resource/'.$resourceId)->send();
+            $response = $client->get('/ayamel/resource/'.$resourceId)->send();
             $tester->assertSame(200, $response->getStatusCode());
             $data = json_decode($response->getBody(), true);
             $tester->assertSame('Hamlet pwnz!', $data['_source']['title']);
-            $tester->assertTrue(empty($data['_source']['relations']));
+            $tester->assertFalse(isset($data['_source']['relations']));
         });
 
         return $resourceId;
@@ -98,7 +95,7 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
             }
 
             $client = new Client('http://127.0.0.1:9200');
-            $response = $client->get('/ayamel_test/resource/'.$id)->send();
+            $response = $client->get('/ayamel/resource/'.$id)->send();
             $tester->assertSame(200, $response->getStatusCode());
             $data = json_decode($response->getBody(), true);
             $tester->assertSame('hamlet !pwnz', $data['_source']['title']);
@@ -154,14 +151,14 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
             $client = new Client('http://127.0.0.1:9200');
 
             //new resource should be in the index, no relations
-            $response = $client->get('/ayamel_test/resource/'.$objectId)->send();
+            $response = $client->get('/ayamel/resource/'.$objectId)->send();
             $tester->assertSame(200, $response->getStatusCode());
             $data = json_decode($response->getBody(), true);
             $tester->assertSame('Hamlet strikes back!', $data['_source']['title']);
             $tester->assertTrue(empty($data['_source']['relations']));
 
             //subject should have new relations
-            $response = $client->get('/ayamel_test/resource/'.$id)->send();
+            $response = $client->get('/ayamel/resource/'.$id)->send();
             $tester->assertSame(200, $response->getStatusCode());
             $data = json_decode($response->getBody(), true);
             $tester->assertFalse(empty($data['_source']['relations']));
@@ -197,13 +194,13 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
 
             //object should not be in the index
             try {
-                $response = $client->get('/ayamel_test/resource/'.$relation['objectId'])->send();
+                $response = $client->get('/ayamel/resource/'.$relation['objectId'])->send();
             } catch (ClientErrorResponseException $exception) {
             }
             $this->assertSame(404, $exception->getResponse()->getStatusCode());
 
             //subject should be in the index, with no relations
-            $response = $client->get('/ayamel_test/resource/'.$relation['subjectId'])->send();
+            $response = $client->get('/ayamel/resource/'.$relation['subjectId'])->send();
             $tester->assertSame(200, $response->getStatusCode());
             $data = json_decode($response->getBody(), true);
             $tester->assertTrue(empty($data['_source']['relations']));
@@ -235,7 +232,7 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
             //object should not be in the index
             try {
                 $client = new Client('http://127.0.0.1:9200');
-                $response = $client->get('/ayamel_test/resource/'.$id)->send();
+                $response = $client->get('/ayamel/resource/'.$id)->send();
             } catch (ClientErrorResponseException $exception) {
             }
             $tester->assertSame(404, $exception->getResponse()->getStatusCode());

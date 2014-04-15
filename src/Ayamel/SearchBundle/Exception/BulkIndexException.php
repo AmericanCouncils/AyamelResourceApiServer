@@ -15,7 +15,7 @@ class BulkIndexException extends IndexException
     {
         $this->messages = $messages;
 
-        parent::__construct("Resources could not be indexed:\n" . implode(';\n', $messages));
+        parent::__construct("Multiple Resources could not be indexed.");
     }
 
     public function getMessages()
