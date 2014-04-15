@@ -31,16 +31,17 @@ class GetResources extends ApiController
      */
     public function executeAction(Request $req)
     {
+        $q = $req->query;
 
         //create filters
         $filters = array();
-        if ($ids = $req->query->get('id', false)) {
+        if ($ids = $q->get('id', false)) {
             $filters['id'] = explode(',', $ids);
         }
-        if ($type = $req->query->get('type', false)) {
+        if ($type = $q->get('type', false)) {
             $filters['type'] = explode(',', $type);
         }
-        if ($clients = $req->query->get('client', false)) {
+        if ($clients = $q->get('client', false)) {
             $filters['client.id'] = explode(',', $clients);
         } else {
             if ($c = $this->getApiClient()) {
@@ -49,7 +50,7 @@ class GetResources extends ApiController
                 //TODO: Force a client filter?
             }
         }
-        if ($clientUsers = $req->query->get('clientUser', false)) {
+        if ($clientUsers = $q->get('clientUser', false)) {
             $filters['clientUser.id'] = explode(',', $clientUsers);
         }
 
@@ -58,15 +59,15 @@ class GetResources extends ApiController
 
         //langs filter is an "or", unless we decide we really have to force the client
         //to choose exactly which language standard they want to filter on
-        if ($languages = $req->query->get('languages', false)) {
+        if ($languages = $q->get('languages', false)) {
             $langs = explode(',', $languages);
             $qb->addOr($qb->expr()->field('languages.iso639_3')->in($langs));
             $qb->addOr($qb->expr()->field('languages.bcp47')->in($langs));
         }
 
-        $limit = (($l = $req->query->get('limit', 20)) <= 100) ? $l : 1000;
+        $limit = (($l = $q->get('limit', 20)) <= 100) ? $l : 1000;
         $qb->limit($limit);
-        $qb->skip($req->query->get('skip', 0));
+        $qb->skip($q->get('skip', 0));
 
         $results = $qb->getQuery()->execute();
 

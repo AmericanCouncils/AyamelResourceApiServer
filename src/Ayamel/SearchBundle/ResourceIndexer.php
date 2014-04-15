@@ -303,8 +303,8 @@ class ResourceIndexer
             return false;
         }
 
-        if ($langs->iso639_3) {
-            $tag = $langs->iso639_3[0];
+        if ($langs->getIso639_3()) {
+            $tag = $langs->getIso639_3()[0];
 
             if (isset($this->languageFieldMap[$tag])) {
                 return $tag;
@@ -312,8 +312,8 @@ class ResourceIndexer
 
             return $this->searchLanguageMapForTag($tag);
 
-        } elseif ($langs->bcp47) {
-            $exp = explode('-', $langs->bcp47[0]);
+        } elseif ($langs->getBcp47()) {
+            $exp = explode('-', $langs->getBcp47()[0]);
             $tag = $exp[0];
 
             return $this->searchLanguageMapForTag($tag);

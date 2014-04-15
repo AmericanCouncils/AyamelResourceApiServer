@@ -608,6 +608,10 @@ class ResourceIntegrationTest extends ApiTestCase
             )
         ));
 
+        // $r6 = $this->createExampleResource([
+
+        // ]);
+
         //get
         $data = $this->getJson('GET', '/api/v1/resources');
         $this->assertSame(200, $data['response']['code']);
@@ -681,5 +685,15 @@ class ResourceIntegrationTest extends ApiTestCase
         $this->assertSame(1, count($data['resources']));
         $this->assertSame($r5['id'], $data['resources'][0]['id']);
 
+        //get w/ status
+        // $data = $this->getJson('GET', '/api/v1/resources?status=awaiting_content');
+        // $this->assertSame(200, $data['response']['code']);
+        // $this->assertSame(5, count($data['resources']));
+        // $data = $this->getJson('GET', '/api/v1/resources?status=normal');
+        // $this->assertSame(200, $data['response']['code']);
+        // $this->assertSame(0, count($data['resources']));
+
+        //get w/ multiple filters (lang and type)
+        //$this->markTestIncomplete();
     }
 }
