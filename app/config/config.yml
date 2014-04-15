@@ -137,7 +137,7 @@ old_sound_rabbit_mq:
         transcoding: %ayamel.transcoding.rabbitmq_producer%
         search_index: %ayamel.search.rabbitmq_producer%
     consumers:
-        transcoding: %ayamel.transcoding.rabbitmq_consumer%
+        transcoding_test: %ayamel.transcoding.rabbitmq_consumer%
         search_index: %ayamel.search.rabbitmq_consumer%
 
 fos_elastica:
