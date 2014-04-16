@@ -2,7 +2,7 @@
 
 namespace Ayamel\SearchBundle\Tests;
 
-use Ayamel\SearchBundle\AsynchronousSearchTest;
+use Ayamel\SearchBundle\SearchTest;
 use Symfony\Component\Process\Process;
 use Guzzle\Http\Client;
 use Guzzle\Http\Exception\ClientErrorResponseException;
@@ -14,11 +14,14 @@ use Guzzle\Http\Exception\ClientErrorResponseException;
  * @package AyamelSearchBundle
  * @author Evan Villemez
  */
-class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
+class AsynchronousSearchIndexerTest extends SearchTest
 {
     public function testCreateResourceTriggersIndex()
     {
-        $client = new Client('http://127.0.0.1:9200');
+        $this->setUpGuzzle();
+        $client = $this->guzzleClient;
+        $indexName = $this->indexName;
+
         $proc = $this->startRabbitListener(1);
 
         //create resource
@@ -35,7 +38,7 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
         //search document should not exist yet
         usleep(500000); //wait a bit, to give it the chance to index, even though it shouldn't
         try {
-            $response = $client->get('/ayamel/resource/'.$resourceId)->send();
+            $response = $client->get("/$this->indexName/resource/".$resourceId)->send();
         } catch (ClientErrorResponseException $exception) {
         }
         $this->assertSame(404, $exception->getResponse()->getStatusCode());
@@ -50,7 +53,7 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
 
         //the listener should index after content was uploaded
         $tester = $this;
-        $proc->wait(function ($type, $buffer) use ($tester, $proc, $resourceId, $client) {
+        $proc->wait(function ($type, $buffer) use ($tester, $proc, $resourceId, $client, $indexName) {
             while ($proc->isRunning()) {
                 usleep(50000); //wait a tiny bit to make sure the process actually quit (... meh)
             }
@@ -60,7 +63,7 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
             }
 
             //check that the resource was indexed
-            $response = $client->get('/ayamel/resource/'.$resourceId)->send();
+            $response = $client->get("/$indexName/resource/".$resourceId)->send();
             $tester->assertSame(200, $response->getStatusCode());
             $data = json_decode($response->getBody(), true);
             $tester->assertSame('Hamlet pwnz!', $data['_source']['title']);
@@ -84,8 +87,12 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
         )));
         $this->assertSame(200, $content['response']['code']);
 
+        $this->setUpGuzzle();
+        $client = $this->guzzleClient;
+        $indexName = $this->indexName;
         $tester = $this;
-        $proc->wait(function ($type, $buffer) use ($id, $tester, $proc) {
+
+        $proc->wait(function ($type, $buffer) use ($id, $tester, $proc, $client, $indexName) {
             while ($proc->isRunning()) {
                 usleep(50000); //wait a tiny bit to make sure the process actually quit (... meh)
             }
@@ -94,8 +101,7 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
                 throw new \RuntimeException($proc->getErrorOutput());
             }
 
-            $client = new Client('http://127.0.0.1:9200');
-            $response = $client->get('/ayamel/resource/'.$id)->send();
+            $response = $client->get("/$indexName/resource/".$id)->send();
             $tester->assertSame(200, $response->getStatusCode());
             $data = json_decode($response->getBody(), true);
             $tester->assertSame('hamlet !pwnz', $data['_source']['title']);
@@ -139,7 +145,11 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
 
         //check for relations
         $tester = $this;
-        $proc->wait(function ($type, $buffer) use ($id, $tester, $proc, $objectId) {
+        $this->setUpGuzzle();
+        $client = $this->guzzleClient;
+        $indexName = $this->indexName;
+
+        $proc->wait(function ($type, $buffer) use ($id, $tester, $proc, $objectId, $client, $indexName) {
             while ($proc->isRunning()) {
                 usleep(50000); //wait a tiny bit to make sure the process actually quit (... meh)
             }
@@ -148,17 +158,15 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
                 throw new \RuntimeException($proc->getErrorOutput());
             }
 
-            $client = new Client('http://127.0.0.1:9200');
-
             //new resource should be in the index, no relations
-            $response = $client->get('/ayamel/resource/'.$objectId)->send();
+            $response = $client->get("/$indexName/resource/".$objectId)->send();
             $tester->assertSame(200, $response->getStatusCode());
             $data = json_decode($response->getBody(), true);
             $tester->assertSame('Hamlet strikes back!', $data['_source']['title']);
             $tester->assertTrue(empty($data['_source']['relations']));
 
             //subject should have new relations
-            $response = $client->get('/ayamel/resource/'.$id)->send();
+            $response = $client->get("/$indexName/resource/".$id)->send();
             $tester->assertSame(200, $response->getStatusCode());
             $data = json_decode($response->getBody(), true);
             $tester->assertFalse(empty($data['_source']['relations']));
@@ -180,8 +188,12 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
         ));
         $this->assertSame(200, $content['response']['code']);
 
+        $this->setUpGuzzle();
+        $client = $this->guzzleClient;
+        $indexName = $this->indexName;
         $tester = $this;
-        $proc->wait(function ($type, $buffer) use ($relation, $tester, $proc) {
+
+        $proc->wait(function ($type, $buffer) use ($relation, $tester, $proc, $client, $indexName) {
             while ($proc->isRunning()) {
                 usleep(50000); //wait a tiny bit to make sure the process actually quit (... meh)
             }
@@ -190,17 +202,15 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
                 throw new \RuntimeException($proc->getErrorOutput());
             }
 
-            $client = new Client('http://127.0.0.1:9200');
-
             //object should not be in the index
             try {
-                $response = $client->get('/ayamel/resource/'.$relation['objectId'])->send();
+                $response = $client->get("/$indexName/resource/".$relation['objectId'])->send();
             } catch (ClientErrorResponseException $exception) {
             }
             $this->assertSame(404, $exception->getResponse()->getStatusCode());
 
             //subject should be in the index, with no relations
-            $response = $client->get('/ayamel/resource/'.$relation['subjectId'])->send();
+            $response = $client->get("/$indexName/resource/".$relation['subjectId'])->send();
             $tester->assertSame(200, $response->getStatusCode());
             $data = json_decode($response->getBody(), true);
             $tester->assertTrue(empty($data['_source']['relations']));
@@ -219,8 +229,12 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
         ));
         $this->assertSame(200, $content['response']['code']);
 
+        $this->setUpGuzzle();
+        $client = $this->guzzleClient;
+        $indexName = $this->indexName;
         $tester = $this;
-        $proc->wait(function ($type, $buffer) use ($id, $tester, $proc) {
+
+        $proc->wait(function ($type, $buffer) use ($id, $tester, $proc, $client, $indexName) {
             while ($proc->isRunning()) {
                 usleep(50000); //wait a tiny bit to make sure the process actually quit (... meh)
             }
@@ -231,8 +245,7 @@ class AsynchronousSearchIndexerTest extends AsynchronousSearchTest
 
             //object should not be in the index
             try {
-                $client = new Client('http://127.0.0.1:9200');
-                $response = $client->get('/ayamel/resource/'.$id)->send();
+                $response = $client->get("/$indexName/resource/".$id)->send();
             } catch (ClientErrorResponseException $exception) {
             }
             $tester->assertSame(404, $exception->getResponse()->getStatusCode());
