@@ -144,7 +144,7 @@ class ResourceIndexer
 
         if (!$resource) {
             if ($this->logger) {
-                $this->logger->warning(sprintf("Tried indexing a non-exiting resource [%s]", $id));
+                $this->logger->warning(sprintf("Tried indexing a non-existing resource [%s]", $id));
             }
 
             throw new IndexException("The Resource could not be found in order to index.");
