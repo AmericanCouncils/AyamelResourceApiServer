@@ -38,8 +38,6 @@ class GetResources extends ApiController
         //create filters
         $filters = [];
 
-        //TODO: enforce visibility filter
-
         if ($ids = $q->get('id', false)) {
             $filters['id'] = explode(',', $ids);
         }
@@ -69,9 +67,22 @@ class GetResources extends ApiController
         //to choose exactly which language standard they want to filter on
         if ($languages = $q->get('languages', false)) {
             $langs = explode(',', $languages);
-            $qb->addOr($qb->expr()->field('languages.iso639_3')->in($langs));
-            $qb->addOr($qb->expr()->field('languages.bcp47')->in($langs));
+            $qb->addAnd($qb->expr()
+                ->addOr($qb->expr()->field('languages.iso639_3')->in($langs))
+                ->addOr($qb->expr()->field('languages.bcp47')->in($langs))
+            );
         }
+
+        //enforce visibility filter
+        // if ($apiClient) {
+        //     $qb->addOr($qb->expr()
+        //         ->field('languages.iso639_3')->in($langs)
+        //         ->field('languages.bcp47')->in($langs)
+        //     );
+        // } else {
+        //     $qb->field('visibility')->equals('');
+        // }
+
 
         //enforce default limits/skips
         $limit = (($l = $q->get('limit', 20)) <= 100) ? $l : 1000;
