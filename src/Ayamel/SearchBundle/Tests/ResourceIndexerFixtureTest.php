@@ -34,6 +34,5 @@ class ResourceIndexerFixtureTest extends FixturedTestCase
         $result = $collection->update(["_id" => $mongoId], $newdata);
         $this->commandTester->execute(['command' => $this->command->getName()]);
         $this->assertRegExp('/Populating ayamel\/resource, Finished indexing resources./', $this->commandTester->getDisplay());
-
     }
 }
