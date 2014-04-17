@@ -24,11 +24,26 @@
         port: 80
         symfony_env: dev
         dir: /vagrant
-    - file: src=/vagrant/app/console dest=/usr/local/bin/ayamel state=link
+    - include: common/tasks/symfony_rabbitmq_consumer.yml
+      vars:
+        name: ayamel-rabbitmq-consumer-transcoding
+        consumer: transcoding
+        symfony_env: dev
+        dir: /vagrant
+    - include: common/tasks/symfony_rabbitmq_consumer.yml
+      vars:
+        name: ayamel-rabbitmq-consumer-search-index
+        consumer: search_index
+        symfony_env: dev
+        dir: /vagrant
     - file: src=/vagrant dest=/home/vagrant/ayamel-server state=link
   handlers:
     - include: common/handlers/sys.yml
     - name: restart ayamel-web-dev
       supervisorctl: name=ayamel-web-dev state=restarted
+    - name: restart ayamel-rabbitmq-consumer-transcoding
+      supervisorctl: name=ayamel-rabbitmq-consumer-transcoding state=restarted
+    - name: restart ayamel-rabbitmq-consumer-search-index
+      supervisorctl: name=ayamel-rabbitmq-consumer-search-index state=restarted
     - name: restart rabbitmq-server
       supervisorctl: name=rabbitmq-server state=restarted

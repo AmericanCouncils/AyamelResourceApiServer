@@ -10,6 +10,7 @@ use Doctrine\ODM\MongoDB\DocumentManager;
 use JMS\Serializer\SerializerInterface;
 use Elastica\Document;
 use Elastica\Type;
+use Elastica\Exception\NotFoundException;
 use Psr\Log\LoggerInterface;
 use Ayamel\SearchBundle\Exception\IndexException;
 use Ayamel\SearchBundle\Exception\BulkIndexException;
@@ -151,8 +152,12 @@ class ResourceIndexer
         }
 
         if ($resource->isDeleted()) {
-            $this->type->deleteById($id);
-
+            try {
+                $this->type->deleteById($id);
+            } catch (NotFoundException $e) {
+                 // We can't delete this from the index, because it's not in the index. This is okay, do nothing.
+                 // TODO: log this warning properly
+            }
             return false;
         }
 
