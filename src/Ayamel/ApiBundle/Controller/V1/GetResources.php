@@ -74,14 +74,16 @@ class GetResources extends ApiController
         }
 
         //enforce visibility filter
-        // if ($apiClient) {
-        //     $qb->addOr($qb->expr()
-        //         ->field('languages.iso639_3')->in($langs)
-        //         ->field('languages.bcp47')->in($langs)
-        //     );
-        // } else {
-        //     $qb->field('visibility')->equals('');
-        // }
+        $visibilityFilter = $qb->expr();
+        //could be empty array
+        $visibilityFilter->addOr($qb->expr()->field('visibility')->size(0));
+        //may not be set at all
+        $visibilityFilter->addOr($qb->expr()->field('visibility')->exists(false));
+        //or visible by the requesting client
+        if ($apiClient) {
+            $visibilityFilter->addOr($qb->expr()->field('visibility')->equals($apiClient->getId()));
+        }
+        $qb->addAnd($visibilityFilter);
 
 
         //enforce default limits/skips
@@ -93,29 +95,10 @@ class GetResources extends ApiController
 
         //assemble final content structure
         return $this->createServiceResponse([
-            'total' => $results->count(),
-            'limit' => $limit,
-            'skip' => $skip,
-            'resources' => $this->getResourcesAsArray($results),
+            'total' => (int) $results->count(),
+            'limit' => (int) $limit,
+            'skip' => (int) $skip,
+            'resources' => array_values(iterator_to_array($results))
         ], 200);
-    }
-
-    /**
-     * Converts result set to normal array, and only includes Resources that are visible
-     * to the requesting client
-     */
-    protected function getResourcesAsArray($results)
-    {
-        $resources = array();
-        $client = $this->getApiClient();
-        $id = ($client) ? $client->id : false;
-
-        foreach ($results as $resource) {
-            if (is_null($resource->getVisibility()) || ($id && in_array($id, $resource->getVisibility())) ) {
-                $resources[] = $resource;
-            }
-        }
-
-        return $resources;
     }
 }

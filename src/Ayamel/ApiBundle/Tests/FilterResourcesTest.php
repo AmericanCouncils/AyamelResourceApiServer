@@ -7,16 +7,33 @@ class FilterResourcesTest extends FixturedTestCase
 
     public function testShowResources()
     {
-        $res = $this->callJsonApi('GET', '/api/v1/resources?limit=3&_key=key-for-test-client-2');
-        var_dump($res['total']);
-        var_dump(count($res['resources']));
+        $res = $this->callJsonApi('GET', '/api/v1/resources?_key=key-for-test-client-2');
+        $this->assertSame(30, $res['total']);
+        $this->assertSame(20, count($res['resources']));
+        $this->assertSame(20, $res['limit']);
+        $this->assertSame(0, $res['skip']);
+    }
 
-        $this->markTestIncomplete();
-        //get w/out apikey
-        //test total
-        
-        //get w/ api key
-        //test total
+    public function testShowResourcesEnforcesVisibility()
+    {
+        //anonymous request
+        $res = $this->callJsonApi('GET', '/api/v1/resources');
+        $this->assertSame(16, $res['total']);
+        foreach ($res['resources'] as $res) {
+            $this->assertTrue(is_null($res['visibility']) || empty($res['visibility']));
+        }
+
+        //with client
+        $res = $this->callJsonApi('GET', '/api/v1/resources?_key=key-for-test-client-2');
+        $this->assertSame(30, $res['total']);
+        $this->assertSame(20, count($res['resources']));
+        foreach ($res['resources'] as $res) {
+            $this->assertTrue(
+                is_null($res['visibility']) ||
+                empty($res['visibility']) ||
+                in_array('another-test-client', $res['visibility'])
+            );
+        }
     }
 
     /**
@@ -24,7 +41,10 @@ class FilterResourcesTest extends FixturedTestCase
      */
     public function testLimit()
     {
-
+        $res = $this->callJsonApi('GET', '/api/v1/resources?_key=key-for-test-client-2&limit=5');
+        $this->assertSame(30, $res['total']);
+        $this->assertSame(5, count($res['resources']));
+        $this->assertSame(5, $res['limit']);
     }
 
     /**
@@ -32,7 +52,10 @@ class FilterResourcesTest extends FixturedTestCase
      */
     public function testSkip()
     {
-
+        $res = $this->callJsonApi('GET', '/api/v1/resources?_key=key-for-test-client-2&skip=25');
+        $this->assertSame(30, $res['total']);
+        $this->assertSame(5, count($res['resources']));
+        $this->assertSame(25, $res['skip']);
     }
 
     /**
@@ -40,7 +63,26 @@ class FilterResourcesTest extends FixturedTestCase
      */
     public function testFilterType()
     {
-        $this->markTestIncomplete();
+        $res = $this->callJsonApi('GET', '/api/v1/resources?_key=key-for-test-client-2&type=video');
+        $this->assertSame(6, $res['total']);
+        $this->assertSame(6, count($res['resources']));
+        foreach($res['resources'] as $res) {
+            $this->assertSame('video', $res['type']);
+        }
+
+        $res = $this->callJsonApi('GET', '/api/v1/resources?_key=key-for-test-client-2&type=audio');
+        $this->assertSame(5, $res['total']);
+        $this->assertSame(5, count($res['resources']));
+        foreach($res['resources'] as $res) {
+            $this->assertSame('audio', $res['type']);
+        }
+
+        $res = $this->callJsonApi('GET', '/api/v1/resources?_key=key-for-test-client-2&type=audio,video');
+        $this->assertSame(11, $res['total']);
+        $this->assertSame(11, count($res['resources']));
+        foreach($res['resources'] as $res) {
+            $this->assertTrue(in_array($res['type'], ['audio','video']));
+        }
     }
 
     /**
@@ -48,7 +90,10 @@ class FilterResourcesTest extends FixturedTestCase
      */
     public function testFilterClient()
     {
-        $this->markTestIncomplete();
+        $res = $this->callJsonApi('GET', '/api/v1/resources?_key=key-for-test-client-2');
+        foreach ($res['resources'] as $res) {
+            var_dump($res['client']);
+        }
     }
 
     /**
@@ -80,6 +125,15 @@ class FilterResourcesTest extends FixturedTestCase
      */
     public function testFilterLanguage()
     {
+        $this->markTestIncomplete();
+    }
+
+    /**
+     * @depends testShowResources
+     */
+    public function testFilterPublic()
+    {
+        //whether or not "visibility" is null/empty
         $this->markTestIncomplete();
     }
 
