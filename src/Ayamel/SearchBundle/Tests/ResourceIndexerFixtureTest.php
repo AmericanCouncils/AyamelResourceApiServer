@@ -2,10 +2,6 @@
 
 namespace Ayamel\SearchBundle\Tests;
 
-use Ayamel\SearchBundle\ResourceIndexer;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Component\Console\Tester\CommandTester;
-use FOS\ElasticaBundle\Command\PopulateCommand;
 use Ayamel\ApiBundle\Tests\FixturedTestCase;
 
 class ResourceIndexerFixtureTest extends FixturedTestCase
