@@ -10,12 +10,7 @@ use Ayamel\ApiBundle\Tests\FixturedTestCase;
 
 class ResourceIndexerFixtureTest extends FixturedTestCase
 {
-    public function setUp()
-    {
-        parent::setUp();
-
-    }
-
+    // TODO: someday, it might be wise to merge this with ResourceIndexerTest, using fixtures throughout
     public function testIndexDeletedResource()
     {
         $id = $this->fixtureData['AyamelResourceBundle:Resource'][0]->getId();
