@@ -13,13 +13,7 @@ class ResourceIndexerFixtureTest extends FixturedTestCase
     public function setUp()
     {
         parent::setUp();
-        $k = $this->createKernel();
-        $k->boot();
-        $app = new Application($k);
-        $app->setAutoExit(false);
-        $app->add(new PopulateCommand());
-        $this->command = $app->find('fos:elastica:populate');
-        $this->commandTester = new CommandTester($this->command);
+
     }
 
     public function testIndexDeletedResource()
@@ -32,7 +26,7 @@ class ResourceIndexerFixtureTest extends FixturedTestCase
         $collection = $mongo->selectCollection("ayamel_test", "resources");
         $newdata = array('$set' => array("status" => "deleted"));
         $result = $collection->update(["_id" => $mongoId], $newdata);
-        $this->commandTester->execute(['command' => $this->command->getName()]);
-        $this->assertRegExp('/Populating ayamel\/resource, Finished indexing resources./', $this->commandTester->getDisplay());
+        $indexer = $this->getClient()->getContainer()->get('ayamel.search.resource_indexer');
+        $indexer->indexResource($id);
     }
 }
