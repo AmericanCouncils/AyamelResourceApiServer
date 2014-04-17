@@ -112,7 +112,7 @@ class BasicTranscodeTest extends ApiTestCase
 
         //now run transcode command directly, the --force flag makes it run immediately, instead
         //of dispatching the transcode job into the queue to be handled by rabbit
-        $this->runCommand(sprintf('api:resource:transcode %s --force', $resourceId));
+        $this->runCommand(sprintf('resource:transcode %s --force', $resourceId));
 
         //now get resource - expect 2 files and changed status
         $json = $this->getJson('GET', '/api/v1/resources/'.$resourceId.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(

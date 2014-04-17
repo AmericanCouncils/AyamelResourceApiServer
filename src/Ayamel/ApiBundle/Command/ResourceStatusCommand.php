@@ -19,7 +19,7 @@ class ResourceStatusCommand extends ContainerAwareCommand
 
     protected function configure()
     {
-        $this->setName('api:resource:status')
+        $this->setName('resource:status')
             ->setDescription("Modify a specific Resource's status.")
             ->addArgument('id', InputArgument::REQUIRED, "ID of Resource to modify.")
             ->addArgument('status', InputArgument::REQUIRED, "New status of resource.");

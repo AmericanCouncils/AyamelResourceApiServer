@@ -158,6 +158,7 @@ class ResourceIndexer
                  // We can't delete this from the index, because it's not in the index. This is okay, do nothing.
                  // TODO: log this warning properly
             }
+
             return false;
         }
 

@@ -18,7 +18,7 @@ class RenameFieldCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('api:field:rename')
+            ->setName('resource:field:rename')
             ->setDescription('Rename a field in the resource structure to a new name.')
             ->setDefinition(array(
                 new InputArgument('collection', InputArgument::REQUIRED, 'Name of the mongodb collection to update.'),
@@ -31,6 +31,8 @@ class RenameFieldCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        throw new \RuntimeException("Not implemented.");
+
         $collection = $input->getArgument('collection');
         $oldFieldName = $input->getArgument('oldFieldName');
         $newFieldName = $input->getArgument('newFieldName');
