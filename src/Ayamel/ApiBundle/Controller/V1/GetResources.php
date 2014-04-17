@@ -50,6 +50,7 @@ class GetResources extends ApiController
         if ($clients = $q->get('client', false)) {
             $filters['client.id'] = explode(',', $clients);
         } else {
+            //TODO: don't force this, it's unexpected
             if ($c = $this->getApiClient()) {
                 $filters['client.id'] = $c->id;
             } else {
