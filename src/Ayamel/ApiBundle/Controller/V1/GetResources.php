@@ -21,6 +21,7 @@ class GetResources extends ApiController
      *          {"name"="id", "description"="Comma separated list of IDs for specific Resources to fetch."},
      *          {"name"="client", "description"="Comma separated list of API client owners. By default query returns resources owned by requesting client."},
      *          {"name"="type", "description"="Limit returned Resources to a certain type."},
+     *          {"name"="status", "description"="Filter returned Resources by status."},
      *          {"name"="clientUser", "description"="Limit returned Resources to those owned by a specific user an API client."},
      *          {"name"="languages", "description"="Limit returned Resources to those containing a specific language.  This can be specified in either the ISO 639-3 format or BCP47 format."},
      *          {"name"="limit", "default"="20", "max": "100", "description"="Limit the number of ids to return."},
@@ -32,14 +33,21 @@ class GetResources extends ApiController
     public function executeAction(Request $req)
     {
         $q = $req->query;
+        $apiClient = $this->getApiClient();
 
         //create filters
-        $filters = array();
+        $filters = [];
+
+        //TODO: enforce visibility filter
+
         if ($ids = $q->get('id', false)) {
             $filters['id'] = explode(',', $ids);
         }
         if ($type = $q->get('type', false)) {
             $filters['type'] = explode(',', $type);
+        }
+        if ($status = $q->get('status', false)) {
+            $filters['status'] = explode(',', $status);
         }
         if ($clients = $q->get('client', false)) {
             $filters['client.id'] = explode(',', $clients);
@@ -65,14 +73,20 @@ class GetResources extends ApiController
             $qb->addOr($qb->expr()->field('languages.bcp47')->in($langs));
         }
 
+        //enforce default limits/skips
         $limit = (($l = $q->get('limit', 20)) <= 100) ? $l : 1000;
         $qb->limit($limit);
-        $qb->skip($q->get('skip', 0));
+        $qb->skip($skip = $q->get('skip', 0));
 
         $results = $qb->getQuery()->execute();
 
         //assemble final content structure
-        return $this->createServiceResponse(array('resources' => $this->getResourcesAsArray($results)), 200);
+        return $this->createServiceResponse([
+            'total' => $results->count(),
+            'limit' => $limit,
+            'skip' => $skip,
+            'resources' => $this->getResourcesAsArray($results),
+        ], 200);
     }
 
     /**
