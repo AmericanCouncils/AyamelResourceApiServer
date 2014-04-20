@@ -24,6 +24,7 @@ class GetResources extends ApiController
      *          {"name"="status", "description"="Filter returned Resources by status."},
      *          {"name"="clientUser", "description"="Limit returned Resources to those owned by a specific user an API client."},
      *          {"name"="languages", "description"="Limit returned Resources to those containing a specific language.  This can be specified in either the ISO 639-3 format or BCP47 format."},
+     *          {"name"="public", "description"="Must be 'true' or 'false'.  Will filter resources based on whether or not they have visibility restrictions."},
      *          {"name"="limit", "default"="20", "max": "100", "description"="Limit the number of ids to return."},
      *          {"name"="skip", "default"="0", "description"="Number of results to skip. Use this for paginating results."}
      *      }
@@ -33,9 +34,8 @@ class GetResources extends ApiController
     public function executeAction(Request $req)
     {
         $q = $req->query;
-        $apiClient = $this->getApiClient();
 
-        //create filters
+        //create raw query filters
         $filters = [];
 
         if ($ids = $q->get('id', false)) {
@@ -49,13 +49,6 @@ class GetResources extends ApiController
         }
         if ($clients = $q->get('client', false)) {
             $filters['client.id'] = explode(',', $clients);
-        } else {
-            //TODO: don't force this, it's unexpected
-            if ($c = $this->getApiClient()) {
-                $filters['client.id'] = $c->id;
-            } else {
-                //TODO: Force a client filter?
-            }
         }
         if ($clientUsers = $q->get('clientUser', false)) {
             $filters['clientUser.id'] = explode(',', $clientUsers);
@@ -64,8 +57,8 @@ class GetResources extends ApiController
         //get query builder
         $qb = $this->getRepo('AyamelResourceBundle:Resource')->getQBForResources($filters);
 
-        //langs filter is an "or", unless we decide we really have to force the client
-        //to choose exactly which language standard they want to filter on
+        //langs filter is an "or", to allow clients to simplify language
+        //queries
         if ($languages = $q->get('languages', false)) {
             $langs = explode(',', $languages);
             $qb->addAnd($qb->expr()
@@ -74,32 +67,62 @@ class GetResources extends ApiController
             );
         }
 
-        //enforce visibility filter
-        $visibilityFilter = $qb->expr();
-        //could be empty array
-        $visibilityFilter->addOr($qb->expr()->field('visibility')->size(0));
-        //may not be set at all
-        $visibilityFilter->addOr($qb->expr()->field('visibility')->exists(false));
-        //or visible by the requesting client
-        if ($apiClient) {
-            $visibilityFilter->addOr($qb->expr()->field('visibility')->equals($apiClient->getId()));
+        //check for "public" filter
+        switch ($q->get('public', null)) {
+            case null: $public = null; break;
+            case 'true': $public = true; break;
+            case 'false': $public = false; break;
+            default: throw $this->createHttpException(400, 'The "public" filter must be "true" or "false", if specified.');
         }
-        $qb->addAnd($visibilityFilter);
 
+        //enforce the visibility filter, conditional on "public" filter
+        $qb->addAnd($this->createVisibilityFilter($qb, $public));
 
         //enforce default limits/skips
-        $limit = (($l = $q->get('limit', 20)) <= 100) ? $l : 1000;
+        $limit = ($l = (int) abs($q->get('limit', 20))) <= 100 ? $l : 100;
         $qb->limit($limit);
-        $qb->skip($skip = $q->get('skip', 0));
+        $qb->skip($skip = (int) abs($q->get('skip', 0)));
 
         $results = $qb->getQuery()->execute();
 
         //assemble final content structure
         return $this->createServiceResponse([
             'total' => (int) $results->count(),
-            'limit' => (int) $limit,
-            'skip' => (int) $skip,
+            'limit' => $limit,
+            'skip' => $skip,
             'resources' => array_values(iterator_to_array($results))
         ], 200);
+    }
+
+    /**
+     * Creates the visibility query expression, which is conditional on the "public" filter.
+     */
+    private function createVisibilityFilter($qb, $public)
+    {
+        $apiClient = $this->getApiClient();
+        $expressions = [];
+        
+        //always find public resources, unless public is explicitly false
+        if (false !== $public) {
+            $expressions[] = $qb->expr()->field('visibility')->size(0);
+            $expressions[] = $qb->expr()->field('visibility')->exists(false);
+        }
+
+        //if we know the API client, and public is not explicitly true, include
+        //requesting client visibility
+        if ($apiClient && true !== $public) {
+            $expressions[] = $qb->expr()->field('visibility')->equals($apiClient->getId());
+        }
+
+        if (empty($expressions)) {
+            throw new \LogicException("Visibility filter must include at least one expression.");
+        }
+
+        $visibilityFilter = $qb->expr();
+        foreach ($expressions as $expression) {
+            $visibilityFilter->addOr($expression);
+        }
+
+        return $visibilityFilter;
     }
 }

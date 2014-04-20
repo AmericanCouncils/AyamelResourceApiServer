@@ -308,7 +308,6 @@ class SearchV1 extends ApiController
      */
     protected function createVisibilityFilter()
     {
-
         //if known, where resource.visibility null OR currentClient in resource.visibility
         $apiClient = $this->getApiClient();
 

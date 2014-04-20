@@ -40,8 +40,8 @@ class AyamelFixture extends CachedMongoFixture
         ]);
 
         $this->describe("AyamelResourceBundle:Languages", [
-            'iso639_3' => function ($f) {return array_unique($f->fake()->randomElements(['eng','rus','arq'], $f->fake()->randomNumber(0,3)));},
-            'bcp47' => function ($f) {return array_unique($f->fake()->randomElements(['en','ru','ar','fr'], $f->fake()->randomNumber(0,4)));},
+            'iso639_3' => function ($f) {return $f->fake()->randomElements(['eng','rus','arq'], $f->fake()->randomNumber(0,3));},
+            'bcp47' => function ($f) {return $f->fake()->randomElements(['en','ru','ar','fr'], $f->fake()->randomNumber(0,4));},
         ]);
 
         $this->describe("AyamelResourceBundle:ContentCollection", [
