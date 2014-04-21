@@ -45,3 +45,12 @@ parameters:
         test_client3:
             name: Flagship Media Library (Development)
             apiKey: tWZ35UyGaCNSnbMHANJf
+
+        #ignore the name similarity to the ones above - they're just
+        #from different eras of testing, accidently named similarly
+        test-client:
+            name: Test Client 1
+            apiKey: key-for-test-client-1
+        another-test-client:
+            name: Test Client 2
+            apiKey: key-for-test-client-2

@@ -26,6 +26,7 @@ class AyamelFixture extends CachedMongoFixture
             'height' => function ($f) {return $f->fake()->randomDigit(6);},
             'width' => function ($f) {return $f->fake()->randomDigit(6);}
         ]);
+
         $this->describe("AyamelResourceBundle:FileReference", [
             'downloadUri' => function ($f) {return $f->fake()->url();},
             'streamUri' => function ($f) {return $f->fake()->url();},
@@ -37,11 +38,18 @@ class AyamelFixture extends CachedMongoFixture
             'mimeType' => function ($f) {return $f->fake()->mimeType();},
             'attributes' => function ($f) {return [];},
         ]);
+
+        $this->describe("AyamelResourceBundle:Languages", [
+            'iso639_3' => function ($f) {return $f->fake()->randomElements(['eng','rus','arq'], $f->fake()->randomNumber(0,3));},
+            'bcp47' => function ($f) {return $f->fake()->randomElements(['en','ru','ar','fr'], $f->fake()->randomNumber(0,4));},
+        ]);
+
         $this->describe("AyamelResourceBundle:ContentCollection", [
             'canonicalUri' => function ($f) {return $f->fake()->url();},
             'files' => function ($f) {return $f->build(1, "AyamelResourceBundle:FileReference");},
             'oembed' => function ($f) {return $f->buildOne("AyamelResourceBundle:OEmbed");},
         ]);
+
         $this->describe("AyamelResourceBundle:Client", [
             'id' => function ($f) {return $f->fake()->randomElement(["test-client", "another-test-client"]);},
             'name' => function ($f) {return $f->fake()->randomElement(["Test Client 1","Test Client 2"]);},
@@ -71,6 +79,7 @@ class AyamelFixture extends CachedMongoFixture
             'license' => function ($f) {return $f->fake()->randomElement(['CC BY', 'CC BY-SA', 'CC BY-NC', 'CC BY-ND', 'CC BY-NC-SA', 'CC BY-NC-ND']);},
             'status' => function ($f) {return $f->fake()->randomElement(['normal','awaiting_processing','processing']);},
             'content' => function ($f) {return $f->buildOne("AyamelResourceBundle:ContentCollection");},
+            'languages' => function ($f) {return $f->buildOne('AyamelResourceBundle:Languages');},
             'client' => function ($f) use ($clients) {return $f->fake()->randomElement($clients);},
             'clientUser' => function ($f) use ($clientUsers) {return $f->fake()->randomElement($clientUsers);},
             // 'dateDeleted' => function ($f) {return $f->fake()->dateTimeBetween('now','+5 years');},
