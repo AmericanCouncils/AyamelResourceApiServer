@@ -102,43 +102,52 @@ class UriContentSubscriber implements EventSubscriberInterface
     protected function mergeResources(Resource $old, Resource $new)
     {
         //set any unset top-level properties
-        $this->mergeDocumentProperties($old, $new, array('title', 'type', 'functionalDomains', 'subjectDomains', 'license', 'copyright', 'description', 'keywords'));
+        $this->mergeDocumentProperties($old, $new, ['title', 'type', 'functionalDomains', 'subjectDomains', 'registers', 'license', 'copyright', 'description', 'keywords']);
 
         //always take newly derived content
-        $old->content = $new->content;
+        $old->setContent($new->getContent());
 
         //set origin if not previously set
         if ($old->origin) {
-            $this->mergeDocumentProperties($old->origin, $new->origin, array('creator', 'location', 'date', 'format', 'note', 'uri'));
+            $this->mergeDocumentProperties($old->getOrigin(), $new->getOrigin(), ['creator', 'location', 'date', 'format', 'note', 'uri']);
         } else {
-            $old->origin = $new->origin;
+            $old->setOrigin($new->getOrigin());
         }
 
         //set languages if not previously set
-        if ($old->languages) {
-            $this->mergeDocumentProperties($old->languages, $new->languages, array('iso639_3', 'bcp47'));
+        if ($old->getLanguages()) {
+            $this->mergeDocumentProperties($old->getLanguages(), $new->getLanguages(), ['iso639_3', 'bcp47']);
         } else {
-            $old->languages = $new->languages;
+            $old->setLanguages($new->getLanguages());
         }
 
         return $old;
     }
 
-    protected function mergeDocumentProperties($old, $new, $properties = array())
+    protected function mergeDocumentProperties($old, $new, $properties = [])
     {
+        if (get_class($old) !== get_class($new)) {
+            throw new \LogicException("Attempted to merge instances of different types.");
+        }
+
+        $reflClass = new \ReflectionClass(get_class($old));
+
         foreach ($properties as $prop) {
-            $setter = 'set'.ucfirst($prop);
-            $getter = 'get'.ucfirst($prop);
-            if (method_exists($old, $getter) && method_exists($old, $setter) && method_exists($new, $getter)) {
-                if (!$old->$getter()) {
-                    $old->$setter($new->$getter());
-                }
-            } else {
-                if (property_exists($old, $prop) && property_exists($new, $prop)) {
-                    if (!$old->$prop) {
-                        $old->$prop = $new->$prop;
-                    }
-                }
+            $reflProp = $reflClass->getProperty($prop);
+            $protected = ($reflProp->isProtected() || $reflProp->isPrivate());
+            
+            if ($protected) {
+                $reflProp->setAccessible(true);
+            }
+
+            $oldValue = $reflProp->getValue($old);
+
+            if (is_null($oldValue) || empty($oldValue)) {
+                $reflProp->setValue($old, $reflProp->getValue($new));
+            }
+
+            if ($protected) {
+                $reflProp->setAccessible(false);
             }
         }
     }
