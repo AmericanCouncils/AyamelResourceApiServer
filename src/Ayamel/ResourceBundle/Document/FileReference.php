@@ -4,6 +4,7 @@ namespace Ayamel\ResourceBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use JMS\Serializer\Annotation as JMS;
+use AC\ModelTraits\AutoGetterSetterTrait;
 
 /**
  * File reference object
@@ -14,6 +15,8 @@ use JMS\Serializer\Annotation as JMS;
  */
 class FileReference
 {
+    use AutoGetterSetterTrait;
+
     /**
      * A public URI where the file is accessible.
      *
@@ -137,66 +140,6 @@ class FileReference
     }
 
     /**
-     * Get the string describing the files representation of the associated resource
-     *
-     * @return string
-     */
-    public function getRepresentation()
-    {
-        return $this->representation;
-    }
-
-    /**
-     * Set the representation string, which can an be any of "original","summary", or "transcoding"
-     *
-     * @param string $representation
-     */
-    public function setRepresentation($representation)
-    {
-        $this->representation = $representation;
-    }
-
-    /**
-     * Get the relative quality
-     *
-     * @return null|integer
-     */
-    public function getQuality()
-    {
-        return $this->quality;
-    }
-
-    /**
-     * Set the relative quality
-     *
-     * @param int $quality
-     */
-    public function setQuality($quality)
-    {
-        $this->quality = $quality;
-    }
-
-    /**
-     * Set all attributes
-     *
-     * @param hash $attributes
-     */
-    public function setAttributes(array $attributes)
-    {
-        $this->attributes = $attributes;
-    }
-
-    /**
-     * Get all attributes
-     *
-     * @return hash $attributes
-     */
-    public function getAttributes()
-    {
-        return $this->attributes;
-    }
-
-    /**
      * Merge an array of attributes into the current set, this will overwrite conflicting keys
      * with the latest one received
      *
@@ -257,116 +200,6 @@ class FileReference
     public function hasAttribute($key)
     {
         return isset($this->attributes[$key]);
-    }
-
-    /**
-     * Set file size in bytes
-     *
-     * @param integer $bytes
-     */
-    public function setBytes($bytes)
-    {
-        $this->bytes = $bytes;
-    }
-
-    /**
-     * Get file size in bytes
-     *
-     * @return integer
-     */
-    public function getBytes()
-    {
-        return $this->bytes;
-    }
-
-    /**
-     * Set the mime string
-     *
-     * @param string $mime
-     */
-    public function setMime($mime)
-    {
-        $this->mime = $mime;
-    }
-
-    /**
-     * Returns mime string
-     *
-     * @return string
-     */
-    public function getMime()
-    {
-        return $this->mime;
-    }
-
-    public function setMimeType($mimeType)
-    {
-        $this->mimeType = $mimeType;
-    }
-
-    public function getMimeType()
-    {
-        return $this->mimeType;
-    }
-
-    /**
-     * Set downloadUri
-     *
-     * @param string $downloadUri
-     */
-    public function setDownloadUri($downloadUri)
-    {
-        $this->downloadUri = $downloadUri;
-    }
-
-    /**
-     * Get downloadUri
-     *
-     * @return string $downloadUri
-     */
-    public function getDownloadUri()
-    {
-        return $this->downloadUri;
-    }
-
-    /**
-     * Set streamUri
-     *
-     * @param string $streamUri
-     */
-    public function setStreamUri($streamUri)
-    {
-        $this->streamUri = $streamUri;
-    }
-
-    /**
-     * Get streamUri
-     *
-     * @return string $streamUri
-     */
-    public function getStreamUri()
-    {
-        return $this->streamUri;
-    }
-
-    /**
-     * Set internalUri
-     *
-     * @param string $internalUri
-     */
-    public function setInternalUri($internalUri)
-    {
-        $this->internalUri = $internalUri;
-    }
-
-    /**
-     * Get internalUri
-     *
-     * @return string $internalUri
-     */
-    public function getInternalUri()
-    {
-        return $this->internalUri;
     }
 
     /**

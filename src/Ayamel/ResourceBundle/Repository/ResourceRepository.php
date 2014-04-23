@@ -38,10 +38,14 @@ class ResourceRepository extends DocumentRepository
      */
     public function deleteResource(Resource $resource)
     {
-        //unset all fields (for now)
-        foreach (get_class_methods($resource) as $method) {
-            if (0 === strpos($method, 'set')) {
-                $resource->$method(null);
+        $whitelist = ['id'];
+        $reflObj = new \ReflectionClass($resource);
+
+        //null out all fields not in the whitelist
+        foreach ($reflObj->getProperties() as $prop) {
+            if (!in_array($prop->getName(), $whitelist)) {
+                $prop->setAccessible(true);
+                $prop->setValue($resource, null);
             }
         }
 

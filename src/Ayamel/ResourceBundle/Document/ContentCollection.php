@@ -4,6 +4,7 @@ namespace Ayamel\ResourceBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use JMS\Serializer\Annotation as JMS;
+use AC\ModelTraits\AutoGetterSetterTrait;
 
 /**
  * Content container object, contains several types of fields for referencing the content of a resource object
@@ -13,6 +14,8 @@ use JMS\Serializer\Annotation as JMS;
  */
 class ContentCollection
 {
+    use AutoGetterSetterTrait;
+
     /**
      * @MongoDB\String
      * @JMS\SerializedName("canonicalUri")
@@ -37,26 +40,6 @@ class ContentCollection
     protected $files = [];
 
     /**
-     * Set canonicalUri
-     *
-     * @param string $canonicalUri
-     */
-    public function setCanonicalUri($canonicalUri)
-    {
-        $this->canonicalUri = $canonicalUri;
-    }
-
-    /**
-     * Get canonicalUri
-     *
-     * @return string $canonicalUri
-     */
-    public function getCanonicalUri()
-    {
-        return $this->canonicalUri;
-    }
-
-    /**
      * Set oembed fields
      *
      * @param hash $oembed
@@ -64,16 +47,6 @@ class ContentCollection
     public function setOembed(OEmbed $oembed)
     {
         $this->oembed = $oembed;
-    }
-
-    /**
-     * Get Oembed fields
-     *
-     * @return hash $oembed
-     */
-    public function getOembed()
-    {
-        return $this->oembed;
     }
 
     /**
@@ -198,15 +171,4 @@ class ContentCollection
 
         return false;
     }
-
-    /**
-     * Get files
-     *
-     * @return array
-     */
-    public function getFiles()
-    {
-        return $this->files;
-    }
-
 }

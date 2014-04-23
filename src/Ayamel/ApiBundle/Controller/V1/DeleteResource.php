@@ -68,6 +68,9 @@ class DeleteResource extends ApiController
         //notify rest of system of deleted resource
         $apiDispatcher->dispatch(Events::RESOURCE_DELETED, new ResourceEvent($resource));
 
+        //unset deleted relations before returning response
+        $resource->setRelations(null);
+
         //return ok
         return $this->createServiceResponse(array('resource' => $resource), 200);
     }
