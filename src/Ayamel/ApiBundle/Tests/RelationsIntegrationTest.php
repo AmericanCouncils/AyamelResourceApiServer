@@ -442,6 +442,8 @@ class RelationsIntegrationTest extends ApiTestCase
         $data = $this->getJson('GET', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
             'CONTENT_TYPE' => 'application/json'
         ));
+
+        $this->assertTrue(in_array('total', $data));
         $this->assertSame(200, $data['response']['code']);
         $this->assertTrue(count($data['relations']) > 0);
 

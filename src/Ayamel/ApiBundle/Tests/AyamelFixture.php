@@ -84,11 +84,13 @@ class AyamelFixture extends CachedMongoFixture
             'clientUser' => function ($f) use ($clientUsers) {return $f->fake()->randomElement($clientUsers);},
             // 'dateDeleted' => function ($f) {return $f->fake()->dateTimeBetween('now','+5 years');},
         ]);
-        $this->generate(50, "AyamelResourceBundle:Relation", [
-            'subjectId' => function ($f) {return $f->fetchCorresponding("AyamelResourceBundle:Resource")->getId();},
-            'objectId' => function ($f) {return $f->fetchCorresponding("AyamelResourceBundle:Resource")->getId();},
+        $this->generate(100, "AyamelResourceBundle:Relation", [
+            'subjectId' => function ($f) {return $f->fetchRandom("AyamelResourceBundle:Resource")->getId();},
+            'objectId' => function ($f) {return $f->fetchRandom("AyamelResourceBundle:Resource")->getId();},
             'type' => function ($f) {return $f->fake()->randomElement(['based_on', 'references', 'requires', 'transcript_of', 'search', 'version_of', 'part_of', 'translation_of', 'contains']);},
             'attributes' => function ($f) {return [];},  // valid values conditional on type - could do this properly, for now just leave as empty array
+            'client' => function ($f) use ($clients) {return $f->fake()->randomElement($clients);},
+            'clientUser' => function ($f) use ($clientUsers) {return $f->fake()->randomElement($clientUsers);},
         ]);
     }
 }
