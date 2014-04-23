@@ -80,9 +80,9 @@ class RelationsController extends ApiController
         }
 
         //set limit/skip
-        $limit = $req->query->get('limit', 20);
+        $limit = ($l = (int) abs($req->query->get('limit', 20))) <= 100 ? $l : 100;
+        $skip = (int) abs($req->query->get('skip', 0));
         $qb->limit($limit);
-        $skip = $req->query->get('skip', 0);
         $qb->skip($skip);
 
         $relations = $qb->getQuery()->execute();
@@ -146,8 +146,8 @@ class RelationsController extends ApiController
         $qb = $this->getRepo('AyamelResourceBundle:Relation')->getQBForRelations($filters);
 
         //set limit/skip
-        $limit = $req->query->get('limit', 20);
-        $skip = $req->query->get('skip', 0);
+        $limit = ($l = (int) abs($req->query->get('limit', 20))) <= 100 ? $l : 100;
+        $skip = (int) abs($req->query->get('skip', 0));
         $qb->limit($limit);
         $qb->skip($skip);
 
