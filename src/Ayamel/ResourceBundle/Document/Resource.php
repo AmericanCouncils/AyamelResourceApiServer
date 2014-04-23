@@ -4,6 +4,7 @@ namespace Ayamel\ResourceBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use JMS\Serializer\Annotation as JMS;
+use AC\ModelTraits\AutoGetterSetterTrait;
 
 /**
  * Base Resource persistence class
@@ -19,6 +20,8 @@ use JMS\Serializer\Annotation as JMS;
  */
 class Resource
 {
+    use AutoGetterSetterTrait;
+
     /**
      * Status when object has no content
      */
@@ -51,7 +54,7 @@ class Resource
      * @JMS\Type("string")
      * @JMS\Groups({"search-decode"})
      */
-    protected $id;
+    private $id;
 
     /**
      * The title.
@@ -83,7 +86,7 @@ class Resource
      * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\Languages")
      * @JMS\Type("Ayamel\ResourceBundle\Document\Languages")
      */
-    public $languages;
+    public $languages = null;
 
     /**
      * An array of categories that apply to the content of the Resource.  Categories here are vetted
@@ -230,7 +233,7 @@ class Resource
      * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\Origin")
      * @JMS\Type("Ayamel\ResourceBundle\Document\Origin")
      */
-    public $origin;
+    public $origin = null;
 
     /**
      * An object containing information about the API client that created the object.
@@ -239,7 +242,7 @@ class Resource
      * @JMS\SerializedName("clientUser")
      * @JMS\Type("Ayamel\ResourceBundle\Document\ClientUser")
      */
-    public $clientUser;
+    public $clientUser = null;
 
     /**
      * An object containing information about the API client that created the Resource.
@@ -248,7 +251,7 @@ class Resource
      * @JMS\Type("Ayamel\ResourceBundle\Document\Client")
      * @JMS\Groups({"search-decode"})
      */
-    public $client;
+    public $client = null;
 
     /**
      * An object containing information about the primary content of the resource.
@@ -257,7 +260,7 @@ class Resource
      * @JMS\Type("Ayamel\ResourceBundle\Document\ContentCollection")
      * @JMS\Groups({"search-decode"})
      */
-    public $content;
+    public $content = null;
 
     /**
      * An array of Relation objects that describe the relationship between this Resource and
@@ -269,196 +272,6 @@ class Resource
     protected $relations = [];
 
     /**
-     * Get id
-     *
-     * @return id $id
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set title
-     *
-     * @param string $title
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-    }
-
-    /**
-     * Get title
-     *
-     * @return string $title
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
-
-    /**
-     * Set description
-     *
-     * @param string $description
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    }
-
-    /**
-     * Get description
-     *
-     * @return string $description
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * Set keywords
-     *
-     * @param string $keywords
-     */
-    public function setKeywords($keywords)
-    {
-        $this->keywords = $keywords;
-    }
-
-    /**
-     * Get keywords
-     *
-     * @return string $keywords
-     */
-    public function getKeywords()
-    {
-        return $this->keywords;
-    }
-
-    /**
-     * Set subject domain categories
-     *
-     * @param array $categories
-     */
-    public function setSubjectDomains(array $categories = null)
-    {
-        $this->subjectDomains = $categories;
-    }
-
-    /**
-     * Get subject domain categories
-     *
-     * @return string $categories
-     */
-    public function getSubjectDomains()
-    {
-        return $this->subjectDomains;
-    }
-
-    /**
-     * Set functional domain categories
-     *
-     * @param array $categories
-     */
-    public function setFunctionalDomains(array $categories = null)
-    {
-        $this->functionalDomains = $categories;
-    }
-
-    /**
-     * Get functional domain categories
-     *
-     * @return string $categories
-     */
-    public function getFunctionalDomains()
-    {
-        return $this->functionalDomains;
-    }
-
-    /**
-     * Get language registers present in the Resource.
-     *
-     * @return array<string>
-     */
-    public function getRegisters()
-    {
-        return $this->registers;
-    }
-
-    /**
-     * Set the language registers in the Resource.
-     *
-     * @param array $registers
-     */
-    public function setRegisters(array $registers = null)
-    {
-        $this->registers = $registers;
-    }
-
-    /**
-     * Set type
-     *
-     * @param string $type
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
-
-    /**
-     * Get type
-     *
-     * @return string $type
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * Get whether or not the Resource is a sequence of other Resources
-     *
-     * @return boolean
-     */
-    public function getSequence()
-    {
-        return $this->sequence;
-    }
-
-    /**
-     * Set whether or not the Resource is a sequence of other Resources.
-     *
-     * @param boolean $bool
-     */
-    public function setSequence($bool)
-    {
-        $this->sequence = (bool) $bool;
-    }
-
-    /**
-     * Set visibility
-     *
-     * @param array $visibility Array of client system IDs which are allowed to view the Resource
-     */
-    public function setVisibility(array $visibility = null)
-    {
-        $this->visibility = $visibility;
-    }
-
-    /**
-     * Get visibility
-     *
-     * @return array $visibility
-     */
-    public function getVisibility()
-    {
-        return $this->visibility;
-    }
-
-    /**
      * Set dateAdded
      *
      * @param date $dateAdded
@@ -466,16 +279,6 @@ class Resource
     public function setDateAdded(\DateTime $dateAdded = null)
     {
         $this->dateAdded = $dateAdded;
-    }
-
-    /**
-     * Get dateAdded
-     *
-     * @return date $dateAdded
-     */
-    public function getDateAdded()
-    {
-        return $this->dateAdded;
     }
 
     /**
@@ -489,16 +292,6 @@ class Resource
     }
 
     /**
-     * Get dateModified
-     *
-     * @return date $dateModified
-     */
-    public function getDateModified()
-    {
-        return $this->dateModified;
-    }
-
-    /**
      * Set dateDeleted
      *
      * @param date $dateDeleted
@@ -506,76 +299,6 @@ class Resource
     public function setDateDeleted(\DateTime $dateDeleted = null)
     {
         $this->dateDeleted = $dateDeleted;
-    }
-
-    /**
-     * Get dateDeleted
-     *
-     * @return date $dateDeleted
-     */
-    public function getDateDeleted()
-    {
-        return $this->dateDeleted;
-    }
-
-    /**
-     * Set copyright
-     *
-     * @param string $copyright
-     */
-    public function setCopyright($copyright)
-    {
-        $this->copyright = $copyright;
-    }
-
-    /**
-     * Get copyright
-     *
-     * @return string $copyright
-     */
-    public function getCopyright()
-    {
-        return $this->copyright;
-    }
-
-    /**
-     * Set license field
-     *
-     * @param string $license
-     */
-    public function setLicense($license)
-    {
-        $this->license = $license;
-    }
-
-    /**
-     * Get license
-     *
-     * @return string
-     */
-    public function getLicense()
-    {
-        return $this->license;
-    }
-
-    /**
-     * Set status
-     *
-     * @param string $status
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-    }
-
-    /**
-     * Get status
-     *
-     * @return string $status
-     */
-    public function getStatus()
-    {
-        return $this->status;
     }
 
     /**
@@ -589,16 +312,6 @@ class Resource
     }
 
     /**
-     * Get langauges
-     *
-     * @return Languages
-     */
-    public function getLanguages()
-    {
-        return $this->languages;
-    }
-
-    /**
      * Set the origin
      *
      * @param Origin $origin
@@ -609,16 +322,6 @@ class Resource
     }
 
     /**
-     * Get the origin
-     *
-     * @return Origin
-     */
-    public function getOrigin()
-    {
-        return $this->origin;
-    }
-
-    /**
      * Set the client
      *
      * @param Client $client
@@ -626,26 +329,6 @@ class Resource
     public function setClient(Client $client = null)
     {
         $this->client = $client;
-    }
-
-    /**
-     * Get the client
-     *
-     * @return Client
-     */
-    public function getClient()
-    {
-        return $this->client;
-    }
-
-    /**
-     * Get the optional client user
-     *
-     * @param ClientUser $user
-     */
-    public function getClientUser()
-    {
-        return $this->clientUser;
     }
 
     /**
@@ -675,16 +358,6 @@ class Resource
         }
 
         return $this;
-    }
-
-    /**
-     * Get relations
-     *
-     * @return array $relations
-     */
-    public function getRelations()
-    {
-        return $this->relations;
     }
 
     /**
@@ -727,16 +400,6 @@ class Resource
     public function setContent(ContentCollection $content = null)
     {
         $this->content = $content;
-    }
-
-    /**
-     * Get content collection
-     *
-     * @return Ayamel\ResourceBundle\Document\ContentCollection $content
-     */
-    public function getContent()
-    {
-        return $this->content;
     }
 
     /**

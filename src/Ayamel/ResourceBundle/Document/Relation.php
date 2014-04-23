@@ -4,6 +4,7 @@ namespace Ayamel\ResourceBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use JMS\Serializer\Annotation as JMS;
+use AC\ModelTraits\AutoGetterSetterTrait;
 
 /**
  * Relation object that describes a type of relationship between two resource objects.
@@ -17,6 +18,8 @@ use JMS\Serializer\Annotation as JMS;
  */
 class Relation
 {
+    use AutoGetterSetterTrait;
+
     /**
      * The unique ID of the resource.
      *
@@ -24,7 +27,7 @@ class Relation
      * @JMS\Type("string")
      * @JMS\Groups({"search-decode"})
      */
-    protected $id;
+    private $id;
 
     /**
      * The ID of the subject Resource.
@@ -90,76 +93,6 @@ class Relation
     protected $clientUser;
 
     /**
-     * Get unique id
-     *
-     * @return string
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Get subjectId
-     *
-     * @return id $subjectId
-     */
-    public function getSubjectId()
-    {
-        return $this->subjectId;
-    }
-
-    /**
-     * Set subjectId
-     *
-     * @return void
-     */
-    public function setSubjectId($id)
-    {
-        $this->subjectId = $id;
-    }
-
-    /**
-     * Get objectId
-     *
-     * @return id $objectId
-     */
-    public function getObjectId()
-    {
-        return $this->objectId;
-    }
-
-    /**
-     * Set objectId
-     *
-     * @return void
-     */
-    public function setObjectId($id)
-    {
-        $this->objectId = $id;
-    }
-
-    /**
-     * Set type
-     *
-     * @param string $type
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
-
-    /**
-     * Get type
-     *
-     * @return string $type
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
      * Set all attributes
      *
      * @param hash $attributes
@@ -167,16 +100,6 @@ class Relation
     public function setAttributes(array $attributes)
     {
         $this->attributes = $attributes;
-    }
-
-    /**
-     * Get all attributes
-     *
-     * @return hash $attributes
-     */
-    public function getAttributes()
-    {
-        return $this->attributes;
     }
 
     /**
@@ -232,16 +155,6 @@ class Relation
     }
 
     /**
-     * Get client
-     *
-     * @return Client
-     */
-    public function getClient()
-    {
-        return $this->client;
-    }
-
-    /**
      * Set the client
      *
      * @param Client $client
@@ -249,16 +162,6 @@ class Relation
     public function setClient(Client $client)
     {
         $this->client = $client;
-    }
-
-    /**
-     * Get the optional client user
-     *
-     * @param ClientUser $user
-     */
-    public function getClientUser()
-    {
-        return $this->clientUser;
     }
 
     /**

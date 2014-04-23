@@ -4,6 +4,7 @@ namespace Ayamel\ResourceBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use JMS\Serializer\Annotation as JMS;
+use AC\ModelTraits\AutoGetterSetterTrait;
 
 /**
  * This is a reference to a specific user in a client system (optional).
@@ -14,6 +15,8 @@ use JMS\Serializer\Annotation as JMS;
  */
 class ClientUser
 {
+    use AutoGetterSetterTrait;
+
     /**
      * An optional reference to an internal user of API client
      * system who uploaded the resource.  This would most likely
@@ -35,45 +38,4 @@ class ClientUser
      * @JMS\Type("string")
      */
     protected $url;
-
-    /**
-     * Set id
-     *
-     * @param string $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * Get id
-     *
-     * @return string $id
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set url
-     *
-     * @param string $url
-     */
-    public function setUrl($url)
-    {
-        $this->url = (string) $url;
-    }
-
-    /**
-     * Get uri
-     *
-     * @return string $uri
-     */
-    public function getUrl()
-    {
-        return $this->url;
-    }
-
 }
