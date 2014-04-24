@@ -33,6 +33,7 @@ class SearchIndexConsumer implements ConsumerInterface
     {
         $body = unserialize($msg->body);
         $batch = $this->container->getParameter('ayamel.search.elastica_resource_provider.batch');
+        $logger = $this->container->get('logger');
 
         try {
             if (isset($body['id'])) {
@@ -47,7 +48,6 @@ class SearchIndexConsumer implements ConsumerInterface
                 $logger->info(sprintf('Indexed multiple [%s]: %s', $body['ids'], $message));
             }
         } catch (IndexException $e) {
-            $logger = $this->container->get('logger');
 
             if ($e instanceof BulkIndexException) {
                 foreach ($e->getMessages() as $id => $message) {
