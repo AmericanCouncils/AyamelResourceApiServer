@@ -166,29 +166,27 @@ class Resource
      *
      * @MongoDB\Date
      * @JMS\SerializedName("dateAdded")
-     * @JMS\Type("DateTime")
-     * @JMS\ReadOnly
+     * @JMS\Type("DateTime<'U'>")
+     * @JMS\Groups({"search-decode"})
      */
     protected $dateAdded;
-    //TODO: use groups, but requires format fix first
 
     /**
      * The last time the Resource was modified.
      *
      * @MongoDB\Date
      * @JMS\SerializedName("dateModified")
-     * @JMS\Type("DateTime")
-     * @JMS\ReadOnly
+     * @JMS\Type("DateTime<'U'>")
+     * @JMS\Groups({"search-decode"})
      */
     protected $dateModified;
-    //TODO: use groups, but requires format fix first
 
     /**
      * The date the Resource was deleted from the database, if applicable.
      *
      * @MongoDB\Date
      * @JMS\SerializedName("dateDeleted")
-     * @JMS\Type("DateTime")
+     * @JMS\Type("DateTime<'U'>")
      * @JMS\ReadOnly
      */
     protected $dateDeleted;

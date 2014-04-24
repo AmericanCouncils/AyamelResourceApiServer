@@ -168,18 +168,23 @@ class FilterResourcesTest extends FixturedTestCase
      */
     public function testFilterLanguage()
     {
-        //TODO: fixtures aren't returning good enough values to test on this - always either the same
-        //values, or unpredictably random - once fixture issue is worked out, this test needs to be
-        //more specific
-        $this->markTestSkipped();
-        $res1 = $this->callJsonApi('GET', '/api/v1/resources?_key=key-for-test-client-2&languages=en');
-        $this->assertSame(0, $res1['total']);
+        $res = $this->callJsonApi('GET', '/api/v1/resources?_key=key-for-test-client-2&languages=en');
+        $this->assertSame(17, $res['total']);
+        foreach ($res['resources'] as $res) {
+            $this->assertTrue(in_array('en', $res['languages']['bcp47']));
+        }
 
-        $res2 = $this->callJsonApi('GET', '/api/v1/resources?_key=key-for-test-client-2&languages=rus');
-        $this->assertSame(0, $res2['total']);
+        $res = $this->callJsonApi('GET', '/api/v1/resources?_key=key-for-test-client-2&languages=rus');
+        $this->assertSame(17, $res['total']);
+        foreach ($res['resources'] as $res) {
+            $this->assertTrue(in_array('rus', $res['languages']['iso639_3']));
+        }
 
-        $res3 = $this->callJsonApi('GET', '/api/v1/resources?_key=key-for-test-client-2&languages=en,rus');
-        $this->assertSame(0, $res3['total']);
+        $res = $this->callJsonApi('GET', '/api/v1/resources?_key=key-for-test-client-2&languages=en,rus');
+        $this->assertSame(27, $res['total']);
+        foreach ($res['resources'] as $res) {
+            $this->assertTrue(in_array('en', $res['languages']['bcp47']) || in_array('rus', $res['languages']['iso639_3']));
+        }
     }
 
     /**
