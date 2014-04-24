@@ -137,7 +137,7 @@ class ResourceIndexer
      * If the Resource was deleted, it will be immediately removed from the index.
      *
      * @param  string           $id
-     * @return Elastca\Document
+     * @return Elastica\Document
      */
     protected function createResourceSearchDocumentForId($id)
     {
@@ -155,8 +155,7 @@ class ResourceIndexer
             try {
                 $this->type->deleteById($id);
             } catch (NotFoundException $e) {
-                 // We can't delete this from the index, because it's not in the index. This is okay, do nothing.
-                 // TODO: log this warning properly
+                throw new IndexException("The Resource index entry could not be found to remove.");
             }
 
             return false;

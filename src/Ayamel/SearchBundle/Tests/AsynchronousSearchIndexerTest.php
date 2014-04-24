@@ -67,7 +67,7 @@ class AsynchronousSearchIndexerTest extends SearchTest
             $tester->assertSame(200, $response->getStatusCode());
             $data = json_decode($response->getBody(), true);
             $tester->assertSame('Hamlet pwnz!', $data['_source']['title']);
-            $tester->assertFalse(isset($data['_source']['relations']));
+            $tester->assertTrue(empty($data['_source']['relations']));
         });
 
         return $resourceId;
