@@ -78,6 +78,9 @@ class GetResources extends ApiController
         //enforce the visibility filter, conditional on "public" filter
         $qb->addAnd($this->createVisibilityFilter($qb, $public));
 
+        //enforce not returning deleted resources
+        $qb->addAnd($qb->expr()->field('status')->notEqual('deleted'));
+
         //enforce default limits/skips
         $limit = ($l = (int) abs($q->get('limit', 20))) <= 100 ? $l : 100;
         $qb->limit($limit);
