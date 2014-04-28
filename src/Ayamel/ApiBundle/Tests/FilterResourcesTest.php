@@ -250,4 +250,21 @@ class FilterResourcesTest extends FixturedTestCase
         }
     }
 
+    /**
+     * @depends testShowResources
+     */
+    public function testDoesNotShowDeletedResources()
+    {
+        $res = $this->callJsonApi('GET', '/api/v1/resources?_key=key-for-test-client-2');
+        $id = $res['resources'][0]['id'];
+
+        $res = $this->callJsonApi('DELETE', '/api/v1/resources/'.$id.'?_key=key-for-test-client-2');
+        $this->assertSame(200, $res['response']['code']);
+
+        $res = $this->callJsonApi('GET', '/api/v1/resources?_key=key-for-test-client-2');
+        foreach ($res['resources'] as $res) {
+            $this->assertFalse('deleted' === $res['status']);
+        }
+    }
+
 }
