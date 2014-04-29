@@ -44,10 +44,10 @@ class SearchV1 extends ApiController
      * * **?q=colorless%20green%20dreams&filter:type=video,audio** - will return matches where
      *     the resource is either video, or audio
      *
-     * For fields that can contain multiple values, such as `subjectDomains`, there are additional ways to specify a filter.
+     * For fields that can contain multiple values, such as `topics`, there are additional ways to specify a filter.
      *
-     * * **?q=colorless%20green%20dreams&filter:subjectDomains=language,science** - will return matches where the resource contains either "language" or "science", or possibly both, as one of the values.
-     * * **?q=colorless%20green%20dreams&filter:subjectDomains[]=language&filter:subjectDomains[]=science** - will contain matches where `subjectDomains` contains *both* "language" and "science".
+     * * **?q=colorless%20green%20dreams&filter:topics=language,science** - will return matches where the resource contains either "language" or "science", or possibly both, as one of the values.
+     * * **?q=colorless%20green%20dreams&filter:topics[]=language&filter:topics[]=science** - will contain matches where `topics` contains *both* "language" and "science".
      *
      * Any field that contains multiple values can be passed as an array shown above to specify an "AND" requirement.  Otherwise, a
      * comma-delimited list of values is interpreted as an "OR" requirement.
@@ -61,7 +61,7 @@ class SearchV1 extends ApiController
      * many values, you will need to increase the size of the facet to see values with lower counts.  A few examples:
      *
      * * **?q=colorless%20green%20dreams&facet:type** - show the type facet
-     * * **?q=colorless%20green%20dreams&facet:subjectDomains=20** - show the subject domains, including value counts for the top 20 most used values
+     * * **?q=colorless%20green%20dreams&facet:topics=20** - show the topics, including value counts for the top 20 most used values
      *
      * @ApiDoc(
      *      resource=true,
@@ -75,15 +75,15 @@ class SearchV1 extends ApiController
      *          {"name"="filter:client", "description"="**Not yet implemented** Comma-delimited list of API Client ids."},
      *          {"name"="filter:clientUser", "description"="**Not yet implemented** Comma-delimited list of API Client User ids."},
      *          {"name"="filter:language", "description"="**Not yet implemented** Comma-delimited list of langauge codes.  Can be specified as an array."},
-     *          {"name"="filter:subjectDomains", "description"="Comma-delimited list of subject domains.  Can be specified as an array."},
-     *          {"name"="filter:functionalDomains", "description"="Comma-delimited list of functional domains.  Can be specified as an array."},
+     *          {"name"="filter:topics", "description"="Comma-delimited list of topics.  Can be specified as an array."},
+     *          {"name"="filter:functions", "description"="Comma-delimited list of functions.  Can be specified as an array."},
      *          {"name"="filter:registers", "description"="Comma-delimited list of registers.  Can be specified as an array."},
      *          {"name"="facet:type", "description"="Include facet for type."},
      *          {"name"="facet:client", "description"="**Not yet implemented** Include facet for client."},
      *          {"name"="facet:clientUser", "description"="**Not yet implemented** Include facet for client."},
      *          {"name"="facet:language", "description"="**Not yet implemented** Include facet for language."},
-     *          {"name"="facet:subjectDomains", "description"="Include facet for subject domains."},
-     *          {"name"="facet:functionalDomains", "description"="Include facet for functional domains."},
+     *          {"name"="facet:topics", "description"="Include facet for topics."},
+     *          {"name"="facet:functions", "description"="Include facet for functions."},
      *          {"name"="facet:registers", "description"="Include facet for registers."}
      *      }
      * )
@@ -122,19 +122,34 @@ class SearchV1 extends ApiController
         if ($filterValue = $q->get('filter:type', false)) {
             $queryFilters[] = new TermsFilter('type', explode(',', strtolower($filterValue)));
         }
-        if ($filterValue = $q->get('filter:subjectDomains', false)) {
+        if ($filterValue = $q->get('filter:topics', false)) {
             foreach ((array) $filterValue as $val) {
-                $queryFilters[] = new TermsFilter('subjectDomains', explode(',', strtolower($val)));
+                $queryFilters[] = new TermsFilter('topics', explode(',', strtolower($val)));
             }
         }
-        if ($filterValue = $q->get('filter:functionalDomains', false)) {
+        if ($filterValue = $q->get('filter:functions', false)) {
             foreach ((array) $filterValue as $val) {
-                $queryFilters[] = new TermsFilter('functionalDomains', explode(',', strtolower($val)));
+                $queryFilters[] = new TermsFilter('functions', explode(',', strtolower($val)));
             }
         }
         if ($filterValue = $q->get('filter:registers', false)) {
             foreach ((array) $filterValue as $val) {
                 $queryFilters[] = new TermsFilter('registers', explode(',', strtolower($val)));
+            }
+        }
+        if ($filterValue = $q->get('filter:authenticity', false)) {
+            foreach ((array) $filterValue as $val) {
+                $queryFilters[] = new TermsFilter('authenticity', explode(',', strtolower($val)));
+            }
+        }
+        if ($filterValue = $q->get('filter:format', false)) {
+            foreach ((array) $filterValue as $val) {
+                $queryFilters[] = new TermsFilter('format', explode(',', strtolower($val)));
+            }
+        }
+        if ($filterValue = $q->get('filter:genres', false)) {
+            foreach ((array) $filterValue as $val) {
+                $queryFilters[] = new TermsFilter('genres', explode(',', strtolower($val)));
             }
         }
         if ($filterValue = $q->get('filter:client', false)) {
@@ -168,16 +183,24 @@ class SearchV1 extends ApiController
         if ($q->has('facet:type')) {
             $queryFacets[] = $this->createFacet('type', $q->get('facet:type', false));
         }
-        if ($q->has('facet:subjectDomains')) {
-            $queryFacets[] = $this->createFacet('subjectDomains', $q->get('facet:subjectDomains', false));
+        if ($q->has('facet:topics')) {
+            $queryFacets[] = $this->createFacet('topics', $q->get('facet:topics', false));
         }
-        if ($q->has('facet:functionalDomains')) {
-            $queryFacets[] = $this->createFacet('functionalDomains', $q->get('facet:functionalDomains', false));
+        if ($q->has('facet:functions')) {
+            $queryFacets[] = $this->createFacet('functions', $q->get('facet:functions', false));
         }
         if ($q->has('facet:registers')) {
             $queryFacets[] = $this->createFacet('registers', $q->get('facet:registers', false));
         }
-
+        if ($q->has('facet:formats')) {
+            $queryFacets[] = $this->createFacet('formats', $q->get('facet:formats', false));
+        }
+        if ($q->has('facet:genres')) {
+            $queryFacets[] = $this->createFacet('genres', $q->get('facet:genres', false));
+        }
+        if ($q->has('facet:authenticity')) {
+            $queryFacets[] = $this->createFacet('authenticity', $q->get('facet:authenticity', false));
+        }
         //add all the facets to the query
         foreach ($queryFacets as $facet) {
             //the main query filter also needs to apply to any facets used
