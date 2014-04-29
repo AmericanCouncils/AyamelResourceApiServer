@@ -22,6 +22,11 @@ class GetResources extends ApiController
      *          {"name"="client", "description"="Comma separated list of API client owners. By default query returns resources owned by requesting client."},
      *          {"name"="type", "description"="Limit returned Resources to a certain type."},
      *          {"name"="status", "description"="Filter returned Resources by status."},
+     *          {"name"="genres", "description"="Filter returned Resources by genres"
+     *          {"name"="authenticity", "description"="Filter returned Resources by authenticity"
+     *          {"name"="formats", "description"="Filter returned Resources by formats"
+     *          {"name"="functions", "description"="Filter returned Resources by functions"
+     *          {"name"="topics", "description"="Filter returned Resources by topics"
      *          {"name"="clientUser", "description"="Limit returned Resources to those owned by a specific user an API client."},
      *          {"name"="languages", "description"="Limit returned Resources to those containing a specific language.  This can be specified in either the ISO 639-3 format or BCP47 format."},
      *          {"name"="public", "description"="Must be 'true' or 'false'.  Will filter resources based on whether or not they have visibility restrictions."},
@@ -46,6 +51,21 @@ class GetResources extends ApiController
         }
         if ($status = $q->get('status', false)) {
             $filters['status'] = explode(',', $status);
+        }
+        if ($genres = $q->get('genres', false)) {
+            $filters['genres'] = explode(',', $genres);
+        }
+        if ($authenticity = $q->get('authenticity', false)) {
+            $filters['authenticity'] = explode(',', $authenticity);
+        }
+        if ($formats = $q->get('formats', false)) {
+            $filters['formats'] = explode(',', $formats);
+        }
+        if ($functions = $q->get('functions', false)) {
+            $filters['functions'] = explode(',', $functions);
+        }
+        if ($topics = $q->get('topics', false)) {
+            $filters['topics'] = explode(',', $topics);
         }
         if ($clients = $q->get('client', false)) {
             $filters['client.id'] = explode(',', $clients);
