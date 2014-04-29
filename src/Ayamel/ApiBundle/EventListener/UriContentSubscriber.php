@@ -102,7 +102,7 @@ class UriContentSubscriber implements EventSubscriberInterface
     protected function mergeResources(Resource $old, Resource $new)
     {
         //set any unset top-level properties
-        $this->mergeDocumentProperties($old, $new, ['title', 'type', 'functions', 'topics', 'genres', 'authenticity', 'formats', 'registers', 'license', 'copyright', 'description', 'keywords']);
+        $this->mergeDocumentProperties($old, $new, ['title', 'type', 'functions', 'topics', 'genres', 'authenticity', 'formats', 'registers', 'license', 'copyright', 'description', 'keywords', 'subjectDomains', 'functionalDomains']);
 
         //always take newly derived content
         $old->setContent($new->getContent());
