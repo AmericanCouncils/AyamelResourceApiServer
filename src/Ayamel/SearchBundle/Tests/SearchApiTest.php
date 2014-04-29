@@ -170,6 +170,93 @@ class SearchApiTest extends FixturedTestCase
         $this->assertSame(1, count($response['result']['hits']));
     }
 
+    public function testFormatsFilter()
+    {
+        $response = $this->callJsonApi(
+            'GET',
+            'api/v1/resources/search?q=user&filter:formats=interview'
+        );
+        $this->assertSame(1, count($response['result']['hits']));
+
+        $response = $this->callJsonApi(
+            'GET',
+            'api/v1/resources/search?q=user&filter:formats=documentary'
+        );
+        $this->assertSame(3, count($response['result']['hits']));
+
+        //OR
+        $response = $this->callJsonApi(
+            'GET',
+            'api/v1/resources/search?q=user&filter:formats=interview,documentary'
+        );
+        $this->assertSame(3, count($response['result']['hits']));
+
+        //AND
+        $response = $this->callJsonApi(
+            'GET',
+            'api/v1/resources/search?q=user&filter:formats[]=interview&filter:formats[]=documentary'
+        );
+        $this->assertSame(1, count($response['result']['hits']));
+    }
+
+    public function testAuthenticityFilter()
+    {
+        $response = $this->callJsonApi(
+            'GET',
+            'api/v1/resources/search?q=user&filter:authenticity=native'
+        );
+        $this->assertSame(8, count($response['result']['hits']));
+
+        $response = $this->callJsonApi(
+            'GET',
+            'api/v1/resources/search?q=user&filter:authenticity=other'
+        );
+        $this->assertSame(4, count($response['result']['hits']));
+
+        //OR
+        $response = $this->callJsonApi(
+            'GET',
+            'api/v1/resources/search?q=user&filter:authenticity=native,other'
+        );
+        $this->assertSame(12, count($response['result']['hits']));
+
+        //AND
+        $response = $this->callJsonApi(
+            'GET',
+            'api/v1/resources/search?q=user&filter:authenticity[]=native&filter:authenticity[]=other'
+        );
+        $this->assertSame(0, count($response['result']['hits']));
+    }
+
+    public function testGenresFilter()
+    {
+        $response = $this->callJsonApi(
+            'GET',
+            'api/v1/resources/search?q=user&filter:genres=comedy'
+        );
+        $this->assertSame(3, count($response['result']['hits']));
+
+        $response = $this->callJsonApi(
+            'GET',
+            'api/v1/resources/search?q=user&filter:genres=musical'
+        );
+        $this->assertSame(3, count($response['result']['hits']));
+
+        //OR
+        $response = $this->callJsonApi(
+            'GET',
+            'api/v1/resources/search?q=user&filter:genres=comedy,musical'
+        );
+        $this->assertSame(5, count($response['result']['hits']));
+
+        //AND
+        $response = $this->callJsonApi(
+            'GET',
+            'api/v1/resources/search?q=user&filter:genres[]=comedy&filter:genres[]=musical'
+        );
+        $this->assertSame(1, count($response['result']['hits']));
+    }
+
     /**
      * @depends testSearchApi
      */
@@ -295,6 +382,42 @@ class SearchApiTest extends FixturedTestCase
 
         //test limit
         $response = $this->callJsonApi('GET', '/api/v1/resources/search?q=user&facet:registers=2');
+        $facet = $response['result']['facets'][0];
+        $this->assertSame(2, count($facet['values']));
+    }
+
+    public function testFormatsFacet()
+    {
+        $response = $this->callJsonApi('GET', 'api/v1/resources/search?q=user&facet:formats');
+        $facet = $response['result']['facets'][0];
+        $this->assertSame(10, count($facet['values']));
+        $this->assertSame('formats', $facet['field']);
+
+        $response = $this->callJsonApi('GET', 'api/v1/resources/search?q=user&facet:formats=2');
+        $facet = $response['result']['facets'][0];
+        $this->assertSame(2, count($facet['values']));
+    }
+
+    public function testAuthenticityFacet()
+    {
+        $response = $this->callJsonApi('GET', 'api/v1/resources/search?q=user&facet:authenticity');
+        $facet = $response['result']['facets'][0];
+        $this->assertSame(4, count($facet['values']));
+        $this->assertSame('authenticity', $facet['field']);
+
+        $response = $this->callJsonApi('GET', 'api/v1/resources/search?q=user&facet:authenticity=2');
+        $facet = $response['result']['facets'][0];
+        $this->assertSame(2, count($facet['values']));
+    }
+
+    public function testGenresFacet()
+    {
+        $response = $this->callJsonApi('GET', 'api/v1/resources/search?q=user&facet:genres');
+        $facet = $response['result']['facets'][0];
+        $this->assertSame(10, count($facet['values']));
+        $this->assertSame('genres', $facet['field']);
+
+        $response = $this->callJsonApi('GET', 'api/v1/resources/search?q=user&facet:genres=2');
         $facet = $response['result']['facets'][0];
         $this->assertSame(2, count($facet['values']));
     }
