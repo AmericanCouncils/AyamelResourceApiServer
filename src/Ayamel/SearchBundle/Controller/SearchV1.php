@@ -77,8 +77,14 @@ class SearchV1 extends ApiController
      *          {"name"="filter:language", "description"="**Not yet implemented** Comma-delimited list of langauge codes.  Can be specified as an array."},
      *          {"name"="filter:topics", "description"="Comma-delimited list of topics.  Can be specified as an array."},
      *          {"name"="filter:functions", "description"="Comma-delimited list of functions.  Can be specified as an array."},
+     *          {"name"="filter:authenticity", description"="Comma-delimited list of authenticity. Can be specified as an array."},
+     *          {"name"="filter:formats", description"="Comma-delimited list of formats. Can be specified as an array."},
+     *          {"name"="filter:genres", description"="Comma-delimited list of genres. Can be specified as an array."},
      *          {"name"="filter:registers", "description"="Comma-delimited list of registers.  Can be specified as an array."},
      *          {"name"="facet:type", "description"="Include facet for type."},
+     *          {"name"="facet:authenticity", description"="Include facet for authenticity."},
+     *          {"name"="facet:formats", description"="Include facet for formats."},
+     *          {"name"="facet:genres", description"="Include facet for genres."},
      *          {"name"="facet:client", "description"="**Not yet implemented** Include facet for client."},
      *          {"name"="facet:clientUser", "description"="**Not yet implemented** Include facet for client."},
      *          {"name"="facet:language", "description"="**Not yet implemented** Include facet for language."},
@@ -142,9 +148,9 @@ class SearchV1 extends ApiController
                 $queryFilters[] = new TermsFilter('authenticity', explode(',', strtolower($val)));
             }
         }
-        if ($filterValue = $q->get('filter:format', false)) {
+        if ($filterValue = $q->get('filter:formats', false)) {
             foreach ((array) $filterValue as $val) {
-                $queryFilters[] = new TermsFilter('format', explode(',', strtolower($val)));
+                $queryFilters[] = new TermsFilter('formats', explode(',', strtolower($val)));
             }
         }
         if ($filterValue = $q->get('filter:genres', false)) {
