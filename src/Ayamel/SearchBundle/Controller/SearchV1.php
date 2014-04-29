@@ -159,11 +159,7 @@ class SearchV1 extends ApiController
             }
         }
         if ($filterValue = $q->get('filter:client', false)) {
-            //TODO
-            // $f = new NestedFilter();
-            // $f->setPath('client');
-            // $f->setFilter(new TermsFilter('client.id', explode(',', strtolower($filterValue))));
-            // $queryFilters[] = $f;
+            $queryFilters[] = new TermsFilter('client.id', explode(',', strtolower($filterValue)));
         }
         if ($filterValue = $q->get('clientUser', false)) {
             //TODO

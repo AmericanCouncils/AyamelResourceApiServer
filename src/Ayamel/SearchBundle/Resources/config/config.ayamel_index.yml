@@ -14,12 +14,19 @@ parameters:
                     keywords:
                         boost: 3
                         analyzer: default
-                    # client:
-                    #     type: nested
-                    #     include_in_parent: false
-                    #     properties:
-                    #         id:
-                    #             type: string
+                    status:
+                        index: not_analyzed
+                    type:
+                        index: not_analyzed
+                    client:
+                        type: object
+                        properties:
+                            id:
+                                index: not_analyzed
+                    clientUser:
+                        type: object
+                    languages:
+                        type: object
                     content_canonical:
                         boost: 2
                         analyzer: default
