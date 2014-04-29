@@ -90,7 +90,7 @@ class Resource
 
     /**
      * Topics
-     *
+     * An array of categories that apply to the content of the Resource.
      * currently accepted topics include:
      *
      * - **arts** -
@@ -159,7 +159,7 @@ class Resource
     /**
     *
      * Functions
-     *
+     * An array of categories that apply to the linguistic properties of the Resource.
      * currently accepted functions include:
      *
      * - **explanation** -
@@ -206,11 +206,9 @@ class Resource
     protected $genres;
 
     /**
-     * An array of categories that apply to the content of the Resource.  Categories here are vetted
-     * against a list of accepted and documented categories.
-     *
-     *  **Deprecated 2014-04-28**
-     *  This is still a valid field, but it's better to use the 'topics' field for the subject of resource content.
+     * Subject Domains
+     * **Deprecated 2014-04-28**
+     * This is still a valid field, but it's better to use the 'topics' field for the subject of resource content.
      *
      * @MongoDB\Collection
      * @JMS\SerializedName("subjectDomains")
@@ -219,11 +217,9 @@ class Resource
     protected $subjectDomains;
 
     /**
-     * An array of categories that apply to the linguistic properties of the Resource.  Categories here are vetted
-     * against a list of accepted and documented categories.
-     *
-     *  **Deprecated 2014-04-28**
-     *  This is still a valid field, but it's better to use the 'functions' field for the linguistic function of resource content.
+     * Functional Domains
+     * **Deprecated 2014-04-28**
+     * This is still a valid field, but it's better to use the 'functions' field for the linguistic function of resource content.
      *
      * @MongoDB\Collection
      * @JMS\SerializedName("functionalDomains")
