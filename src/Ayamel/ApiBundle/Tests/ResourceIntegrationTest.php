@@ -67,8 +67,8 @@ class ResourceIntegrationTest extends ApiTestCase
                 'iso639_3' => array('eng', 'zho'),
                 'bcp47' => array('en', 'en-GB')
             ),
-            'subjectDomains' => array('food', 'culture', 'history'),
-            'functionalDomains' => array('verbs', 'adjectives', 'conjugation'),
+            'topics' => array('food', 'culture', 'history'),
+            'functions' => array('response', 'introduction', 'discussion'),
             'registers' => array('casual','intimate'),
             'visibility' => array('test_client', 'client1', 'client2'),
             'copyright' => "Copyright text 2013",
@@ -106,8 +106,8 @@ class ResourceIntegrationTest extends ApiTestCase
         $this->assertSame($data['description'], $json['resource']['description']);
         $this->assertSame($data['keywords'], $json['resource']['keywords']);
         $this->assertSame($data['languages'], $json['resource']['languages']);
-        $this->assertSame($data['subjectDomains'], $json['resource']['subjectDomains']);
-        $this->assertSame($data['functionalDomains'], $json['resource']['functionalDomains']);
+        $this->assertSame($data['topics'], $json['resource']['topics']);
+        $this->assertSame($data['functions'], $json['resource']['functions']);
         $this->assertSame($data['visibility'], $json['resource']['visibility']);
         $this->assertSame($data['copyright'], $json['resource']['copyright']);
         $this->assertSame($data['license'], $json['resource']['license']);
@@ -129,8 +129,8 @@ class ResourceIntegrationTest extends ApiTestCase
             'description' => 'An amazing description',
             'type' => 'data',
             'keywords' => 'foo, bar, baz',
-            'subjectDomains' => array('food', 'culture', 'history'),
-            'functionalDomains' => array('verbs', 'adjectives', 'conjugation'),
+            'topics' => array('food', 'culture', 'history'),
+            'functions' => array('response', 'introduction', 'discussion'),
             'visibility' => array('client1', 'client2'),
             'copyright' => "Copyright text 2013",
             'license' => 'Public Domain',
@@ -192,8 +192,8 @@ class ResourceIntegrationTest extends ApiTestCase
             'description' => 'An amazing description',
             'type' => 'data',
             'keywords' => 'foo, bar, baz',
-            'subjectDomains' => array('food', 'culture', 'history'),
-            'functionalDomains' => array('verbs', 'adjectives', 'conjugation'),
+            'topics' => array('food', 'culture', 'history'),
+            'functions' => array('response', 'introduction', 'discussion'),
             'visibility' => array('test_client', 'client2'),
             'copyright' => "Copyright text 2013",
             'license' => 'Public Domain',
@@ -229,8 +229,8 @@ class ResourceIntegrationTest extends ApiTestCase
         $this->assertSame($data['type'], $json['resource']['type']);
         $this->assertSame($data['description'], $json['resource']['description']);
         $this->assertSame($data['keywords'], $json['resource']['keywords']);
-        $this->assertSame($data['subjectDomains'], $json['resource']['subjectDomains']);
-        $this->assertSame($data['functionalDomains'], $json['resource']['functionalDomains']);
+        $this->assertSame($data['topics'], $json['resource']['topics']);
+        $this->assertSame($data['functions'], $json['resource']['functions']);
         $this->assertSame($data['visibility'], $json['resource']['visibility']);
         $this->assertSame($data['copyright'], $json['resource']['copyright']);
         $this->assertSame($data['license'], $json['resource']['license']);
@@ -253,8 +253,8 @@ class ResourceIntegrationTest extends ApiTestCase
         sleep(1);       //sleeping one second to force dateModified to be different
         $changes = array(
             'title' => "I CHANGED YOU!",
-            'subjectDomains' => array('food','bard'),
-            'functionalDomains' => array('adjectives', 'conjugation', 'nouns'),
+            'topics' => array('food','weather'),
+            'functions' => array('response', 'introduction', 'discussion'),
             'clientUser' => array(
                 'id' => 'transferred',
                 'url' => 'http://foo.bar'
@@ -272,8 +272,8 @@ class ResourceIntegrationTest extends ApiTestCase
         $this->assertSame($data['type'], $modified['resource']['type']);
         $this->assertSame($data['description'], $modified['resource']['description']);
         $this->assertSame($data['keywords'], $modified['resource']['keywords']);
-        $this->assertSame($changes['subjectDomains'], $modified['resource']['subjectDomains']);
-        $this->assertSame($changes['functionalDomains'], $modified['resource']['functionalDomains']);
+        $this->assertSame($changes['topics'], $modified['resource']['topics']);
+        $this->assertSame($changes['functions'], $modified['resource']['functions']);
         $this->assertSame($data['visibility'], $modified['resource']['visibility']);
         $this->assertSame($data['copyright'], $modified['resource']['copyright']);
         $this->assertSame($data['license'], $modified['resource']['license']);
@@ -294,7 +294,7 @@ class ResourceIntegrationTest extends ApiTestCase
         $prevDateModified = $modified['resource']['dateModified'];
         $changes2 = array(
             'title' => 'changed again',
-            'subjectDomains' => null,
+            'topics' => null,
             'description' => null,
         );
         $modified = $this->getJson("PUT", '/api/v1/resources/'.$resourceId."?_key=45678isafgd56789asfgdhf4567", array(), array(), array(
@@ -308,8 +308,8 @@ class ResourceIntegrationTest extends ApiTestCase
         $this->assertSame($data['type'], $modified['resource']['type']);
         $this->assertFalse(isset($modified['resource']['description']));
         $this->assertSame($data['keywords'], $modified['resource']['keywords']);
-        $this->assertFalse(isset($modified['resource']['subjectDomains']));
-        $this->assertSame($changes['functionalDomains'], $modified['resource']['functionalDomains']);
+        $this->assertFalse(isset($modified['resource']['topics']));
+        $this->assertSame($changes['functions'], $modified['resource']['functions']);
         $this->assertSame($data['visibility'], $modified['resource']['visibility']);
         $this->assertSame($data['copyright'], $modified['resource']['copyright']);
         $this->assertSame($data['license'], $modified['resource']['license']);
@@ -332,8 +332,8 @@ class ResourceIntegrationTest extends ApiTestCase
             'description' => 'An amazing description',
             'type' => 'data',
             'keywords' => 'foo, bar, baz',
-            'subjectDomains' => array('food', 'culture', 'history'),
-            'functionalDomains' => array('verbs', 'adjectives', 'conjugation'),
+            'topics' => array('food', 'culture', 'history'),
+            'functions' => array('response', 'introduction', 'discussion'),
             'visibility' => array('test_client', 'client2'),
             'copyright' => "Copyright text 2013",
             'license' => 'Public Domain',
@@ -369,8 +369,8 @@ class ResourceIntegrationTest extends ApiTestCase
         $this->assertSame($data['type'], $json['resource']['type']);
         $this->assertSame($data['description'], $json['resource']['description']);
         $this->assertSame($data['keywords'], $json['resource']['keywords']);
-        $this->assertSame($data['subjectDomains'], $json['resource']['subjectDomains']);
-        $this->assertSame($data['functionalDomains'], $json['resource']['functionalDomains']);
+        $this->assertSame($data['topics'], $json['resource']['topics']);
+        $this->assertSame($data['functions'], $json['resource']['functions']);
         $this->assertSame($data['visibility'], $json['resource']['visibility']);
         $this->assertSame($data['copyright'], $json['resource']['copyright']);
         $this->assertSame($data['license'], $json['resource']['license']);
@@ -398,8 +398,8 @@ class ResourceIntegrationTest extends ApiTestCase
         $this->assertFalse(isset($modified['resource']['description']));
         $this->assertFalse(isset($modified['resource']['type']));
         $this->assertFalse(isset($modified['resource']['keywords']));
-        $this->assertFalse(isset($modified['resource']['subjectDomains']));
-        $this->assertFalse(isset($modified['resource']['functionalDomains']));
+        $this->assertFalse(isset($modified['resource']['topics']));
+        $this->assertFalse(isset($modified['resource']['functions']));
         $this->assertFalse(isset($modified['resource']['visibility']));
         $this->assertFalse(isset($modified['resource']['copyright']));
         $this->assertFalse(isset($modified['resource']['license']));
