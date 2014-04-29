@@ -136,7 +136,7 @@ class ResourceIndexer
      * Given an ID, this will create a corresponding search document IF POSSIBLE.
      * If the Resource was deleted, it will be immediately removed from the index.
      *
-     * @param  string           $id
+     * @param  string            $id
      * @return Elastica\Document
      */
     protected function createResourceSearchDocumentForId($id)

@@ -102,7 +102,26 @@ class UriContentSubscriber implements EventSubscriberInterface
     protected function mergeResources(Resource $old, Resource $new)
     {
         //set any unset top-level properties
-        $this->mergeDocumentProperties($old, $new, ['title', 'type', 'functionalDomains', 'subjectDomains', 'registers', 'license', 'copyright', 'description', 'keywords']);
+        $this->mergeDocumentProperties(
+            $old, 
+            $new, 
+            [
+                'title',
+                'type',
+                'functions',
+                'topics',
+                'genres',
+                'authenticity',
+                'formats',
+                'registers',
+                'license',
+                'copyright',
+                'description',
+                'keywords',
+                'subjectDomains',
+                'functionalDomains'
+            ]
+        );
 
         //always take newly derived content
         $old->setContent($new->getContent());
@@ -135,7 +154,7 @@ class UriContentSubscriber implements EventSubscriberInterface
         foreach ($properties as $prop) {
             $reflProp = $reflClass->getProperty($prop);
             $protected = ($reflProp->isProtected() || $reflProp->isPrivate());
-            
+
             if ($protected) {
                 $reflProp->setAccessible(true);
             }

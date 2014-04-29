@@ -52,7 +52,7 @@ class ResourceIndexTest extends FixturedTestCase
         // The search results seem to come back in an indeterminate order,
         // so just check that some fields are present in the returned data.
         $results = $this->index->search();
-        $this->assertFalse(empty($results[0]->getData()['functionalDomains']));
+        $this->assertFalse(empty($results[0]->getData()['topics']));
 
         //hit raw ES API, expect fixtures
         $response = $this->guzzleClient->get("/$this->indexName/resource/_search")->send();

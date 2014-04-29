@@ -72,6 +72,7 @@ class YouTubeResourceProvider implements ProviderInterface
         if (isset($data['entry']['media$group']['media$description']['$t'])) {
             $res->setDescription($data['entry']['media$group']['media$description']['$t']);
         }
+        // TODO: Use topics field for each category label that validates
         if (isset($data['entry']['category'])) {
             $subjectDomains = array();
             foreach ($data['entry']['category'] as $cat) {

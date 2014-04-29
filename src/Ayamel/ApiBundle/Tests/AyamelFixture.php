@@ -67,9 +67,96 @@ class AyamelFixture extends CachedMongoFixture
             'title' => function ($f) {return $f->fake()->sentence(3);},
             'description' => function ($f) {return $f->fake()->sentence(20);},
             'keywords' => function ($f) {return $f->fake()->word() . ',' . $f->fake()->word() . ',' . $f->fake()->word();},
-            'subjectDomains' => function ($f) {return array_unique($f->fake()->randomElements(["arts", "science", "literature", "entertainment", "culture", "economy", "education", "food", "geography", "history", "news", "politics", "religion", "sports", "technology", "weather", "other"], $f->fake()->randomNumber(1,7)));},
-            'functionalDomains' => function ($f) {return array_unique($f->fake()->randomElements(['informative','presentational','interactive'], $f->fake()->randomNumber(1,2)));},
-            'registers' => function ($f) {return array_unique($f->fake()->randomElements(['formal', 'casual', 'intimate', 'static', 'consultative'], $f->fake()->randomNumber(1,3)));},
+            'topics' => function ($f) {
+                return array_unique(
+                    $f->fake()->randomElements([
+                        'arts',
+                        'entertainment',
+                        'culture',
+                        'economy',
+                        'education',
+                        'food',
+                        'geography',
+                        'history',
+                        'news',
+                        'politics',
+                        'religion',
+                        'sports',
+                        'technology',
+                        'weather',
+                        'other'
+                    ], $f->fake()->randomNumber(1,7))
+                );
+            },
+            'formats' => function ($f) {
+                return array_unique(
+                    $f->fake()->randomElements([
+                        'music',
+                        'news',
+                        'documentary',
+                        'television',
+                        'film',
+                        'radio',
+                        'skit',
+                        'interview',
+                        'role-play',
+                        'presentation',
+                        'home-conversation',
+                        'public-interaction',
+                        'grammar-lecture',
+                        'cultural-lecture',
+                        'how-to',
+                        'other'
+                    ], $f->fake()->randomNumber(1,2))
+                );
+            },
+            'authenticity' => function ($f) {
+                return array_unique(
+                    $f->fake()->randomElements(['native', 'non-native', 'learner', 'other'], 1)
+                );
+            },
+            'registers' => function ($f) {
+                return array_unique(
+                    $f->fake()->randomElements(['formal', 'casual', 'intimate', 'static', 'consultative', 'other'], $f->fake()->randomNumber(1,2))
+                );
+            },
+            'functions' => function ($f) {
+                return array_unique(
+                    $f->fake()->randomElements([
+                        'explanation',
+                        'request',
+                        'response',
+                        'persuasion',
+                        'introduction',
+                        'reporting',
+                        'discussion',
+                        'apology',
+                        'invitation',
+                        'promise',
+                        'other'
+                    ], $f->fake()->randomNumber(1,3))
+                );
+            },
+            'genres' => function ($f) {
+                return array_unique(
+                    $f->fake()->randomElements([
+                        'comedy',
+                        'drama',
+                        'horror',
+                        'history',
+                        'romance',
+                        'action',
+                        'animation',
+                        'children',
+                        'classics',
+                        'thriller',
+                        'musical',
+                        'science-fiction',
+                        'fantasy',
+                        'other'
+                    ], $f->fake()->randomNumber(1,2))
+                );
+            },
             'type' => function ($f) {return $f->fake()->randomElement(['video', 'audio', 'image', 'document', 'collection']);},
             'sequence' => function ($f) {return $f->fake()->boolean();}, //really this should be conditional on type
             'visibility' => function ($f) {return $f->fake()->randomElement([[], ['test_client2'], ['test_client2','test_client']]); },

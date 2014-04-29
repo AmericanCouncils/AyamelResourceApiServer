@@ -22,6 +22,11 @@ class GetResources extends ApiController
      *          {"name"="client", "description"="Comma separated list of API client owners. By default query returns resources owned by requesting client."},
      *          {"name"="type", "description"="Limit returned Resources to a certain type."},
      *          {"name"="status", "description"="Filter returned Resources by status."},
+     *          {"name"="genres", "description"="Filter returned Resources by genres"
+     *          {"name"="authenticity", "description"="Filter returned Resources by authenticity"
+     *          {"name"="formats", "description"="Filter returned Resources by formats"
+     *          {"name"="functions", "description"="Filter returned Resources by functions"
+     *          {"name"="topics", "description"="Filter returned Resources by topics"
      *          {"name"="clientUser", "description"="Limit returned Resources to those owned by a specific user an API client."},
      *          {"name"="languages", "description"="Limit returned Resources to those containing a specific language.  This can be specified in either the ISO 639-3 format or BCP47 format."},
      *          {"name"="public", "description"="Must be 'true' or 'false'.  Will filter resources based on whether or not they have visibility restrictions."},
@@ -39,19 +44,34 @@ class GetResources extends ApiController
         $filters = [];
 
         if ($ids = $q->get('id', false)) {
-            $filters['id'] = explode(',', $ids);
+            $filters['id'] = explode(',', strtolower($ids));
         }
         if ($type = $q->get('type', false)) {
-            $filters['type'] = explode(',', $type);
+            $filters['type'] = explode(',', strtolower($type));
         }
         if ($status = $q->get('status', false)) {
-            $filters['status'] = explode(',', $status);
+            $filters['status'] = explode(',', strtolower($status));
+        }
+        if ($genres = $q->get('genres', false)) {
+            $filters['genres'] = explode(',', strtolower($genres));
+        }
+        if ($authenticity = $q->get('authenticity', false)) {
+            $filters['authenticity'] = explode(',', strtolower($authenticity));
+        }
+        if ($formats = $q->get('formats', false)) {
+            $filters['formats'] = explode(',', strtolower($formats));
+        }
+        if ($functions = $q->get('functions', false)) {
+            $filters['functions'] = explode(',', strtolower($functions));
+        }
+        if ($topics = $q->get('topics', false)) {
+            $filters['topics'] = explode(',', strtolower($topics));
         }
         if ($clients = $q->get('client', false)) {
-            $filters['client.id'] = explode(',', $clients);
+            $filters['client.id'] = explode(',', strtolower($clients));
         }
         if ($clientUsers = $q->get('clientUser', false)) {
-            $filters['clientUser.id'] = explode(',', $clientUsers);
+            $filters['clientUser.id'] = explode(',', strtolower($clientUsers));
         }
 
         //get query builder
@@ -104,7 +124,7 @@ class GetResources extends ApiController
     {
         $apiClient = $this->getApiClient();
         $expressions = [];
-        
+
         //always find public resources, unless public is explicitly false
         if (false !== $public) {
             $expressions[] = $qb->expr()->field('visibility')->size(0);
