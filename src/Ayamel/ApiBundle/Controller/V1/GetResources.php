@@ -104,7 +104,7 @@ class GetResources extends ApiController
     {
         $apiClient = $this->getApiClient();
         $expressions = [];
-        
+
         //always find public resources, unless public is explicitly false
         if (false !== $public) {
             $expressions[] = $qb->expr()->field('visibility')->size(0);

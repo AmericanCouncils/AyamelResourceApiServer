@@ -66,21 +66,21 @@ class FilterResourcesTest extends FixturedTestCase
         $res = $this->callJsonApi('GET', '/api/v1/resources?_key=key-for-test-client-2&type=video');
         $this->assertSame(7, $res['total']);
         $this->assertSame(7, count($res['resources']));
-        foreach($res['resources'] as $res) {
+        foreach ($res['resources'] as $res) {
             $this->assertSame('video', $res['type']);
         }
 
         $res = $this->callJsonApi('GET', '/api/v1/resources?_key=key-for-test-client-2&type=audio');
         $this->assertSame(8, $res['total']);
         $this->assertSame(8, count($res['resources']));
-        foreach($res['resources'] as $res) {
+        foreach ($res['resources'] as $res) {
             $this->assertSame('audio', $res['type']);
         }
 
         $res = $this->callJsonApi('GET', '/api/v1/resources?_key=key-for-test-client-2&type=audio,video');
         $this->assertSame(15, $res['total']);
         $this->assertSame(15, count($res['resources']));
-        foreach($res['resources'] as $res) {
+        foreach ($res['resources'] as $res) {
             $this->assertTrue(in_array($res['type'], ['audio','video']));
         }
     }
@@ -121,7 +121,7 @@ class FilterResourcesTest extends FixturedTestCase
         $this->assertSame(3, $res['total']);
 
         $res = $this->callJsonApi('GET', '/api/v1/resources?_key=key-for-test-client-2&clientUser=user-1,user-2');
-        $this->assertSame(5, $res['total']);        
+        $this->assertSame(5, $res['total']);
     }
 
     /**
