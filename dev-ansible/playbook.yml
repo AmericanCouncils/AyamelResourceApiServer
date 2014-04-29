@@ -30,20 +30,24 @@
         consumer: transcoding
         symfony_env: dev
         dir: /vagrant
+        process_count: 4
     - include: common/tasks/symfony_rabbitmq_consumer.yml
       vars:
         name: ayamel-rabbitmq-consumer-search-index
         consumer: search_index
         symfony_env: dev
         dir: /vagrant
+        process_count: 1
     - file: src=/vagrant dest=/home/vagrant/ayamel-server state=link
   handlers:
     - include: common/handlers/sys.yml
     - name: restart ayamel-web-dev
       supervisorctl: name=ayamel-web-dev state=restarted
     - name: restart ayamel-rabbitmq-consumer-transcoding
-      supervisorctl: name=ayamel-rabbitmq-consumer-transcoding state=restarted
+      ignore_errors: True
+      supervisorctl: name='ayamel-rabbitmq-consumer-transcoding:' state=restarted
     - name: restart ayamel-rabbitmq-consumer-search-index
-      supervisorctl: name=ayamel-rabbitmq-consumer-search-index state=restarted
+      ignore_errors: True
+      supervisorctl: name='ayamel-rabbitmq-consumer-search-index:' state=restarted
     - name: restart rabbitmq-server
       supervisorctl: name=rabbitmq-server state=restarted
