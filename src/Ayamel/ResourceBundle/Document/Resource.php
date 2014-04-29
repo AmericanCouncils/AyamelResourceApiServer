@@ -210,6 +210,7 @@ class Resource
      * against a list of accepted and documented categories.
      *
      *  **Deprecated 2014-04-28**
+     *  This is still a valid field, but it's better to use the 'topics' field for the subject of resource content.
      *
      * @MongoDB\Collection
      * @JMS\SerializedName("subjectDomains")
@@ -222,6 +223,7 @@ class Resource
      * against a list of accepted and documented categories.
      *
      *  **Deprecated 2014-04-28**
+     *  This is still a valid field, but it's better to use the 'functions' field for the linguistic function of resource content.
      *
      * @MongoDB\Collection
      * @JMS\SerializedName("functionalDomains")
