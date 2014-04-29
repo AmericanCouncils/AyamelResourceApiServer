@@ -89,10 +89,127 @@ class Resource
     public $languages = null;
 
     /**
+     * Topics
+     *
+     * currently accepted topics include:
+     *
+     * - **arts** -
+     * - **entertainment** -
+     * - **culture** -
+     * - **economy** -
+     * - **education** -
+     * - **food** -
+     * - **geography** -
+     * - **history** -
+     * - **news** -
+     * - **politics** -
+     * - **religion** -
+     * - **sports** -
+     * - **technology** -
+     * - **weather** -
+     * - **other** -
+     * @JMS\Type("array<string>")
+     * @MongoDB\Collection
+     * @JMS\SerializedName("topics")
+     */
+    protected $topics;
+
+    /**
+     * Formats
+     *
+     * currently accepted formats include:
+     *
+     * - **music** -
+     * - **news** -
+     * - **documentary** -
+     * - **television** -
+     * - **film** -
+     * - **radio** -
+     * - **skit** -
+     * - **interview** -
+     * - **role-play** -
+     * - **presentation** -
+     * - **home-conversation** -
+     * - **public-interaction** -
+     * - **grammar-lecture** -
+     * - **cultural-lecture** -
+     * - **how-to** -
+     * - **other** -
+     * @JMS\Type("array<string>")
+     * @MongoDB\Collection
+     * @JMS\SerializedName("formats")
+     */
+    protected $formats;
+
+    /**
+     * Authenticity
+     *
+     * currently accepted authenticity includes:
+     *
+     * - **native** -
+     * - **non-native** -
+     * - **learner** -
+     * - **other** -
+     * @JMS\Type("array<string>")
+     * @MongoDB\Collection
+     * @JMS\SerializedName("authenticity")
+     */
+    protected $authenticity;
+
+    /**
+    *
+     * Functions
+     *
+     * currently accepted functions include:
+     *
+     * - **explanation** -
+     * - **request** -
+     * - **response** -
+     * - **persuasion** -
+     * - **introduction** -
+     * - **reporting** -
+     * - **discussion** -
+     * - **apology** -
+     * - **invitation** -
+     * - **promise** -
+     * - **other** -
+     *
+     * @JMS\Type("array<string>")
+     * @MongoDB\Collection
+     * @JMS\SerializedName("functions")
+     */
+    protected $functions;
+
+    /**
+     * Genres
+     *
+     * currently accepted genres include:
+     * - **comedy** -
+     * - **drama** -
+     * - **horror** -
+     * - **history** -
+     * - **romance** -
+     * - **action** -
+     * - **animation** -
+     * - **children** -
+     * - **classics** -
+     * - **thriller** -
+     * - **musical** -
+     * - **science-fiction** -
+     * - **fantasy** -
+     * - **other** -
+     *
+     * @JMS\Type("array<string>")
+     * @MongoDB\Collection
+     * @JMS\SerializedName("genres")
+     */
+    protected $genres;
+
+    /**
      * An array of categories that apply to the content of the Resource.  Categories here are vetted
      * against a list of accepted and documented categories.
      *
-     *  //TODO: document valid values
+     *  **Deprecated 2014-04-28**
      *
      * @MongoDB\Collection
      * @JMS\SerializedName("subjectDomains")
@@ -104,7 +221,7 @@ class Resource
      * An array of categories that apply to the linguistic properties of the Resource.  Categories here are vetted
      * against a list of accepted and documented categories.
      *
-     *  //TODO: document valid values
+     *  **Deprecated 2014-04-28**
      *
      * @MongoDB\Collection
      * @JMS\SerializedName("functionalDomains")
