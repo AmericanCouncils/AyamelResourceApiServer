@@ -26,10 +26,44 @@ Ayamel\ResourceBundle\Document\Resource:
                 type: string
             - Length:
                 max: 2000
-
         languages:
             - Valid: ~
-
+        topics:
+            - All:
+                - Type:
+                    type: string
+                - Choice:
+                    choices: ['arts', 'entertainment', 'culture', 'economy', 'education', 'food', 'geography', 'history', 'news', 'politics', 'religion', 'sports', 'technology', 'weather', 'other']
+        formats:
+            - All:
+                - Type:
+                    type: string
+                - Choice:
+                    choices: ['music', 'news', 'documentary', 'television', 'film', 'radio', 'skit', 'interview', 'role-play', 'presentation', 'home-conversation', 'public-interaction', 'grammar-lecture', 'cultural-lecture', 'how-to', 'other']
+        authenticity:
+            - All:
+                - Type:
+                    type: string
+                - Choice:
+                    choices: ['native', 'non-native', 'learner', 'other']
+        registers:
+            - All:
+                - Type:
+                    type: string
+                - Choice:
+                    choices: ['formal', 'casual', 'intimate', 'static', 'consultative', 'other']
+        functions:
+            - All:
+                - Type:
+                    type: string
+                - Choice:
+                    choices: ['explanation', 'request', 'response', 'persuasion', 'introduction', 'reporting', 'discussion', 'apology', 'invitation', 'promise', 'other']
+        genres:
+            - All:
+                - Type:
+                    type: string
+                - Choice:
+                    choices: ['comedy', 'drama', 'horror', 'history', 'romance', 'action', 'animation', 'children', 'classics', 'thriller', 'musical', 'science-fiction', 'fantasy', 'other']
         subjectDomains:
             - All:
                 - Type:
@@ -42,12 +76,7 @@ Ayamel\ResourceBundle\Document\Resource:
                     type: string
 #                - Choice:
 #                    choices: []
-        registers:
-            - All:
-                - Type:
-                    type: string
-                - Choice:
-                    choices: [formal, static, casual, intimate, consultative]
+
         visibility:
             - All:
                 - Type:
