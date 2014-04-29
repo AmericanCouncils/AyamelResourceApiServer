@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "1c46eadd3c8b2a233a142b6823a801ac",
+    "hash": "46c7e0de3469b960e6e7b5ca6c38e38a",
     "packages": [
         {
             "name": "ac/media-info-bundle",
@@ -961,23 +961,23 @@
         },
         {
             "name": "friendsofsymfony/elastica-bundle",
-            "version": "v3.0.0-alpha4",
+            "version": "dev-master",
             "target-dir": "FOS/ElasticaBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfSymfony/FOSElasticaBundle.git",
-                "reference": "1bc085141b5a5e368b09a57245a40883815351e7"
+                "reference": "90abc44968f9ef2ab36c869d9b5cdda184fabd03"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSElasticaBundle/zipball/1bc085141b5a5e368b09a57245a40883815351e7",
-                "reference": "1bc085141b5a5e368b09a57245a40883815351e7",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSElasticaBundle/zipball/90abc44968f9ef2ab36c869d9b5cdda184fabd03",
+                "reference": "90abc44968f9ef2ab36c869d9b5cdda184fabd03",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2",
                 "psr/log": "~1.0",
-                "ruflin/elastica": ">=0.20, <1.1-dev",
+                "ruflin/elastica": ">=0.90.2.0, <1.1-dev",
                 "symfony/console": "~2.1",
                 "symfony/form": "~2.1",
                 "symfony/framework-bundle": "~2.3",
@@ -1040,7 +1040,7 @@
                 "propel",
                 "search"
             ],
-            "time": "2014-04-10 03:14:03"
+            "time": "2014-04-20 06:01:38"
         },
         {
             "name": "fzaninotto/faker",

@@ -18,11 +18,21 @@ parameters:
                         index: not_analyzed
                     type:
                         index: not_analyzed
+                    topics:
+                        index: not_analyzed
+                    registers:
+                        index: not_analyzed
+                    functions:
+                        index: not_analyzed
+                    genres:
+                        index: not_analyzed
+                    authenticity:
+                        index: not_analyzed
                     client:
                         type: object
-                        properties:
-                            id:
-                                index: not_analyzed
+                        # properties:
+                        #     id:
+                        #         index: not_analyzed
                     clientUser:
                         type: object
                     languages:
