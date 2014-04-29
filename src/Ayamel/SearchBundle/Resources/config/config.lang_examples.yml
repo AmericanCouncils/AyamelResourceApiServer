@@ -1,4 +1,5 @@
-
+## This is an example of configuring ES w/ lots of languages... don't remember where I found it...
+## It would need to be heavily modified/customized for our use case
   analysis:
     filter:
       ar_stop_filter:

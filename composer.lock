@@ -961,17 +961,17 @@
         },
         {
             "name": "friendsofsymfony/elastica-bundle",
-            "version": "v3.0.0-alpha3",
+            "version": "v3.0.0-alpha4",
             "target-dir": "FOS/ElasticaBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfSymfony/FOSElasticaBundle.git",
-                "reference": "5855ac6fbddc53959b4f1191029f72d80627e51b"
+                "reference": "1bc085141b5a5e368b09a57245a40883815351e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSElasticaBundle/zipball/5855ac6fbddc53959b4f1191029f72d80627e51b",
-                "reference": "5855ac6fbddc53959b4f1191029f72d80627e51b",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSElasticaBundle/zipball/1bc085141b5a5e368b09a57245a40883815351e7",
+                "reference": "1bc085141b5a5e368b09a57245a40883815351e7",
                 "shasum": ""
             },
             "require": {
@@ -1040,7 +1040,7 @@
                 "propel",
                 "search"
             ],
-            "time": "2014-03-31 22:11:31"
+            "time": "2014-04-10 03:14:03"
         },
         {
             "name": "fzaninotto/faker",
