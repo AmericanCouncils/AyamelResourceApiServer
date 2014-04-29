@@ -44,34 +44,34 @@ class GetResources extends ApiController
         $filters = [];
 
         if ($ids = $q->get('id', false)) {
-            $filters['id'] = explode(',', $ids);
+            $filters['id'] = explode(',', strtolower($ids));
         }
         if ($type = $q->get('type', false)) {
-            $filters['type'] = explode(',', $type);
+            $filters['type'] = explode(',', strtolower($type));
         }
         if ($status = $q->get('status', false)) {
-            $filters['status'] = explode(',', $status);
+            $filters['status'] = explode(',', strtolower($status));
         }
         if ($genres = $q->get('genres', false)) {
-            $filters['genres'] = explode(',', $genres);
+            $filters['genres'] = explode(',', strtolower($genres));
         }
         if ($authenticity = $q->get('authenticity', false)) {
-            $filters['authenticity'] = explode(',', $authenticity);
+            $filters['authenticity'] = explode(',', strtolower($authenticity));
         }
         if ($formats = $q->get('formats', false)) {
-            $filters['formats'] = explode(',', $formats);
+            $filters['formats'] = explode(',', strtolower($formats));
         }
         if ($functions = $q->get('functions', false)) {
-            $filters['functions'] = explode(',', $functions);
+            $filters['functions'] = explode(',', strtolower($functions));
         }
         if ($topics = $q->get('topics', false)) {
-            $filters['topics'] = explode(',', $topics);
+            $filters['topics'] = explode(',', strtolower($topics));
         }
         if ($clients = $q->get('client', false)) {
-            $filters['client.id'] = explode(',', $clients);
+            $filters['client.id'] = explode(',', strtolower($clients));
         }
         if ($clientUsers = $q->get('clientUser', false)) {
-            $filters['clientUser.id'] = explode(',', $clientUsers);
+            $filters['clientUser.id'] = explode(',', strtolower($clientUsers));
         }
 
         //get query builder
