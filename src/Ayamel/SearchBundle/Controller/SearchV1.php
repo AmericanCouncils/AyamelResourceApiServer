@@ -11,8 +11,10 @@ use Ayamel\SearchBundle\Model\FacetValue;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Request;
 use JMS\Serializer\DeserializationContext;
-use Elastica\Query\QueryString as ESQueryString;
-use Elastica\Query as ESQuery;
+use Elastica\Query\QueryString;
+use Elastica\Query\SimpleQueryString;
+use Elastica\Query\MatchAll;
+use Elastica\Query as ElasticaQuery;
 use Elastica\Filter\Terms as TermsFilter;
 use Elastica\Filter\Nested as NestedFilter;
 use Elastica\Filter\Missing as MissingFilter;
@@ -33,7 +35,35 @@ class SearchV1 extends ApiController
      * available resources, as well as resources visible to the requesting client.  Searches may contain a variety
      * of filters and facets, described below.
      *
-     * ### Filters ###
+     * ## General behavior ##
+     *
+     * The purpose of the Search API is to allow easier discovery of consumable Resources. To do this, it allows 
+     * quick searching/filtering on the contents of the Library.  However, there are some major differences between
+     * the Search API, and the `GET /resources` API.
+     *
+     * * Only consumable Resources are visible in Search, meaning:
+     *     * no deleted Resources
+     *     * no Resources that have empty content
+     * * Resources may contain Relations - but only the Relations created by owning Client.
+     * * Resources of type `data`, which are meant to be consumed by programs (not people), are not stored in the index.
+     *
+     * ## Query Text ##
+     *
+     * The text to perform the query on can be specified via one of two parameters.  The `q` parameter allows query 
+     * strings in the [*SimpleQueryString*  format](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-simple-query-string-query.html#_simple_query_string_syntax)
+     * described in the ElasticSearch documentation.  Generally, this is the option that should be used, as it is 
+     * what most end-users will be familiar with from other search applications.
+     *
+     * If you specify the `s` parameter instead, the string passed will be parsed according the [*QueryString* 
+     * format](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax)
+     * described in the ElasticSearch documentation.  This option allows for more complex queries, but are more
+     * difficult to construct.
+     *
+     * If you do not specify a query string via the `q` or `s` parameter - then all visible results will be returned. In
+     * some cases, this may be preferable to using the the `GET /resources` API, for example if you want to do categorizations 
+     * of Resources using facets (described below).
+     * 
+     * ## Filters ##
      *
      * When searching, you may filter results on certain fields.  All filters are specified in the format
      * `filter:<fieldName>=<values>`. Values can be passed as comma-delimited, to specify multiple allowed
@@ -52,7 +82,7 @@ class SearchV1 extends ApiController
      * Any field that contains multiple values can be passed as an array shown above to specify an "AND" requirement.  Otherwise, a
      * comma-delimited list of values is interpreted as an "OR" requirement.
      *
-     * ### Facets ###
+     * ## Facets ##
      *
      * Facets allow you see the count of potential hits containing values for certain fields.  Facets are available for the same
      * fields that you are allowed to filter on, and are specified in the format `facet:<fieldName>`, or `facet:<fieldName>=<size>`.
@@ -68,8 +98,9 @@ class SearchV1 extends ApiController
      *      description="Search for resources",
      *      output="Ayamel\SearchBundle\Model\Result",
      *      filters={
-     *          {"name"="q", "required"="yes", "description"="The text to search on."},
-     *          {"name"="limit", "default"="10", "description"="How many results to return.  Max 100."},
+     *          {"name"="q", "description"="The text to search on. Follows the SimpleQueryString format described above."},
+     *          {"name"="s", "description"="The text to search on. Follows the QueryString format described above."},
+     *          {"name"="limit", "default"="20", "description"="How many results to return.  Max 100."},
      *          {"name"="skip", "default"="0", "description"="Which result to start at. This in combination with `limit` can be used for paginating results.  Max 1000."},
      *          {"name"="filter:type", "description"="comma-delimited list of Resource types."},
      *          {"name"="filter:client", "description"="**Not yet implemented** Comma-delimited list of API Client ids."},
@@ -97,20 +128,23 @@ class SearchV1 extends ApiController
     public function searchAction(Request $request)
     {
         $q = $request->query;
-        if (!$queryText = $q->get('q', false)) {
-            throw $this->createHttpException(400, "Searches must include a string query via the [q] parameter.");
+
+        //the actual query type depends on which filters received
+        if ($queryText = $q->get('q', false)) {
+            $queryType = new SimpleQueryString($queryText);
+        } else if ($queryText = $q->get('s', false)) {
+            $queryType = new QueryString($queryText);
+        } else {
+            $queryType = new MatchAll();
         }
 
-        //create an Elastica query, and set the text to query
-        $query = new ESQuery();
-        $queryString = new ESQueryString();
-        $queryString->setQuery($queryText);
-        $queryString->setDefaultOperator('AND');
-        $query->setQuery($queryString);
+        //create an Elastica query, and set the type of query
+        $query = new ElasticaQuery();
+        $query->setQuery($queryType);
 
         //limit and skip, with some internally enforced ranges
-        $limit = ($l = $q->get('limit', 20)) > 100 ? 100 : (int) $l;
-        $skip = ($s = $q->get('skip', 0)) > 1000 ? 1000 : (int) $s;
+        $limit = ((int) $l = $q->get('limit', 20)) > 100 ? 100 : abs($l);
+        $skip = ((int) $s = $q->get('skip', 0)) > 1000 ? 1000 : abs($s);
         $query->setFrom($skip);
         $query->setLimit($limit);
 
@@ -258,6 +292,8 @@ class SearchV1 extends ApiController
         foreach ($results as $result) {
             $hits[] = Hit::createFromArray([
                 'score' => $result->getScore(),
+
+                //'highlight' => //TODO... also include (optionally?) hit highlights?
 
                 //This looks funny, but it's basically just saying "deserialize this object
                 //from a raw array of data" (from ES).  It's called the "form" deserializer
