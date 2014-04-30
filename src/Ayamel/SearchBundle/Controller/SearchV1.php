@@ -143,8 +143,8 @@ class SearchV1 extends ApiController
         $query->setQuery($queryType);
 
         //limit and skip, with some internally enforced ranges
-        $limit = ((int) $l = $q->get('limit', 20)) > 100 ? 100 : abs($l);
-        $skip = ((int) $s = $q->get('skip', 0)) > 1000 ? 1000 : abs($s);
+        $limit = ($l = abs((int) $q->get('limit', 20))) > 100 ? 100 : $l;
+        $skip = ($s = abs((int) $q->get('skip', 0))) > 1000 ? 1000 : $s;
         $query->setFrom($skip);
         $query->setLimit($limit);
 
