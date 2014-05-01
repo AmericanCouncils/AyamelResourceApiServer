@@ -196,7 +196,7 @@ class SearchV1 extends ApiController
             $queryFilters[] = new TermsFilter('client.id', explode(',', strtolower($filterValue)));
         }
         if ($filterValue = $q->get('clientUser', false)) {
-            //TODO
+            $queryFilters[] = new TermsFilter('clientUser.id', explode(',', strtolower($filterValue)));
         }
         if ($filterValue = $q->get('filter:language', false)) {
             //TODO

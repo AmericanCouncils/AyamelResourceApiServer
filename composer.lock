@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "46c7e0de3469b960e6e7b5ca6c38e38a",
+    "hash": "af2ab99af92529405c2ae5a151cfda84",
     "packages": [
         {
             "name": "ac/media-info-bundle",
@@ -961,17 +961,17 @@
         },
         {
             "name": "friendsofsymfony/elastica-bundle",
-            "version": "dev-master",
+            "version": "dev-config",
             "target-dir": "FOS/ElasticaBundle",
             "source": {
                 "type": "git",
-                "url": "https://github.com/FriendsOfSymfony/FOSElasticaBundle.git",
-                "reference": "90abc44968f9ef2ab36c869d9b5cdda184fabd03"
+                "url": "https://github.com/evillemez/FOSElasticaBundle.git",
+                "reference": "c93bbb9081c3915e457713990c02afc700c0a933"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSElasticaBundle/zipball/90abc44968f9ef2ab36c869d9b5cdda184fabd03",
-                "reference": "90abc44968f9ef2ab36c869d9b5cdda184fabd03",
+                "url": "https://api.github.com/repos/evillemez/FOSElasticaBundle/zipball/c93bbb9081c3915e457713990c02afc700c0a933",
+                "reference": "c93bbb9081c3915e457713990c02afc700c0a933",
                 "shasum": ""
             },
             "require": {
@@ -1010,24 +1010,21 @@
                     "FOS\\ElasticaBundle": ""
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "authors": [
                 {
                     "name": "Thibault Duplessis",
-                    "email": "thibault.duplessis@gmail.com",
-                    "homepage": "http://ornicar.github.com"
-                },
-                {
-                    "name": "Jeremy Mikola",
-                    "email": "jmikola@gmail.com",
-                    "homepage": "http://jmikola.net"
+                    "email": "thibault.duplessis@gmail.com"
                 },
                 {
                     "name": "Richard Miller",
                     "email": "richard.miller@limethinking.co.uk"
+                },
+                {
+                    "name": "Jeremy Mikola",
+                    "email": "jmikola@gmail.com"
                 }
             ],
             "description": "Elasticsearch PHP integration for your Symfony2 project using Elastica",
@@ -1040,7 +1037,10 @@
                 "propel",
                 "search"
             ],
-            "time": "2014-04-20 06:01:38"
+            "support": {
+                "source": "https://github.com/evillemez/FOSElasticaBundle/tree/config"
+            },
+            "time": "2014-05-01 15:05:16"
         },
         {
             "name": "fzaninotto/faker",

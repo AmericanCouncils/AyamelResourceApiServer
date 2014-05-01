@@ -4,6 +4,9 @@ parameters:
         client: default
         types:
             resource:
+
+                #NOTE: in the raw ES api, this property is called "properties" - for some reason in the ElasticaBundle
+                #at the top level they called it "mappings"
                 mappings:
                     title:
                         boost: 5
@@ -30,9 +33,9 @@ parameters:
                         index: not_analyzed
                     client:
                         type: object
-                        # properties:
-                        #     id:
-                        #         index: not_analyzed
+                        properties:
+                            id:
+                                index: not_analyzed
                     clientUser:
                         type: object
                     languages:
@@ -130,10 +133,10 @@ parameters:
                     content_tha:
                         boost: 1
                         analyzer: default
-        settings:
-            index:
-                analysis:
-                    analyzer:
-                        default:
-                            type: standard
-                    #filter:
+        # settings:
+        #     index:
+        #         analysis:
+        #             analyzer:
+        #                 default:
+        #                     type: standard
+        #             filter:

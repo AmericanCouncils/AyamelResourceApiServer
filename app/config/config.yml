@@ -143,8 +143,6 @@ old_sound_rabbit_mq:
 fos_elastica:
     clients:
         default: { host: %elasticsearch_host%, port: %elasticsearch_port% }
-    serializer:
-        callback_class: FOS\ElasticaBundle\Serializer\Callback
-        serializer: serializer
+    serializer: ~
     indexes:
         ayamel: %ayamel.search.ayamel_index%

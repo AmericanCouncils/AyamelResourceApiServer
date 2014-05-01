@@ -13,6 +13,12 @@
     },
     "minimum-stability": "beta",
     "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/evillemez/FOSElasticaBundle"
+        }
+    ],
     "require": {
         "php": ">=5.4.0",
         "ext-apcu": "*",
@@ -33,7 +39,7 @@
         "jms/serializer-bundle": "0.13.*",
         "ac/web-services-bundle": "0.3.*",
         "ac/media-info-bundle": "1.2.*",
-        "friendsofsymfony/elastica-bundle": "dev-master",
+        "friendsofsymfony/elastica-bundle": "dev-config",
         "ornicar/apc-bundle": "1.0.*",
         "ac/model-traits-bundle": "0.1.*"
     },
