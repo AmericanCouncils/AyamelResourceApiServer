@@ -148,12 +148,6 @@ class SearchV1 extends ApiController
         $query->setFrom($skip);
         $query->setLimit($limit);
 
-        //TODO: nested field filters
-        //  * resource.client.id
-        //  * resource.clientUser.id
-        //  * resource.language
-        //    * languages.iso639_3 OR langauges.bcp47
-
         //create query filters, always enforcing a visibility filter
         $queryFilters = [$this->createVisibilityFilter()];
 
@@ -212,10 +206,6 @@ class SearchV1 extends ApiController
         $queryFilter = (new BoolAndFilter())->setFilters($queryFilters);
         $query->setFilter($queryFilter);
 
-        //TODO: nested field facets
-        //  * resource.client.id
-        //  * resource.clientUser.id
-        //  * resource.language ... how to do this, really?
         $queryFacets = [];
         if ($q->has('facet:type')) {
             $queryFacets[] = $this->createFacet('type', $q->get('facet:type', false));
@@ -238,6 +228,16 @@ class SearchV1 extends ApiController
         if ($q->has('facet:authenticity')) {
             $queryFacets[] = $this->createFacet('authenticity', $q->get('facet:authenticity', false));
         }
+        if ($q->has('facet:client')) {
+            $queryFacets[] = $this->createFacet('client.id', $q->get('facet:client', false), 'client');
+        }
+        if ($q->has('facet:clientUser')) {
+            $queryFacets[] = $this->createFacet('clientUser.id', $q->get('facet:clientUser', false), 'clientUser');
+        }
+        if ($q->has('facet:languages')) {
+            $queryFacets[] = $this->createFacet(['languages.iso639_3','languages.bcp47'], $q->get('facet:languages', false), 'languages');
+        }
+
         //add all the facets to the query
         foreach ($queryFacets as $facet) {
             //the main query filter also needs to apply to any facets used
@@ -267,16 +267,28 @@ class SearchV1 extends ApiController
     /**
      * Create Elastica facet, enforcing a default size.
      *
-     * @param  string     $fieldName
-     * @param  int|null   $size
+     * @param  string|array     $fields
+     * @param  int|null         $size
      * @return TermsFacet
      */
-    private function createFacet($fieldName, $size)
+    private function createFacet($fields, $size, $name = false)
     {
-        $facet = (new TermsFacet($fieldName))->setField($fieldName);
+        $facet = new TermsFacet($name ? $name : $fields);
+
+        if (is_array($fields)) {
+            $facet->setFields($fields);
+        } else {
+            $facet->setField($fields);
+        }
+
         $facet->setSize($size ? $size : 10);
 
         return $facet;
+    }
+
+    private function transformFacetFieldName($facetName)
+    {
+        return $facetName;
     }
 
     /**
