@@ -1,5 +1,6 @@
 imports:
     - { resource: "@AyamelSearchBundle/Resources/config/config.ayamel_index.yml" }
+    - { resource: "@AyamelSearchBundle/Resources/config/config.lang_mappings.yml" }
 
 parameters:
     ayamel.search.elastica_resource_provider.batch: 100
