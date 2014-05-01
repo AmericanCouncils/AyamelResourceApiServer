@@ -4,6 +4,22 @@ parameters:
         client: default
         types:
             resource:
+                dynamic_templates:
+                    tmpl_content:
+                        match: content.*
+                        mapping:
+                            store: true
+                            index: no
+                    tmpl_relations:
+                        match: relations.*
+                        mapping:
+                            store: true
+                            index: no
+                    tmpl_content_text:
+                        match: content_*
+                        mapping:
+                            store: false
+                            index: analyzed
 
                 #NOTE: in the raw ES api, this property is called "properties" - for some reason in the ElasticaBundle
                 #at the top level they called it "mappings"
@@ -31,15 +47,35 @@ parameters:
                         index: not_analyzed
                     authenticity:
                         index: not_analyzed
+                    visibility:
+                        index: not_analyzed
+                    license:
+                        index: not_analyzed
+                    copyright:
+                        index: not_analyzed
                     client:
                         type: object
                         properties:
                             id:
                                 index: not_analyzed
+                            uri:
+                                store: true
+                                index: no
                     clientUser:
                         type: object
+                        properties:
+                            id:
+                                index: not_analyzed
+                            url:
+                                store: yes
+                                index: no
                     languages:
                         type: object
+                        properties:
+                            iso639_3:
+                                index: not_analyzed
+                            bcp47:
+                                index: not_analyzed
                     content_canonical:
                         boost: 2
                         analyzer: default
