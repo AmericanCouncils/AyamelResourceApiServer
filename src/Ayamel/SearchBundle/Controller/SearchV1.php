@@ -16,7 +16,6 @@ use Elastica\Query\SimpleQueryString;
 use Elastica\Query\MatchAll;
 use Elastica\Query as ElasticaQuery;
 use Elastica\Filter\Terms as TermsFilter;
-use Elastica\Filter\Nested as NestedFilter;
 use Elastica\Filter\Missing as MissingFilter;
 use Elastica\Filter\BoolOr as BoolOrFilter;
 use Elastica\Filter\BoolAnd as BoolAndFilter;
@@ -37,7 +36,7 @@ class SearchV1 extends ApiController
      *
      * ## General behavior ##
      *
-     * The purpose of the Search API is to allow easier discovery of consumable Resources. To do this, it allows 
+     * The purpose of the Search API is to allow easier discovery of consumable Resources. To do this, it allows
      * quick searching/filtering on the contents of the Library.  However, there are some major differences between
      * the Search API, and the `GET /resources` API.
      *
@@ -49,20 +48,20 @@ class SearchV1 extends ApiController
      *
      * ## Query Text ##
      *
-     * The text to perform the query on can be specified via one of two parameters.  The `q` parameter allows query 
+     * The text to perform the query on can be specified via one of two parameters.  The `q` parameter allows query
      * strings in the [*SimpleQueryString*  format](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-simple-query-string-query.html#_simple_query_string_syntax)
-     * described in the ElasticSearch documentation.  Generally, this is the option that should be used, as it is 
+     * described in the ElasticSearch documentation.  Generally, this is the option that should be used, as it is
      * what most end-users will be familiar with from other search applications.
      *
-     * If you specify the `s` parameter instead, the string passed will be parsed according the [*QueryString* 
+     * If you specify the `s` parameter instead, the string passed will be parsed according the [*QueryString*
      * format](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax)
      * described in the ElasticSearch documentation.  This option allows for more complex queries, but are more
      * difficult to construct.
      *
      * If you do not specify a query string via the `q` or `s` parameter - then all visible results will be returned. In
-     * some cases, this may be preferable to using the the `GET /resources` API, for example if you want to do categorizations 
+     * some cases, this may be preferable to using the the `GET /resources` API, for example if you want to do categorizations
      * of Resources using facets (described below).
-     * 
+     *
      * ## Filters ##
      *
      * When searching, you may filter results on certain fields.  All filters are specified in the format
@@ -132,7 +131,7 @@ class SearchV1 extends ApiController
         //the actual query type depends on which filters received
         if ($queryText = $q->get('q', false)) {
             $queryType = new SimpleQueryString($queryText);
-        } else if ($queryText = $q->get('s', false)) {
+        } elseif ($queryText = $q->get('s', false)) {
             $queryType = new QueryString($queryText);
         } else {
             $queryType = new MatchAll();
@@ -267,8 +266,8 @@ class SearchV1 extends ApiController
     /**
      * Create Elastica facet, enforcing a default size.
      *
-     * @param  string|array     $fields
-     * @param  int|null         $size
+     * @param  string|array $fields
+     * @param  int|null     $size
      * @return TermsFacet
      */
     private function createFacet($fields, $size, $name = false)

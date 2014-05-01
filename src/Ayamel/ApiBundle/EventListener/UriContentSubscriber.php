@@ -103,8 +103,8 @@ class UriContentSubscriber implements EventSubscriberInterface
     {
         //set any unset top-level properties
         $this->mergeDocumentProperties(
-            $old, 
-            $new, 
+            $old,
+            $new,
             [
                 'title',
                 'type',
