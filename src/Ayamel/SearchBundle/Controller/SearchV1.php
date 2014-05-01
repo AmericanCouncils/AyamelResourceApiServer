@@ -92,7 +92,6 @@ class SearchV1 extends ApiController
      * * **?q=colorless%20green%20dreams&facet:type** - show the type facet
      * * **?q=colorless%20green%20dreams&facet:topics=20** - show the topics, including value counts for the top 20 most used values
      *
-     * End.
      *
      * @ApiDoc(
      *      resource=true,

@@ -558,7 +558,6 @@ class SearchApiTest extends FixturedTestCase
         $this->assertSame(1, count($facet['values']));
     }
 
-
     /**
      * @depends testSearchApi
      */
