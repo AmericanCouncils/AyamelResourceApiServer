@@ -187,6 +187,9 @@ class SearchApiTest extends FixturedTestCase
         $this->assertSame(1, count($response['result']['hits']));
     }
 
+    /**
+     * @depends testSearchApi
+     */
     public function testFormatsFilter()
     {
         $response = $this->callJsonApi(
@@ -216,6 +219,9 @@ class SearchApiTest extends FixturedTestCase
         $this->assertSame(1, count($response['result']['hits']));
     }
 
+    /**
+     * @depends testSearchApi
+     */
     public function testAuthenticityFilter()
     {
         $response = $this->callJsonApi(
@@ -245,6 +251,9 @@ class SearchApiTest extends FixturedTestCase
         $this->assertSame(0, count($response['result']['hits']));
     }
 
+    /**
+     * @depends testSearchApi
+     */
     public function testGenresFilter()
     {
         $response = $this->callJsonApi(
@@ -279,14 +288,29 @@ class SearchApiTest extends FixturedTestCase
      */
     public function testClientFilter()
     {
-        $this->markTestSkipped();
+        $response = $this->callJsonApi('GET', '/api/v1/resources/search?&filter:client=test-client');
+        $this->assertSame(6, count($response['result']['hits']));
+
         $response = $this->callJsonApi('GET', '/api/v1/resources/search?&filter:client=another-test-client');
-        $this->assertSame(3, count($response['result']['hits']));
+        $this->assertSame(10, count($response['result']['hits']));
+
+        $response = $this->callJsonApi('GET', '/api/v1/resources/search?&filter:client=test-client,another-test-client');
+        $this->assertSame(16, count($response['result']['hits']));
     }
 
+    /**
+     * @depends testSearchApi
+     */
     public function testClientUserFilter()
     {
-        $this->markTestSkipped();
+        $response = $this->callJsonApi('GET', '/api/v1/resources/search?&filter:clientUser=user-6');
+        $this->assertSame(7, count($response['result']['hits']));
+
+        $response = $this->callJsonApi('GET', '/api/v1/resources/search?&filter:clientUser=user-10');
+        $this->assertSame(3, count($response['result']['hits']));
+
+        $response = $this->callJsonApi('GET', '/api/v1/resources/search?&filter:clientUser=user-6,user-10');
+        $this->assertSame(10, count($response['result']['hits']));
     }
 
     /**
@@ -294,7 +318,24 @@ class SearchApiTest extends FixturedTestCase
      */
     public function testLanguageFilter()
     {
-        $this->markTestSkipped();
+        $response = $this->callJsonApi('GET', '/api/v1/resources/search?&filter:languages=eng');
+        $this->assertSame(8, count($response['result']['hits']));
+
+        $response = $this->callJsonApi('GET', '/api/v1/resources/search?&filter:languages=ru');
+        $this->assertSame(10, count($response['result']['hits']));
+
+        //and
+        $response = $this->callJsonApi('GET', '/api/v1/resources/search?&filter:languages=ru,eng');
+        $this->assertSame(12, count($response['result']['hits']));
+
+        //or (has both english & russian)
+        $response = $this->callJsonApi('GET', '/api/v1/resources/search?&filter:languages[]=eng,rus&filter:languages[]=en,ru');
+        $this->assertSame(8, count($response['result']['hits']));
+        foreach ($response['result']['hits'] as $hit) {
+            $langs = $hit['resource']['languages'];
+            $this->assertTrue(in_array('en', $langs['bcp47']) || in_array('ru', $langs['bcp47']));
+            $this->assertTrue(in_array('eng', $langs['iso639_3']) || in_array('rus', $langs['iso639_3']));
+        }
     }
 
     /**
@@ -320,6 +361,9 @@ class SearchApiTest extends FixturedTestCase
         $this->assertTrue(in_array('politics', $hit['topics']));
     }
 
+    /**
+     * @depends testSearchApi
+     */
     public function testEmptyFacets()
     {
         $response = $this->callJsonApi('GET', '/api/v1/resources/search?');
@@ -365,6 +409,9 @@ class SearchApiTest extends FixturedTestCase
         $this->assertSame(2, count($facet['values']));
     }
 
+    /**
+     * @depends testSearchApi
+     */
     public function testMultipleFacets()
     {
         $response = $this->callJsonApi('GET', '/api/v1/resources/search?&facet:type&facet:topics');
@@ -403,6 +450,9 @@ class SearchApiTest extends FixturedTestCase
         $this->assertSame(2, count($facet['values']));
     }
 
+    /**
+     * @depends testSearchApi
+     */
     public function testFormatsFacet()
     {
         $response = $this->callJsonApi('GET', 'api/v1/resources/search?&facet:formats');
@@ -415,6 +465,9 @@ class SearchApiTest extends FixturedTestCase
         $this->assertSame(2, count($facet['values']));
     }
 
+    /**
+     * @depends testSearchApi
+     */
     public function testAuthenticityFacet()
     {
         $response = $this->callJsonApi('GET', 'api/v1/resources/search?&facet:authenticity');
@@ -427,6 +480,9 @@ class SearchApiTest extends FixturedTestCase
         $this->assertSame(2, count($facet['values']));
     }
 
+    /**
+     * @depends testSearchApi
+     */
     public function testGenresFacet()
     {
         $response = $this->callJsonApi('GET', 'api/v1/resources/search?&facet:genres');

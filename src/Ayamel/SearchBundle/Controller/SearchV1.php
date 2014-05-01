@@ -195,16 +195,17 @@ class SearchV1 extends ApiController
         if ($filterValue = $q->get('filter:client', false)) {
             $queryFilters[] = new TermsFilter('client.id', explode(',', strtolower($filterValue)));
         }
-        if ($filterValue = $q->get('clientUser', false)) {
-            $queryFilters[] = new TermsFilter('clientUser.id', explode(',', strtolower($filterValue)));
+        if ($filterValue = $q->get('filter:clientUser', false)) {
+            $queryFilters[] = new TermsFilter('clientUser.id', explode(',', $filterValue));
         }
-        if ($filterValue = $q->get('filter:language', false)) {
-            //TODO
-            // $filterValue = explode(',', strtolower($filterValue));
-            // $queryFilters[] = (new BoolOrFilter())
-            //     ->addFilter(new TermsFilter('languages.iso639_3', $langs))
-            //     ->addFilter(new TermsFilter('languages.bcp47', $langs))
-            // ;
+        if ($filterValue = $q->get('filter:languages', false)) {
+            foreach ((array) $filterValue as $val) {
+                $langs = explode(',', strtolower($val));
+                $queryFilters[] = (new BoolOrFilter())
+                    ->addFilter(new TermsFilter('languages.iso639_3', $langs))
+                    ->addFilter(new TermsFilter('languages.bcp47', $langs))
+                ;
+            }
         }
 
         //add all the filters to the query
