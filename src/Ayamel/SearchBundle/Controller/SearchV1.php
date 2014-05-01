@@ -92,6 +92,8 @@ class SearchV1 extends ApiController
      * * **?q=colorless%20green%20dreams&facet:type** - show the type facet
      * * **?q=colorless%20green%20dreams&facet:topics=20** - show the topics, including value counts for the top 20 most used values
      *
+     * End.
+     *
      * @ApiDoc(
      *      resource=true,
      *      description="Search for resources",
@@ -102,9 +104,10 @@ class SearchV1 extends ApiController
      *          {"name"="limit", "default"="20", "description"="How many results to return.  Max 100."},
      *          {"name"="skip", "default"="0", "description"="Which result to start at. This in combination with `limit` can be used for paginating results.  Max 1000."},
      *          {"name"="filter:type", "description"="comma-delimited list of Resource types."},
-     *          {"name"="filter:client", "description"="**Not yet implemented** Comma-delimited list of API Client ids."},
-     *          {"name"="filter:clientUser", "description"="**Not yet implemented** Comma-delimited list of API Client User ids."},
-     *          {"name"="filter:language", "description"="**Not yet implemented** Comma-delimited list of langauge codes.  Can be specified as an array."},
+     *          {"name"="filter:license", "description"="comma-delimited list of licenses."},
+     *          {"name"="filter:client", "description"="Comma-delimited list of API Client ids."},
+     *          {"name"="filter:clientUser", "description"="Comma-delimited list of API Client User ids."},
+     *          {"name"="filter:language", "description"="Comma-delimited list of langauge codes.  Can be specified as an array."},
      *          {"name"="filter:topics", "description"="Comma-delimited list of topics.  Can be specified as an array."},
      *          {"name"="filter:functions", "description"="Comma-delimited list of functions.  Can be specified as an array."},
      *          {"name"="filter:authenticity", description"="Comma-delimited list of authenticity. Can be specified as an array."},
@@ -112,12 +115,13 @@ class SearchV1 extends ApiController
      *          {"name"="filter:genres", description"="Comma-delimited list of genres. Can be specified as an array."},
      *          {"name"="filter:registers", "description"="Comma-delimited list of registers.  Can be specified as an array."},
      *          {"name"="facet:type", "description"="Include facet for type."},
+     *          {"name"="facet:license", "description"="Include facet for license."},
      *          {"name"="facet:authenticity", description"="Include facet for authenticity."},
      *          {"name"="facet:formats", description"="Include facet for formats."},
      *          {"name"="facet:genres", description"="Include facet for genres."},
-     *          {"name"="facet:client", "description"="**Not yet implemented** Include facet for client."},
-     *          {"name"="facet:clientUser", "description"="**Not yet implemented** Include facet for client."},
-     *          {"name"="facet:language", "description"="**Not yet implemented** Include facet for language."},
+     *          {"name"="facet:client", "description"="Include facet for client."},
+     *          {"name"="facet:clientUser", "description"="Include facet for client."},
+     *          {"name"="facet:language", "description"="Include facet for language."},
      *          {"name"="facet:topics", "description"="Include facet for topics."},
      *          {"name"="facet:functions", "description"="Include facet for functions."},
      *          {"name"="facet:registers", "description"="Include facet for registers."}
@@ -154,6 +158,9 @@ class SearchV1 extends ApiController
 
         if ($filterValue = $q->get('filter:type', false)) {
             $queryFilters[] = new TermsFilter('type', explode(',', strtolower($filterValue)));
+        }
+        if ($filterValue = $q->get('filter:license', false)) {
+            $queryFilters[] = new TermsFilter('license', explode(',', strtoupper($filterValue)));
         }
         if ($filterValue = $q->get('filter:topics', false)) {
             foreach ((array) $filterValue as $val) {
@@ -208,6 +215,9 @@ class SearchV1 extends ApiController
         $queryFacets = [];
         if ($q->has('facet:type')) {
             $queryFacets[] = $this->createFacet('type', $q->get('facet:type', false));
+        }
+        if ($q->has('facet:license')) {
+            $queryFacets[] = $this->createFacet('license', $q->get('facet:license', false));
         }
         if ($q->has('facet:topics')) {
             $queryFacets[] = $this->createFacet('topics', $q->get('facet:topics', false));

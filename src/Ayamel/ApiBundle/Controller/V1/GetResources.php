@@ -21,6 +21,7 @@ class GetResources extends ApiController
      *          {"name"="id", "description"="Comma separated list of IDs for specific Resources to fetch."},
      *          {"name"="client", "description"="Comma separated list of API client owners. By default query returns resources owned by requesting client."},
      *          {"name"="type", "description"="Limit returned Resources to a certain type."},
+     *          {"name"="license", "description"="Limit returned Resources to a certain license."},
      *          {"name"="status", "description"="Filter returned Resources by status."},
      *          {"name"="genres", "description"="Filter returned Resources by genres"
      *          {"name"="authenticity", "description"="Filter returned Resources by authenticity"
@@ -66,6 +67,9 @@ class GetResources extends ApiController
         }
         if ($topics = $q->get('topics', false)) {
             $filters['topics'] = explode(',', strtolower($topics));
+        }
+        if ($license = $q->get('license', false)) {
+            $filters['license'] = explode(',', strtoupper($license));
         }
         if ($clients = $q->get('client', false)) {
             $filters['client.id'] = explode(',', strtolower($clients));

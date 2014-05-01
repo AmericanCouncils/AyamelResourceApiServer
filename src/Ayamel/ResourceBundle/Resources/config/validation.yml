@@ -68,14 +68,14 @@ Ayamel\ResourceBundle\Document\Resource:
             - All:
                 - Type:
                     type: string
-#                - Choice:
-#                    choices: []
+                - Length:
+                    max: 100
         functionalDomains:
             - All:
                 - Type:
                     type: string
-#                - Choice:
-#                    choices: []
+                - Length:
+                    max: 100
 
         visibility:
             - All:
@@ -91,8 +91,8 @@ Ayamel\ResourceBundle\Document\Resource:
         license:
             - Type:
                 type: string
-            - Length:
-                max: 500
+            - Choice:
+                choices: ['CC BY','CC BY-ND','CC BY-NC','CC BY-SA','CC BY-NC-SA','CC BY-NC-ND']
         origin:
             - Valid: ~
         client:
