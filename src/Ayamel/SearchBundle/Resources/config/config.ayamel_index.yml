@@ -1,0 +1,178 @@
+parameters:
+    ayamel.search.ayamel_index:
+        index_name: %elasticsearch_index%
+        client: default
+        types:
+            resource:
+                dynamic_templates:
+                    tmpl_content:
+                        match: content.*
+                        mapping:
+                            store: true
+                            index: no
+                    tmpl_relations:
+                        match: relations.*
+                        mapping:
+                            store: true
+                            index: no
+                    tmpl_content_text:
+                        match: content_*
+                        mapping:
+                            store: false
+                            index: analyzed
+
+                #NOTE: in the raw ES api, this property is called "properties" - for some reason in the ElasticaBundle
+                #at the top level they called it "mappings"
+                mappings:
+                    title:
+                        boost: 5
+                        analyzer: default
+                    description:
+                        boost: 4
+                        analyzer: default
+                    keywords:
+                        boost: 3
+                        analyzer: default
+                    status:
+                        index: not_analyzed
+                    type:
+                        index: not_analyzed
+                    topics:
+                        index: not_analyzed
+                    registers:
+                        index: not_analyzed
+                    functions:
+                        index: not_analyzed
+                    genres:
+                        index: not_analyzed
+                    authenticity:
+                        index: not_analyzed
+                    visibility:
+                        index: not_analyzed
+                    license:
+                        index: not_analyzed
+                    copyright:
+                        index: not_analyzed
+                    client:
+                        type: object
+                        properties:
+                            id:
+                                index: not_analyzed
+                            uri:
+                                store: true
+                                index: no
+                    clientUser:
+                        type: object
+                        properties:
+                            id:
+                                index: not_analyzed
+                            url:
+                                store: yes
+                                index: no
+                    languages:
+                        type: object
+                        properties:
+                            iso639_3:
+                                index: not_analyzed
+                            bcp47:
+                                index: not_analyzed
+                    content_canonical:
+                        boost: 2
+                        analyzer: default
+                    content_ara:
+                        boost: 1
+                        analyzer: default
+                    content_arm:
+                        boost: 1
+                        analyzer: default
+                    content_baq:
+                        boost: 1
+                        analyzer: default
+                    content_brz:
+                        boost: 1
+                        analyzer: default
+                    content_bul:
+                        boost: 1
+                        analyzer: default
+                    content_cat:
+                        boost: 1
+                        analyzer: default
+                    content_zho:
+                        boost: 1
+                        analyzer: default
+                    content_cjk:
+                        boost: 1
+                        analyzer: default
+                    content_ces:
+                        boost: 1
+                        analyzer: default
+                    content_dan:
+                        boost: 1
+                        analyzer: default
+                    content_dut:
+                        boost: 1
+                        analyzer: default
+                    content_eng:
+                        boost: 1
+                        analyzer: default
+                    content_fin:
+                        boost: 1
+                        analyzer: default
+                    content_fra:
+                        boost: 1
+                        analyzer: default
+                    content_glg:
+                        boost: 1
+                        analyzer: default
+                    content_deu:
+                        boost: 1
+                        analyzer: default
+                    content_gre:
+                        boost: 1
+                        analyzer: default
+                    content_hin:
+                        boost: 1
+                        analyzer: default
+                    content_hun:
+                        boost: 1
+                        analyzer: default
+                    content_ind:
+                        boost: 1
+                        analyzer: default
+                    content_ita:
+                        boost: 1
+                        analyzer: default
+                    content_nor:
+                        boost: 1
+                        analyzer: default
+                    content_fas:
+                        boost: 1
+                        analyzer: default
+                    content_por:
+                        boost: 1
+                        analyzer: default
+                    content_ron:
+                        boost: 1
+                        analyzer: default
+                    content_rus:
+                        boost: 1
+                        analyzer: default
+                    content_spa:
+                        boost: 1
+                        analyzer: default
+                    content_swe:
+                        boost: 1
+                        analyzer: default
+                    content_tur:
+                        boost: 1
+                        analyzer: default
+                    content_tha:
+                        boost: 1
+                        analyzer: default
+        # settings:
+        #     index:
+        #         analysis:
+        #             analyzer:
+        #                 default:
+        #                     type: standard
+        #             filter:

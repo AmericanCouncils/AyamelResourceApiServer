@@ -3,6 +3,7 @@ namespace Ayamel\ResourceBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use JMS\Serializer\Annotation as JMS;
+use AC\ModelTraits\AutoGetterSetterTrait;
 
 /**
  * API Client object, which can contain optional user-specific data.
@@ -13,6 +14,8 @@ use JMS\Serializer\Annotation as JMS;
  */
 class Client
 {
+    use AutoGetterSetterTrait;
+
     /**
      * The ID of the API client which created the Resource.  Ids in this case
      * are unique string representations, not database-assigned values.
@@ -20,7 +23,7 @@ class Client
      * @MongoDB\String
      * @JMS\SerializedName("id")
      * @JMS\Type("string")
-     * @JMS\ReadOnly
+     * @JMS\Groups({"search-decode"})
      */
     protected $id;
 
@@ -30,7 +33,7 @@ class Client
      * @MongoDB\String
      * @JMS\SerializedName("name")
      * @JMS\Type("string")
-     * @JMS\ReadOnly
+     * @JMS\Groups({"search-decode"})
      */
     protected $name;
 
@@ -40,67 +43,7 @@ class Client
      * @MongoDB\String
      * @JMS\SerializedName("uri")
      * @JMS\Type("string")
-     * @JMS\ReadOnly
+     * @JMS\Groups({"search-decode"})
      */
     protected $uri;
-
-    /**
-     * Set id
-     *
-     * @param string $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * Get id
-     *
-     * @return string $id
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set name
-     *
-     * @param string $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string $name
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Set uri
-     *
-     * @param string $uri
-     */
-    public function setUri($uri)
-    {
-        $this->uri = $uri;
-    }
-
-    /**
-     * Get uri
-     *
-     * @return string $uri
-     */
-    public function getUri()
-    {
-        return $this->uri;
-    }
 }

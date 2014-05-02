@@ -4,7 +4,7 @@ namespace Ayamel\ResourceBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use JMS\Serializer\Annotation as JMS;
-use Doctrine\Common\Collections\ArrayCollection;
+use AC\ModelTraits\AutoGetterSetterTrait;
 
 /**
  * Base Resource persistence class
@@ -20,6 +20,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Resource
 {
+    use AutoGetterSetterTrait;
+
     /**
      * Status when object has no content
      */
@@ -50,9 +52,9 @@ class Resource
      *
      * @MongoDB\Id
      * @JMS\Type("string")
-     * @JMS\ReadOnly
+     * @JMS\Groups({"search-decode"})
      */
-    protected $id;
+    private $id;
 
     /**
      * The title.
@@ -84,13 +86,71 @@ class Resource
      * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\Languages")
      * @JMS\Type("Ayamel\ResourceBundle\Document\Languages")
      */
-    public $languages;
+    public $languages = null;
 
     /**
-     * An array of categories that apply to the content of the Resource.  Categories here are vetted
-     * against a list of accepted and documented categories.
+     * An array of topics that describe the content of the Resource. Currently accepted topics include:
      *
-     *  //TODO: document valid values
+     * *arts, entertainment, culture, economy, education, food, geography, history, news, politics
+     * religion, sports, technology, weather, other*
+     * 
+     * @JMS\Type("array<string>")
+     * @MongoDB\Collection
+     */
+    protected $topics;
+
+    /**
+     * Formats describe the how the content is presented. Currently accepted formats include:
+     *
+     * *music, news, documentary, television, film, radio, skit, interview, role-play
+     * presentation, home-conversation, public-interaction, grammer-lecture, cultural-lecture
+     * how-to, other*
+     * 
+     * @JMS\Type("array<string>")
+     * @MongoDB\Collection
+     */
+    protected $formats;
+
+    /**
+     * Authenticity describes the general proficiency of the language demonstrated in the Resource.
+     * Currently accepted authenticities includes:
+     *
+     * *native, non-native, learner, other*
+     * 
+     * @JMS\Type("array<string>")
+     * @MongoDB\Collection
+     */
+    protected $authenticity;
+
+    /**
+    *
+     * Functions describe the capacities in which the language is used in the Resource. Currently 
+     * accepted functions include:
+     *
+     * *explanation, request, response, persuasion, introduction, reporting, discussion
+     * apology, invitation, promise, other*
+     *
+     * @JMS\Type("array<string>")
+     * @MongoDB\Collection
+     */
+    protected $functions;
+
+    /**
+     * Currently accepted genres include:
+     *
+     * *comedy, drama, horror, history, romance, action, animation
+     * children, classics, thriller, musical, science-fiction
+     * fantasy, other*
+     *
+     * @JMS\Type("array<string>")
+     * @MongoDB\Collection
+     */
+    protected $genres;
+
+    /**
+     * **Deprecated 2014-04-28**
+     * 
+     * Use the `topics` field instead - this field will be removed in a future version.
      *
      * @MongoDB\Collection
      * @JMS\SerializedName("subjectDomains")
@@ -99,10 +159,9 @@ class Resource
     protected $subjectDomains;
 
     /**
-     * An array of categories that apply to the linguistic properties of the Resource.  Categories here are vetted
-     * against a list of accepted and documented categories.
-     *
-     *  //TODO: document valid values
+     * **Deprecated 2014-04-28**
+     * 
+     * Use the `functions` field instead - this field will be removed in a future version.
      *
      * @MongoDB\Collection
      * @JMS\SerializedName("functionalDomains")
@@ -164,8 +223,8 @@ class Resource
      *
      * @MongoDB\Date
      * @JMS\SerializedName("dateAdded")
-     * @JMS\Type("DateTime")
-     * @JMS\ReadOnly
+     * @JMS\Type("DateTime<'U'>")
+     * @JMS\Groups({"search-decode"})
      */
     protected $dateAdded;
 
@@ -174,8 +233,8 @@ class Resource
      *
      * @MongoDB\Date
      * @JMS\SerializedName("dateModified")
-     * @JMS\Type("DateTime")
-     * @JMS\ReadOnly
+     * @JMS\Type("DateTime<'U'>")
+     * @JMS\Groups({"search-decode"})
      */
     protected $dateModified;
 
@@ -184,7 +243,7 @@ class Resource
      *
      * @MongoDB\Date
      * @JMS\SerializedName("dateDeleted")
-     * @JMS\Type("DateTime")
+     * @JMS\Type("DateTime<'U'>")
      * @JMS\ReadOnly
      */
     protected $dateDeleted;
@@ -200,8 +259,33 @@ class Resource
     /**
      * License type assocated with the resource.
      *
-     * This must be provided before the Resource will be added
-     * into the search index.
+     * This must be provided before the Resource will be publicly searchable.
+     *
+     * The available licenses are currently:
+     *
+     * * **CC BY**
+     * 
+     *     This license lets others distribute, remix, tweak, and build upon your work, even commercially, as long as they credit you for the original creation. This is the most accommodating of licenses offered. Recommended for maximum dissemination and use of licensed materials. [Summary &rarr;](http://creativecommons.org/licenses/by/4.0/) [Full text &rarr;](http://creativecommons.org/licenses/by/4.0/legalcode)
+     *     
+     * * **CC BY-ND**
+     * 
+     *     This license allows for redistribution, commercial and non-commercial, as long as it is passed along unchanged and in whole, with credit to you. [Summary &rarr;](http://creativecommons.org/licenses/by-nd/4.0/) [Full text &rarr;](http://creativecommons.org/licenses/by-nd/4.0/legalcode)
+     *     
+     * * **CC BY-NC**
+     * 
+     *     This license lets others remix, tweak, and build upon your work non-commercially, and although their new works must also acknowledge you and be non-commercial, they don’t have to license their derivative works on the same terms. [Summary &rarr;](http://creativecommons.org/licenses/by-nc/4.0/) [Full text &rarr;](http://creativecommons.org/licenses/by-nc/4.0/legalcode)
+     *     
+     * * **CC BY-SA**
+     * 
+     *     This license lets others remix, tweak, and build upon your work even for commercial purposes, as long as they credit you and license their new creations under the identical terms. This license is often compared to “copyleft” free and open source software licenses. All new works based on yours will carry the same license, so any derivatives will also allow commercial use. This is the license used by Wikipedia, and is recommended for materials that would benefit from incorporating content from Wikipedia and similarly licensed projects. [Summary &rarr;](http://creativecommons.org/licenses/by-sa/4.0/) [Full text &rarr;](http://creativecommons.org/licenses/by-sa/4.0/legalcode)
+     *     
+     * * **CC BY-NC-SA**
+     * 
+     *     This license lets others remix, tweak, and build upon your work non-commercially, as long as they credit you and license their new creations under the identical terms. [Summary &rarr;](http://creativecommons.org/licenses/by-nc-sa/4.0/) [Full text &rarr;](http://creativecommons.org/licenses/by-nc-sa/4.0/legalcode)
+     *     
+     * * **CC BY-NC-ND**
+     * 
+     *     This license is the most restrictive of our six main licenses, only allowing others to download your works and share them with others as long as they credit you, but they can’t change them in any way or use them commercially. [Summary &rarr;](http://creativecommons.org/licenses/by-nc-nd/4.0/) [Full text &rarr;](http://creativecommons.org/licenses/by-nc-nd/4.0/legalcode)
      *
      * @MongoDB\String
      * @JMS\Type("string")
@@ -219,7 +303,7 @@ class Resource
      *
      * @MongoDB\String
      * @JMS\Type("string")
-     * @JMS\ReadOnly
+     * @JMS\Groups({"search-decode"})
      */
     protected $status;
 
@@ -229,7 +313,7 @@ class Resource
      * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\Origin")
      * @JMS\Type("Ayamel\ResourceBundle\Document\Origin")
      */
-    public $origin;
+    public $origin = null;
 
     /**
      * An object containing information about the API client that created the object.
@@ -238,224 +322,34 @@ class Resource
      * @JMS\SerializedName("clientUser")
      * @JMS\Type("Ayamel\ResourceBundle\Document\ClientUser")
      */
-    public $clientUser;
+    public $clientUser = null;
 
     /**
      * An object containing information about the API client that created the Resource.
      *
      * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\Client")
-     * @JMS\ReadOnly
      * @JMS\Type("Ayamel\ResourceBundle\Document\Client")
+     * @JMS\Groups({"search-decode"})
      */
-    public $client;
+    public $client = null;
 
     /**
      * An object containing information about the primary content of the resource.
      *
      * @MongoDB\EmbedOne(targetDocument="Ayamel\ResourceBundle\Document\ContentCollection")
      * @JMS\Type("Ayamel\ResourceBundle\Document\ContentCollection")
-     * @JMS\ReadOnly
+     * @JMS\Groups({"search-decode"})
      */
-    public $content;
+    public $content = null;
 
     /**
      * An array of Relation objects that describe the relationship between this Resource and
      * other Resources.  Relations are critical to the search indexing process.
      *
      * @JMS\Type("array<Ayamel\ResourceBundle\Document\Relation>")
-     * @JMS\ReadOnly
+     * @JMS\Groups({"search-decode"})
      */
-    protected $relations;
-
-    /**
-     * Get id
-     *
-     * @return id $id
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set title
-     *
-     * @param string $title
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-    }
-
-    /**
-     * Get title
-     *
-     * @return string $title
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
-
-    /**
-     * Set description
-     *
-     * @param string $description
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    }
-
-    /**
-     * Get description
-     *
-     * @return string $description
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * Set keywords
-     *
-     * @param string $keywords
-     */
-    public function setKeywords($keywords)
-    {
-        $this->keywords = $keywords;
-    }
-
-    /**
-     * Get keywords
-     *
-     * @return string $keywords
-     */
-    public function getKeywords()
-    {
-        return $this->keywords;
-    }
-
-    /**
-     * Set subject domain categories
-     *
-     * @param array $categories
-     */
-    public function setSubjectDomains(array $categories = null)
-    {
-        $this->subjectDomains = $categories;
-    }
-
-    /**
-     * Get subject domain categories
-     *
-     * @return string $categories
-     */
-    public function getSubjectDomains()
-    {
-        return $this->subjectDomains;
-    }
-
-    /**
-     * Set functional domain categories
-     *
-     * @param array $categories
-     */
-    public function setFunctionalDomains(array $categories = null)
-    {
-        $this->functionalDomains = $categories;
-    }
-
-    /**
-     * Get functional domain categories
-     *
-     * @return string $categories
-     */
-    public function getFunctionalDomains()
-    {
-        return $this->functionalDomains;
-    }
-
-    /**
-     * Get language registers present in the Resource.
-     *
-     * @return array<string>
-     */
-    public function getRegisters()
-    {
-        return $this->registers;
-    }
-
-    /**
-     * Set the language registers in the Resource.
-     *
-     * @param array $registers
-     */
-    public function setRegisters(array $registers = null)
-    {
-        $this->registers = $registers;
-    }
-
-    /**
-     * Set type
-     *
-     * @param string $type
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
-
-    /**
-     * Get type
-     *
-     * @return string $type
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * Get whether or not the Resource is a sequence of other Resources
-     *
-     * @return boolean
-     */
-    public function getSequence()
-    {
-        return $this->sequence;
-    }
-
-    /**
-     * Set whether or not the Resource is a sequence of other Resources.
-     *
-     * @param boolean $bool
-     */
-    public function setSequence($bool)
-    {
-        $this->sequence = (bool) $bool;
-    }
-
-    /**
-     * Set visibility
-     *
-     * @param array $visibility Array of client system IDs which are allowed to view the Resource
-     */
-    public function setVisibility(array $visibility = null)
-    {
-        $this->visibility = $visibility;
-    }
-
-    /**
-     * Get visibility
-     *
-     * @return array $visibility
-     */
-    public function getVisibility()
-    {
-        return $this->visibility;
-    }
+    protected $relations = [];
 
     /**
      * Set dateAdded
@@ -465,16 +359,6 @@ class Resource
     public function setDateAdded(\DateTime $dateAdded = null)
     {
         $this->dateAdded = $dateAdded;
-    }
-
-    /**
-     * Get dateAdded
-     *
-     * @return date $dateAdded
-     */
-    public function getDateAdded()
-    {
-        return $this->dateAdded;
     }
 
     /**
@@ -488,16 +372,6 @@ class Resource
     }
 
     /**
-     * Get dateModified
-     *
-     * @return date $dateModified
-     */
-    public function getDateModified()
-    {
-        return $this->dateModified;
-    }
-
-    /**
      * Set dateDeleted
      *
      * @param date $dateDeleted
@@ -505,76 +379,6 @@ class Resource
     public function setDateDeleted(\DateTime $dateDeleted = null)
     {
         $this->dateDeleted = $dateDeleted;
-    }
-
-    /**
-     * Get dateDeleted
-     *
-     * @return date $dateDeleted
-     */
-    public function getDateDeleted()
-    {
-        return $this->dateDeleted;
-    }
-
-    /**
-     * Set copyright
-     *
-     * @param string $copyright
-     */
-    public function setCopyright($copyright)
-    {
-        $this->copyright = $copyright;
-    }
-
-    /**
-     * Get copyright
-     *
-     * @return string $copyright
-     */
-    public function getCopyright()
-    {
-        return $this->copyright;
-    }
-
-    /**
-     * Set license field
-     *
-     * @param string $license
-     */
-    public function setLicense($license)
-    {
-        $this->license = $license;
-    }
-
-    /**
-     * Get license
-     *
-     * @return string
-     */
-    public function getLicense()
-    {
-        return $this->license;
-    }
-
-    /**
-     * Set status
-     *
-     * @param string $status
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-    }
-
-    /**
-     * Get status
-     *
-     * @return string $status
-     */
-    public function getStatus()
-    {
-        return $this->status;
     }
 
     /**
@@ -588,16 +392,6 @@ class Resource
     }
 
     /**
-     * Get langauges
-     *
-     * @return Languages
-     */
-    public function getLanguages()
-    {
-        return $this->languages;
-    }
-
-    /**
      * Set the origin
      *
      * @param Origin $origin
@@ -608,16 +402,6 @@ class Resource
     }
 
     /**
-     * Get the origin
-     *
-     * @return Origin
-     */
-    public function getOrigin()
-    {
-        return $this->origin;
-    }
-
-    /**
      * Set the client
      *
      * @param Client $client
@@ -625,26 +409,6 @@ class Resource
     public function setClient(Client $client = null)
     {
         $this->client = $client;
-    }
-
-    /**
-     * Get the client
-     *
-     * @return Client
-     */
-    public function getClient()
-    {
-        return $this->client;
-    }
-
-    /**
-     * Get the optional client user
-     *
-     * @param ClientUser $user
-     */
-    public function getClientUser()
-    {
-        return $this->clientUser;
     }
 
     /**
@@ -665,13 +429,12 @@ class Resource
      */
     public function setRelations(array $relations = null)
     {
-        if ($relations) {
-            $this->relations = new ArrayCollection();
+        $this->relations = [];
+
+        if (!is_null($relations)) {
             foreach ($relations as $relation) {
                 $this->addRelation($relation);
             }
-        } else {
-            $this->relations = null;
         }
 
         return $this;
@@ -698,27 +461,15 @@ class Resource
      */
     public function removeRelation(Relation $relation)
     {
-        $new = array();
+        $newRels = [];
 
-        foreach ($this->relations as $instance) {
-            if (!$instance->equals($relation)) {
-                $new[] = $instance;
+        foreach ($this->relations as $r) {
+            if ($r->getId() != $relation->getId()) {
+                $newRels[] = $r;
             }
         }
 
-        $this->setRelations($new);
-
-        return $this;
-    }
-
-    /**
-     * Get relations
-     *
-     * @return Doctrine\Common\Collections\Collection $relations
-     */
-    public function getRelations()
-    {
-        return $this->relations;
+        return $this->setRelations($newRels);
     }
 
     /**
@@ -729,16 +480,6 @@ class Resource
     public function setContent(ContentCollection $content = null)
     {
         $this->content = $content;
-    }
-
-    /**
-     * Get content collection
-     *
-     * @return Ayamel\ResourceBundle\Document\ContentCollection $content
-     */
-    public function getContent()
-    {
-        return $this->content;
     }
 
     /**

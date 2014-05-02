@@ -6,7 +6,7 @@ This bundle adds support for transcoding Resource file uploads.  In order to do 
 
 The bundle adds a subscriber that listens for new files uploaded via the Resource API.  Then it registers a transcode job to be handled asynchronously.  It also provides a custom transcode logger to help with tracking server overhead for clients that upload files.
 
-Resources can be transcoded directly via the command `api:resource:transcode [resourceId]`.
+Resources can be transcoded directly via the command `resource:transcode [resourceId]`.
 
 ## Configuration ##
 

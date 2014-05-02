@@ -1,5 +1,7 @@
 <?php
 
+namespace Ayamel\TranscodingBundle\Tests;
+
 use Ayamel\ApiBundle\ApiTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Process\Process;
@@ -110,7 +112,7 @@ class BasicTranscodeTest extends ApiTestCase
 
         //now run transcode command directly, the --force flag makes it run immediately, instead
         //of dispatching the transcode job into the queue to be handled by rabbit
-        $this->runCommand(sprintf('api:resource:transcode %s --force', $resourceId));
+        $this->runCommand(sprintf('resource:transcode %s --force', $resourceId));
 
         //now get resource - expect 2 files and changed status
         $json = $this->getJson('GET', '/api/v1/resources/'.$resourceId.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
@@ -141,8 +143,9 @@ class BasicTranscodeTest extends ApiTestCase
     {
         //start the rabbitmq consumer, clear the queue
         $container = $this->getContainer();
+        $queueName = $container->getParameter('transcoding_queue_name');
         try {
-            $container->get('old_sound_rabbit_mq.transcoding_producer')->getChannel()->queue_purge('transcoding');
+            $container->get('old_sound_rabbit_mq.transcoding_producer')->getChannel()->queue_purge($queueName);
         } catch (\PhpAmqpLib\Exception\AMQPProtocolChannelException $e) {
             //swallow this error because of travis
         }
@@ -194,14 +197,12 @@ class BasicTranscodeTest extends ApiTestCase
         //wait for the rabbit process to exit after it has
         //transcoded the resource, then make some assertions
         $tester = $this;
-        $rabbitProcess->wait(function($type, $output) use ($tester, $resourceId, $rabbitProcess) {
+        $rabbitProcess->wait(function ($type, $output) use ($tester, $resourceId, $rabbitProcess) {
             //I'm not sure why I have to wait here in this loop... theoretically this should have only
             //been triggered if the process was actually done... ?
             while ($rabbitProcess->isRunning()) {
                 usleep(500000); //wait half a second
             }
-
-            //var_dump($output);
 
             if (!$rabbitProcess->isSuccessful()) {
                 throw new \RuntimeException($rabbitProcess->getErrorOutput());

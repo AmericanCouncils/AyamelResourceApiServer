@@ -4,6 +4,7 @@ namespace Ayamel\ResourceBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use JMS\Serializer\Annotation as JMS;
+use AC\ModelTraits\AutoGetterSetterTrait;
 
 /**
  * Language standards supported.
@@ -12,6 +13,7 @@ use JMS\Serializer\Annotation as JMS;
  */
 class Languages
 {
+    use AutoGetterSetterTrait;
 
     /**
      * Array of ISO 639-3 language codes.
@@ -19,7 +21,7 @@ class Languages
      * @MongoDB\Collection
      * @JMS\Type("array<string>")
      */
-    public $iso639_3;
+    protected $iso639_3;
 
     /**
      * Array of BCP 47 language codes.
@@ -27,6 +29,6 @@ class Languages
      * @MongoDB\Collection
      * @JMS\Type("array<string>")
      */
-    public $bcp47;
+    protected $bcp47;
 
 }

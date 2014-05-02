@@ -9,6 +9,10 @@
     - include: common/tasks/install_symfony_reqs.yml
     - include: common/tasks/install_rabbitmq_server.yml
     - include: common/tasks/install_mediainfo.yml
+    - include: common/tasks/install_elasticsearch.yml
+    - include: common/tasks/create_swapfile.yml
+      vars:
+        swapsize: 512M
     #- include: common/tasks/install_ffmpeg.yml
     #- include: common/tasks/install_ffmpegthumbnailer.yml
     - copy:
@@ -20,11 +24,30 @@
         port: 80
         symfony_env: dev
         dir: /vagrant
-    - file: src=/vagrant/app/console dest=/usr/local/bin/ayamel state=link
+    - include: common/tasks/symfony_rabbitmq_consumer.yml
+      vars:
+        name: ayamel-rabbitmq-consumer-transcoding
+        consumer: transcoding
+        symfony_env: dev
+        dir: /vagrant
+        process_count: 4
+    - include: common/tasks/symfony_rabbitmq_consumer.yml
+      vars:
+        name: ayamel-rabbitmq-consumer-search-index
+        consumer: search_index
+        symfony_env: dev
+        dir: /vagrant
+        process_count: 1
     - file: src=/vagrant dest=/home/vagrant/ayamel-server state=link
   handlers:
     - include: common/handlers/sys.yml
     - name: restart ayamel-web-dev
       supervisorctl: name=ayamel-web-dev state=restarted
+    - name: restart ayamel-rabbitmq-consumer-transcoding
+      ignore_errors: True
+      supervisorctl: name='ayamel-rabbitmq-consumer-transcoding:' state=restarted
+    - name: restart ayamel-rabbitmq-consumer-search-index
+      ignore_errors: True
+      supervisorctl: name='ayamel-rabbitmq-consumer-search-index:' state=restarted
     - name: restart rabbitmq-server
       supervisorctl: name=rabbitmq-server state=restarted

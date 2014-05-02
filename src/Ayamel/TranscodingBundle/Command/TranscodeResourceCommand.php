@@ -21,7 +21,7 @@ class TranscodeResourceCommand extends ContainerAwareCommand
 
     protected function configure()
     {
-        $this->setName('api:resource:transcode')
+        $this->setName('resource:transcode')
             ->setDescription("Transcode files for a given Resource ID.")
             ->addArgument('id', InputArgument::REQUIRED, "ID of Resource to transcode.")
             ->addOption('force','-f', InputOption::VALUE_NONE, "If forced, the transcode will happen immediately, rather than asynchronously.");

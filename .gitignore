@@ -1,5 +1,7 @@
+temp/
 web/bundles/
 web/examples/
+web/resource_uploads/
 web/files
 app/cache/*
 app/logs/*

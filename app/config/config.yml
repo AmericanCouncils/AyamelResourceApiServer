@@ -5,6 +5,7 @@ imports:
     - { resource: '@AyamelTranscodingBundle/Resources/config/config.yml' }
     - { resource: '@AyamelYouTubeBundle/Resources/config/config.yml' }
     - { resource: '@AyamelMediaInfoBundle/Resources/config/config.yml' }
+    - { resource: '@AyamelSearchBundle/Resources/config/config.yml' }
 
     # include parameters.yml last, git ignores it, so deployment specific overrides can go there safely
     - { resource: parameters.yml }
@@ -27,7 +28,7 @@ framework:
     validation:      { enabled: true, enable_annotations: true }
     templating:      { engines: ['twig'] } #assets_version: SomeVersionScheme
     default_locale:  %locale%
-    session:
+    session: ~
 
 ornicar_apc:
       host: %apc_web_domain%
@@ -80,6 +81,7 @@ doctrine_mongodb:
 ac_web_services:
     serializer:
         allow_deserialize_into_target: true
+        enable_form_deserialization: true
     paths:
         "{^/api/}":
             include_exception_data: %include_api_exception_data%
@@ -133,5 +135,14 @@ old_sound_rabbit_mq:
             vhost:     %rabbitmq_vhost%
     producers:
         transcoding: %ayamel.transcoding.rabbitmq_producer%
+        search_index: %ayamel.search.rabbitmq_producer%
     consumers:
         transcoding: %ayamel.transcoding.rabbitmq_consumer%
+        search_index: %ayamel.search.rabbitmq_consumer%
+
+fos_elastica:
+    clients:
+        default: { host: %elasticsearch_host%, port: %elasticsearch_port% }
+    serializer: ~
+    indexes:
+        ayamel: %ayamel.search.ayamel_index%

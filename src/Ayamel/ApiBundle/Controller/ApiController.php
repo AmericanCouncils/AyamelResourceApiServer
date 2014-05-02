@@ -44,8 +44,11 @@ abstract class ApiController extends Controller
 
     protected function requireResourceOwner($obj)
     {
-        if ($this->getApiClient()->id !== $obj->getClient()->getId()) {
-            throw new HttpException(403, "Not authorized to view the requested object.");
+        $client = $this->getApiClient();
+        $clientId = $client ? $client->id : null;
+        $objId = $obj->getClient()->getId();
+        if ($clientId !== $objId) {
+            throw new HttpException(403, "Not authorized to access the requested object.");
         }
     }
 

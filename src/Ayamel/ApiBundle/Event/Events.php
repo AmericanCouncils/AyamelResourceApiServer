@@ -30,7 +30,9 @@ final class Events
     const RESOURCE_MODIFIED = 'ayamel.api.resource_modified';
 
     /**
-     * Fires when a resource is deleted via the api
+     * Fires when a resource is deleted via the api.  Note that when
+     * this event is fired, the Resource in question also contains the
+     * any Relations that were also deleted.
      *
      * Listeners receive an instance of `ResourceEvent`
      */
@@ -65,11 +67,14 @@ final class Events
     const RELATION_CREATED = 'ayamel.api.relation_created';
 
     /**
-     * Fired when a Relation is deleted.
+     * Fired when an individual Relation is deleted.
      *
      * WARNING: It is important to note that this event does NOT fire when a Relation
      * is deleted as the result of a Resource being deleted.  This only fires if a Relation
      * is deleted explicitly via the /relations/{id} api.
+     *
+     * If you need to know when Relations were deleted along with a Resource, you should listen
+     * for the RESOURCE_DELETED event.
      *
      * Listeners receive an instance of `RelationEvent`
      */

@@ -1,0 +1,6 @@
+#browse the search index for resources w/ a simplified GET api
+api_v1_search:
+    pattern: /resources/search
+    defaults: { _controller: Ayamel\SearchBundle\Controller\SearchV1::searchAction }
+    requirements:
+        _method:  GET

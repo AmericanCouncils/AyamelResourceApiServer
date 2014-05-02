@@ -9,14 +9,34 @@
          processIsolation="false"
          stopOnFailure="false"
          syntaxCheck="false"
-         bootstrap="vendor/autoload.php"
+         bootstrap="app/autoload.php"
 >
     <testsuites>
-        <testsuite name="Ayamel Resource Api Test Suite">
-            <directory>./src/</directory>
+        <testsuite name="ResourceBundle Test Suite">
+            <directory>./src/Ayamel/ResourceBundle/</directory>
+        </testsuite>
+        <testsuite name="ApiBundle Test Suite">
+            <directory>./src/Ayamel/ApiBundle/</directory>
+        </testsuite>
+        <testsuite name="FilesystemBundle Test Suite">
+            <directory>./src/Ayamel/FilesystemBundle/</directory>
+        </testsuite>
+        <testsuite name="MediaInfoBundle Test Suite">
+            <directory>./src/Ayamel/MediaInfoBundle/</directory>
+        </testsuite>
+        <testsuite name="YouTubeBundle Test Suite">
+            <directory>./src/Ayamel/YouTubeBundle/</directory>
+        </testsuite>
+        <testsuite name="TranscodingBundle Test Suite">
+            <directory>./src/Ayamel/TranscodingBundle/</directory>
+        </testsuite>
+        <testsuite name="SearchBundle Test Suite">
+            <directory>./src/Ayamel/SearchBundle/</directory>
         </testsuite>
     </testsuites>
+    
     <php>
         <server name="KERNEL_DIR" value="app/" />
+        <ini name="memory_limit" value="512M"/>
     </php>
 </phpunit>

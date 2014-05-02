@@ -26,28 +26,57 @@ Ayamel\ResourceBundle\Document\Resource:
                 type: string
             - Length:
                 max: 2000
-
         languages:
             - Valid: ~
-
-        subjectDomains:
+        topics:
             - All:
                 - Type:
                     type: string
-#                - Choice:
-#                    choices: []
-        functionalDomains:
+                - Choice:
+                    choices: ['arts', 'entertainment', 'culture', 'economy', 'education', 'food', 'geography', 'history', 'news', 'politics', 'religion', 'sports', 'technology', 'weather', 'other']
+        formats:
             - All:
                 - Type:
                     type: string
-#                - Choice:
-#                    choices: []
+                - Choice:
+                    choices: ['music', 'news', 'documentary', 'television', 'film', 'radio', 'skit', 'interview', 'role-play', 'presentation', 'home-conversation', 'public-interaction', 'grammar-lecture', 'cultural-lecture', 'how-to', 'other']
+        authenticity:
+            - All:
+                - Type:
+                    type: string
+                - Choice:
+                    choices: ['native', 'non-native', 'learner', 'other']
         registers:
             - All:
                 - Type:
                     type: string
                 - Choice:
-                    choices: [formal, static, casual, intimate, consultative]
+                    choices: ['formal', 'casual', 'intimate', 'static', 'consultative', 'other']
+        functions:
+            - All:
+                - Type:
+                    type: string
+                - Choice:
+                    choices: ['explanation', 'request', 'response', 'persuasion', 'introduction', 'reporting', 'discussion', 'apology', 'invitation', 'promise', 'other']
+        genres:
+            - All:
+                - Type:
+                    type: string
+                - Choice:
+                    choices: ['comedy', 'drama', 'horror', 'history', 'romance', 'action', 'animation', 'children', 'classics', 'thriller', 'musical', 'science-fiction', 'fantasy', 'other']
+        subjectDomains:
+            - All:
+                - Type:
+                    type: string
+                - Length:
+                    max: 100
+        functionalDomains:
+            - All:
+                - Type:
+                    type: string
+                - Length:
+                    max: 100
+
         visibility:
             - All:
                 - Type:
@@ -62,8 +91,8 @@ Ayamel\ResourceBundle\Document\Resource:
         license:
             - Type:
                 type: string
-            - Length:
-                max: 500
+            - Choice:
+                choices: ['CC BY','CC BY-ND','CC BY-NC','CC BY-SA','CC BY-NC-SA','CC BY-NC-ND']
         origin:
             - Valid: ~
         client:
@@ -262,7 +291,6 @@ Ayamel\ResourceBundle\Document\FileReference:
             - Length:
                 max: 100
         bytes:
-            - NotBlank: ~
             - Type:
                 type: integer
             - Range:

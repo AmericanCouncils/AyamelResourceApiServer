@@ -80,13 +80,18 @@ class RelationsController extends ApiController
         }
 
         //set limit/skip
-        $qb->limit($req->query->get('limit', 20));
-        $qb->skip($req->query->get('skip', 0));
+        $limit = ($l = (int) abs($req->query->get('limit', 20))) <= 100 ? $l : 100;
+        $skip = (int) abs($req->query->get('skip', 0));
+        $qb->limit($limit);
+        $qb->skip($skip);
 
         $relations = $qb->getQuery()->execute();
 
         return $this->createServiceResponse(array(
-            'relations' => $this->relationsToArray($relations)
+            'relations' => $this->relationsToArray($relations),
+            'total' => (int) $relations->count(),
+            'limit' => $limit,
+            'skip' => $skip,
         ), 200);
     }
 
@@ -141,8 +146,10 @@ class RelationsController extends ApiController
         $qb = $this->getRepo('AyamelResourceBundle:Relation')->getQBForRelations($filters);
 
         //set limit/skip
-        $qb->limit($req->query->get('limit', 20));
-        $qb->skip($req->query->get('skip', 0));
+        $limit = ($l = (int) abs($req->query->get('limit', 20))) <= 100 ? $l : 100;
+        $skip = (int) abs($req->query->get('skip', 0));
+        $qb->limit($limit);
+        $qb->skip($skip);
 
         //EITHER subject or object
         if ($req->query->get('id', false)) {
@@ -155,7 +162,10 @@ class RelationsController extends ApiController
         $relations = $qb->getQuery()->execute();
 
         return $this->createServiceResponse(array(
-            'relations' => $this->relationsToArray($relations)
+            'relations' => $this->relationsToArray($relations),
+            'total' => (int) $relations->count(),
+            'limit' => $limit,
+            'skip' => $skip,
         ), 200);
     }
 

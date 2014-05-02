@@ -3,13 +3,18 @@
 parameters:
     mongodb_host: localhost
     mongodb_port: 27017
-    mongodb_database: ayamel_test
+    mongodb_database: ayamel_%kernel.environment%
 
     rabbitmq_host: localhost
     rabbitmq_port: 5672
     rabbitmq_user: guest
     rabbitmq_password: guest
     rabbitmq_vhost: '/'
+
+    elasticsearch_index: ayamel_%kernel.environment%
+    elasticsearch_host: 127.0.0.1
+    elasticsearch_port: 9200
+    search_index_queue_name: ayamel_search_index_%kernel.environment%
 
     #mailer_transport: smtp
     #mailer_host: localhost
@@ -18,24 +23,25 @@ parameters:
 
     locale: en
     secret: thisisnotasafesecret
+    logfile_path: %kernel.logs_dir%/%kernel.environment%.log
 
-    apc_web_domain: http://127.0.0.1/AyamelResourceApiServer/web
+    apc_web_domain: http://192.168.13.38/
 
     include_api_exception_data: true
 
     ## File upload handling ##
-    ayamel.filesystem.local_filesystem.root_dir: %kernel.root_dir%/files/resource_uploads
-    ayamel.filesystem.local_filesystem.secret: zeroisnotanumber
-    ayamel.filesystem.local_filesystem.base_uri: http://127.0.0.1/ayamel/web/files
-    ayamel.transcoding.temp_directory: %kernel.root_dir%/files/tmp
-    ayamel.transcoding.ffmpegthumbnailer_path: /usr/bin/ffmpegthumbnailer
+    filesystem_root_dir: %kernel.root_dir%/files/resource_uploads
+    filesystem_secret: zeroisnotanumber
+    filesystem_base_url: http://192.168.13.38/files/resource_uploads
 
     ## API Docs
-    nelmio_api_doc_endpoint: http://127.0.0.1/AyamelResourceApiServer/web/index_dev.php
+    nelmio_api_doc_endpoint: http://192.168.13.38
 
     ## Transcoding support
+    transcoding_tmp_dir: %kernel.root_dir%/files/tmp
     ffmpeg_path: /usr/bin/ffmpeg
-
+    ffmpegthumbnailer_path: /usr/bin/ffmpegthumbnailer
+    transcoding_queue_name: ayamel_transcoding_%kernel.environment%
     #if you use ffmpeg w/ libvpx to encode webm, it doesn't seem to let you specify "-threads 0" to maximize cpu usage, instead
     #you have to be specific in the number of threads, which should be the same as the number of cores on the machine
     libvpx_threads: 4

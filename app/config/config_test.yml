@@ -9,3 +9,10 @@ framework:
 web_profiler:
     toolbar: false
     intercept_redirects: false
+
+#don't allow logging during tests...
+#slows things down a bit
+monolog:
+    handlers:
+        main:
+            type:  test

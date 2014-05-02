@@ -4,9 +4,7 @@ namespace Ayamel\ResourceBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use JMS\Serializer\Annotation as JMS;
-use Doctrine\Common\Collections\ArrayCollection;
-
-use Ayamel\ResourceBundle\Document\FileReference;
+use AC\ModelTraits\AutoGetterSetterTrait;
 
 /**
  * Content container object, contains several types of fields for referencing the content of a resource object
@@ -16,6 +14,8 @@ use Ayamel\ResourceBundle\Document\FileReference;
  */
 class ContentCollection
 {
+    use AutoGetterSetterTrait;
+
     /**
      * @MongoDB\String
      * @JMS\SerializedName("canonicalUri")
@@ -37,33 +37,7 @@ class ContentCollection
      * @MongoDB\EmbedMany(targetDocument="Ayamel\ResourceBundle\Document\FileReference")
      * @JMS\Type("array<Ayamel\ResourceBundle\Document\FileReference>")
      */
-    protected $files;
-
-    public function __construct()
-    {
-        //TODO: don't set this in constructor, make it null when possible
-        $this->files = new ArrayCollection();
-    }
-
-    /**
-     * Set canonicalUri
-     *
-     * @param string $canonicalUri
-     */
-    public function setCanonicalUri($canonicalUri)
-    {
-        $this->canonicalUri = $canonicalUri;
-    }
-
-    /**
-     * Get canonicalUri
-     *
-     * @return string $canonicalUri
-     */
-    public function getCanonicalUri()
-    {
-        return $this->canonicalUri;
-    }
+    protected $files = [];
 
     /**
      * Set oembed fields
@@ -73,16 +47,6 @@ class ContentCollection
     public function setOembed(OEmbed $oembed)
     {
         $this->oembed = $oembed;
-    }
-
-    /**
-     * Get Oembed fields
-     *
-     * @return hash $oembed
-     */
-    public function getOembed()
-    {
-        return $this->oembed;
     }
 
     /**
@@ -145,13 +109,12 @@ class ContentCollection
      */
     public function setFiles(array $files = null)
     {
-        if ($files !== null) {
-            $this->files = new ArrayCollection();
+        $this->files = [];
+
+        if (!is_null($files)) {
             foreach ($files as $file) {
                 $this->addFile($file);
             }
-        } else {
-            $this->files = new ArrayCollection();
         }
 
         return $this;
@@ -208,15 +171,4 @@ class ContentCollection
 
         return false;
     }
-
-    /**
-     * Get files
-     *
-     * @return array
-     */
-    public function getFiles()
-    {
-        return $this->files->toArray();
-    }
-
 }

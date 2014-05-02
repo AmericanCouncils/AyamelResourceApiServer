@@ -1,21 +1,39 @@
-<li class="{{ data.method|lower }} operation">
-    <div class="heading toggler">
-    <h3>
-        <span class="http_method">
-            <a>{{ data.method|upper }}</a>
-        </span>
-        <span class="path">
-            {{ data.uri }}
-        </span>
-    </h3>
-    <ul class="options">
-        {% if data.description is defined %}
-            <li>{{ data.description }}</li>
-        {% endif %}
-    </ul>
-    </div>
+<li class="{{ data.method|lower }} operation" id="{{ data.id }}">
+    <a class="heading toggler{% if data.deprecated %} deprecated{% endif %}" href="#{{ data.id }}">
+        <h3>
+            <span class="http_method">
+                <i>{{ data.method|upper }}</i>
+            </span>
 
-    <div class="content" style="display: {% if displayContent  is defined and displayContent == true %}display{% else %}none{% endif %};">
+            {% if data.deprecated %}
+            <span class="deprecated">
+                <i>DEPRECATED</i>
+            </span>
+            {% endif %}
+
+            {% if data.https %}
+                <span class="icon lock" title="HTTPS"></span>
+            {% endif %}
+            {% if data.authentication %}
+                <span class="icon keys" title="Needs authentication"></span>
+            {% endif %}
+
+            <span class="path">
+                {% if data.host is defined -%}
+                    {{ data.https ? 'https://' : 'http://' -}}
+                    {{ data.host -}}
+                {% endif -%}
+                {{ data.uri }}
+            </span>
+        </h3>
+        <ul class="options">
+            {% if data.description is defined %}
+                <li>{{ data.description }}</li>
+            {% endif %}
+        </ul>
+    </a>
+
+    <div class="content" style="display: {% if displayContent is defined and displayContent == true %}display{% else %}none{% endif %};">
         <ul class="tabs">
             <li class="selected" data-pane="content">Documentation</li>
             {% if enableSandbox %}
@@ -28,6 +46,11 @@
             {% if data.documentation is defined and data.documentation is not empty %}
                 <h4>Documentation</h4>
                 <div>{{ data.documentation|extra_markdown }}</div>
+            {% endif %}
+
+            {% if data.link is defined and data.link is not empty %}
+                <h4>Link</h4>
+                <div><a href="{{ data.link }}" target="_blank">{{ data.link }}</a></div>
             {% endif %}
 
             {% if data.requirements is defined  and data.requirements is not empty %}
@@ -91,6 +114,7 @@
                             <th>Parameter</th>
                             <th>Type</th>
                             <th>Required?</th>
+                            <th>Format</th>
                             <th>Description</th>
                         </tr>
                     </thead>
@@ -99,9 +123,10 @@
                             {% if not infos.readonly %}
                                 <tr>
                                     <td>{{ name }}</td>
-                                    <td>{{ infos.dataType }}</td>
+                                    <td>{{ infos.dataType is defined ? infos.dataType : '' }}</td>
                                     <td>{{ infos.required ? 'true' : 'false' }}</td>
-                                    <td>{{ infos.description|extra_markdown }}</td>
+                                    <td>{{ infos.format }}</td>
+                                    <td>{{ infos.description is defined ? infos.description|extra_markdown : ''  }}</td>
                                 </tr>
                             {% endif %}
                         {% endfor %}
@@ -116,6 +141,7 @@
                         <tr>
                             <th>Parameter</th>
                             <th>Type</th>
+                            <th>Versions</th>
                             <th>Description</th>
                         </tr>
                     </thead>
@@ -124,17 +150,50 @@
                             <tr>
                                 <td>{{ name }}</td>
                                 <td>{{ infos.dataType }}</td>
+                                <td>{% include 'NelmioApiDocBundle:Components:version.html.twig' with {'sinceVersion': infos.sinceVersion, 'untilVersion': infos.untilVersion} only %}</td>
                                 <td>{{ infos.description|extra_markdown }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             {% endif %}
+
+            {% if data.statusCodes is defined and data.statusCodes is not empty %}
+                <h4>Status Codes</h4>
+                <table class="fullwidth">
+                    <thead>
+                    <tr>
+                        <th>Status Code</th>
+                        <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for status_code, descriptions in data.statusCodes %}
+                        <tr>
+                            <td><a href="http://en.wikipedia.org/wiki/HTTP_{{ status_code }}" target="_blank">{{ status_code }}<a/></td>
+                            <td>
+                                <ul>
+                                    {% for description in descriptions %}
+                                        <li>{{ description }}</li>
+                                    {%  endfor %}
+                                </ul>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+
+            {% if data.cache is defined and data.cache is not empty %}
+                <h4>Cache</h4>
+                <div>{{ data.cache }}s</div>
+            {% endif %}
+
             </div>
 
             {% if enableSandbox %}
                 <div class="pane sandbox">
-                    <form method="{{ data.method|upper }}" action="{{ data.uri }}">
+                    <form method="{{ data.method|upper }}" action="{% if data.host is defined %}{{ data.https ? 'https://' : 'http://' }}{{ data.host }}{% endif %}{{ data.uri }}">
                         <fieldset class="parameters">
                             <legend>Input</legend>
                             {% if data.requirements is defined %}
@@ -164,18 +223,25 @@
                                     <p class="tuple">
                                         <input type="text" class="key" value="{{ name }}" placeholder="Key" />
                                         <span>=</span>
-                                        <input type="text" class="value" placeholder="{% if infos.dataType %}[{{ infos.dataType }}] {% endif %}{% if infos.description %}{{ infos.description }}{% else %}Value{% endif %}" /> <span class="remove">-</span>
+                                        <input type="text" class="value" placeholder="{% if infos.dataType %}[{{ infos.dataType }}] {% endif %}{% if infos.format %}{{ infos.format }}{% endif %}{% if infos.description %}{{ infos.description }}{% else %}Value{% endif %}" /> <span class="remove">-</span>
                                     </p>
                                 {% endif %}
                                 {% endfor %}
                                 <button class="add">New parameter</button>
                             {% endif %}
-                            <button class="add">New parameter</button>
 
                         </fieldset>
 
                         <fieldset class="headers">
                             <legend>Headers</legend>
+
+                            {% if acceptType %}
+                                <p class="tuple">
+                                    <input type="text" class="key" value="Accept" />
+                                    <span>=</span>
+                                    <input type="text" class="value" value="{{ acceptType }}" /> <span class="remove">-</span>
+                                </p>
+                            {% endif %}
 
                             <p class="tuple">
                                 <input type="text" class="key" placeholder="Key" />
