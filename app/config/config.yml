@@ -28,7 +28,7 @@ framework:
     validation:      { enabled: true, enable_annotations: true }
     templating:      { engines: ['twig'] } #assets_version: SomeVersionScheme
     default_locale:  %locale%
-    session:
+    session: ~
 
 ornicar_apc:
       host: %apc_web_domain%
