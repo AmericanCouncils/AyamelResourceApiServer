@@ -286,6 +286,30 @@ class FilterResourcesTest extends FixturedTestCase
     /**
      * @depends testShowResources
      */
+    public function testFilterLicense()
+    {
+        $res = $this->callJsonApi('GET', '/api/v1/resources?license=CC BY');
+        $this->assertSame(2, $res['total']);
+        foreach ($res['resources'] as $res) {
+            $this->assertSame('CC BY', $res['license']);
+        }
+
+        $res = $this->callJsonApi('GET', '/api/v1/resources?license=CC BY-ND');
+        $this->assertSame(2, $res['total']);
+        foreach ($res['resources'] as $res) {
+            $this->assertSame('CC BY-ND', $res['license']);
+        }
+
+        $res = $this->callJsonApi('GET', '/api/v1/resources?license=CC BY,CC BY-ND');
+        $this->assertSame(4, $res['total']);
+        foreach ($res['resources'] as $res) {
+            $this->assertTrue(in_array($res['license'], ['CC BY', 'CC BY-ND']));
+        }
+    }
+
+    /**
+     * @depends testShowResources
+     */
     public function testMultipleFilters()
     {
         //by type

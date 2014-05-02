@@ -89,126 +89,68 @@ class Resource
     public $languages = null;
 
     /**
-     * Topics
-     * An array of categories that apply to the content of the Resource.
-     * currently accepted topics include:
+     * An array of topics that describe the content of the Resource. Currently accepted topics include:
      *
-     * - **arts** -
-     * - **entertainment** -
-     * - **culture** -
-     * - **economy** -
-     * - **education** -
-     * - **food** -
-     * - **geography** -
-     * - **history** -
-     * - **news** -
-     * - **politics** -
-     * - **religion** -
-     * - **sports** -
-     * - **technology** -
-     * - **weather** -
-     * - **other** -
+     * *arts, entertainment, culture, economy, education, food, geography, history, news, politics
+     * religion, sports, technology, weather, other*
+     * 
      * @JMS\Type("array<string>")
      * @MongoDB\Collection
-     * @JMS\SerializedName("topics")
      */
     protected $topics;
 
     /**
-     * Formats
+     * Formats describe the how the content is presented. Currently accepted formats include:
      *
-     * currently accepted formats include:
-     *
-     * - **music** -
-     * - **news** -
-     * - **documentary** -
-     * - **television** -
-     * - **film** -
-     * - **radio** -
-     * - **skit** -
-     * - **interview** -
-     * - **role-play** -
-     * - **presentation** -
-     * - **home-conversation** -
-     * - **public-interaction** -
-     * - **grammar-lecture** -
-     * - **cultural-lecture** -
-     * - **how-to** -
-     * - **other** -
+     * *music, news, documentary, television, film, radio, skit, interview, role-play
+     * presentation, home-conversation, public-interaction, grammer-lecture, cultural-lecture
+     * how-to, other*
+     * 
      * @JMS\Type("array<string>")
      * @MongoDB\Collection
-     * @JMS\SerializedName("formats")
      */
     protected $formats;
 
     /**
-     * Authenticity
+     * Authenticity describes the general proficiency of the language demonstrated in the Resource.
+     * Currently accepted authenticities includes:
      *
-     * currently accepted authenticity includes:
-     *
-     * - **native** -
-     * - **non-native** -
-     * - **learner** -
-     * - **other** -
+     * *native, non-native, learner, other*
+     * 
      * @JMS\Type("array<string>")
      * @MongoDB\Collection
-     * @JMS\SerializedName("authenticity")
      */
     protected $authenticity;
 
     /**
     *
-     * Functions
-     * An array of categories that apply to the linguistic properties of the Resource.
-     * currently accepted functions include:
+     * Functions describe the capacities in which the language is used in the Resource. Currently 
+     * accepted functions include:
      *
-     * - **explanation** -
-     * - **request** -
-     * - **response** -
-     * - **persuasion** -
-     * - **introduction** -
-     * - **reporting** -
-     * - **discussion** -
-     * - **apology** -
-     * - **invitation** -
-     * - **promise** -
-     * - **other** -
+     * *explanation, request, response, persuasion, introduction, reporting, discussion
+     * apology, invitation, promise, other*
      *
      * @JMS\Type("array<string>")
      * @MongoDB\Collection
-     * @JMS\SerializedName("functions")
      */
     protected $functions;
 
     /**
-     * Genres
+     * Currently accepted genres include:
      *
-     * currently accepted genres include:
-     * - **comedy** -
-     * - **drama** -
-     * - **horror** -
-     * - **history** -
-     * - **romance** -
-     * - **action** -
-     * - **animation** -
-     * - **children** -
-     * - **classics** -
-     * - **thriller** -
-     * - **musical** -
-     * - **science-fiction** -
-     * - **fantasy** -
-     * - **other** -
+     * *comedy, drama, horror, history, romance, action, animation
+     * children, classics, thriller, musical, science-fiction
+     * fantasy, other*
      *
      * @JMS\Type("array<string>")
      * @MongoDB\Collection
-     * @JMS\SerializedName("genres")
      */
     protected $genres;
 
     /**
-     * Subject Domains
      * **Deprecated 2014-04-28**
-     * This is still a valid field, but it's better to use the 'topics' field for the subject of resource content.
+     * 
+     * Use the `topics` field instead - this field will be removed in a future version.
      *
      * @MongoDB\Collection
      * @JMS\SerializedName("subjectDomains")
@@ -217,9 +159,9 @@ class Resource
     protected $subjectDomains;
 
     /**
-     * Functional Domains
      * **Deprecated 2014-04-28**
-     * This is still a valid field, but it's better to use the 'functions' field for the linguistic function of resource content.
+     * 
+     * Use the `functions` field instead - this field will be removed in a future version.
      *
      * @MongoDB\Collection
      * @JMS\SerializedName("functionalDomains")
@@ -317,8 +259,33 @@ class Resource
     /**
      * License type assocated with the resource.
      *
-     * This must be provided before the Resource will be added
-     * into the search index.
+     * This must be provided before the Resource will be publicly searchable.
+     *
+     * The available licenses are currently:
+     *
+     * * **CC BY**
+     * 
+     *     This license lets others distribute, remix, tweak, and build upon your work, even commercially, as long as they credit you for the original creation. This is the most accommodating of licenses offered. Recommended for maximum dissemination and use of licensed materials. [Summary &rarr;](http://creativecommons.org/licenses/by/4.0/) [Full text &rarr;](http://creativecommons.org/licenses/by/4.0/legalcode)
+     *     
+     * * **CC BY-ND**
+     * 
+     *     This license allows for redistribution, commercial and non-commercial, as long as it is passed along unchanged and in whole, with credit to you. [Summary &rarr;](http://creativecommons.org/licenses/by-nd/4.0/) [Full text &rarr;](http://creativecommons.org/licenses/by-nd/4.0/legalcode)
+     *     
+     * * **CC BY-NC**
+     * 
+     *     This license lets others remix, tweak, and build upon your work non-commercially, and although their new works must also acknowledge you and be non-commercial, they don’t have to license their derivative works on the same terms. [Summary &rarr;](http://creativecommons.org/licenses/by-nc/4.0/) [Full text &rarr;](http://creativecommons.org/licenses/by-nc/4.0/legalcode)
+     *     
+     * * **CC BY-SA**
+     * 
+     *     This license lets others remix, tweak, and build upon your work even for commercial purposes, as long as they credit you and license their new creations under the identical terms. This license is often compared to “copyleft” free and open source software licenses. All new works based on yours will carry the same license, so any derivatives will also allow commercial use. This is the license used by Wikipedia, and is recommended for materials that would benefit from incorporating content from Wikipedia and similarly licensed projects. [Summary &rarr;](http://creativecommons.org/licenses/by-sa/4.0/) [Full text &rarr;](http://creativecommons.org/licenses/by-sa/4.0/legalcode)
+     *     
+     * * **CC BY-NC-SA**
+     * 
+     *     This license lets others remix, tweak, and build upon your work non-commercially, as long as they credit you and license their new creations under the identical terms. [Summary &rarr;](http://creativecommons.org/licenses/by-nc-sa/4.0/) [Full text &rarr;](http://creativecommons.org/licenses/by-nc-sa/4.0/legalcode)
+     *     
+     * * **CC BY-NC-ND**
+     * 
+     *     This license is the most restrictive of our six main licenses, only allowing others to download your works and share them with others as long as they credit you, but they can’t change them in any way or use them commercially. [Summary &rarr;](http://creativecommons.org/licenses/by-nc-nd/4.0/) [Full text &rarr;](http://creativecommons.org/licenses/by-nc-nd/4.0/legalcode)
      *
      * @MongoDB\String
      * @JMS\Type("string")

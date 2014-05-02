@@ -72,7 +72,7 @@ class ResourceIntegrationTest extends ApiTestCase
             'registers' => array('casual','intimate'),
             'visibility' => array('test_client', 'client1', 'client2'),
             'copyright' => "Copyright text 2013",
-            'license' => 'Public Domain',
+            'license' => 'CC BY',
             'origin' => array(
                 'creator' => 'Leonardo da Vinci',
                 'location' => 'Italy',
@@ -133,7 +133,7 @@ class ResourceIntegrationTest extends ApiTestCase
             'functions' => array('response', 'introduction', 'discussion'),
             'visibility' => array('client1', 'client2'),
             'copyright' => "Copyright text 2013",
-            'license' => 'Public Domain',
+            'license' => 'CC BY',
             'dateDeleted' => 132435654,
             'foooooo' => 'bar',
             'origin' => array(
@@ -196,7 +196,7 @@ class ResourceIntegrationTest extends ApiTestCase
             'functions' => array('response', 'introduction', 'discussion'),
             'visibility' => array('test_client', 'client2'),
             'copyright' => "Copyright text 2013",
-            'license' => 'Public Domain',
+            'license' => 'CC BY',
             'origin' => array(
                 'creator' => 'Leonardo da Vinci',
                 'location' => 'Italy',
@@ -336,7 +336,7 @@ class ResourceIntegrationTest extends ApiTestCase
             'functions' => array('response', 'introduction', 'discussion'),
             'visibility' => array('test_client', 'client2'),
             'copyright' => "Copyright text 2013",
-            'license' => 'Public Domain',
+            'license' => 'CC BY',
             'origin' => array(
                 'creator' => 'Leonardo da Vinci',
                 'location' => 'Italy',

@@ -5,102 +5,102 @@
     {% block stylesheets %}{% endblock %}
 
 <!--[if lt IE 7]> <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;'> <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode"><img src="http://storage.ie6countdown.com/assets/100/images/banners/warning_bar_0000_us.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today." /></a></div> <![endif]-->
-	<style>
-		.content {
-			padding-top: 60px;
-		}
-		.main-container {
-			padding-bottom: 40px;
-			text-align: justify;			
-		}
-		.main-content {
-			min-height: 500px;
-		}
-		h1 code,
-		h2 code,
-		h3 code,
-		h4 code,
-		h5 code {
-			background-color: transparent;
-			font-size: 18px;
-			border: none;
-		}
-		footer {
-			color: #aaa;
-		}
-		.toc-top-link {
-			margin-left: 5px;
-			font-size: 10px;
-		}
-		code {
-			background-color: #f8f8f8;
-		}
-		
-		form div {
-			margin-bottom: 5px;
-		}
-		
-		form label {
-			margin-right: 5px;
-		}
+    <style>
+        .content {
+            padding-top: 60px;
+        }
+        .main-container {
+            padding-bottom: 40px;
+            text-align: justify;            
+        }
+        .main-content {
+            min-height: 500px;
+        }
+        h1 code,
+        h2 code,
+        h3 code,
+        h4 code,
+        h5 code {
+            background-color: transparent;
+            font-size: 18px;
+            border: none;
+        }
+        footer {
+            color: #aaa;
+        }
+        .toc-top-link {
+            margin-left: 5px;
+            font-size: 10px;
+        }
+        code {
+            background-color: #f8f8f8;
+        }
+        
+        form div {
+            margin-bottom: 5px;
+        }
+        
+        form label {
+            margin-right: 5px;
+        }
 
-	</style>
-	{% block title %}<title>Ayamel Media API</title>{% endblock %}
+    </style>
+    {% block title %}<title>Ayamel Media API</title>{% endblock %}
 </head>
 
 <body>
   
-	<% block header %>
+    <% block header %>
     <div class="topbar">
       <div class="fill">
         <div class="container">
-			<a class = 'brand' href='{{ app.request.BaseUrl }}/'>Ayamel Media API</a>
-		  	<ul>
-		  		<li><a href='{{ app.request.BaseUrl }}/api/v1/docs'>Docs</a></li>
-		  	</ul>
+            <a class = 'brand' href='{{ app.request.BaseUrl }}/'>Ayamel Media API</a>
+            <ul>
+                <li><a href='{{ app.request.BaseUrl }}/api/v1/docs'>Docs</a></li>
+            </ul>
         </div>
       </div>
     </div>
-	<% endblock %>
-	<a href="https://github.com/AmericanCouncils/AyamelResourceApiServer"><img style="position: absolute; top: 0; right: 0; border: 0; z-index: 999999" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
+    <% endblock %>
+    <a href="https://github.com/AmericanCouncils/AyamelResourceApiServer"><img style="position: absolute; top: 0; right: 0; border: 0; z-index: 999999" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
 
     <div class="container main-container">
 
       <div class="content">
-		
-		<!-- optional breadcrumbs -->
-		{% block breadcrumbs %}{% endblock %}
-				
-		<!-- optional page title -->
-		{% block page_title %}
+        
+        <!-- optional breadcrumbs -->
+        {% block breadcrumbs %}{% endblock %}
+                
+        <!-- optional page title -->
+        {% block page_title %}
         <div class="page-title">
           <h1>Ayamel Media API</h1>
           <hr />
         </div>
-		{% endblock %}
+        {% endblock %}
 
-		<!-- main content: expands if right column is empty -->
+        <!-- main content: expands if right column is empty -->
         <div class="row">
-	          <div class="main-content span16">
-				  {% block body %}{% endblock %}
-	          </div>
+              <div class="main-content span16">
+                  {% block body %}{% endblock %}
+              </div>
         </div>
       </div>
 
-	  	<!-- start footer block -->
-		{% block footer %}
-		    <div id="footer">
-				<center>
-			      <footer>
-			        <p>&copy; Copyright 2012 by <a href="http://www.americancouncils.org/">American Councils for International Education</a> and <a href='http://byu.edu/'>Brigham Young University</a>.</p>
-			      </footer>
-			    </center>
-		    </div>
-		{% endblock %}
-	  	<!-- end footer block -->
+        <!-- start footer block -->
+        {% block footer %}
+            <div id="footer">
+                <center>
+                  <footer>
+                    <p>&copy; Copyright 2012 by <a href="http://www.americancouncils.org/">American Councils for International Education</a> and <a href='http://byu.edu/'>Brigham Young University</a>.</p>
+                  </footer>
+                </center>
+            </div>
+        {% endblock %}
+        <!-- end footer block -->
 
 </div> <!-- /container -->
 
-	{% block javascripts %}{% endblock %}
+    {% block javascripts %}{% endblock %}
 </body>
 </html>

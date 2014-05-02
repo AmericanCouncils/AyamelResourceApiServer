@@ -9,5 +9,5 @@ monolog:
             handler:      nested
         nested:
             type:  stream
-            path:  %kernel.logs_dir%/%kernel.environment%.log
+            path:  %logfile_path%
             level: debug

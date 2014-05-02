@@ -338,6 +338,18 @@ class SearchApiTest extends FixturedTestCase
         }
     }
 
+    public function testLicenseFilter()
+    {
+        $response = $this->callJsonApi('GET', '/api/v1/resources/search?filter:license=CC BY');
+        $this->assertSame(2, count($response['result']['hits']));
+
+        $response = $this->callJsonApi('GET', '/api/v1/resources/search?filter:license=CC BY-ND');
+        $this->assertSame(2, count($response['result']['hits']));
+
+        $response = $this->callJsonApi('GET', '/api/v1/resources/search?filter:license=CC BY,CC BY-ND');
+        $this->assertSame(4, count($response['result']['hits']));
+    }
+
     /**
      * @depends testSearchApi
      */
@@ -407,15 +419,6 @@ class SearchApiTest extends FixturedTestCase
         $response = $this->callJsonApi('GET', '/api/v1/resources/search?facet:functions=2');
         $facet = $response['result']['facets'][0];
         $this->assertSame(2, count($facet['values']));
-    }
-
-    /**
-     * @depends testSearchApi
-     */
-    public function testMultipleFacets()
-    {
-        $response = $this->callJsonApi('GET', '/api/v1/resources/search?facet:type&facet:topics');
-        $this->assertSame(2, count($response['result']['facets']));
     }
 
     /**
@@ -538,5 +541,29 @@ class SearchApiTest extends FixturedTestCase
         $response = $this->callJsonApi('GET', 'api/v1/resources/search?facet:languages=1');
         $facet = $response['result']['facets'][0];
         $this->assertSame(1, count($facet['values']));
+    }
+
+    /**
+     * @depends testSearchApi
+     */
+    public function testLicenseFacet()
+    {
+        $response = $this->callJsonApi('GET', 'api/v1/resources/search?facet:license');
+        $facet = $response['result']['facets'][0];
+        $this->assertSame(6, count($facet['values']));
+        $this->assertSame('license', $facet['field']);
+
+        $response = $this->callJsonApi('GET', 'api/v1/resources/search?facet:license=1');
+        $facet = $response['result']['facets'][0];
+        $this->assertSame(1, count($facet['values']));
+    }
+
+    /**
+     * @depends testSearchApi
+     */
+    public function testMultipleFacets()
+    {
+        $response = $this->callJsonApi('GET', '/api/v1/resources/search?facet:type&facet:topics');
+        $this->assertSame(2, count($response['result']['facets']));
     }
 }
