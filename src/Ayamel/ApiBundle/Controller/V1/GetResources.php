@@ -16,6 +16,7 @@ class GetResources extends ApiController
      * @ApiDoc(
      *      resource=true,
      *      description="Retrieve multiple resources",
+     *      output="Ayamel\ResourceBundle\Document\Resource",
      *      filters={
      *          {"name"="_format", "default"="json", "description"="Return format, can be one of xml, yml or json."},
      *          {"name"="id", "description"="Comma separated list of IDs for specific Resources to fetch."},
@@ -23,15 +24,15 @@ class GetResources extends ApiController
      *          {"name"="type", "description"="Limit returned Resources to a certain type."},
      *          {"name"="license", "description"="Limit returned Resources to a certain license."},
      *          {"name"="status", "description"="Filter returned Resources by status."},
-     *          {"name"="genres", "description"="Filter returned Resources by genres"
-     *          {"name"="authenticity", "description"="Filter returned Resources by authenticity"
-     *          {"name"="formats", "description"="Filter returned Resources by formats"
-     *          {"name"="functions", "description"="Filter returned Resources by functions"
-     *          {"name"="topics", "description"="Filter returned Resources by topics"
+     *          {"name"="genres", "description"="Filter returned Resources by genres"},
+     *          {"name"="authenticity", "description"="Filter returned Resources by authenticity"},
+     *          {"name"="formats", "description"="Filter returned Resources by formats"},
+     *          {"name"="functions", "description"="Filter returned Resources by functions"},
+     *          {"name"="topics", "description"="Filter returned Resources by topics"},
      *          {"name"="clientUser", "description"="Limit returned Resources to those owned by a specific user an API client."},
      *          {"name"="languages", "description"="Limit returned Resources to those containing a specific language.  This can be specified in either the ISO 639-3 format or BCP47 format."},
      *          {"name"="public", "description"="Must be 'true' or 'false'.  Will filter resources based on whether or not they have visibility restrictions."},
-     *          {"name"="limit", "default"="20", "max": "100", "description"="Limit the number of ids to return."},
+     *          {"name"="limit", "default"="20", "max"="100", "description"="Limit the number of ids to return."},
      *          {"name"="skip", "default"="0", "description"="Number of results to skip. Use this for paginating results."}
      *      }
      * )
