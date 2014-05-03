@@ -6,6 +6,7 @@ use Ayamel\ResourceBundle\Document\Resource;
 use AC\WebServicesBundle\ServiceResponse;
 use AC\WebServicesBundle\Controller;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use JMS\Serializer\Context;
 
 /**
  * A base API Controller to provide convenience methods for actions commonly performed in various places in the Ayamel Resource API.
@@ -65,6 +66,21 @@ abstract class ApiController extends Controller
         }
 
         return $this->container->get('ayamel.client_loader')->getClientByApiKey($key);
+    }
+
+    /**
+     * If the request can't be deserialized at all, then it is likely malformed, so return
+     * a 400 instead of letting the response be converted to 500.
+     * 
+     * @see Controller::decodeRequest()
+     */
+    protected function decodeRequest($class, Context $ctx = null)
+    {
+        try {
+            return parent::decodeRequest($class, $ctx);
+        } catch (\Exception $e) {
+            throw $this->createHttpException(400, $e->getMessage());
+        }
     }
 
     /**
