@@ -4,7 +4,7 @@ namespace Ayamel\ApiBundle\Tests;
 
 use AC\WebServicesBundle\TestCase;
 
-class FixturedTestCase extends TestCase
+abstract class FixturedTestCase extends TestCase
 {
     protected function getFixtureClass()
     {

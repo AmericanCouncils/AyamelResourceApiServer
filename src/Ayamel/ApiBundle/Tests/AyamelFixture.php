@@ -10,7 +10,7 @@ class AyamelFixture extends CachedMongoFixture
     protected function fixture()
     {
         $this->describe('AyamelResourceBundle:OEmbed',[
-            'type' => function ($f) {return $f->fake()->word();},
+            'type' => function ($f) {return $f->fake()->randomElement(['video', 'photo', 'link', 'rich']);},
             'version' => function ($f) {return "1.0";},
             'title' => function ($f) {return $f->fake()->sentence(5);},
             'author_name' => function ($f) {return $f->fake()->name();},
