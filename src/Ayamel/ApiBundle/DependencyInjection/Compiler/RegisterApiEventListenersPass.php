@@ -15,11 +15,7 @@ class RegisterApiEventListenersPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition('event_dispatcher')) {
-            return;
-        }
-
-        $definition = $container->getDefinition('event_dispatcher');
+        $definition = $container->findDefinition('event_dispatcher');
 
         foreach ($container->findTaggedServiceIds('ayamel.api.event_listener') as $id => $events) {
             foreach ($events as $event) {
