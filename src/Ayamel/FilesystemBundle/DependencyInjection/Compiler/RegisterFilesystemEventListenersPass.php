@@ -13,7 +13,7 @@ class RegisterFilesystemEventListenersPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        $dispatcherDefinition = $container->getDefinition('event_dispatcher');
+        $dispatcherDefinition = $container->findDefinition('event_dispatcher');
 
         foreach ($container->findTaggedServiceIds('ayamel.filesystem.event_listener') as $id => $events) {
             foreach ($events as $event) {
