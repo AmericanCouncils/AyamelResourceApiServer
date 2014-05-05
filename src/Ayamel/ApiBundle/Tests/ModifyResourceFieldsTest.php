@@ -8,13 +8,25 @@ namespace Ayamel\ApiBundle\Tests;
  */
 class ModifyResourceFieldsTest extends FixturedTestCase
 {
+    //the specifc resource id we are modifying
+    private $id = false;
+
     protected function modify($fieldName, $newValue, $expectedCode)
     {
-        //get a resource
-        $res = $this->callJsonApi('GET', '/api/v1/resources?_key=key-for-test-client-1');
-
         //pick a resource to modify
-        $resource = $res['resources'][0];
+        if (!$this->id) {
+            //get a resource
+            $res = $this->callJsonApi('GET', '/api/v1/resources?_key=key-for-test-client-1&limit=1');
+            $resource = $res['resources'][0];
+            $this->id = $id = $resource['id'];
+        } else {
+            $id = $this->id;
+            $res = $this->callJsonApi('GET', '/api/v1/resources/'.$id.'?_key=key-for-test-client-1');
+            $resource = $res['resource'];
+        }
+
+        //get a resource
+        $res = $this->callJsonApi('GET', '/api/v1/resources?_key=key-for-test-client-1');        
 
         //store the old value
         $oldValue = isset($resource[$fieldName]) ? $resource[$fieldName] : null;
@@ -239,9 +251,6 @@ class ModifyResourceFieldsTest extends FixturedTestCase
             'location' => 'Here',
             'note' => null
         ]);
-
-        //I can't explain the behavior below this line....
-        $this->markTestIncomplete();
 
         $this->assertSame('Sir Longfellow', $res['resource']['origin']['creator']);
         $this->assertSame('Here', $res['resource']['origin']['location']);
