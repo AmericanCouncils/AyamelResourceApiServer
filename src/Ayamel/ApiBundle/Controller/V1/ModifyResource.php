@@ -41,7 +41,7 @@ class ModifyResource extends ApiController
         $this->requireResourceOwner($resource);
 
         //use object validation service to modify the existing object
-        $ctx = DeserializationContext::create()->setTarget($resource);
+        $ctx = DeserializationContext::create()->setTarget($resource)->setSerializeNested(true);
         $modifiedResource = $this->decodeRequest('Ayamel\ResourceBundle\Document\Resource', $ctx);
         $this->validateObject($modifiedResource);
 
