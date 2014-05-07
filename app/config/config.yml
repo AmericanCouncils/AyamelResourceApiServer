@@ -69,14 +69,16 @@ jms_serializer:
 doctrine_mongodb:
     connections:
         default:
-            server: mongodb://%mongodb_host%:%mongodb_port%
+            server: mongodb://%mongodb_hosts%
             options:
                 connect: true
+                replicaSet: %mongodb_replica_set%
     default_database: %mongodb_database%
     document_managers:
         default:
             auto_mapping: true
             metadata_cache_driver: apc
+            retry_connect: 3
 
 ac_web_services:
     serializer:

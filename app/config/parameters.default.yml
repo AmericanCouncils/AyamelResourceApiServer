@@ -1,8 +1,8 @@
 ## Note that this parameters.yml file includes configuration for a test/dev environment.  For an
 ## actual production configuration, change this file accordingly.
 parameters:
-    mongodb_host: localhost
-    mongodb_port: 27017
+    mongodb_hosts: localhost
+    mongodb_replica_set: ~
     mongodb_database: ayamel_%kernel.environment%
 
     rabbitmq_host: localhost
