@@ -96,7 +96,6 @@ nelmio_api_doc:
     name:   Ayamel Media API Documentation
     sandbox:
         enabled:  true
-        endpoint: %nelmio_api_doc_endpoint%
         authentication:
             name: _key
             delivery: query

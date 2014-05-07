@@ -34,9 +34,6 @@ parameters:
     filesystem_secret: zeroisnotanumber
     filesystem_base_url: http://192.168.13.38/files/resource_uploads
 
-    ## API Docs
-    nelmio_api_doc_endpoint: http://192.168.13.38
-
     ## Transcoding support
     transcoding_tmp_dir: %kernel.root_dir%/files/tmp
     ffmpeg_path: /usr/bin/ffmpeg
