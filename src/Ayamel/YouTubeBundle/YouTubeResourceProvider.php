@@ -70,8 +70,8 @@ class YouTubeResourceProvider implements ProviderInterface
         //set title
         if (isset($data['entry']['title']['$t'])) {
             $res->setTitle($data['entry']['title']['$t']);
-        } else if (isset($data['entry']['media$group']['media$description']['$t'])) {
-            $res->setTitle($data['entry']['media$group']['media$description']['$t']);
+        } else if (isset($data['entry']['media$group']['media$title']['$t'])) {
+            $res->setTitle($data['entry']['media$group']['media$title']['$t']);
         } else {
             $res->setTitle('Untitled YouTube Video');
         }
