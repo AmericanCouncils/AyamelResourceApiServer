@@ -164,7 +164,7 @@ class UriContentSubscriber implements EventSubscriberInterface
             if (is_null($oldValue) || empty($oldValue)) {
                 $reflProp->setValue($old, $reflProp->getValue($new));
             }
-
+            
             if ($protected) {
                 $reflProp->setAccessible(false);
             }

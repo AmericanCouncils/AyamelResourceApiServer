@@ -92,7 +92,7 @@ Ayamel\ResourceBundle\Document\Resource:
             - Type:
                 type: string
             - Choice:
-                choices: ['CC BY','CC BY-ND','CC BY-NC','CC BY-SA','CC BY-NC-SA','CC BY-NC-ND']
+                choices: ['CC BY','CC BY-ND','CC BY-NC','CC BY-SA','CC BY-NC-SA','CC BY-NC-ND', 'youtube']
         origin:
             - Valid: ~
         client:
