@@ -10,6 +10,7 @@ use Ayamel\ApiBundle\Event\Events as ApiEvents;
 use Ayamel\ApiBundle\Event\RelationEvent;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Request;
+use JMS\Serializer\DeserializationContext;
 
 class RelationsController extends ApiController
 {
@@ -196,7 +197,7 @@ class RelationsController extends ApiController
         $request = $this->getRequest();
 
         //create the relation submitted by the client
-        $relation = $this->decodeRequest('Ayamel\ResourceBundle\Document\Relation');
+        $relation = $this->decodeRequest('Ayamel\ResourceBundle\Document\Relation', DeserializationContext::create()->setGroups(['Default']));
 
         //retrieve the related resources
         $subject = $this->getRequestedResourceById($relation->getSubjectId());
