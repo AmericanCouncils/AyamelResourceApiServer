@@ -66,12 +66,21 @@ class YouTubeResourceProvider implements ProviderInterface
         $res->setStatus(Resource::STATUS_NORMAL);
         $res->setType('video');
         $res->content = new ContentCollection();
+
+        //set title
         if (isset($data['entry']['title']['$t'])) {
             $res->setTitle($data['entry']['title']['$t']);
+        } else if (isset($data['entry']['media$group']['media$title']['$t'])) {
+            $res->setTitle($data['entry']['media$group']['media$title']['$t']);
+        } else {
+            $res->setTitle('Untitled YouTube Video');
         }
+
+
         if (isset($data['entry']['media$group']['media$description']['$t'])) {
             $res->setDescription($data['entry']['media$group']['media$description']['$t']);
         }
+        
         // TODO: Use topics field for each category label that validates
         if (isset($data['entry']['category'])) {
             $subjectDomains = array();
@@ -83,8 +92,14 @@ class YouTubeResourceProvider implements ProviderInterface
 
             $res->setSubjectDomains($subjectDomains);
         }
+
+        //populate license field properly
         if (isset($data['entry']['media$group']['media$license']['$t'])) {
-            $res->setLicense($data['entry']['media$group']['media$license']['$t']);
+            switch ($data['entry']['media$group']['media$license']['$t']) {
+                case 'cc': $res->setLicense('CC BY'); break;
+                case 'youtube': $res->setLicense('youtube'); break;
+                default: break;
+            }
         }
 
         //create content

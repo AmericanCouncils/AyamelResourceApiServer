@@ -287,6 +287,10 @@ class Resource
      * 
      *     This license is the most restrictive of our six main licenses, only allowing others to download your works and share them with others as long as they credit you, but they can’t change them in any way or use them commercially. [Summary &rarr;](http://creativecommons.org/licenses/by-nc-nd/4.0/) [Full text &rarr;](http://creativecommons.org/licenses/by-nc-nd/4.0/legalcode)
      *
+     * * **youtube**
+     *
+     *      Creators of content with this license must abide by the [YouTube Terms of Service](http://www.youtube.com/t/terms).
+     *
      * @MongoDB\String
      * @JMS\Type("string")
      */
