@@ -271,4 +271,10 @@ class ModifyResourceFieldsTest extends FixturedTestCase
         $res = $this->good('clientUser', ['url' => null]);
         $this->assertSame('user-23', $res['resource']['clientUser']['id']);
     }
+
+    public function testIgnoredFields()
+    {
+        //add tests for setting read only fields via the API
+        $this->markTestIncomplete();
+    }
 }

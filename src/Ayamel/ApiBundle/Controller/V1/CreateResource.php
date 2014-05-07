@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Ayamel\ResourceBundle\Document\Resource;
 use Ayamel\ResourceBundle\Document\Client;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use JMS\Serializer\DeserializationContext;
 
 class CreateResource extends ApiController
 {
@@ -31,7 +32,7 @@ class CreateResource extends ApiController
         $this->requireAuthentication();
 
         //create object from client request
-        $resource = $this->decodeRequest('Ayamel\ResourceBundle\Document\Resource');
+        $resource = $this->decodeRequest('Ayamel\ResourceBundle\Document\Resource', DeserializationContext::create()->setGroups(['Default']));
 
         //set the properties controlled by the resource library
         $resource->setStatus(Resource::STATUS_AWAITING_CONTENT);

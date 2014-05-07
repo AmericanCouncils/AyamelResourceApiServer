@@ -103,7 +103,7 @@ class UploadContent extends ApiController
         // $this->requireAuthentication();
 
         //get the resource
-        $resource = $this->getRequestedResourceById($id);
+        $resource = $this->getRequestedResourceById($id, true);
 
         //check for deleted resource
         if ($resource->isDeleted()) {

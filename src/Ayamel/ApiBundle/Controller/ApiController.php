@@ -131,7 +131,7 @@ abstract class ApiController extends Controller
      * @throws Symfony\Component\HttpKernel\Exception\HttpException(403) if resource is private and requesting client is not the owner.
      * @return Ayamel\ResourceBundle\Document\Resource
      */
-    protected function getRequestedResourceById($id)
+    protected function getRequestedResourceById($id, $skipVisibilityCheck = false)
     {
         //get repository and find requested object
         $resource = $this->getRepo('AyamelResourceBundle:Resource')->find($id);
@@ -141,14 +141,17 @@ abstract class ApiController extends Controller
             throw new HttpException(404, "The requested resource does not exist.");
         }
 
-        //throw access denied exception if resource has visibility restrictions
-        $visibility = $resource->getVisibility();
-        if (!empty($visibility)) {
-            if (!$client = $this->getApiClient()) {
-                throw new HttpException(401, "Valid API key required.");
-            }
+        if (!$skipVisibilityCheck) {
+            //throw access denied exception if resource has visibility restrictions
+            $visibility = $resource->getVisibility();
 
-            $this->requireClientVisibility($resource);
+            if (!empty($visibility)) {
+                if (!$client = $this->getApiClient()) {
+                    throw new HttpException(401, "Valid API key required.");
+                }
+
+                $this->requireClientVisibility($resource);
+            }
         }
 
         return $resource;
