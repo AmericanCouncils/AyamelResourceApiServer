@@ -29,7 +29,7 @@
         "doctrine/mongodb-odm-bundle": "3.0.*@dev",
         "symfony/assetic-bundle": "2.3.*",
         "symfony/swiftmailer-bundle": "2.3.*",
-        "symfony/monolog-bundle": "2.3.*",
+        "symfony/monolog-bundle": "~2.4",
         "sensio/distribution-bundle": "2.3.*",
         "sensio/generator-bundle": "2.3.*",
         "ac/transcoding-bundle": "0.4.*",

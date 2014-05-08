@@ -149,7 +149,7 @@ class ResourceIndexer
             try {
                 $this->type->deleteById($id);
             } catch (NotFoundException $e) {
-                throw new IndexException("The Resource index entry could not be found to remove.");
+                throw new IndexException("The Resource was already removed from the index.");
             }
 
             return false;

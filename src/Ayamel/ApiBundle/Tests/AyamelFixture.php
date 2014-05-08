@@ -30,7 +30,7 @@ class AyamelFixture extends CachedMongoFixture
         $this->describe("AyamelResourceBundle:FileReference", [
             'downloadUri' => function ($f) {return $f->fake()->url();},
             'streamUri' => function ($f) {return $f->fake()->url();},
-            'internalUri' => function ($f) {return $f->fake()->url();},
+            'internalUri' => function ($f) { return $f->reallyNull(); },
             'bytes' => function ($f) {return $f->fake()->randomDigit(10);},
             'representation' => function ($f) {return $f->fake()->randomElement(['original', 'transcoding', 'summary']);},
             'quality' => function ($f) {return $f->fake()->randomDigit();},

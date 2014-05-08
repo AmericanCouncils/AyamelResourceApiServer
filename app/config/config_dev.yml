@@ -11,6 +11,9 @@ web_profiler:
 
 monolog:
     handlers:
+        console:
+            type: console
+            channels: app
         main:
             type:  stream
             path:  %kernel.logs_dir%/%kernel.environment%.log

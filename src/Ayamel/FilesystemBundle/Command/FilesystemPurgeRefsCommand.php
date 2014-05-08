@@ -14,13 +14,13 @@ use Ayamel\FilesystemBundle\Filesystem\LocalFilesystem;
  *
  * @author Evan Villemez
  */
-class FilesystemCleanCommand extends ContainerAwareCommand
+class FilesystemPurgeRefsCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
         $this
-            ->setName('fs:clean')
-            ->setDescription('Remove files in the filesystem for which no records exist in Resource storage.')
+            ->setName('fs:purge:refs')
+            ->setDescription('Remove data references to local files that do not exist.')
             ->setDefinition(array(
                 new InputOption('update', null, InputOption::VALUE_NONE, 'Specifying this flag will actually remove references to lost files from the database.  Otherwise, the command will just return counts for lost references.'),
             ));
@@ -29,14 +29,17 @@ class FilesystemCleanCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         //check for local filesystem
-        $fs = $this->getContainer()->get('ayamel.api.filesystem');
+        $c = $this->getContainer();
+        $fs = $c->get('ayamel.api.filesystem');
         if (!($fs instanceof FilesystemManager && $fs->getFilesystem() instanceof LocalFilesystem) && !$fs instanceof LocalFilesystem) {
             throw new \RuntimeException("This command will only work for filesystems managing files accessible by this server.");
         }
 
         //get array of internal uris in database
-        $mongo = $this->getContainer()->get('doctrine_mongodb.odm.default_connection');
-        $results = $mongo->ayamel->resources->find(array('content.files.internalUri' => array('$exists'=>true)), array('content.files.internalUri' => 1));
+        $manager = $c->get('doctrine_mongodb')->getManager();
+        $mongo = $manager->getConnection();
+        $collection = $mongo->selectCollection($c->getParameter('mongodb_database'), "resources");
+        $results = $collection->find(array('content.files.internalUri' => array('$exists'=>true)), array('content.files.internalUri' => 1));
 
         //check if file actually exists for each uri
         $total = 0;
