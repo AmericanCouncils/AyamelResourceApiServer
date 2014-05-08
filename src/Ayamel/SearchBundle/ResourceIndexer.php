@@ -72,6 +72,8 @@ class ResourceIndexer
             $this->type->addDocument($doc);
             $this->type->getIndex()->refresh();
 
+            $this->log(sprintf("Indexed Resource %s", $id));
+
             return true;
         }
 
@@ -95,25 +97,17 @@ class ResourceIndexer
             }
 
             if ($count >= $batch) {
-                $count = 0;
                 $this->type->getIndex()->refresh();
+                $this->log(sprintf("Indexed [%s of %s] resources.", $count, $batch));
+                $count = 0;
             }
         }
 
         $this->type->getIndex()->refresh();
+        $this->log(sprintf("Indexed [%s of %s] resources.", $count, $batch));
 
         if (!empty($failed)) {
              $e = new BulkIndexException($failed);
-
-             // TODO: ad-hoc debug, if needed should implement logging
-
-             // $messages = $e->getMessages();
-             // $indices = array_keys($messages);
-             // print_r("\nFailed to index " . count($messages) . " resources.\n");
-             // print_r("ResourceIndexer failure messages:\n");
-             // foreach ($indices as $index) {
-             //     print_r("id: $index; message: " . $messages[$index] . "\n");
-             // }
 
              throw $e;
         }
@@ -148,7 +142,7 @@ class ResourceIndexer
                 $this->logger->warning(sprintf("Tried indexing a non-existing resource [%s]", $id));
             }
 
-            throw new IndexException("The Resource could not be found in order to index.");
+            throw new IndexException(sprintf("Tried indexing a non-existing resource [%s]", $id));
         }
 
         if ($resource->isDeleted()) {
@@ -330,5 +324,12 @@ class ResourceIndexer
         }
 
         return false;
+    }
+
+    protected function log($msg, $level = 'info')
+    {
+        if ($this->logger) {
+            $this->logger->log($level, $msg);
+        }
     }
 }
