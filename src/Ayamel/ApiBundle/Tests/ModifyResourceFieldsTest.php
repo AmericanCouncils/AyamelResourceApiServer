@@ -11,7 +11,7 @@ class ModifyResourceFieldsTest extends FixturedTestCase
     //the specifc resource id we are modifying
     private $id = false;
 
-    protected function modify($fieldName, $newValue, $expectedCode)
+    protected function modify($fieldName, $newValue, $expectedCode, $expectUpdates = true)
     {
         //pick a resource to modify
         if (!$this->id) {
@@ -24,9 +24,6 @@ class ModifyResourceFieldsTest extends FixturedTestCase
             $res = $this->callJsonApi('GET', '/api/v1/resources/'.$id.'?_key=key-for-test-client-1');
             $resource = $res['resource'];
         }
-
-        //get a resource
-        $res = $this->callJsonApi('GET', '/api/v1/resources?_key=key-for-test-client-1');        
 
         //store the old value
         $oldValue = isset($resource[$fieldName]) ? $resource[$fieldName] : null;
@@ -43,16 +40,27 @@ class ModifyResourceFieldsTest extends FixturedTestCase
             'expectedCode' => $expectedCode
         ]);
 
-        //if modified, should have new value
+        //if modified, should have new value (unless explicitly ignored)
         if (200 === $expectedCode) {
-            $this->compareValues($fieldName, $newValue, $modified['resource']);
 
-            //get the resource again, should still have modified value
-            $res = $this->callJsonApi('GET', '/api/v1/resources/'.$id.'?_key=key-for-test-client-1');
+            if (!$expectUpdates) {
+                //input should have been ignored (read only fields)
+                $this->compareValues($fieldName, $oldValue, $modified['resource']);
+                //get the resource again, should still have old value
+                $res = $this->callJsonApi('GET', '/api/v1/resources/'.$id.'?_key=key-for-test-client-1');
+                $this->compareValues($fieldName, $oldValue, $res['resource']);
 
-            $this->compareValues($fieldName, $newValue, $res['resource']);
+                return $res;
+            } else {
+                //otherwise, update should have happened as epxected
+                $this->compareValues($fieldName, $newValue, $modified['resource']);
+                //get the resource again, should still have modified value
+                $res = $this->callJsonApi('GET', '/api/v1/resources/'.$id.'?_key=key-for-test-client-1');
+                $this->compareValues($fieldName, $newValue, $res['resource']);
 
-            return $res;
+                return $res;
+            }
+
         }
 
         //if not modified, should have old value
@@ -103,6 +111,11 @@ class ModifyResourceFieldsTest extends FixturedTestCase
     protected function bad($fieldName, $newValue)
     {
         return $this->modify($fieldName, $newValue, 400);
+    }
+
+    protected function ignore($fieldName, $newValue)
+    {
+        return $this->modify($fieldName, $newValue, 200, false);
     }
 
     public function testTitle()
@@ -168,7 +181,6 @@ class ModifyResourceFieldsTest extends FixturedTestCase
         ]);
 
         $this->good('languages', null);
-
 
         $this->bad('languages', 9001);
     }
@@ -272,9 +284,33 @@ class ModifyResourceFieldsTest extends FixturedTestCase
         $this->assertSame('user-23', $res['resource']['clientUser']['id']);
     }
 
-    public function testIgnoredFields()
+    public function testId()
     {
-        //add tests for setting read only fields via the API
-        $this->markTestIncomplete();
+        $this->ignore('id', '50000');
+    }
+
+    public function testStatus()
+    {
+        $this->ignore('status', 'deleted');
+    }
+
+    public function testDateAdded()
+    {
+        $this->ignore('dateAdded', '2732732823');
+    }
+
+    public function testDateModified()
+    {
+        $this->ignore('dateModified', '2373289323');
+    }
+
+    public function testDateDeleted()
+    {
+        $this->ignore('dateDeleted', '2373289323');
+    }
+
+    public function testContent()
+    {
+        $this->ignore('content', ['canonicalUri' => 'http://example.com']);
     }
 }
