@@ -238,17 +238,17 @@
         },
         {
             "name": "ac/web-services-bundle",
-            "version": "0.3.5",
+            "version": "0.3.6",
             "target-dir": "AC/WebServicesBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/AmericanCouncils/WebServicesBundle.git",
-                "reference": "282c8e8d769d8529c1a5191505e52691d42b4754"
+                "reference": "44aee4dd70aa51fa5840ad068a2268c4ce6b6dbd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AmericanCouncils/WebServicesBundle/zipball/282c8e8d769d8529c1a5191505e52691d42b4754",
-                "reference": "282c8e8d769d8529c1a5191505e52691d42b4754",
+                "url": "https://api.github.com/repos/AmericanCouncils/WebServicesBundle/zipball/44aee4dd70aa51fa5840ad068a2268c4ce6b6dbd",
+                "reference": "44aee4dd70aa51fa5840ad068a2268c4ce6b6dbd",
                 "shasum": ""
             },
             "require": {
@@ -289,7 +289,7 @@
                 "rest",
                 "web services"
             ],
-            "time": "2014-05-03 01:10:53"
+            "time": "2014-05-08 16:29:37"
         },
         {
             "name": "dflydev/markdown",
@@ -895,12 +895,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/DoctrineMongoDBBundle.git",
-                "reference": "ba17a288ae0f2f2cb4ef1bac667710a5f3b7151e"
+                "reference": "30be111a948a661d42a1008a11847702e8d6e4aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineMongoDBBundle/zipball/ba17a288ae0f2f2cb4ef1bac667710a5f3b7151e",
-                "reference": "ba17a288ae0f2f2cb4ef1bac667710a5f3b7151e",
+                "url": "https://api.github.com/repos/doctrine/DoctrineMongoDBBundle/zipball/30be111a948a661d42a1008a11847702e8d6e4aa",
+                "reference": "30be111a948a661d42a1008a11847702e8d6e4aa",
                 "shasum": ""
             },
             "require": {
@@ -940,7 +940,7 @@
                     "homepage": "http://avalanche123.com"
                 },
                 {
-                    "name": "Jonathan Wage",
+                    "name": "Jonathan H. Wage",
                     "email": "jonwage@gmail.com",
                     "homepage": "http://www.jwage.com/",
                     "role": "Creator"
@@ -957,7 +957,7 @@
                 "persistence",
                 "symfony"
             ],
-            "time": "2014-04-03 20:22:59"
+            "time": "2014-03-28 00:31:22"
         },
         {
             "name": "friendsofsymfony/elastica-bundle",
@@ -1052,16 +1052,12 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/c43676fdda733c413ec016d4fdeb73d5477e4d65",
+                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/2fc67a37bdb32300080dee7a14b902c7a012837a",
                 "reference": "991e39d280afc34a91684e5789023f1b276e4618",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.0",
-                "squizlabs/php_codesniffer": "~1.5"
             },
             "type": "library",
             "extra": {
