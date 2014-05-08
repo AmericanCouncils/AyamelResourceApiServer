@@ -145,6 +145,8 @@ class UriContentSubscriber implements EventSubscriberInterface
 
     protected function mergeDocumentProperties($old, $new, $properties = [])
     {
+        if (is_null($new)) { return; }
+
         if (get_class($old) !== get_class($new)) {
             throw new \LogicException(sprintf(
                 "Attempted to merge instances of different types (%s and %s).",
