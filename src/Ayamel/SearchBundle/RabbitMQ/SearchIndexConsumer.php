@@ -38,12 +38,12 @@ class SearchIndexConsumer implements ConsumerInterface
         try {
             if (isset($body['id'])) {
                 $this->container->get('ayamel.search.resource_indexer')->indexResource($body['id']);
-                $logger->info(sprintf('Indexed [%s]: %s', $body['id'], $message));
+                $logger->info(sprintf('Indexed [%s]', $body['id']));
             }
 
             if (isset($body['ids'])) {
                 $this->container->get('ayamel.search.resource_indexer')->indexResources($body['ids'], $batch);
-                $logger->info(sprintf('Indexed multiple [%s]: %s', $body['ids'], $message));
+                $logger->info(sprintf('Indexed multiple [%s]', $body['ids']));
             }
         } catch (IndexException $e) {
 
