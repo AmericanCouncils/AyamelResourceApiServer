@@ -5,6 +5,7 @@ namespace Ayamel\SearchBundle\Provider;
 use Ayamel\SearchBundle\ResourceIndexer;
 use FOS\ElasticaBundle\Provider\ProviderInterface;
 use Elastica\Type;
+use Ayamel\SearchBundle\Exception\BulkIndexException;
 
 /**
  * The ResourceProvider implements the necessary interface from FOSElasticaBundle to populate the search
@@ -54,7 +55,20 @@ class ResourceProvider implements ProviderInterface
             $loggerClosure(sprintf("Indexing %s resources.", count($ids)));
         }
 
-        $this->indexer->indexResources($ids, $this->batch);
+        try {
+            $this->indexer->indexResources($ids, $this->batch);
+        } catch (BulkIndexException $e) {
+            if ($loggerClosure) {
+                $loggerClosure(sprintf("Finished indexing, skipped [%s] resources.", $e->getCount()));
+
+                if ($this->getArgument('verbose')) {
+                    foreach ($e->getMessages() as $message) {
+                        $loggerClosure($message);
+                    }
+                }
+            }
+        }
+            
 
         if ($loggerClosure) {
             $loggerClosure("Finished indexing resources.");

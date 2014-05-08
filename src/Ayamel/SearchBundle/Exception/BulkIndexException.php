@@ -15,11 +15,16 @@ class BulkIndexException extends IndexException
     {
         $this->messages = $messages;
 
-        parent::__construct("Multiple Resources could not be indexed.");
+        parent::__construct("Multiple Resources (".$this->getCount().") could not be indexed.");
     }
 
     public function getMessages()
     {
         return $this->messages;
+    }
+
+    public function getCount()
+    {
+        return count($this->messages);
     }
 }
