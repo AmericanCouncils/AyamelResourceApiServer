@@ -104,6 +104,8 @@ class PublisherListener implements EventSubscriberInterface
                 'path' => $this->fileToTranscode->getInternalUri(),
                 'notifyClient' => true,
             )));
+
+            $this->container->get('monolog.logger.transcoding')->info(sprintf("Scheduled transcode of resource [%s] via RabbitMQ.", $this->resource->getId()));
         }
     }
 }
