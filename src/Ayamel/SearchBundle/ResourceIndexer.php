@@ -66,7 +66,13 @@ class ResourceIndexer
      **/
     public function indexResource($id)
     {
-        $doc = $this->createResourceSearchDocumentForId($id);
+        try {
+            $doc = $this->createResourceSearchDocumentForId($id);
+        } catch (IndexException $e) {
+            $this->log(sprintf("Not indexing [%s] because [%s]", $id, $e->getMessage()));
+
+            throw $e;
+        }        
 
         if ($doc instanceof Document) {
             $this->type->addDocument($doc);
@@ -83,6 +89,7 @@ class ResourceIndexer
     public function indexResources(array $ids, $batch = 100)
     {
         $count = 0;
+        $fails = 0;
         $failed = array();
         foreach ($ids as $id) {
             try {
@@ -92,24 +99,24 @@ class ResourceIndexer
                     $this->type->addDocument($doc);
                 }
             } catch (IndexException $e) {
+                $fails++;
                 $failed[$id] = $e->getMessage();
                 continue;
             }
 
             if ($count >= $batch) {
                 $this->type->getIndex()->refresh();
-                $this->log(sprintf("Indexed [%s of %s] resources.", $count, $batch));
+                $this->log(sprintf("Indexed [%s] & skipped [%s] resources.", $count, $fails));
                 $count = 0;
+                $fails = 0;
             }
         }
 
         $this->type->getIndex()->refresh();
-        $this->log(sprintf("Indexed [%s of %s] resources.", $count, $batch));
+        $this->log(sprintf("Indexed [%s] & skipped [%s] resources.", $count, $fails));
 
         if (!empty($failed)) {
-             $e = new BulkIndexException($failed);
-
-             throw $e;
+            throw new BulkIndexException($failed);
         }
 
         return true;
@@ -138,10 +145,6 @@ class ResourceIndexer
         $resource = $this->manager->getRepository('AyamelResourceBundle:Resource')->find($id);
 
         if (!$resource) {
-            if ($this->logger) {
-                $this->logger->warning(sprintf("Tried indexing a non-existing resource [%s]", $id));
-            }
-
             throw new IndexException(sprintf("Tried indexing a non-existing resource [%s]", $id));
         }
 
@@ -273,9 +276,7 @@ class ResourceIndexer
             try {
                 return file_get_contents($uri);
             } catch (\Exception $e) {
-                if ($this->logger) {
-                    $this->logger->warning(sprintf("Failed getting search index content at [%s]", $uri));
-                }
+                $this->log(sprintf("Failed getting search index content at [%s]", $uri), 'warning');
 
                 return false;
             }

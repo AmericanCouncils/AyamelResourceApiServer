@@ -55,12 +55,12 @@ class ResourceProvider implements ProviderInterface
             $loggerClosure(sprintf("Indexing %s resources.", count($ids)));
         }
 
+        $batchSize = isset($options['batch-size']) ? $options['batch-size'] : $this->batch;
+
         try {
-            $this->indexer->indexResources($ids, (int) $options['batch-size']);
+            $this->indexer->indexResources($ids, $batchSize);
         } catch (BulkIndexException $e) {
             if ($loggerClosure) {
-                $loggerClosure(sprintf("Finished indexing, skipped [%s] resources.", $e->getCount()));
-
                 if ($options['verbose']) {
                     foreach ($e->getMessages() as $id => $message) {
                         $loggerClosure(sprintf("Index failed/skipped for [%s]: %s", $id, $message));

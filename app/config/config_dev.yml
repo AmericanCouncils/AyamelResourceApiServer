@@ -13,7 +13,7 @@ monolog:
     handlers:
         console:
             type: console
-            channels: app
+            channels: ['app','search','transcoding','filesystem']
         main:
             type:  stream
             path:  %kernel.logs_dir%/%kernel.environment%.log

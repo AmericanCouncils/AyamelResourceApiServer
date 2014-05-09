@@ -9,7 +9,7 @@ parameters:
 services:
     ayamel.api.filesystem:
         class: Ayamel\FilesystemBundle\Filesystem\FilesystemManager
-        arguments: [@ayamel.api.filesystem.backend, @event_dispatcher]
+        arguments: [@ayamel.api.filesystem.backend, @event_dispatcher, @monolog.logger.filesystem]
 
     ayamel.api.filesystem.backend:
         class: Ayamel\FilesystemBundle\Filesystem\LocalFilesystem
