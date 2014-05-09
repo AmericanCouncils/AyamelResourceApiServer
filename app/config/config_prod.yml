@@ -7,6 +7,8 @@ monolog:
             type:         fingers_crossed
             action_level: error
             handler:      nested
+            excluded_404s:
+                - ^/
         nested:
             type:  stream
             path:  %logfile_path%
