@@ -108,8 +108,13 @@ class SearchIndexSubscriber implements EventSubscriberInterface
         }
 
         $producer = $this->container->get('old_sound_rabbit_mq.search_index_producer');
+        $logger = $this->container->get('monolog.logger.search');
+
         foreach ($this->messages as $message) {
             $producer->publish(serialize($message));
+            $ids = isset($message['ids']) ? $message['ids'] : (array) $message['id'];
+
+            $logger->info(sprintf("Scheduled search index rebuild of [%s] via RabbitMQ.", implode(',', $ids)));
         }
 
         $this->messages = array();
