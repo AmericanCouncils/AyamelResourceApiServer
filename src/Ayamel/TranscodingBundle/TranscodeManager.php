@@ -16,6 +16,7 @@ use Ayamel\ApiBundle\Event\Events as ApiEvents;
 use Ayamel\ApiBundle\Event\ResourceEvent;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * This class transcodes original files in a resource into multiple files
@@ -49,7 +50,7 @@ class TranscodeManager
     private $dispatcher;
     private $presetConfig;
     private $presetMap;
-    //private $logger;
+    private $logger;
     //private $clientManager;
 
     /**
@@ -60,7 +61,17 @@ class TranscodeManager
      * @param Transcoder               $t
      * @param $defaulMapperConfig
      */
-    public function __construct(ContainerInterface $container, FilesystemInterface $fs, DocumentManager $dm, Transcoder $t, $tmpDirectory, EventDispatcherInterface $dispatcher, $presetConfig = array(), $presetMap = array())
+    public function __construct(
+        ContainerInterface $container,
+        FilesystemInterface $fs,
+        DocumentManager $dm,
+        Transcoder $t,
+        $tmpDirectory,
+        EventDispatcherInterface $dispatcher,
+        $presetConfig = array(),
+        $presetMap = array(),
+        LoggerInterface $logger = null
+    )
     {
         $this->container = $container;
         $this->filesystem = $fs;
@@ -70,6 +81,14 @@ class TranscodeManager
         $this->tmpDirectory = $tmpDirectory;
         $this->presetConfig = $presetConfig;
         $this->presetMap = $presetMap;
+        $this->logger = $logger;
+    }
+
+    private function log($msg, $level = 'info')
+    {
+        if ($this->logger) {
+            $this->logger->log($level, $msg);
+        }
     }
 
     /**
@@ -138,6 +157,8 @@ class TranscodeManager
         $this->lockResource($resource);
         $newFiles = array();
         try {
+            $this->log(sprintf("Starting transcode of resource [%s].", $resource->getId()));
+
             foreach ($presetDefinitions as $def) {
 
                 $preset = $this->container->get($def['preset_service']);
@@ -147,6 +168,8 @@ class TranscodeManager
                 }
 
                 //run the transcode & create a FileReference from the resulting file
+                $this->log(sprintf("Starting transcode of [%s] with preset [%s].", $resource->getId(), $def['preset_service']), 'info');
+
                 try {
                     $transcodedFile = $this->transcoder->transcodeWithPreset(
                         $ref->getInternalUri(),
@@ -157,12 +180,16 @@ class TranscodeManager
                         Transcoder::ONFAIL_DELETE
                     );
                 } catch (\Exception $e) {
+                    $this->log(sprintf('Failed transcode of [%s] with preset [%s] due to [%s]', $ref->getInternalUri(), $def['preset_service'], $e->getMessage()), 'error');
+
                     if (isset($def['ignore_errors']) && true === $def['ignore_errors']) {
                         continue;
                     } else {
                         throw $e;
                     }
                 }
+
+                $this->log(sprintf("Finished transcoding [%s] with preset [%s].", $ref->getInternalUri(), $def['preset_service']));
 
                 $newFileReference = FileReference::createFromLocalPath($transcodedFile->getRealPath());
 
@@ -187,6 +214,8 @@ class TranscodeManager
                 $newFiles[] = $finalReference;
             }
         } catch (\Exception $e) {
+            $this->log(sprintf("Failed transcode of resource [%s]: [%s].", $resource->getId(), $e->getMessage()), 'error');
+
             $this->unlockResource($resource);
 
             foreach ($newFiles as $failedFile) {
@@ -228,6 +257,8 @@ class TranscodeManager
 
         //clean up the filesystem
         $this->cleanupFilesystem($resource);
+
+        $this->log(sprintf("Finished transcode of resource [%s]", $resource->getId()));
 
         return $resource;
     }

@@ -6,9 +6,11 @@ use Ayamel\ResourceBundle\Document\FileReference;
 use Ayamel\FilesystemBundle\Event\FilesystemEvent;
 use Ayamel\FilesystemBundle\Event\Events;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Psr\Log\LoggerInterface;
 
 /**
- * FilesystemManager wraps another FilesystemInterface instance and uses an EventDispatcer to dispatch filesystem related events.
+ * FilesystemManager wraps another FilesystemInterface instance and uses an EventDispatcer 
+ * to dispatch filesystem related events and log addition/removal events.
  *
  * @author Evan Villemez
  */
@@ -25,15 +27,21 @@ class FilesystemManager implements FilesystemInterface
     protected $dispatcher;
 
     /**
+     * @var object - Psr\Log\LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * Constructor takes another FilesystemInterface to wrap, and an EventDispatcher for events
      *
      * @param FilesystemInterface      $fs
      * @param EventDispatcherInterface $dispatcher
      */
-    public function __construct(FilesystemInterface $fs, EventDispatcherInterface $dispatcher)
+    public function __construct(FilesystemInterface $fs, EventDispatcherInterface $dispatcher, LoggerInterface $logger = null)
     {
         $this->fs = $fs;
         $this->dispatcher = $dispatcher;
+        $this->logger = $logger;
     }
 
     /**
@@ -72,6 +80,8 @@ class FilesystemManager implements FilesystemInterface
         }
         $this->dispatcher->dispatch(Events::FILESYSTEM_POST_DELETE, new FilesystemEvent($this->fs, $ref, $id));
 
+        $this->log(sprintf("Removed file [%s] for id [%s]", $ref->getDownloadUri(), $id));
+
         return true;
     }
 
@@ -92,6 +102,8 @@ class FilesystemManager implements FilesystemInterface
         $this->dispatcher->dispatch(Events::FILESYSTEM_PRE_DELETE, new FilesystemEvent($this->fs, $ref, $id));
         $return = $this->fs->removeFileForId($id, $name);
         $this->dispatcher->dispatch(Events::FILESYSTEM_POST_DELETE, new FilesystemEvent($this->fs, $ref, $id));
+
+        $this->log(sprintf("Removed file [%s] for id [%s]", $name, $id));
 
         return $return;
     }
@@ -149,6 +161,8 @@ class FilesystemManager implements FilesystemInterface
         $newRef = $this->fs->addFileForId($id, $ref, $newBasename, $copy, $onConflict);
         $e = $this->dispatcher->dispatch(Events::FILESYSTEM_POST_ADD, new FilesystemEvent($this->fs, $newRef, $id));
 
+        $this->log(sprintf("Added file [%s] for id [%s].", $newRef->getDownloadUri(), $id));
+
         return $e->getFileReference();
     }
 
@@ -176,5 +190,12 @@ class FilesystemManager implements FilesystemInterface
     public function getFilesystem()
     {
         return $this->fs;
+    }
+
+    protected function log($msg, $level = 'info', $ops = [])
+    {
+        if ($this->logger) {
+            $this->logger->log($level, $msg, $ops);
+        }
     }
 }

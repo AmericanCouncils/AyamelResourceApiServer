@@ -35,7 +35,7 @@ services:
             - @serializer
             - %ayamel.search.indexable_mime_types%
             - %ayamel.search.indexable_resource_types%
-            - @logger
+            - @monolog.logger.search
             - %ayamel.search.language_field_map%
 
     ayamel.search.elastica_resource_provider:
