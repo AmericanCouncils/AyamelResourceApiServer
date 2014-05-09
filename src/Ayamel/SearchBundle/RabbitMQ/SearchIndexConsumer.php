@@ -33,7 +33,11 @@ class SearchIndexConsumer implements ConsumerInterface
     {
         $body = unserialize($msg->body);
         $batch = $this->container->getParameter('ayamel.search.elastica_resource_provider.batch');
-        $logger = $this->container->get('logger');
+        $logger = $this->container->get('monolog.logger.search');
+        
+        $ids = isset($body['ids']) ? $body['ids'] : $body['id'];
+
+        $logger->info(sprintf("Attempting to asynchronously index [%s]", implode(', ', $ids)));
 
         try {
             if (isset($body['id'])) {

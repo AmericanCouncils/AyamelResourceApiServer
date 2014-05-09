@@ -56,33 +56,28 @@ class Consumer implements ConsumerInterface
         $presetFilter = isset($body['presetFilter']) ? $body['presetFilter'] : array();
         $mimeFilter = isset($body['mimeFilter']) ? $body['mimeFilter'] : array();
         $notifyClient = isset($body['notifyClient']) ? $body['notifyClient'] : false;
+        $logger = $this->container->get('monolog.logger.transcoding');
+        $exception = false;
 
         //try the transcode, if it fails, depending on how, either remove the job from the queue
         //or requeue for later
         try {
-            echo "Transcoding $id ...".PHP_EOL;
+            
+            $logger->info(sprintf("Attempting to asynchronously transcode resource [id].", $id));
+
             $resource = $this->container->get('ayamel.transcoding.manager')->transcodeResource($id, $appendFiles, $presetFilter, $mimeFilter);
-            echo "Finished.".PHP_EOL;
         } catch (ResourceLockedException $e) {
-            echo get_class($e).PHP_EOL;
+            $logger->info(sprintf("Aborted transcoding resource [%s], it is locked.", $id));
 
             return false;
         } catch (NoTranscodeableFilesException $e) {
-            echo get_class($e).PHP_EOL;
-
-            return true;
+            $exception = $e;
         } catch (ResourceNotFoundException $e) {
-            echo get_class($e).PHP_EOL;
-
-            return true;
+            $exception = $e;
         } catch (ResourceDeletedException $e) {
-            echo get_class($e).PHP_EOL;
-
-            return true;
+            $exception = $e;
         } catch (NoRelevantPresetsException $e) {
-            echo get_class($e).PHP_EOL;
-
-            return true;
+            $exception = $e;
         } catch (\Exception $e) {
             if ($notifyClient) {
                 //TODO:
@@ -91,10 +86,16 @@ class Consumer implements ConsumerInterface
                 //saying there was a problem
             }
 
+            $logger->error("Unexpected error during transcode of resource [%s]: ", $id, $e->getMessage());
+
             throw $e;
 
-            //and try handling the message again
+            //do not requeue
             return true;
+        }
+
+        if ($exception) {
+            $logger->info(sprintf("Skipped transcode of resource [%s] because [%s]", $id, $exception->getMessage()));
         }
 
         //if we got this far we've transcoded everything cleanly
