@@ -1,7 +1,9 @@
 <?php
 
 namespace Ayamel\ApiBundle\Tests;
+
 use Ayamel\ApiBundle\ApiTestCase;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ResourceIntegrationTest extends ApiTestCase
 {
@@ -570,6 +572,39 @@ class ResourceIntegrationTest extends ApiTestCase
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array('type'=>'audio')));
         $this->assertSame(403, $json['response']['code']);
+    }
+
+    public function testDeleteResourceWithUploadedFiles()
+    {
+        //get content upload url
+        $data = array(
+            'title' => 'test',
+            'type' => 'data'
+        );
+
+        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+            'CONTENT_TYPE' => 'application/json'
+        ), json_encode($data));
+        $this->assertSame(201, $response['response']['code']);
+        $this->assertFalse(isset($response['resource']['content']));
+        $resourceId = $response['resource']['id'];
+        $uploadUrl = substr($response['contentUploadUrl'], strlen('http://localhost'));
+
+        //create uploaded file
+        $testFilePath = __DIR__."/files/resource_test_files/lorem.txt";
+        $uploadedFile = new UploadedFile(
+            $testFilePath,
+            'lorem.txt',
+            'text/plain',
+            filesize($testFilePath)
+        );
+
+        $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', array(), array('file' => $uploadedFile));
+        $this->assertSame(202, $content['response']['code']);
+        $this->assertSame(1, count($content['resource']['content']['files']));
+        
+        $response = $this->getJson('DELETE', '/api/v1/resources/'.$resourceId.'?_key=45678isafgd56789asfgdhf4567');
+        $this->assertSame(200, $response['response']['code']);
     }
 
 }
