@@ -18,10 +18,9 @@
     - copy:
         src: ../app/config/parameters.default.yml
         dest: /vagrant/app/config/parameters.yml
-    - include: common/tasks/symfony_server.yml
+    - include: common/tasks/symfony_dev_server.yml
       vars:
         name: ayamel-web-dev
-        port: 80
         symfony_env: dev
         dir: /vagrant
     - include: common/tasks/symfony_rabbitmq_consumer.yml
