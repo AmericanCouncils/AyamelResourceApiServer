@@ -166,7 +166,7 @@ monolog:
             passthru_level: info
             handler: syslog_backend
         syslog_backend:
-            ident: symfony.hammerspace
+            ident: symfony.ayamel
             type: syslog
             level: debug
             facility: local7
