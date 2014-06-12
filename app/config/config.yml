@@ -37,9 +37,6 @@ framework:
     default_locale:  %locale%
     session: ~
 
-monolog:
-    channels: ['search','transcoding','analytics','users','filesystem']
-
 ornicar_apc:
       host: %apc_web_domain%
       web_dir: %kernel.root_dir%/../web
@@ -138,7 +135,7 @@ old_sound_rabbit_mq:
 
 fos_elastica:
     clients:
-        default: { host: %elasticsearch_host%, port: %elasticsearch_port% }
+        default: { url: "http://%elasticsearch_host%:%elasticsearch_port%" }
     serializer: ~
     indexes:
         ayamel: %ayamel.search.ayamel_index%
@@ -160,6 +157,8 @@ socloz_monitoring:
 
 monolog:
     handlers:
+        console:
+            type: console
         main:
             type: fingers_crossed
             action_level: warning
