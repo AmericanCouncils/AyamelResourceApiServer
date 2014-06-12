@@ -6,7 +6,7 @@
     - include: common/tasks/install_mongodb.yml
       vars:
         small_files: true
-    - include: common/tasks/install_symfony_reqs.yml
+    - include: common/tasks/install_php5.yml
     - include: common/tasks/install_rabbitmq_server.yml
     - include: common/tasks/install_mediainfo.yml
     - include: common/tasks/install_elasticsearch.yml
@@ -21,7 +21,6 @@
     - include: common/tasks/symfony_dev_server.yml
       vars:
         name: ayamel-web-dev
-        symfony_env: dev
         dir: /vagrant
     - include: common/tasks/symfony_rabbitmq_consumer.yml
       vars:
@@ -48,5 +47,3 @@
     - name: restart ayamel-rabbitmq-consumer-search-index
       ignore_errors: True
       supervisorctl: name='ayamel-rabbitmq-consumer-search-index:' state=restarted
-    - name: restart rabbitmq-server
-      supervisorctl: name=rabbitmq-server state=restarted

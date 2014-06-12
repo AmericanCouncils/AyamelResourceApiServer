@@ -35,8 +35,10 @@ services:
             - @serializer
             - %ayamel.search.indexable_mime_types%
             - %ayamel.search.indexable_resource_types%
-            - @monolog.logger.search
+            - @logger
             - %ayamel.search.language_field_map%
+        tags:
+            - { name: monolog.logger, channel: search }
 
     ayamel.search.elastica_resource_provider:
         class: Ayamel\SearchBundle\Provider\ResourceProvider

@@ -10,9 +10,8 @@ web_profiler:
     toolbar: false
     intercept_redirects: false
 
-#don't allow logging during tests...
-#slows things down a bit
+# don't send anything to syslog
 monolog:
     handlers:
         main:
-            type:  test
+            type: console

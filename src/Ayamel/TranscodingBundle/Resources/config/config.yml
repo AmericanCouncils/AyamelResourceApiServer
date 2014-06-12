@@ -34,7 +34,9 @@ services:
             - @event_dispatcher
             - %ayamel.transcoding.presets%
             - %ayamel.transcoding.preset_map%
-            - @monolog.logger.transcoding
+            - @logger
+        tags:
+            - { name: monolog.logger, channel: transcoding }
 
     # This service listens for file uploads, then registers a resource to have it's uploaded file
     # transcoded asyncronously

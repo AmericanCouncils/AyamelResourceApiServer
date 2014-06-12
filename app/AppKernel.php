@@ -12,10 +12,7 @@ class AppKernel extends Kernel
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new Symfony\Bundle\TwigBundle\TwigBundle(),
             new Symfony\Bundle\MonologBundle\MonologBundle(),
-//            new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
-
-            //added by Evan
             new Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new AC\WebServicesBundle\ACWebServicesBundle(),
@@ -26,13 +23,13 @@ class AppKernel extends Kernel
             new OldSound\RabbitMqBundle\OldSoundRabbitMqBundle(),
             new Ayamel\TranscodingBundle\AyamelTranscodingBundle(),
             new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
-            new Nelmio\CorsBundle\NelmioCorsBundle(),
             new Ayamel\YouTubeBundle\AyamelYouTubeBundle(),
             new AC\MediaInfoBundle\ACMediaInfoBundle(),
             new Ayamel\MediaInfoBundle\AyamelMediaInfoBundle(),
             new Ornicar\ApcBundle\OrnicarApcBundle(),
             new FOS\ElasticaBundle\FOSElasticaBundle(),
             new Ayamel\SearchBundle\AyamelSearchBundle(),
+            new Socloz\MonitoringBundle\SoclozMonitoringBundle()
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

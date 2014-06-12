@@ -18,6 +18,13 @@ services:
         class: Metadata\Cache\DoctrineCacheAdapter
         arguments: ['ayamel.jms_metadata', @ayamel.apc_cache]
 
+    ayamel.multiline_syslog_formatter:
+        class: 'Monolog\Formatter\LineFormatter'
+        arguments:
+            - "%%channel%%.%%level_name%%: %%message%% %%extra%%\n"
+            - null # Default date format
+            - true # Allow newlines within the message
+
 framework:
     #esi:             ~
     #translator:      { fallback: %locale% }
@@ -29,9 +36,6 @@ framework:
     templating:      { engines: ['twig'] } #assets_version: SomeVersionScheme
     default_locale:  %locale%
     session: ~
-
-monolog:
-    channels: ['search','transcoding','analytics','users','filesystem']
 
 ornicar_apc:
       host: %apc_web_domain%
@@ -103,21 +107,6 @@ nelmio_api_doc:
             name: _key
             delivery: query
 
-nelmio_cors:
-    defaults:
-        allow_credentials: false
-        allow_origin: []
-        allow_headers: []
-        allow_methods: []
-        expose_headers: []
-        max_age: 0
-    paths:
-        '^/api/':
-            allow_origin: ['*']
-            allow_methods: ['POST', 'PUT', 'GET', 'DELETE']
-            allow_headers: ['X-Requested-With', 'Content-Type', 'Origin']
-            max_age: 3600
-
 ac_media_info:
     path: %mediainfo_path%
 
@@ -146,7 +135,38 @@ old_sound_rabbit_mq:
 
 fos_elastica:
     clients:
-        default: { host: %elasticsearch_host%, port: %elasticsearch_port% }
+        default: { url: "http://%elasticsearch_host%:%elasticsearch_port%" }
     serializer: ~
     indexes:
         ayamel: %ayamel.search.ayamel_index%
+
+socloz_monitoring:
+    exceptions:
+        enable: false
+    profiler:
+        enable: true
+    mailer:
+        enable: false
+    statsd:
+        enable: false
+    request_id:
+        enable: true
+        add_pid: false
+    logger:
+        enable: true
+
+monolog:
+    handlers:
+        console:
+            type: console
+        main:
+            type: fingers_crossed
+            action_level: warning
+            passthru_level: info
+            handler: syslog_backend
+        syslog_backend:
+            ident: symfony.ayamel
+            type: syslog
+            level: debug
+            facility: local7
+            formatter: ayamel.multiline_syslog_formatter
