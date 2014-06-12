@@ -1456,16 +1456,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.9.1",
+            "version": "1.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "65026b610f8c19e61d7242f600530677b0466aac"
+                "reference": "25b16e801979098cb2f120e697bfce454b18bf23"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/65026b610f8c19e61d7242f600530677b0466aac",
-                "reference": "65026b610f8c19e61d7242f600530677b0466aac",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/25b16e801979098cb2f120e697bfce454b18bf23",
+                "reference": "25b16e801979098cb2f120e697bfce454b18bf23",
                 "shasum": ""
             },
             "require": {
@@ -1493,7 +1493,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.9.x-dev"
+                    "dev-master": "1.10.x-dev"
                 }
             },
             "autoload": {
@@ -1520,7 +1520,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2014-04-24 13:29:03"
+            "time": "2014-06-04 16:30:04"
         },
         {
             "name": "nelmio/api-doc-bundle",
