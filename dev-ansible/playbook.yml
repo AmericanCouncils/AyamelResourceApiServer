@@ -1,4 +1,5 @@
 - hosts: all
+  connection: local
   vars:
     production: false
   tasks:
@@ -12,7 +13,7 @@
     - include: common/tasks/install_elasticsearch.yml
     - include: common/tasks/create_swapfile.yml
       vars:
-        swapsize: 512M
+        swapsize: 200M
     #- include: common/tasks/install_ffmpeg.yml
     #- include: common/tasks/install_ffmpegthumbnailer.yml
     - copy:
@@ -28,7 +29,7 @@
         consumer: transcoding
         symfony_env: dev
         dir: /vagrant
-        process_count: 4
+        process_count: 1
     - include: common/tasks/symfony_rabbitmq_consumer.yml
       vars:
         name: ayamel-rabbitmq-consumer-search-index

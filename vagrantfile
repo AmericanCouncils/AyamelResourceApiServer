@@ -1,5 +1,14 @@
 VAGRANTFILE_API_VERSION = "2"
 
+#this is the shell script that will run once the dev box is up - it just installs ansible
+#then uses ansible to set up the vm
+$provision_script = <<SCRIPT
+apt-add-repository -y ppa:rquillo/ansible
+apt-get update -y
+apt-get install -y ansible
+ansible-playbook /vagrant/dev-ansible/playbook.yml -i /vagrant/dev-ansible/hosts.cfg
+SCRIPT
+
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "ubuntu/trusty64"
 
@@ -12,16 +21,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     v.memory = 1024
   end
 
-  config.vm.provision "ansible" do |a|
-    a.playbook = "dev-ansible/playbook.yml"
-    a.host_key_checking = false
-    a.sudo = true
-  end
-
-  #up memory a little bit
-  config.vm.provider "virtualbox" do |v|
-    v.memory = 1024
-  end
+  config.vm.provision "shell", inline: $provision_script, keep_color: true
+  
+  config.ssh.forward_agent = true
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
