@@ -61,17 +61,6 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $this->assertSame(200, $content['response']['code']);
         $this->assertTrue(isset($content['contentUploadUrl']));
         $uploadUrl = substr($content['contentUploadUrl'], strlen('http://localhost'));
-
-        //no apikey
-        // Test removed 2014-04-07 - we don't need an api key for content upload, we use a token for validation
-        // $response = $this->getResponse('POST', $uploadUrl);
-        // $this->assertSame(401, $response->getStatusCode());
-
-        //invalid key
-        // Test removed 2014-04-07 - we don't need an api key for content upload, we use a token for validation
-        // $response = $this->getResponse('POST', $uploadUrl.'?_key=55678isafgd56789asfgdhf4568');
-        // $this->assertSame(403, $response->getStatusCode());
-
     }
 
     public function testUploadContentAsRemoteFilesArray()
@@ -133,7 +122,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $this->assertSame($data['remoteFiles'], $response['resource']['content']['files']);
         $this->assertSame('normal', $response['resource']['status']);
     }
-
+    
     public function testUploadContentAsFile()
     {
         //get content upload url
@@ -149,7 +138,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $this->assertFalse(isset($response['resource']['content']));
         $resourceId = $response['resource']['id'];
         $uploadUrl = substr($response['contentUploadUrl'], strlen('http://localhost'));
-
+        
         //create uploaded file
         $testFilePath = __DIR__."/files/resource_test_files/lorem.txt";
         $uploadedFile = new UploadedFile(

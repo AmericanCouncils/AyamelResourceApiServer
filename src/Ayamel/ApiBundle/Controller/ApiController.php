@@ -109,6 +109,8 @@ abstract class ApiController extends Controller
 
     /**
      * Validate an object, throw an http exception if validation fails.
+     * 
+     * TODO: Return 422 instead of 400 when validation fails.  422 is more descriptive of the actual error.
      *
      * @param  mixed                                                     $object
      * @throws Symfony\Component\HttpKernel\Exception\HttpException(400) If validation fails
