@@ -37,6 +37,7 @@
     
     <php>
         <server name="KERNEL_DIR" value="app/" />
+        <ini name="display_errors" value="on" />
         <ini name="memory_limit" value="512M"/>
     </php>
 </phpunit>
