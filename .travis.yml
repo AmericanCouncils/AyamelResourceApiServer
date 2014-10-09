@@ -2,7 +2,7 @@ language: php
 
 php:
     - 5.5
-    - hhvm
+    #- hhvm  ... can't seem to get travis to run this, seemingly because of the custom php.ini
 
 services:
     - mongodb
@@ -12,18 +12,15 @@ services:
 before_script:
     - sh -c "if [ `php-config --vernum` -ge 50500 ] ; then pecl config-set preferred_state beta; printf "yes\n" | pecl install apcu ; else echo 'extension="apc.so"' >> ./travis.php.ini ;fi"
 
-    #attempt at hhvm support, config-add breaks using hhvm on travis for some reason
-    #- phpenv config-add travis.php.ini
-    - echo 'date.timezone = "America/New_York"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-    - echo 'extension = "mongo.so"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-    - echo 'apc.enabled = 1' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-    - echo 'apc.cli_enabled = 1' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-
+    - phpenv config-add travis.php.ini
     - cp app/config/parameters.default.yml app/config/parameters.yml
     - sudo apt-get update -qq
     - sudo apt-get install -qq mediainfo 
+
+# skipping transcoding related tests on travis because it takes too long to rebuild ffmpeg all the time
 #    - util/install_ffmpeg.sh
 #    - sudo apt-get install -qq ffmpegthumbnailer
+
     - composer self-update
     - composer install --dev
     - app/console cache:clear --env=test
