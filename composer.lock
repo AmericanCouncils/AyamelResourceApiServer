@@ -893,17 +893,17 @@
         },
         {
             "name": "doctrine/mongodb-odm-bundle",
-            "version": "dev-master",
+            "version": "v3.0.0-BETA5",
             "target-dir": "Doctrine/Bundle/MongoDBBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/DoctrineMongoDBBundle.git",
-                "reference": "30be111a948a661d42a1008a11847702e8d6e4aa"
+                "reference": "ba17a288ae0f2f2cb4ef1bac667710a5f3b7151e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineMongoDBBundle/zipball/30be111a948a661d42a1008a11847702e8d6e4aa",
-                "reference": "30be111a948a661d42a1008a11847702e8d6e4aa",
+                "url": "https://api.github.com/repos/doctrine/DoctrineMongoDBBundle/zipball/ba17a288ae0f2f2cb4ef1bac667710a5f3b7151e",
+                "reference": "ba17a288ae0f2f2cb4ef1bac667710a5f3b7151e",
                 "shasum": ""
             },
             "require": {
@@ -943,7 +943,7 @@
                     "homepage": "http://avalanche123.com"
                 },
                 {
-                    "name": "Jonathan H. Wage",
+                    "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com",
                     "homepage": "http://www.jwage.com/",
                     "role": "Creator"
@@ -960,7 +960,7 @@
                 "persistence",
                 "symfony"
             ],
-            "time": "2014-03-28 00:31:22"
+            "time": "2014-04-03 20:22:59"
         },
         {
             "name": "friendsofsymfony/elastica-bundle",
