@@ -38,7 +38,7 @@
         "jms/serializer-bundle": "0.13.*",
         "ac/web-services-bundle": "0.3.*",
         "ac/media-info-bundle": "1.2.*",
-        "friendsofsymfony/elastica-bundle": "3.0.0-alpha5",
+        "friendsofsymfony/elastica-bundle": "~3.0",
         "ornicar/apc-bundle": "1.0.*",
         "ac/model-traits-bundle": "0.1.*",
         "socloz/monitoring-bundle": "dev-master#b189ca122eae812856821adba30e6deee7f0f96a"
