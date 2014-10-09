@@ -1606,17 +1606,17 @@
         },
         {
             "name": "oldsound/rabbitmq-bundle",
-            "version": "v1.3.2",
+            "version": "v1.4.1",
             "target-dir": "OldSound/RabbitMqBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/videlalvaro/RabbitMqBundle.git",
-                "reference": "f21d8698129486a3b569a155d4d8d18ee403fbba"
+                "reference": "da63e1b401f14b357169d5550aa37cee6c7414d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/videlalvaro/RabbitMqBundle/zipball/f21d8698129486a3b569a155d4d8d18ee403fbba",
-                "reference": "f21d8698129486a3b569a155d4d8d18ee403fbba",
+                "url": "https://api.github.com/repos/videlalvaro/RabbitMqBundle/zipball/da63e1b401f14b357169d5550aa37cee6c7414d5",
+                "reference": "da63e1b401f14b357169d5550aa37cee6c7414d5",
                 "shasum": ""
             },
             "require": {
@@ -1655,7 +1655,7 @@
                 "queue",
                 "rabbitmq"
             ],
-            "time": "2014-03-17 14:38:17"
+            "time": "2014-06-03 19:50:30"
         },
         {
             "name": "ornicar/apc-bundle",
