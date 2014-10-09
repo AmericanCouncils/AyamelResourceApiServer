@@ -8,6 +8,9 @@ use Ayamel\ResourceBundle\Document\Resource;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Guzzle\Http\Exception\ClientErrorResponseException;
 
+/**
+ * TODO: Convert this test to use fixtures, rather than the API.
+ */
 class ResourceIndexerTest extends SearchTest
 {
 
