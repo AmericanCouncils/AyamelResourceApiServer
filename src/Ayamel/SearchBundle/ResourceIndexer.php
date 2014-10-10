@@ -95,7 +95,8 @@ class ResourceIndexer
             try {
                 $count++;
                 $doc = $this->createResourceSearchDocumentForId($id);
-                if ($doc) {
+                if ($doc instanceof Document) {
+                    //here ?
                     $this->type->addDocument($doc);
                 }
             } catch (IndexException $e) {
@@ -140,14 +141,15 @@ class ResourceIndexer
      * @param  string            $id
      * @return Elastica\Document
      */
-    protected function createResourceSearchDocumentForId($id)
+    public function createResourceSearchDocumentForId($id)
     {
         $resource = $this->manager->getRepository('AyamelResourceBundle:Resource')->find($id);
 
         if (!$resource) {
             throw new IndexException(sprintf("Tried indexing a non-existing resource [%s]", $id));
         }
-
+        
+        //TODO: maybe return false here instead, and take care of index removal elsewhere
         if ($resource->isDeleted()) {
             try {
                 $this->type->deleteById($id);

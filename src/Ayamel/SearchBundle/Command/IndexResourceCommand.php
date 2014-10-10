@@ -19,15 +19,25 @@ class IndexResourceCommand extends ContainerAwareCommand
         $this->setName('resource:index')
             ->setDescription("Reindex a particular Resource for search by ID.")
             ->addArgument('id', InputArgument::REQUIRED, "ID of Resource to index.")
-            ->addOption('force','-f', InputOption::VALUE_NONE, "If forced, the indexing will happen immediately, rather than asynchronously.");
+            ->addOption('force','-f', InputOption::VALUE_NONE, "If forced, the indexing will happen immediately, rather than asynchronously.")
+            ->addOption('debug', null, InputOption::VALUE_NONE, "Dump the search document to the console, rather than actually indexing.")
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $id = $input->getArgument('id');
+        
+        //just create the search doc, but don't do anything with it
+        if ($input->getOption('debug')) {
+            $indexer = $this->getContainer()->get('ayamel.search.resource_indexer');
+            $searchDoc = $indexer->createResourceSearchDocumentForId($id);
+            $output->writeln(var_export($searchDoc->toArray()));
+            return;
+        }
 
         if ($input->getOption('force')) {
-            $indexer = $this->getContainer()->get('ayamel.search.resource_indexer')->indexResource($id);
+            $this->getContainer()->get('ayamel.search.resource_indexer')->indexResource($id);
             $output->writeln("Indexed Resource $id");
         } else {
             //otherwise publish message via RabbitMQ
