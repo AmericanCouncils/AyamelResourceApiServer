@@ -102,7 +102,7 @@ abstract class ApiController extends Controller
      * @param  string          $template
      * @return ServiceResponse
      */
-    protected function createServiceResponse($data, $code, $headers = array(), $template = null)
+    protected function createServiceResponse($data, $code, $headers = [], $template = null)
     {
         return new ServiceResponse($data, $code, $headers, $template);
     }
@@ -167,7 +167,7 @@ abstract class ApiController extends Controller
      */
     protected function filterVisibleResources(array $resources)
     {
-        $visibleResources = array();
+        $visibleResources = [];
         $client = $this->getApiClient();
 
         foreach ($resources as $resource) {

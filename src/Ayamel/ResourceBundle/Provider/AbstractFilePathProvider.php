@@ -14,7 +14,7 @@ abstract class AbstractFilePathProvider implements ProviderInterface
      *
      * @var array
      */
-    protected $resourceTypes = array();
+    protected $resourceTypes = [];
 
     /**
      * Type to use for paths without a file extension.

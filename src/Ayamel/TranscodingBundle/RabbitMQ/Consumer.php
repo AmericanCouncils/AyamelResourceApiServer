@@ -22,8 +22,8 @@ use Ayamel\TranscodingBundle\Exception\NoRelevantPresetsException;
  *  array(
  *      'id' => $id,                            //required: the string resource id
  *      'appendFiles' => false,                 //optional: whether or not to add transcoded files into the existing files array, or replace them
- *      'presetFilter' => array(),              //optional: limit job to specific presets
- *      'mimeFilter' => array(),                //optional: limit job to specific mimes
+ *      'presetFilter' => [],              //optional: limit job to specific presets
+ *      'mimeFilter' => [],                //optional: limit job to specific mimes
  *      'replacePreexisting' => true            //optional: whether or not to replace a preexisting file
  *      'notifyClient' => true                  //optional: whether or not to send notifications to the client upon success/failure of job
  *  );
@@ -53,8 +53,8 @@ class Consumer implements ConsumerInterface
         $body = unserialize($msg->body);
         $id = $body['id'];
         $appendFiles = isset($body['appendFiles']) ? (bool) $body['appendFiles'] : false;
-        $presetFilter = isset($body['presetFilter']) ? $body['presetFilter'] : array();
-        $mimeFilter = isset($body['mimeFilter']) ? $body['mimeFilter'] : array();
+        $presetFilter = isset($body['presetFilter']) ? $body['presetFilter'] : [];
+        $mimeFilter = isset($body['mimeFilter']) ? $body['mimeFilter'] : [];
         $notifyClient = isset($body['notifyClient']) ? $body['notifyClient'] : false;
         $logger = $this->container->get('monolog.logger.transcoding');
         $exception = false;

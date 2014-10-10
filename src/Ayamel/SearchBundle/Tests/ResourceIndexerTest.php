@@ -28,7 +28,7 @@ class ResourceIndexerTest extends SearchTest
 
     public function testThrowsExceptionOnUnindexableResource()
     {
-        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array(
             'title' => 'Hamlet pwnz!',
@@ -43,7 +43,7 @@ class ResourceIndexerTest extends SearchTest
 
     public function testThrowsExceptionIndexingResourcesWithNoContent()
     {
-        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array(
             'title' => 'Hamlet pwnz!',
@@ -61,7 +61,7 @@ class ResourceIndexerTest extends SearchTest
         $container = $this->getContainer();
 
         //create resource
-        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array(
             'title' => 'Hamlet pwnz!',
@@ -70,7 +70,7 @@ class ResourceIndexerTest extends SearchTest
         $this->assertSame(201, $response['response']['code']);
         $resourceId = $response['resource']['id'];
         $uploadUrl = substr($response['contentUploadUrl'], strlen('http://localhost'));
-        $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array(
             'uri' => 'http://www.google.com/'
@@ -101,7 +101,7 @@ class ResourceIndexerTest extends SearchTest
     public function testIndexerRemovesDeletedResources($id)
     {
         //delete resource
-        $response = $this->getJson('DELETE', '/api/v1/resources/'.$id.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $response = $this->getJson('DELETE', '/api/v1/resources/'.$id.'?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ));
         $this->assertSame(200, $response['response']['code']);
@@ -122,7 +122,7 @@ class ResourceIndexerTest extends SearchTest
         $container = $this->getContainer();
         $indexer = $container->get('ayamel.search.resource_indexer');
 
-        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array(
             'title' => 'Hamlet pwnz!',
@@ -142,7 +142,7 @@ class ResourceIndexerTest extends SearchTest
             'text/plain',
             filesize($testFilePath)
         );
-        $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', array(), array('file' => $uploadedFile));
+        $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', [], array('file' => $uploadedFile));
         $this->assertSame(202, $content['response']['code']);
 
         //index it
@@ -161,6 +161,37 @@ class ResourceIndexerTest extends SearchTest
 
         return $resourceId;
     }
+    
+    public function testIndexerConvertsNonUtf8FileContent()
+    {
+        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', [], [], array(
+            'CONTENT_TYPE' => 'application/json'
+        ), json_encode(array(
+            'title' => 'Utf-8 is for n00bs!',
+            'type' => 'document',
+            'languages' => array(
+                'iso639_3' => array('eng'),
+                'bcp47' => array('en')
+            )
+        )));
+        $this->assertSame(201, $response['response']['code']);
+        $resourceId = $response['resource']['id'];
+        $uploadUrl = substr($response['contentUploadUrl'], strlen('http://localhost'));
+        $testFilePath = __DIR__."/files/hamlet.en.txt";
+        $uploadedFile = new UploadedFile(
+            $testFilePath,
+            'hamlet.en.txt',
+            'text/plain',
+            filesize($testFilePath)
+        );
+        $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', [], array('file' => $uploadedFile));
+        $this->assertSame(202, $content['response']['code']);
+    }
+    
+    public function testIndexerSkipsNonConvertableFileContent()
+    {
+        
+    }
 
     /**
      * @depends testIndexerIndexesContentFromFiles
@@ -171,7 +202,7 @@ class ResourceIndexerTest extends SearchTest
         $indexer = $container->get('ayamel.search.resource_indexer');
 
         //create a new resource w/ Russian
-        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array(
             'title' => 'Гамлет круто!',
@@ -191,11 +222,11 @@ class ResourceIndexerTest extends SearchTest
             'text/plain',
             filesize($testFilePath)
         );
-        $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', array(), array('file' => $uploadedFile));
+        $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', [], array('file' => $uploadedFile));
         $this->assertSame(202, $content['response']['code']);
 
         //create relations
-        $response = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $response = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array(
             'subjectId' => $id,

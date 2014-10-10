@@ -19,7 +19,7 @@ use Ayamel\ApiBundle\Event\RelationEvent;
  */
 class SearchIndexSubscriber implements EventSubscriberInterface
 {
-    protected $messages = array();
+    protected $messages = [];
     private $registered = false;
 
     public function __construct(ContainerInterface $container)
@@ -56,7 +56,7 @@ class SearchIndexSubscriber implements EventSubscriberInterface
 
     public function onResourceDeleted(ResourceEvent $e)
     {
-        $ids = array();
+        $ids = [];
 
         $resource = $e->getResource();
         $ids[] = $resource->getId();
@@ -117,7 +117,7 @@ class SearchIndexSubscriber implements EventSubscriberInterface
             $logger->info(sprintf("Scheduled search index rebuild of [%s] via RabbitMQ.", implode(',', $ids)));
         }
 
-        $this->messages = array();
+        $this->messages = [];
     }
 
     private function registerTerminateListener()

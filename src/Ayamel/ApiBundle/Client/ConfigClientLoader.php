@@ -4,9 +4,9 @@ namespace Ayamel\ApiBundle\Client;
 
 class ConfigClientLoader implements ClientLoaderInterface
 {
-    protected $clients = array();
+    protected $clients = [];
 
-    public function __construct($data = array())
+    public function __construct($data = [])
     {
         foreach ($data as $id => $item) {
             $c = new Client();

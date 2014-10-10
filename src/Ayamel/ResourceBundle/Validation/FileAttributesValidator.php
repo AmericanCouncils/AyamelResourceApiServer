@@ -15,7 +15,7 @@ class FileAttributesValidator extends ConstraintValidator
     protected $map;
     protected $validator;
 
-    public function __construct(ValidatorInterface $validator, $map = array())
+    public function __construct(ValidatorInterface $validator, $map = [])
     {
         $this->validator = $validator;
         $this->map = $map;
@@ -37,7 +37,7 @@ class FileAttributesValidator extends ConstraintValidator
             return;
         }
 
-        $errors = array();
+        $errors = [];
 
         //allow pre-processing of the file reference
         foreach ($attrs as $attr) {
@@ -63,7 +63,7 @@ class FileAttributesValidator extends ConstraintValidator
 
         //check for fields that were NOT validated by any of the mapped attributes classes
         $total = count($attrs);
-        $extras = array();
+        $extras = [];
         foreach ($attrs as $attr) {
             foreach ($attr->getExtraFields() as $field) {
                 $extras[$field] = (isset($extras[$field])) ? $extras[$field] + 1 : 1;
@@ -78,7 +78,7 @@ class FileAttributesValidator extends ConstraintValidator
 
     protected function getAttributesClasses($mime, $data)
     {
-        $classes = array();
+        $classes = [];
         foreach ($this->map as $class => $mimes) {
             if (in_array($mime, $mimes)) {
                 $classes[] = $class::createFromArray($data);

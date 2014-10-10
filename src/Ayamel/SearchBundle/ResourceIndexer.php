@@ -46,7 +46,7 @@ class ResourceIndexer
         array $indexableMimeTypes = array('text/plain'),
         array $indexableResourceTypes = array('audio','video','image'),
         LoggerInterface $logger = null,
-        $languageFieldMap = array()
+        $languageFieldMap = []
     ) {
         $this->manager = $manager;
         $this->type = $resourceType;
@@ -90,7 +90,7 @@ class ResourceIndexer
     {
         $count = 0;
         $fails = 0;
-        $failed = array();
+        $failed = [];
         foreach ($ids as $id) {
             try {
                 $count++;
@@ -123,11 +123,11 @@ class ResourceIndexer
         return true;
     }
 
-    public function indexResourcesByFields(array $fields = array(), $batch = 100)
+    public function indexResourcesByFields(array $fields = [], $batch = 100)
     {
         throw new \RuntimeException('not implemented');
 
-        $ids = array(); //query for ids;
+        $ids = []; //query for ids;
 
         $this->indexResources($ids, $batch);
 
@@ -194,8 +194,8 @@ class ResourceIndexer
         $data = json_decode($this->serializer->serialize($resource, 'json'), true);
 
         //now check search relations and get relevant file content
-        $relatedResourceIds = array();
-        $relatedResources = array();
+        $relatedResourceIds = [];
+        $relatedResources = [];
 
         foreach ($resource->getRelations() as $relation) {
             if ('search' === $relation->getType() && $resource->getId() === $relation->getSubjectId()) {
@@ -208,7 +208,7 @@ class ResourceIndexer
                 ->getQBForResources(array('id' => $relatedResourceIds))
                 ->getQuery()
                 ->execute();
-            $relatedResources = count($relatedResources) > 0 ? iterator_to_array($relatedResources) : array();
+            $relatedResources = count($relatedResources) > 0 ? iterator_to_array($relatedResources) : [];
         }
 
         $contentFields = $this->generateContentFields($resource, $relatedResources);
@@ -225,16 +225,16 @@ class ResourceIndexer
      *
      * @return array
      **/
-    protected function generateContentFields(Resource $resource, array $relatedResources = array())
+    protected function generateContentFields(Resource $resource, array $relatedResources = [])
     {
-        $contentFields = array();
+        $contentFields = [];
 
         //handle content for main resource
         if ($resource->content) {
             foreach ($resource->content->getFiles() as $fileReference) {
                 if (in_array($fileReference->getMimeType(), $this->indexableMimeTypes)) {
                     if (!isset($contentFields['content_canonical'])) {
-                        $contentFields['content_canonical'] = array();
+                        $contentFields['content_canonical'] = [];
                     }
 
                     if ($content = $this->retrieveContent($fileReference)) {
@@ -254,7 +254,7 @@ class ResourceIndexer
 
             $field = 'content_'.$lang;
             if (!isset($contentFields[$field])) {
-                $contentFields[$field] = array();
+                $contentFields[$field] = [];
             }
 
             if ($related->content) {

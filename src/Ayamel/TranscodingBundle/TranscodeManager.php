@@ -68,8 +68,8 @@ class TranscodeManager
         Transcoder $t,
         $tmpDirectory,
         EventDispatcherInterface $dispatcher,
-        $presetConfig = array(),
-        $presetMap = array(),
+        $presetConfig = [],
+        $presetMap = [],
         LoggerInterface $logger = null
     )
     {
@@ -100,7 +100,7 @@ class TranscodeManager
      * @param  array   $mimeFilter
      * @return boolean
      */
-    public function transcodeResource($id, $appendFiles = false, $presetFilter = array(), $mimeFilter = array())
+    public function transcodeResource($id, $appendFiles = false, $presetFilter = [], $mimeFilter = [])
     {
         //get resource or fail with relevant exception
         $resource = $this->getResource($id);
@@ -116,7 +116,7 @@ class TranscodeManager
             $append = ($i < 1) ? $appendFiles : true;
             $mappings = $mapper->getPresetMappingsForFileReference($ref);
             if (!$mappings) {
-                $mappings = array();
+                $mappings = [];
             }
             $mappings = $this->filterPresetMappings($mappings, $ref, $presetFilter, $mimeFilter);
             if (empty($mappings)) {
@@ -155,7 +155,7 @@ class TranscodeManager
     {
         //first lock the resource
         $this->lockResource($resource);
-        $newFiles = array();
+        $newFiles = [];
         try {
             $this->log(sprintf("Starting transcode of resource [%s].", $resource->getId()));
 
@@ -228,7 +228,7 @@ class TranscodeManager
 
         //Remove old files or not?
         if (!$appendFiles) {
-            $toRemove = array();
+            $toRemove = [];
             foreach ($resource->content->getFiles() as $file) {
                 if ('original' !== $file->getRepresentation()) {
                     $toRemove[] = $file;
@@ -357,7 +357,7 @@ class TranscodeManager
      */
     protected function getRefsToTranscode(Resource $resource, $path = false)
     {
-        $refsToTranscode = array();
+        $refsToTranscode = [];
         $fileRefs = $resource->content->getFiles();
 
         if (!$fileRefs || empty($fileRefs)) {
@@ -392,13 +392,13 @@ class TranscodeManager
         return $this->tmpDirectory.DIRECTORY_SEPARATOR.$id.".".$tag.".".$ext;
     }
 
-    protected function filterPresetMappings(array $mappings, FileReference $ref, $presetFilter = array(), $mimeFilter = array())
+    protected function filterPresetMappings(array $mappings, FileReference $ref, $presetFilter = [], $mimeFilter = [])
     {
         if (!empty($mimeFilter) && !in_array($ref->getMimeType(), $mimeFilter)) {
-            return array();
+            return [];
         }
 
-        $filtered = array();
+        $filtered = [];
         foreach ($mappings as $key => $data) {
             if (!empty($presetFilter) && !in_array($key, $presetFilter)) {
                 continue;
@@ -415,7 +415,7 @@ class TranscodeManager
     protected function filterPresetMappingsByConfig(FileReference $ref, array $presets)
     {
         $attrs = $ref->getAttributes();
-        $filtered = array();
+        $filtered = [];
 
         foreach ($presets as $key => $data) {
             $include = true;

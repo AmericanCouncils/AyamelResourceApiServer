@@ -63,7 +63,7 @@ class RemoteFilesContentSubscriber implements EventSubscriberInterface
         }
 
         //create & validate FileReference instances
-        $remoteFiles = array();
+        $remoteFiles = [];
         foreach ($body['remoteFiles'] as $fileData) {
             $newFileRef = $this->container->get('serializer')->deserialize(json_encode($fileData), 'Ayamel\ResourceBundle\Document\FileReference', 'json');
             $errors = $this->container->get('validator')->validate($newFileRef);
@@ -80,7 +80,7 @@ class RemoteFilesContentSubscriber implements EventSubscriberInterface
         }
 
         //make sure the files defined actually exist by trying to derive a new resource from them
-        $failed = array();
+        $failed = [];
         foreach ($remoteFiles as $ref) {
             if ($ref->getDownloadUri()) {
                 if (!$this->container->get('ayamel.resource.provider')->createResourceFromUri($ref->getDownloadUri())) {

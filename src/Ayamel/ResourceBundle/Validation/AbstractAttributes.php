@@ -11,11 +11,11 @@ namespace Ayamel\ResourceBundle\Validation;
  */
 abstract class AbstractAttributes
 {
-    protected $extraFields = array();
+    protected $extraFields = [];
 
     public static function createFromArray(array $data)
     {
-        $extras = array();
+        $extras = [];
         $obj = new static();
         foreach ($data as $key => $val) {
             if (property_exists($obj, $key)) {

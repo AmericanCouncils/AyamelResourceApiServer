@@ -72,7 +72,7 @@ class FilesystemPurgeRefsCommand extends ContainerAwareCommand
         $manager = $this->getContainer()->get('doctrine_mongodb')->getManager();
         $resource = $manager->getRepository('AyamelResourceBundle:Resource')->find($id);
 
-        $newFiles = array();
+        $newFiles = [];
         foreach ($resource->content->getFiles() as $file) {
             if ($file->getInternalUri() !== $path) {
                 $newFiles[] = $file;

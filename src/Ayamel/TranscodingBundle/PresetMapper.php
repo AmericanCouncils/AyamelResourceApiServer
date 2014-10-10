@@ -15,8 +15,8 @@ use Ayamel\ResourceBundle\Document\FileReference;
 class PresetMapper
 {
 
-    private $presets = array();
-    private $map = array();
+    private $presets = [];
+    private $map = [];
 
     /**
      * Constructor expects two arguments describing the available presets.
@@ -37,7 +37,7 @@ class PresetMapper
      * @param array $presets Map of presetDefinitionKey => array of preset data
      * @param array $map     Map of mimeType => array of preset definition keys
      */
-    public function __construct(array $presets = array(), array $map = array())
+    public function __construct(array $presets = [], array $map = [])
     {
         foreach ($presets as $key => $data) {
             if ($this->validatePreset($data)) {
@@ -91,7 +91,7 @@ class PresetMapper
             return false;
         }
 
-        $presets = array();
+        $presets = [];
         foreach ($this->map[$mime] as $key) {
             if (isset($this->presets[$key])) {
                 $presets[$key] = $this->presets[$key];
@@ -112,7 +112,7 @@ class PresetMapper
 
     public function getMimeTypesForPreset($presetName)
     {
-        $mimeTypes = array();
+        $mimeTypes = [];
         foreach ($this->map as $mime => $presets) {
             if (in_array($presetName, $presets)) {
                 $mimeTypes[] = $mime;

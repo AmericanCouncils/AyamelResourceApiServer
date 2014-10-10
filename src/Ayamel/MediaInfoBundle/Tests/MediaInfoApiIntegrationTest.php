@@ -16,7 +16,7 @@ class MediaInfoApiIntegrationTest extends ApiTestCase
         }
 
         $apiKey = '45678isafgd56789asfgdhf4567';
-        $json = $this->getJson('POST', '/api/v1/resources?_key='.$apiKey, array(), array(), array(
+        $json = $this->getJson('POST', '/api/v1/resources?_key='.$apiKey, [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array(
             'title' => 'audio mediainfo test',
@@ -34,7 +34,7 @@ class MediaInfoApiIntegrationTest extends ApiTestCase
             filesize($testFilePath)
         );
 
-        $resp = $this->getJson('POST', $uploadUrl.'?_key='.$apiKey, array(), array('file' => $uploadedFile));
+        $resp = $this->getJson('POST', $uploadUrl.'?_key='.$apiKey, [], array('file' => $uploadedFile));
 
         $this->assertSame(202, $resp['response']['code']);
         $this->assertTrue(isset($resp['resource']['content']['files']));

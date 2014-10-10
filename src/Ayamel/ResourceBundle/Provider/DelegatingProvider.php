@@ -10,7 +10,7 @@ namespace Ayamel\ResourceBundle\Provider;
  */
 class DelegatingProvider implements ProviderInterface
 {
-    protected $providers = array();
+    protected $providers = [];
 
     public function getKey()
     {
@@ -124,7 +124,7 @@ class DelegatingProvider implements ProviderInterface
      */
     public function setProviders(array $providers)
     {
-        $this->providers = array();
+        $this->providers = [];
         foreach ($providers as $provider) {
             $this->addProvider($provider);
         }

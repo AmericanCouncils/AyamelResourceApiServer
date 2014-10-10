@@ -18,7 +18,7 @@ class DelegatingAnalyzer implements AnalyzerInterface
 
     protected $cacheTTL;
 
-    protected $analyzers = array();
+    protected $analyzers = [];
 
     /**
      * Constructor, tell it whether or not to analyze remote files, and optionally give it a cache mechanism.

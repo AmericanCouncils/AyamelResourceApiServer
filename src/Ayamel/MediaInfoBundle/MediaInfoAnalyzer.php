@@ -61,7 +61,7 @@ class MediaInfoAnalyzer implements AnalyzerInterface
             $ref->setMimeType($general['internet_media_type'][0]);
         }
 
-        $attrs = array();
+        $attrs = [];
 
         if (isset($image['height']) && isset($image['width'])) {
             $attrs['frameSize'] = array(
@@ -86,7 +86,7 @@ class MediaInfoAnalyzer implements AnalyzerInterface
             $ref->setMimeType($general['internet_media_type'][0]);
         }
 
-        $attrs = array();
+        $attrs = [];
 
         if (isset($video['height']) && isset($video['width'])) {
             $attrs['frameSize'] = array(
@@ -125,7 +125,7 @@ class MediaInfoAnalyzer implements AnalyzerInterface
             $ref->setMimeType($general['internet_media_type'][0]);
         }
 
-        $attrs = array();
+        $attrs = [];
 
         if (isset($general['overall_bit_rate'])) {
             $attrs['bitrate'] = $this->getIntValue($general['overall_bit_rate']);
