@@ -11,6 +11,7 @@ use JMS\Serializer\SerializerInterface;
 use Elastica\Document;
 use Elastica\Type;
 use Elastica\Exception\NotFoundException;
+use Elastica\Exception\ResponseException;
 use Psr\Log\LoggerInterface;
 use Ayamel\SearchBundle\Exception\IndexException;
 use Ayamel\SearchBundle\Exception\BulkIndexException;
@@ -45,6 +46,7 @@ class ResourceIndexer
         SerializerInterface $serializer,
         array $indexableMimeTypes = array('text/plain'),
         array $indexableResourceTypes = array('audio','video','image'),
+        array $textEncodingCheckOrder,
         LoggerInterface $logger = null,
         $languageFieldMap = []
     ) {
@@ -53,6 +55,7 @@ class ResourceIndexer
         $this->serializer = $serializer;
         $this->indexableMimeTypes = $indexableMimeTypes;
         $this->indexableResourceTypes = $indexableResourceTypes;
+        $this->textEncodingCheckOrder = $textEncodingCheckOrder;
         $this->logger = $logger;
         $this->languageFieldMap = $languageFieldMap;
     }
@@ -75,7 +78,12 @@ class ResourceIndexer
         }        
 
         if ($doc instanceof Document) {
-            $this->type->addDocument($doc);
+            try {
+                $this->type->addDocument($doc);
+            } catch (ResponseException $e) {
+                throw new IndexException("Failed to add search document for resource [$id]");
+            }
+            
             $this->type->getIndex()->refresh();
 
             $this->log(sprintf("Indexed Resource %s", $id));
@@ -96,10 +104,13 @@ class ResourceIndexer
                 $count++;
                 $doc = $this->createResourceSearchDocumentForId($id);
                 if ($doc instanceof Document) {
-                    //here ?
                     $this->type->addDocument($doc);
                 }
             } catch (IndexException $e) {
+                $fails++;
+                $failed[$id] = $e->getMessage();
+                continue;
+            } catch (Elastica\Exception\ResponseException $e) {
                 $fails++;
                 $failed[$id] = $e->getMessage();
                 continue;
@@ -107,14 +118,14 @@ class ResourceIndexer
 
             if ($count >= $batch) {
                 $this->type->getIndex()->refresh();
-                $this->log(sprintf("Indexed [%s] & skipped [%s] resources.", $count, $fails));
+                $this->log(sprintf("Indexed [%s] & skipped [%s] resources.", $count, $fails), 'info');
                 $count = 0;
                 $fails = 0;
             }
         }
 
         $this->type->getIndex()->refresh();
-        $this->log(sprintf("Indexed [%s] & skipped [%s] resources.", $count, $fails));
+        $this->log(sprintf("Indexed [%s] & skipped [%s] resources.", $count, $fails), 'info');
 
         if (!empty($failed)) {
             throw new BulkIndexException($failed);
@@ -270,23 +281,43 @@ class ResourceIndexer
 
         return $contentFields;
     }
-
+    
+    /**
+     * This also converts file content to UTF-8 when possible, otherwise returns false.
+     */
     protected function retrieveContent(FileReference $ref)
     {
         $uri = ($ref->getInternalUri()) ? $ref->getInternalUri() : $ref->getDownloadUri();
         if ($uri) {
             try {
-                return file_get_contents($uri);
+                $rawStringContent = file_get_contents($uri);
             } catch (\Exception $e) {
-                $this->log(sprintf("Failed getting search index content at [%s]", $uri), 'warning');
+                $this->log("Failed getting search index content for file.", 'warning', ['uri' => $uri]);
 
                 return false;
             }
-        }
+            
+            $fromEnc = false;
+            foreach ($this->textEncodingCheckOrder as $enc) {
+                if (mb_check_encoding($rawStringContent, $enc)) {
+                    $fromEnc = $enc;
+                    break;
+                }
+            }
 
+            if (!$fromEnc) {
+                $this->log("Did not index content or file, failed to guess encoding.", 'warning', ['uri' => $uri]);
+                
+                return false;
+            }
+            
+            //return encoding to UTF - but don't encode one UTF type to another UTF type
+            return (false === strpos($fromEnc, 'UTF')) ? mb_convert_encoding($rawStringContent, 'UTF-8', $fromEnc) : $rawStringContent;
+        }
+        
         return false;
     }
-
+    
     /**
      * Note, it's assumed that the first language in any list is the primary language.
      *
@@ -329,10 +360,10 @@ class ResourceIndexer
         return false;
     }
 
-    protected function log($msg, $level = 'info')
+    protected function log($msg, $level = 'info', $extras = [])
     {
         if ($this->logger) {
-            $this->logger->log($level, $msg);
+            $this->logger->log($level, $msg, $extras);
         }
     }
 }

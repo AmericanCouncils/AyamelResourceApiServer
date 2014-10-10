@@ -14,6 +14,27 @@ use Guzzle\Http\Exception\ClientErrorResponseException;
 class ResourceIndexerTest extends SearchTest
 {
 
+    protected function createTestResourceWithFile($filepath, $mimetype, $data)
+    {
+        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', [], [], array(
+            'CONTENT_TYPE' => 'application/json'
+        ), json_encode($data));
+        $this->assertSame(201, $response['response']['code']);
+        $resourceId = $response['resource']['id'];
+        $uploadUrl = substr($response['contentUploadUrl'], strlen('http://localhost'));
+        
+        $uploadedFile = new UploadedFile(
+            $filepath,
+            basename($filepath),
+            $mimetype,
+            filesize($filepath)
+        );
+        $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', [], array('file' => $uploadedFile));
+        $this->assertSame(202, $content['response']['code']);
+        
+        return $resourceId;
+    }
+
     public function testLoadIndexer()
     {
         $indexer = $this->getContainer()->get('ayamel.search.resource_indexer');
@@ -121,29 +142,14 @@ class ResourceIndexerTest extends SearchTest
     {
         $container = $this->getContainer();
         $indexer = $container->get('ayamel.search.resource_indexer');
-
-        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', [], [], array(
-            'CONTENT_TYPE' => 'application/json'
-        ), json_encode(array(
+        $resourceId = $this->createTestResourceWithFile(__DIR__."/files/hamlet.en.txt", 'text/plain', [
             'title' => 'Hamlet pwnz!',
             'type' => 'document',
             'languages' => array(
                 'iso639_3' => array('eng'),
                 'bcp47' => array('en')
             )
-        )));
-        $this->assertSame(201, $response['response']['code']);
-        $resourceId = $response['resource']['id'];
-        $uploadUrl = substr($response['contentUploadUrl'], strlen('http://localhost'));
-        $testFilePath = __DIR__."/files/hamlet.en.txt";
-        $uploadedFile = new UploadedFile(
-            $testFilePath,
-            'hamlet.en.txt',
-            'text/plain',
-            filesize($testFilePath)
-        );
-        $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', [], array('file' => $uploadedFile));
-        $this->assertSame(202, $content['response']['code']);
+        ]);
 
         //index it
         $indexer->indexResource($resourceId);
@@ -164,33 +170,57 @@ class ResourceIndexerTest extends SearchTest
     
     public function testIndexerConvertsNonUtf8FileContent()
     {
-        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', [], [], array(
-            'CONTENT_TYPE' => 'application/json'
-        ), json_encode(array(
+        $resourceId = $this->createTestResourceWithFile(__DIR__."/files/hamlet.win1251.txt", 'text/plain', [
             'title' => 'Utf-8 is for n00bs!',
             'type' => 'document',
-            'languages' => array(
-                'iso639_3' => array('eng'),
-                'bcp47' => array('en')
-            )
-        )));
-        $this->assertSame(201, $response['response']['code']);
-        $resourceId = $response['resource']['id'];
-        $uploadUrl = substr($response['contentUploadUrl'], strlen('http://localhost'));
-        $testFilePath = __DIR__."/files/hamlet.en.txt";
-        $uploadedFile = new UploadedFile(
-            $testFilePath,
-            'hamlet.en.txt',
-            'text/plain',
-            filesize($testFilePath)
-        );
-        $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', [], array('file' => $uploadedFile));
-        $this->assertSame(202, $content['response']['code']);
+            'languages' => [
+                'iso639_3' => ['rus'],
+                'bcp47' => ['ru']
+            ]
+        ]);
+        
+        //index it
+        $this->getContainer()->get('ayamel.search.resource_indexer')->indexResource($resourceId);
+
+        //make sure record exists
+        $this->setUpGuzzle();
+        $response = $this->guzzleClient->get("/$this->indexName/resource/".$resourceId)->send();
+        $this->assertSame(200, $response->getStatusCode());
+        $body = json_decode($response->getBody(), true);
+
+        //check for content_canonical, should be converted readable text
+        $this->assertTrue(isset($body['_source']['content_canonical']));
+        $this->assertSame(1, count($body['_source']['content_canonical']));
+        $this->assertSame(0, strpos($body['_source']['content_canonical'][0], "Быть иль не быть"));
+    }
+    
+    public function testIndexerSkipsFilesThatLieAboutTheirCharset()
+    {
+        $this->markTestIncomplete();
     }
     
     public function testIndexerSkipsNonConvertableFileContent()
     {
+        $resourceId = $this->createTestResourceWithFile(__DIR__."/files/not_utf8_text.txt", 'text/plain', [
+            'title' => 'Utf-8 is for n00bs!',
+            'type' => 'document',
+            'languages' => [
+                'iso639_3' => ['rus'],
+                'bcp47' => ['ru']
+            ]
+        ]);
         
+        //index it
+        $this->getContainer()->get('ayamel.search.resource_indexer')->indexResource($resourceId);
+
+        //make sure record exists
+        $this->setUpGuzzle();
+        $response = $this->guzzleClient->get("/$this->indexName/resource/".$resourceId)->send();
+        $this->assertSame(200, $response->getStatusCode());
+        $body = json_decode($response->getBody(), true);
+
+        //check for content_canonical, should be empty
+        $this->assertSame(0, count($body['_source']['content_canonical']));
     }
 
     /**
@@ -262,6 +292,6 @@ class ResourceIndexerTest extends SearchTest
 
     public function testBulkIndexResources()
     {
-        $this->markTestSkipped();
+        $this->markTestIncomplete();
     }
 }
