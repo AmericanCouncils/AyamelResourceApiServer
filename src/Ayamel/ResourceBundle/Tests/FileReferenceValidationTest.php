@@ -196,7 +196,7 @@ class FileReferenceValidationTest extends ApiTestCase
         $ref->setRepresentation('original');
         $ref->setQuality(0);
         $ref->setMimeType('application/zip');
-        $ref->setAttributes(array());
+        $ref->setAttributes([]);
 
         $errors = $v->validate($ref);
         $this->assertSame(0, count($errors));
@@ -211,7 +211,7 @@ class FileReferenceValidationTest extends ApiTestCase
         $ref->setRepresentation('original');
         $ref->setQuality(0);
         $ref->setMimeType('application/xml');
-        $ref->setAttributes(array());
+        $ref->setAttributes([]);
 
         $errors = $v->validate($ref);
         $this->assertSame(0, count($errors));

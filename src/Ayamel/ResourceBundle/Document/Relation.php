@@ -72,7 +72,7 @@ class Relation
      * @MongoDB\Hash
      * @JMS\Type("array")
      */
-    protected $attributes = array();
+    protected $attributes = [];
 
     /**
      * An object containing information about the API client that created the object.

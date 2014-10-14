@@ -34,7 +34,7 @@ class BasicTranscodeTest extends ApiTestCase
             'type' => 'data'
         );
 
-        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($data));
         $this->assertSame(201, $response['response']['code']);
@@ -52,7 +52,7 @@ class BasicTranscodeTest extends ApiTestCase
             filesize($testFilePath)
         );
 
-        $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', array(), array('file' => $uploadedFile));
+        $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', [], array('file' => $uploadedFile));
         $this->assertSame(202, $content['response']['code']);
         $this->assertSame('awaiting_processing', $content['resource']['status']);
         $this->assertSame($data['title'], $content['resource']['title']);
@@ -78,7 +78,7 @@ class BasicTranscodeTest extends ApiTestCase
             'type' => 'data'
         );
 
-        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($data));
         $this->assertSame(201, $response['response']['code']);
@@ -96,7 +96,7 @@ class BasicTranscodeTest extends ApiTestCase
             filesize($testFilePath)
         );
 
-        $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', array(), array('file' => $uploadedFile));
+        $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', [], array('file' => $uploadedFile));
 
         $this->assertSame(202, $content['response']['code']);
         $this->assertSame('awaiting_processing', $content['resource']['status']);
@@ -115,7 +115,7 @@ class BasicTranscodeTest extends ApiTestCase
         $this->runCommand(sprintf('resource:transcode %s --force', $resourceId));
 
         //now get resource - expect 2 files and changed status
-        $json = $this->getJson('GET', '/api/v1/resources/'.$resourceId.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $json = $this->getJson('GET', '/api/v1/resources/'.$resourceId.'?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ));
 
@@ -164,7 +164,7 @@ class BasicTranscodeTest extends ApiTestCase
             'title' => 'test',
             'type' => 'data'
         );
-        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($data));
         $this->assertSame(201, $response['response']['code']);
@@ -181,7 +181,7 @@ class BasicTranscodeTest extends ApiTestCase
             'text/plain',
             filesize($testFilePath)
         );
-        $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', array(), array('file' => $uploadedFile));
+        $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', [], array('file' => $uploadedFile));
         $this->assertSame(202, $content['response']['code']);
         $this->assertSame('awaiting_processing', $content['resource']['status']);
         $this->assertSame($data['title'], $content['resource']['title']);

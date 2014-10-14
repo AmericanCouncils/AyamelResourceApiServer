@@ -22,7 +22,7 @@ class RelationRepository extends DocumentRepository
      * @param  array|null $filters
      * @return array
      */
-    public function getRelationsForResource($resourceId, $filters = array())
+    public function getRelationsForResource($resourceId, $filters = [])
     {
         return $this->getQBForResourceRelations($resourceId, $filters)->getQuery()->execute();
     }
@@ -33,12 +33,12 @@ class RelationRepository extends DocumentRepository
      * @param string     $resourceId
      * @param array|null $filters
      */
-    public function deleteRelationsForResource($resourceId, $filters = array())
+    public function deleteRelationsForResource($resourceId, $filters = [])
     {
         return $this->getQBForResourceRelations($resourceId, $filters)->remove()->getQuery()->execute();
     }
 
-    public function getQBForRelations($filters = array())
+    public function getQBForRelations($filters = [])
     {
         $qb = $this->createQueryBuilder('Relation');
 
@@ -54,7 +54,7 @@ class RelationRepository extends DocumentRepository
         return $qb;
     }
 
-    public function getQBForResourceRelations($resourceId, $filters = array())
+    public function getQBForResourceRelations($resourceId, $filters = [])
     {
         $qb = $this->createQueryBuilder('Relation');
 

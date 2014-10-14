@@ -100,7 +100,9 @@ class UploadContent extends ApiController
      */
     public function executeAction($id, $token)
     {
-        // $this->requireAuthentication();
+        //NOTE: There are no auth checks on this route, because a one-time-use token is required.  The assumption is currently that
+        //if you have a valid one-time-use upload token, then you were properly authenticated then.  Eventually we'll replace
+        //this mechanism with something less tedious.
 
         //get the resource
         $resource = $this->getRequestedResourceById($id, true);
@@ -109,8 +111,6 @@ class UploadContent extends ApiController
         if ($resource->isDeleted()) {
             return $this->returnDeletedResource($resource);
         }
-
-        // $this->requireResourceOwner($resource);
 
         //collections can't contain content
         if ('collection' === $resource->getType()) {

@@ -29,7 +29,7 @@ class ModifyResource extends ApiController
     public function executeAction($id)
     {
         $this->requireAuthentication();
-
+        
         //get the resource
         $resource = $this->getRequestedResourceById($id);
 

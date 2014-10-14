@@ -9,7 +9,7 @@ class BulkIndexException extends IndexException
      *
      * @var hash
      */
-    protected $messages = array();
+    protected $messages = [];
 
     public function __construct(array $messages)
     {

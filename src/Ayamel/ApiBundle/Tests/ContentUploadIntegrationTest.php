@@ -15,7 +15,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
             'type' => 'data'
         );
 
-        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($data));
 
@@ -61,17 +61,6 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $this->assertSame(200, $content['response']['code']);
         $this->assertTrue(isset($content['contentUploadUrl']));
         $uploadUrl = substr($content['contentUploadUrl'], strlen('http://localhost'));
-
-        //no apikey
-        // Test removed 2014-04-07 - we don't need an api key for content upload, we use a token for validation
-        // $response = $this->getResponse('POST', $uploadUrl);
-        // $this->assertSame(401, $response->getStatusCode());
-
-        //invalid key
-        // Test removed 2014-04-07 - we don't need an api key for content upload, we use a token for validation
-        // $response = $this->getResponse('POST', $uploadUrl.'?_key=55678isafgd56789asfgdhf4568');
-        // $this->assertSame(403, $response->getStatusCode());
-
     }
 
     public function testUploadContentAsRemoteFilesArray()
@@ -81,7 +70,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
             'type' => 'data'
         );
 
-        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($data));
         $this->assertSame(201, $response['response']['code']);
@@ -125,7 +114,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
                 )
             )
         );
-        $response = $this->getJson('POST', $apiPath.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $response = $this->getJson('POST', $apiPath.'?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($data));
 
@@ -133,7 +122,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $this->assertSame($data['remoteFiles'], $response['resource']['content']['files']);
         $this->assertSame('normal', $response['resource']['status']);
     }
-
+    
     public function testUploadContentAsFile()
     {
         //get content upload url
@@ -142,14 +131,14 @@ class ContentUploadIntegrationTest extends ApiTestCase
             'type' => 'data'
         );
 
-        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($data));
         $this->assertSame(201, $response['response']['code']);
         $this->assertFalse(isset($response['resource']['content']));
         $resourceId = $response['resource']['id'];
         $uploadUrl = substr($response['contentUploadUrl'], strlen('http://localhost'));
-
+        
         //create uploaded file
         $testFilePath = __DIR__."/files/resource_test_files/lorem.txt";
         $uploadedFile = new UploadedFile(
@@ -159,7 +148,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
             filesize($testFilePath)
         );
 
-        $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', array(), array('file' => $uploadedFile));
+        $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', [], array('file' => $uploadedFile));
         $this->assertSame(202, $content['response']['code']);
         $this->assertSame('awaiting_processing', $content['resource']['status']);
         $this->assertSame($data['title'], $content['resource']['title']);
@@ -179,7 +168,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
             'type' => 'data'
         );
 
-        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($data));
         $this->assertSame(201, $response['response']['code']);
@@ -189,7 +178,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $resourceId = $response['resource']['id'];
         $apiPath = substr($response['contentUploadUrl'], strlen('http://localhost'));
 
-        $response = $this->getJson('POST', $apiPath.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $response = $this->getJson('POST', $apiPath.'?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array(
             'uri' => 'http://www.google.com/'

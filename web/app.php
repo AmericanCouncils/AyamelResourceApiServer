@@ -3,7 +3,7 @@
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\ClassLoader\ApcClassLoader;
 
-$__start = microtime(true);
+// $__start = microtime(true);
 
 $loader = require_once __DIR__.'/../app/bootstrap.php.cache';
 

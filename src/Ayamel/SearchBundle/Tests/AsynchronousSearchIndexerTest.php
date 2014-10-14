@@ -25,7 +25,7 @@ class AsynchronousSearchIndexerTest extends SearchTest
         $proc = $this->startRabbitListener(1);
 
         //create resource
-        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array(
             'title' => 'Hamlet pwnz!',
@@ -44,7 +44,7 @@ class AsynchronousSearchIndexerTest extends SearchTest
         $this->assertSame(404, $exception->getResponse()->getStatusCode());
 
         //set uploaded content as something, should force the object to index
-        $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array(
             'uri' => 'http://www.google.com/'
@@ -80,7 +80,7 @@ class AsynchronousSearchIndexerTest extends SearchTest
     {
         $proc = $this->startRabbitListener(1);
 
-        $content = $this->getJson('PUT', '/api/v1/resources/'.$id.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $content = $this->getJson('PUT', '/api/v1/resources/'.$id.'?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array(
             'title' => 'hamlet !pwnz'
@@ -116,7 +116,7 @@ class AsynchronousSearchIndexerTest extends SearchTest
         $proc = $this->startRabbitListener(2);  //this test should trigger 2 resources to index
 
         //create resource
-        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $response = $this->getJson('POST', '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array(
             'title' => 'Hamlet strikes back!',
@@ -125,7 +125,7 @@ class AsynchronousSearchIndexerTest extends SearchTest
         $this->assertSame(201, $response['response']['code']);
         $objectId = $response['resource']['id'];
         $uploadUrl = substr($response['contentUploadUrl'], strlen('http://localhost'));
-        $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $content = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array(
             'uri' => 'http://www.google.com/'
@@ -138,7 +138,7 @@ class AsynchronousSearchIndexerTest extends SearchTest
             'objectId' => $objectId,
             'type' => 'search'
         );
-        $content = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $content = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($relation));
         $this->assertSame(201, $content['response']['code']);
@@ -183,7 +183,7 @@ class AsynchronousSearchIndexerTest extends SearchTest
     {
         $proc = $this->startRabbitListener(1);
 
-        $content = $this->getJson('DELETE', '/api/v1/resources/'.$relation['objectId'].'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $content = $this->getJson('DELETE', '/api/v1/resources/'.$relation['objectId'].'?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ));
         $this->assertSame(200, $content['response']['code']);
@@ -224,7 +224,7 @@ class AsynchronousSearchIndexerTest extends SearchTest
     {
         $proc = $this->startRabbitListener(1);
 
-        $content = $this->getJson('DELETE', '/api/v1/resources/'.$id.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $content = $this->getJson('DELETE', '/api/v1/resources/'.$id.'?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ));
         $this->assertSame(200, $content['response']['code']);

@@ -3,9 +3,19 @@ imports:
     - { resource: "@AyamelSearchBundle/Resources/config/config.lang_mappings.yml" }
 
 parameters:
+    #during batch operations, how many to send to ES at once
     ayamel.search.elastica_resource_provider.batch: 100
-    ayamel.search.indexable_mime_types: ['text/plain']
+    
+    #only these types of resources are included as searchable in the index
     ayamel.search.indexable_resource_types: ['document','collection','audio','video','image']
+
+    #only content from file references with this mime type will be included as searchable text
+    ayamel.search.indexable_mime_types: ['text/plain']
+    
+    #text encoding for sending to ES must be UTF-8, so detect encodings if possible in this order
+    #WARNING: order matters, use the most specific ones first
+    ayamel.search.indexable_encoding_check_order: ['UTF-32', 'UTF-16', 'ASCII', 'UTF-8', 'Windows-1251', 'Windows-1252']
+
     ayamel.search.rabbitmq_producer:
         connection: default
         exchange_options: { name: %search_index_queue_name%, type: direct }
@@ -35,6 +45,7 @@ services:
             - @serializer
             - %ayamel.search.indexable_mime_types%
             - %ayamel.search.indexable_resource_types%
+            - %ayamel.search.indexable_encoding_check_order%
             - @logger
             - %ayamel.search.language_field_map%
         tags:

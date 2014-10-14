@@ -14,7 +14,7 @@ class RelationAttributesValidator extends ConstraintValidator
     protected $map;
     protected $validator;
 
-    public function __construct(ValidatorInterface $validator, $map = array())
+    public function __construct(ValidatorInterface $validator, $map = [])
     {
         $this->validator = $validator;
         $this->map = $map;

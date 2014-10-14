@@ -37,15 +37,21 @@ several key technologies:
 ## Development and Testing ##
 
 The project has a number of dependencies and requires a bit of setup to run and test.  For this reason, there is a vagrant environment
-configured for development. The vagrant dev machine is set up using [ansible](http://docs.ansible.com/intro_installation.html), so you 
-will need that installed locally in order to bring up the dev environment and run the tests.
+configured for development. The vagrant dev machine installs [ansible](http://docs.ansible.com/intro_installation.html) on the VM, then runs it to install all other dependencies.  The machine is configured for development and running the tests.
 
-After you have installed `ansible`, you should be able to just run `vagrant up` in the project directory.
+This is all you should need in order to develop:
 
-Use `vagrant ssh` to connect to the virtual machine, then:
+* `cd <path/to/ayamel>` - go to this project's root directory on your machine
+* `vagrant up`          - start the vagrant vm and set it up
+* `vagrant ssh`         - connect to the vm
+* `cd /vagrant`         - REMOVE
+* `bin/phpunit --exclude-group=transcoding` - run the tests
 
-* `cd /vagrant`
-* `bin/phpunit --exclude-group=transcoding` to run the tests.
+At this point you can edit files in the project and re-run the tests whenever.
+
+TODO: notes about connecting to the VM - and test ApiKey
+
+> Note: The first time you run `vagrant up`, it will take a fair amount of time to set the machine up.
 
 > Note: Video transcoding tests are being ignored for the moment, due to ffmpeg being a pain to install.
 

@@ -8,7 +8,7 @@ class ResourceLifecycleTest extends ApiTestCase
     public function testResourceLifecycle()
     {
         //create it
-        $json = $this->getJson("POST", '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $json = $this->getJson("POST", '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array('title'=>'foo', 'type'=>'data')));
         $this->assertSame(201, $json['response']['code']);
@@ -24,7 +24,7 @@ class ResourceLifecycleTest extends ApiTestCase
         $this->assertFalse(isset($json['resource']['content']));
 
         //modify it
-        $json = $this->getJson("PUT", '/api/v1/resources/'.$id.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $json = $this->getJson("PUT", '/api/v1/resources/'.$id.'?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array('keywords'=>'foo,bar,baz')));
         $this->assertSame(200, $json['response']['code']);
@@ -51,7 +51,7 @@ class ResourceLifecycleTest extends ApiTestCase
             )
         );
         $apiPath = substr($uploadUrl, strlen('http://localhost'));
-        $json = $this->getJson('POST', $apiPath.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $json = $this->getJson('POST', $apiPath.'?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array('remoteFiles' => $remoteFiles)));
         $this->assertSame(200, $json['response']['code']);
@@ -69,7 +69,7 @@ class ResourceLifecycleTest extends ApiTestCase
         $this->assertSame(1, count($json['resource']['content']));
 
         //modify it
-        $json = $this->getJson("PUT", '/api/v1/resources/'.$id.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $json = $this->getJson("PUT", '/api/v1/resources/'.$id.'?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array('keywords'=>'foo,bar,baz,qux')));
         $this->assertSame(200, $json['response']['code']);

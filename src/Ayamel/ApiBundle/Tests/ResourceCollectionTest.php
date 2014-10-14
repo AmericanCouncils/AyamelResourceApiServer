@@ -11,7 +11,7 @@ class ResourceCollectionTest extends ApiTestCase
             'title' => 'yo dawg',
             'type' => 'collection'
         );
-        $return = $this->getJson("POST", '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $return = $this->getJson("POST", '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($data));
 
@@ -27,7 +27,7 @@ class ResourceCollectionTest extends ApiTestCase
      */
     public function testCollectionDoesNotAllowContentUploading($uploadUrl)
     {
-        $return = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $return = $this->getJson('POST', $uploadUrl.'?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array(
             'uri' => 'http://www.google.com/'

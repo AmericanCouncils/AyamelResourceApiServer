@@ -54,7 +54,7 @@ class RelationsController extends ApiController
         $this->requireClientVisibility($resource);
 
         //build filters
-        $filters = array();
+        $filters = [];
         if ($types = $req->query->get('type', false)) {
             $filters['type'] = explode(',', $types);
         }
@@ -123,7 +123,7 @@ class RelationsController extends ApiController
      */
     public function filterRelations(Request $req)
     {
-        $filters = array();
+        $filters = [];
 
         //set filters
         if ($subIds = $req->query->get('subjectId', false)) {
@@ -305,7 +305,7 @@ class RelationsController extends ApiController
 
     protected function relationsToArray($relations)
     {
-        $rels = array();
+        $rels = [];
 
         foreach (iterator_to_array($relations) as $key => $val) {
             $rels[] = $val;

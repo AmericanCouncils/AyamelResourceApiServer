@@ -9,7 +9,7 @@ class RelationsIntegrationTest extends ApiTestCase
 
     protected function createTestResource($id = '45678isafgd56789asfgdhf4567')
     {
-        $json = $this->getJson('POST', '/api/v1/resources?_key='.$id, array(), array(), array(
+        $json = $this->getJson('POST', '/api/v1/resources?_key='.$id, [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array(
             'title' => 'testing',
@@ -26,7 +26,7 @@ class RelationsIntegrationTest extends ApiTestCase
 
     protected function createTestRelation($relationData, $id = '45678isafgd56789asfgdhf4567')
     {
-        $json = $this->getJson('POST', '/api/v1/relations?_key='.$id, array(), array(), array(
+        $json = $this->getJson('POST', '/api/v1/relations?_key='.$id, [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($relationData));
 
@@ -92,7 +92,7 @@ class RelationsIntegrationTest extends ApiTestCase
             'name' => 'The Test Client',
         );
 
-        $response = $this->getResponse('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $response = $this->getResponse('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($relationData));
 
@@ -110,7 +110,7 @@ class RelationsIntegrationTest extends ApiTestCase
         $this->assertTrue(isset($data['relation']['client']['id']));
 
         //check subject resource
-        $res1 = $this->getJson('GET', '/api/v1/resources/'.$subjectId.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $res1 = $this->getJson('GET', '/api/v1/resources/'.$subjectId.'?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ));
 
@@ -124,7 +124,7 @@ class RelationsIntegrationTest extends ApiTestCase
         $this->assertSame($data['relation']['client']['id'], $res1['resource']['relations'][0]['client']['id']);
 
         //check object resource
-        $res2 = $this->getJson('GET', '/api/v1/resources/'.$objectId.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $res2 = $this->getJson('GET', '/api/v1/resources/'.$objectId.'?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ));
 
@@ -141,7 +141,7 @@ class RelationsIntegrationTest extends ApiTestCase
     public function testCreateRelationForNonExistingObject()
     {
         //non-existing subject
-        $response = $this->getResponse('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $response = $this->getResponse('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array(
             'subjectId' => '33333335',
@@ -157,7 +157,7 @@ class RelationsIntegrationTest extends ApiTestCase
         $subject = $this->createTestResource();
         $subId = $subject['resource']['id'];
 
-        $response = $this->getResponse('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $response = $this->getResponse('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array(
             'subjectId' => $subId,
@@ -174,21 +174,21 @@ class RelationsIntegrationTest extends ApiTestCase
     public function testCreateRelationForHiddenObject()
     {
         //create private Resource as client1
-        $json = $this->getJson("POST", '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $json = $this->getJson("POST", '/api/v1/resources?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array('title'=>'foo', 'type'=>'data', 'visibility' => array('test_client'))));
         $this->assertSame(201, $json['response']['code']);
         $subId = $json['resource']['id'];
 
         //create resource is 2nd client
-        $json = $this->getJson("POST", '/api/v1/resources?_key=55678isafgd56789asfgdhf4568', array(), array(), array(
+        $json = $this->getJson("POST", '/api/v1/resources?_key=55678isafgd56789asfgdhf4568', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array('title'=>'foo', 'type'=>'data')));
         $this->assertSame(201, $json['response']['code']);
         $objId = $json['resource']['id'];
 
         //create relation as client 2 to hidden resource - fails
-        $json = $this->getJson('POST', '/api/v1/relations?_key=55678isafgd56789asfgdhf4568', array(), array(), array(
+        $json = $this->getJson('POST', '/api/v1/relations?_key=55678isafgd56789asfgdhf4568', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array(
             'subjectId' => $subId,
@@ -198,7 +198,7 @@ class RelationsIntegrationTest extends ApiTestCase
         $this->assertSame(403, $json['response']['code']);
 
         //as client one, create relation to public resource
-        $json = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $json = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode(array(
             'subjectId' => $subId,
@@ -217,13 +217,13 @@ class RelationsIntegrationTest extends ApiTestCase
         $objId = $json['resource']['id'];
 
         //requires
-        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode(array(
+        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', [], [], array('CONTENT_TYPE' => 'application/json'), json_encode(array(
             'subjectId' => $subId,
             'objectId' => $objId,
             'type' => 'requires'
         )));
         $this->assertSame(201, $data['response']['code']);
-        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode(array(
+        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', [], [], array('CONTENT_TYPE' => 'application/json'), json_encode(array(
             'subjectId' => $objId,
             'objectId' => $subId,
             'type' => 'requires'
@@ -231,13 +231,13 @@ class RelationsIntegrationTest extends ApiTestCase
         $this->assertSame(403, $data['response']['code']);
 
         //transcript_of
-        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode(array(
+        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', [], [], array('CONTENT_TYPE' => 'application/json'), json_encode(array(
             'subjectId' => $subId,
             'objectId' => $objId,
             'type' => 'transcript_of'
         )));
         $this->assertSame(201, $data['response']['code']);
-        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode(array(
+        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', [], [], array('CONTENT_TYPE' => 'application/json'), json_encode(array(
             'subjectId' => $objId,
             'objectId' => $subId,
             'type' => 'transcript_of'
@@ -245,13 +245,13 @@ class RelationsIntegrationTest extends ApiTestCase
         $this->assertSame(403, $data['response']['code']);
 
         //references
-        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode(array(
+        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', [], [], array('CONTENT_TYPE' => 'application/json'), json_encode(array(
             'subjectId' => $subId,
             'objectId' => $objId,
             'type' => 'references'
         )));
         $this->assertSame(201, $data['response']['code']);
-        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode(array(
+        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', [], [], array('CONTENT_TYPE' => 'application/json'), json_encode(array(
             'subjectId' => $objId,
             'objectId' => $subId,
             'type' => 'references'
@@ -259,13 +259,13 @@ class RelationsIntegrationTest extends ApiTestCase
         $this->assertSame(403, $data['response']['code']);
 
         //based_on
-        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode(array(
+        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', [], [], array('CONTENT_TYPE' => 'application/json'), json_encode(array(
             'subjectId' => $subId,
             'objectId' => $objId,
             'type' => 'based_on'
         )));
         $this->assertSame(201, $data['response']['code']);
-        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode(array(
+        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', [], [], array('CONTENT_TYPE' => 'application/json'), json_encode(array(
             'subjectId' => $objId,
             'objectId' => $subId,
             'type' => 'based_on'
@@ -273,13 +273,13 @@ class RelationsIntegrationTest extends ApiTestCase
         $this->assertSame(403, $data['response']['code']);
 
         //translation_of
-        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode(array(
+        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', [], [], array('CONTENT_TYPE' => 'application/json'), json_encode(array(
             'subjectId' => $subId,
             'objectId' => $objId,
             'type' => 'translation_of'
         )));
         $this->assertSame(201, $data['response']['code']);
-        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode(array(
+        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', [], [], array('CONTENT_TYPE' => 'application/json'), json_encode(array(
             'subjectId' => $objId,
             'objectId' => $subId,
             'type' => 'translation_of'
@@ -287,13 +287,13 @@ class RelationsIntegrationTest extends ApiTestCase
         $this->assertSame(403, $data['response']['code']);
 
         //search
-        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode(array(
+        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', [], [], array('CONTENT_TYPE' => 'application/json'), json_encode(array(
             'subjectId' => $subId,
             'objectId' => $objId,
             'type' => 'search'
         )));
         $this->assertSame(201, $data['response']['code']);
-        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode(array(
+        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', [], [], array('CONTENT_TYPE' => 'application/json'), json_encode(array(
             'subjectId' => $objId,
             'objectId' => $subId,
             'type' => 'search'
@@ -311,19 +311,19 @@ class RelationsIntegrationTest extends ApiTestCase
         $r3 = $json['resource']['id'];
 
         //version_of
-        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode(array(
+        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', [], [], array('CONTENT_TYPE' => 'application/json'), json_encode(array(
             'subjectId' => $r1,
             'objectId' => $r2,
             'type' => 'version_of'
         )));
         $this->assertSame(201, $data['response']['code']);
-        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode(array(
+        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', [], [], array('CONTENT_TYPE' => 'application/json'), json_encode(array(
             'subjectId' => $r1,
             'objectId' => $r3,
             'type' => 'version_of'
         )));
         $this->assertSame(403, $data['response']['code']);
-        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode(array(
+        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', [], [], array('CONTENT_TYPE' => 'application/json'), json_encode(array(
             'subjectId' => $r3,
             'objectId' => $r2,
             'type' => 'version_of'
@@ -331,19 +331,19 @@ class RelationsIntegrationTest extends ApiTestCase
         $this->assertSame(403, $data['response']['code']);
 
         //part_of
-        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode(array(
+        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', [], [], array('CONTENT_TYPE' => 'application/json'), json_encode(array(
             'subjectId' => $r1,
             'objectId' => $r2,
             'type' => 'part_of'
         )));
         $this->assertSame(201, $data['response']['code']);
-        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode(array(
+        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', [], [], array('CONTENT_TYPE' => 'application/json'), json_encode(array(
             'subjectId' => $r1,
             'objectId' => $r3,
             'type' => 'part_of'
         )));
         $this->assertSame(403, $data['response']['code']);
-        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode(array(
+        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', [], [], array('CONTENT_TYPE' => 'application/json'), json_encode(array(
             'subjectId' => $r3,
             'objectId' => $r2,
             'type' => 'part_of'
@@ -357,7 +357,7 @@ class RelationsIntegrationTest extends ApiTestCase
         $r2 = $this->createTestResource();
 
         //relation that has no attributes
-        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode(array(
+        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', [], [], array('CONTENT_TYPE' => 'application/json'), json_encode(array(
             'subjectId' => $r1['resource']['id'],
             'objectId' => $r2['resource']['id'],
             'type' => 'based_on',
@@ -368,7 +368,7 @@ class RelationsIntegrationTest extends ApiTestCase
         $this->assertSame(400, $data['response']['code']);
 
         //relation that does have attributes
-        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode(array(
+        $data = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', [], [], array('CONTENT_TYPE' => 'application/json'), json_encode(array(
             'subjectId' => $r1['resource']['id'],
             'objectId' => $r2['resource']['id'],
             'type' => 'transcript_of',
@@ -385,7 +385,7 @@ class RelationsIntegrationTest extends ApiTestCase
         $subjectId = $stubs['subject']['id'];
         $objectId = $stubs['object']['id'];
 
-        $data = $this->getJson('GET', '/api/v1/resources/'.$subjectId.'/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $data = $this->getJson('GET', '/api/v1/resources/'.$subjectId.'/relations?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ));
         $this->assertSame(200, $data['response']['code']);
@@ -393,7 +393,7 @@ class RelationsIntegrationTest extends ApiTestCase
         $rel1Id = $data['relations'][0]['id'];
         $rel2Id = $data['relations'][1]['id'];
 
-        $data = $this->getJson('GET', '/api/v1/resources/'.$objectId.'/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $data = $this->getJson('GET', '/api/v1/resources/'.$objectId.'/relations?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ));
         $this->assertSame(200, $data['response']['code']);
@@ -404,7 +404,7 @@ class RelationsIntegrationTest extends ApiTestCase
         //get relations when none exist
         $response = $this->createTestResource();
         $id = $response['resource']['id'];
-        $data = $this->getJson('GET', '/api/v1/resources/'.$id.'/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $data = $this->getJson('GET', '/api/v1/resources/'.$id.'/relations?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ));
         $this->assertTrue(isset($data['relations']));
@@ -419,14 +419,14 @@ class RelationsIntegrationTest extends ApiTestCase
         $objectId = $stubs['object']['id'];
 
         //filter by type on subject
-        $data = $this->getJson('GET', '/api/v1/resources/'.$subjectId.'/relations?_key=45678isafgd56789asfgdhf4567&type=nonexisting,part_of', array(), array(), array(
+        $data = $this->getJson('GET', '/api/v1/resources/'.$subjectId.'/relations?_key=45678isafgd56789asfgdhf4567&type=nonexisting,part_of', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ));
         $this->assertSame(200, $data['response']['code']);
         $this->assertSame(1, count($data['relations']));
 
         //filter by type on object
-        $data = $this->getJson('GET', '/api/v1/resources/'.$objectId.'/relations?_key=45678isafgd56789asfgdhf4567&type=requires,nonexisting', array(), array(), array(
+        $data = $this->getJson('GET', '/api/v1/resources/'.$objectId.'/relations?_key=45678isafgd56789asfgdhf4567&type=requires,nonexisting', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ));
         $this->assertSame(1, count($data['relations']));
@@ -439,7 +439,7 @@ class RelationsIntegrationTest extends ApiTestCase
         $objectId = $stubs['object']['id'];
 
         //no ids specified
-        $data = $this->getJson('GET', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $data = $this->getJson('GET', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ));
 
@@ -448,28 +448,28 @@ class RelationsIntegrationTest extends ApiTestCase
         $this->assertTrue(count($data['relations']) > 0);
 
         //filter subject OR object id
-        $data = $this->getJson('GET', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567&id='.$subjectId, array(), array(), array(
+        $data = $this->getJson('GET', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567&id='.$subjectId, [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ));
         $this->assertSame(200, $data['response']['code']);
         $this->assertSame(2, count($data['relations']));
 
         //filter subjectId
-        $data = $this->getJson('GET', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567&subjectId='.$subjectId, array(), array(), array(
+        $data = $this->getJson('GET', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567&subjectId='.$subjectId, [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ));
         $this->assertSame(200, $data['response']['code']);
         $this->assertSame(1, count($data['relations']));
 
         //filter objectId
-        $data = $this->getJson('GET', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567&objectId='.$subjectId, array(), array(), array(
+        $data = $this->getJson('GET', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567&objectId='.$subjectId, [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ));
         $this->assertSame(200, $data['response']['code']);
         $this->assertSame(1, count($data['relations']));
 
         //filter type
-        $data = $this->getJson('GET', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567&id='.$subjectId.'&type=requires', array(), array(), array(
+        $data = $this->getJson('GET', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567&id='.$subjectId.'&type=requires', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ));
         $this->assertSame(200, $data['response']['code']);
@@ -493,7 +493,7 @@ class RelationsIntegrationTest extends ApiTestCase
         );
 
         //create and check relation
-        $rel = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $rel = $this->getJson('POST', '/api/v1/relations?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ), json_encode($relationData));
         $this->assertSame(201, $rel['response']['code']);
@@ -501,10 +501,10 @@ class RelationsIntegrationTest extends ApiTestCase
         $relationId = $rel['relation']['id'];
 
         //check both resources, should both have the relation
-        $subject = $this->getJson('GET', '/api/v1/resources/'.$subjectId.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $subject = $this->getJson('GET', '/api/v1/resources/'.$subjectId.'?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ));
-        $object = $this->getJson('GET', '/api/v1/resources/'.$objectId.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $object = $this->getJson('GET', '/api/v1/resources/'.$objectId.'?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ));
         $this->assertTrue(isset($subject['resource']['relations'][0]['id']));
@@ -515,16 +515,16 @@ class RelationsIntegrationTest extends ApiTestCase
         );
 
         //delete the relation
-        $response = $this->getResponse('DELETE', '/api/v1/relations/'.$relationId.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $response = $this->getResponse('DELETE', '/api/v1/relations/'.$relationId.'?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ));
         $this->assertSame(200, $response->getStatusCode());
 
         //check resources again, neither should have relations
-        $subject = $this->getJson('GET', '/api/v1/resources/'.$subjectId.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $subject = $this->getJson('GET', '/api/v1/resources/'.$subjectId.'?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ));
-        $object = $this->getJson('GET', '/api/v1/resources/'.$objectId.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $object = $this->getJson('GET', '/api/v1/resources/'.$objectId.'?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ));
 
@@ -538,7 +538,7 @@ class RelationsIntegrationTest extends ApiTestCase
         $subjectId = $stubs['subject']['id'];
         $objectId = $stubs['object']['id'];
 
-        $data = $this->getJson('GET', '/api/v1/resources/'.$subjectId.'/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $data = $this->getJson('GET', '/api/v1/resources/'.$subjectId.'/relations?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ));
         $this->assertSame(200, $data['response']['code']);
@@ -546,7 +546,7 @@ class RelationsIntegrationTest extends ApiTestCase
         $rel1Id = $data['relations'][0]['id'];
         $rel2Id = $data['relations'][1]['id'];
 
-        $data = $this->getJson('GET', '/api/v1/resources/'.$objectId.'/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $data = $this->getJson('GET', '/api/v1/resources/'.$objectId.'/relations?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ));
         $this->assertSame(200, $data['response']['code']);
@@ -555,7 +555,7 @@ class RelationsIntegrationTest extends ApiTestCase
         $this->assertSame($rel2Id, $data['relations'][1]['id']);
 
         //get raw object field, assert relations field
-        $data = $this->getJson('GET', '/api/v1/resources/'.$objectId.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $data = $this->getJson('GET', '/api/v1/resources/'.$objectId.'?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ));
         $this->assertSame(200, $data['response']['code']);
@@ -563,20 +563,20 @@ class RelationsIntegrationTest extends ApiTestCase
         $this->assertSame(2, count($data['resource']['relations']));
 
         //delete the subject resource
-        $data = $this->getJson('DELETE', '/api/v1/resources/'.$subjectId.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $data = $this->getJson('DELETE', '/api/v1/resources/'.$subjectId.'?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ));
 
         $this->assertSame(200, $data['response']['code']);
 
         //check the relations for both subject and object
-        $data = $this->getJson('GET', '/api/v1/resources/'.$subjectId.'/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $data = $this->getJson('GET', '/api/v1/resources/'.$subjectId.'/relations?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ));
         $this->assertSame(410, $data['response']['code']);
         $this->assertFalse(isset($data['relations']));
 
-        $data = $this->getJson('GET', '/api/v1/resources/'.$objectId.'/relations?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $data = $this->getJson('GET', '/api/v1/resources/'.$objectId.'/relations?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ));
         $this->assertSame(200, $data['response']['code']);
@@ -586,7 +586,7 @@ class RelationsIntegrationTest extends ApiTestCase
 
         //get raw object, assert no relations field
         //get raw object field, assert relations field
-        $data = $this->getJson('GET', '/api/v1/resources/'.$objectId.'?_key=45678isafgd56789asfgdhf4567', array(), array(), array(
+        $data = $this->getJson('GET', '/api/v1/resources/'.$objectId.'?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ));
         $this->assertSame(200, $data['response']['code']);

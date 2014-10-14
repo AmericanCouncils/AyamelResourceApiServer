@@ -13,7 +13,7 @@ use Doctrine\ODM\MongoDB\DocumentRepository;
  */
 class ResourceRepository extends DocumentRepository
 {
-    public function getQBForResources($filters = array())
+    public function getQBForResources($filters = [])
     {
         $qb = $this->createQueryBuilder('Resource');
 

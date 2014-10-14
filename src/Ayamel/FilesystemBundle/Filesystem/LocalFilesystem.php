@@ -134,7 +134,7 @@ class LocalFilesystem implements FilesystemInterface
     public function getFilesForId($id)
     {
         $pattern = $this->generateBasePathForId($id)."*";
-        $files = array();
+        $files = [];
 
         foreach (glob($pattern) as $path) {
             $files[] = FileReference::createFromLocalPath($path);

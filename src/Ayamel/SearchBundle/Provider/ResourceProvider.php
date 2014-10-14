@@ -35,7 +35,7 @@ class ResourceProvider implements ProviderInterface
         $this->documentManager = $documentManager;
     }
 
-    public function populate(\Closure $loggerClosure = null, array $options = array())
+    public function populate(\Closure $loggerClosure = null, array $options = [])
     {
 
         if ($loggerClosure) {
@@ -51,15 +51,19 @@ class ResourceProvider implements ProviderInterface
             $ids[] = $resource['_id']->{'$id'};
         }
 
-        if ($loggerClosure) {
-            $loggerClosure(sprintf("Indexing %s resources.", count($ids)));
-        }
-
         $batchSize = isset($options['batch-size']) ? $options['batch-size'] : $this->batch;
+        $totalCount = count($ids);
+        $failedCount = 0;
+        
+        if ($loggerClosure) {
+            $loggerClosure(sprintf("Indexing %s resources.", $totalCount));
+        }
 
         try {
             $this->indexer->indexResources($ids, $batchSize);
         } catch (BulkIndexException $e) {
+            $failedCount = $e->getCount();
+            
             if ($loggerClosure) {
                 if ($options['verbose']) {
                     foreach ($e->getMessages() as $id => $message) {
@@ -70,7 +74,7 @@ class ResourceProvider implements ProviderInterface
         }
 
         if ($loggerClosure) {
-            $loggerClosure("Finished indexing resources.");
+            $loggerClosure(sprintf("Successfully indexed %s of %s resources.", ($totalCount - $failedCount), $totalCount));
         }
     }
 }

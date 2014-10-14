@@ -83,7 +83,7 @@ class YouTubeResourceProvider implements ProviderInterface
         
         // TODO: Use topics field for each category label that validates
         if (isset($data['entry']['category'])) {
-            $subjectDomains = array();
+            $subjectDomains = [];
             foreach ($data['entry']['category'] as $cat) {
                 if (isset($cat['label'])) {
                     $subjectDomains[] = $cat['label'];

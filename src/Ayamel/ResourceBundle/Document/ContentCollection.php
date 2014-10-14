@@ -141,7 +141,7 @@ class ContentCollection
      */
     public function removeFile(FileReference $file)
     {
-        $new = array();
+        $new = [];
 
         //TODO: this... not so efficient, can be refactored later
         foreach ($this->files as $instance) {

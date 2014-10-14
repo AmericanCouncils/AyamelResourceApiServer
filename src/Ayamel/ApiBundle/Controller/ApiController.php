@@ -102,13 +102,15 @@ abstract class ApiController extends Controller
      * @param  string          $template
      * @return ServiceResponse
      */
-    protected function createServiceResponse($data, $code, $headers = array(), $template = null)
+    protected function createServiceResponse($data, $code, $headers = [], $template = null)
     {
         return new ServiceResponse($data, $code, $headers, $template);
     }
 
     /**
      * Validate an object, throw an http exception if validation fails.
+     * 
+     * TODO: Return 422 instead of 400 when validation fails.  422 is more descriptive of the actual error.
      *
      * @param  mixed                                                     $object
      * @throws Symfony\Component\HttpKernel\Exception\HttpException(400) If validation fails
@@ -165,7 +167,7 @@ abstract class ApiController extends Controller
      */
     protected function filterVisibleResources(array $resources)
     {
-        $visibleResources = array();
+        $visibleResources = [];
         $client = $this->getApiClient();
 
         foreach ($resources as $resource) {

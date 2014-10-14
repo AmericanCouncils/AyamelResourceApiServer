@@ -1,8 +1,12 @@
 - hosts: all
+  connection: local
   vars:
     production: false
   tasks:
     - include: common/tasks/sys.yml
+    - include: common/tasks/vagrant_helpers.yml
+      vars:
+        swapsize: 200M
     - include: common/tasks/install_mongodb.yml
       vars:
         small_files: true
@@ -10,33 +14,31 @@
     - include: common/tasks/install_rabbitmq_server.yml
     - include: common/tasks/install_mediainfo.yml
     - include: common/tasks/install_elasticsearch.yml
-    - include: common/tasks/create_swapfile.yml
-      vars:
-        swapsize: 512M
     #- include: common/tasks/install_ffmpeg.yml
     #- include: common/tasks/install_ffmpegthumbnailer.yml
     - copy:
-        src: ../app/config/parameters.default.yml
+        src: /vagrant/app/config/parameters.default.yml
         dest: /vagrant/app/config/parameters.yml
     - include: common/tasks/symfony_dev_server.yml
       vars:
-        name: ayamel-web-dev
+        name: vagrant #this should be named "user"?
         dir: /vagrant
     - include: common/tasks/symfony_rabbitmq_consumer.yml
       vars:
-        name: ayamel-rabbitmq-consumer-transcoding
+        name: ayamel-consumer-transcoding
         consumer: transcoding
         symfony_env: dev
         dir: /vagrant
-        process_count: 4
+        process_count: 1
     - include: common/tasks/symfony_rabbitmq_consumer.yml
       vars:
-        name: ayamel-rabbitmq-consumer-search-index
+        name: ayamel-consumer-search
         consumer: search_index
         symfony_env: dev
         dir: /vagrant
         process_count: 1
     - file: src=/vagrant dest=/home/vagrant/ayamel-server state=link
+    - file: src=/vagrant/app/console dest=/usr/local/bin/ayamel state=link
   handlers:
     - include: common/handlers/sys.yml
     - name: restart ayamel-web-dev

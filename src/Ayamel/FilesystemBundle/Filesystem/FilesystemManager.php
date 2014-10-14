@@ -135,7 +135,7 @@ class FilesystemManager implements FilesystemInterface
     public function getFilesForId($id)
     {
         $returned = $this->fs->getFilesForId($id);
-        $processed = array();
+        $processed = [];
         foreach ($returned as $ref) {
             $processed[] = $this->dispatcher->dispatch(Events::FILESYSTEM_RETRIEVE, new FilesystemEvent($this->fs, $ref, $id))->getFileReference();
         }

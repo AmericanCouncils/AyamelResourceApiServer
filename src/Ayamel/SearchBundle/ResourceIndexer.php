@@ -11,6 +11,7 @@ use JMS\Serializer\SerializerInterface;
 use Elastica\Document;
 use Elastica\Type;
 use Elastica\Exception\NotFoundException;
+use Elastica\Exception\ResponseException;
 use Psr\Log\LoggerInterface;
 use Ayamel\SearchBundle\Exception\IndexException;
 use Ayamel\SearchBundle\Exception\BulkIndexException;
@@ -45,14 +46,16 @@ class ResourceIndexer
         SerializerInterface $serializer,
         array $indexableMimeTypes = array('text/plain'),
         array $indexableResourceTypes = array('audio','video','image'),
+        array $textEncodingCheckOrder,
         LoggerInterface $logger = null,
-        $languageFieldMap = array()
+        $languageFieldMap = []
     ) {
         $this->manager = $manager;
         $this->type = $resourceType;
         $this->serializer = $serializer;
         $this->indexableMimeTypes = $indexableMimeTypes;
         $this->indexableResourceTypes = $indexableResourceTypes;
+        $this->textEncodingCheckOrder = $textEncodingCheckOrder;
         $this->logger = $logger;
         $this->languageFieldMap = $languageFieldMap;
     }
@@ -75,7 +78,12 @@ class ResourceIndexer
         }        
 
         if ($doc instanceof Document) {
-            $this->type->addDocument($doc);
+            try {
+                $this->type->addDocument($doc);
+            } catch (ResponseException $e) {
+                throw new IndexException("Failed to add search document for resource [$id]");
+            }
+            
             $this->type->getIndex()->refresh();
 
             $this->log(sprintf("Indexed Resource %s", $id));
@@ -90,15 +98,19 @@ class ResourceIndexer
     {
         $count = 0;
         $fails = 0;
-        $failed = array();
+        $failed = [];
         foreach ($ids as $id) {
             try {
                 $count++;
                 $doc = $this->createResourceSearchDocumentForId($id);
-                if ($doc) {
+                if ($doc instanceof Document) {
                     $this->type->addDocument($doc);
                 }
             } catch (IndexException $e) {
+                $fails++;
+                $failed[$id] = $e->getMessage();
+                continue;
+            } catch (Elastica\Exception\ResponseException $e) {
                 $fails++;
                 $failed[$id] = $e->getMessage();
                 continue;
@@ -106,14 +118,14 @@ class ResourceIndexer
 
             if ($count >= $batch) {
                 $this->type->getIndex()->refresh();
-                $this->log(sprintf("Indexed [%s] & skipped [%s] resources.", $count, $fails));
+                $this->log(sprintf("Indexed [%s] & skipped [%s] resources.", $count, $fails), 'info');
                 $count = 0;
                 $fails = 0;
             }
         }
 
         $this->type->getIndex()->refresh();
-        $this->log(sprintf("Indexed [%s] & skipped [%s] resources.", $count, $fails));
+        $this->log(sprintf("Indexed [%s] & skipped [%s] resources.", $count, $fails), 'info');
 
         if (!empty($failed)) {
             throw new BulkIndexException($failed);
@@ -122,11 +134,11 @@ class ResourceIndexer
         return true;
     }
 
-    public function indexResourcesByFields(array $fields = array(), $batch = 100)
+    public function indexResourcesByFields(array $fields = [], $batch = 100)
     {
         throw new \RuntimeException('not implemented');
 
-        $ids = array(); //query for ids;
+        $ids = []; //query for ids;
 
         $this->indexResources($ids, $batch);
 
@@ -140,14 +152,15 @@ class ResourceIndexer
      * @param  string            $id
      * @return Elastica\Document
      */
-    protected function createResourceSearchDocumentForId($id)
+    public function createResourceSearchDocumentForId($id)
     {
         $resource = $this->manager->getRepository('AyamelResourceBundle:Resource')->find($id);
 
         if (!$resource) {
             throw new IndexException(sprintf("Tried indexing a non-existing resource [%s]", $id));
         }
-
+        
+        //TODO: maybe return false here instead, and take care of index removal elsewhere
         if ($resource->isDeleted()) {
             try {
                 $this->type->deleteById($id);
@@ -192,8 +205,8 @@ class ResourceIndexer
         $data = json_decode($this->serializer->serialize($resource, 'json'), true);
 
         //now check search relations and get relevant file content
-        $relatedResourceIds = array();
-        $relatedResources = array();
+        $relatedResourceIds = [];
+        $relatedResources = [];
 
         foreach ($resource->getRelations() as $relation) {
             if ('search' === $relation->getType() && $resource->getId() === $relation->getSubjectId()) {
@@ -206,7 +219,7 @@ class ResourceIndexer
                 ->getQBForResources(array('id' => $relatedResourceIds))
                 ->getQuery()
                 ->execute();
-            $relatedResources = count($relatedResources) > 0 ? iterator_to_array($relatedResources) : array();
+            $relatedResources = count($relatedResources) > 0 ? iterator_to_array($relatedResources) : [];
         }
 
         $contentFields = $this->generateContentFields($resource, $relatedResources);
@@ -223,16 +236,16 @@ class ResourceIndexer
      *
      * @return array
      **/
-    protected function generateContentFields(Resource $resource, array $relatedResources = array())
+    protected function generateContentFields(Resource $resource, array $relatedResources = [])
     {
-        $contentFields = array();
+        $contentFields = [];
 
         //handle content for main resource
         if ($resource->content) {
             foreach ($resource->content->getFiles() as $fileReference) {
                 if (in_array($fileReference->getMimeType(), $this->indexableMimeTypes)) {
                     if (!isset($contentFields['content_canonical'])) {
-                        $contentFields['content_canonical'] = array();
+                        $contentFields['content_canonical'] = [];
                     }
 
                     if ($content = $this->retrieveContent($fileReference)) {
@@ -252,7 +265,7 @@ class ResourceIndexer
 
             $field = 'content_'.$lang;
             if (!isset($contentFields[$field])) {
-                $contentFields[$field] = array();
+                $contentFields[$field] = [];
             }
 
             if ($related->content) {
@@ -268,23 +281,43 @@ class ResourceIndexer
 
         return $contentFields;
     }
-
+    
+    /**
+     * This also converts file content to UTF-8 when possible, otherwise returns false.
+     */
     protected function retrieveContent(FileReference $ref)
     {
         $uri = ($ref->getInternalUri()) ? $ref->getInternalUri() : $ref->getDownloadUri();
         if ($uri) {
             try {
-                return file_get_contents($uri);
+                $rawStringContent = file_get_contents($uri);
             } catch (\Exception $e) {
-                $this->log(sprintf("Failed getting search index content at [%s]", $uri), 'warning');
+                $this->log("Failed getting search index content for file.", 'warning', ['uri' => $uri]);
 
                 return false;
             }
-        }
+            
+            $fromEnc = false;
+            foreach ($this->textEncodingCheckOrder as $enc) {
+                if (mb_check_encoding($rawStringContent, $enc)) {
+                    $fromEnc = $enc;
+                    break;
+                }
+            }
 
+            if (!$fromEnc) {
+                $this->log("Did not index content or file, failed to guess encoding.", 'warning', ['uri' => $uri]);
+                
+                return false;
+            }
+            
+            //return encoding to UTF - but don't encode one UTF type to another UTF type
+            return (false === strpos($fromEnc, 'UTF')) ? mb_convert_encoding($rawStringContent, 'UTF-8', $fromEnc) : $rawStringContent;
+        }
+        
         return false;
     }
-
+    
     /**
      * Note, it's assumed that the first language in any list is the primary language.
      *
@@ -327,10 +360,10 @@ class ResourceIndexer
         return false;
     }
 
-    protected function log($msg, $level = 'info')
+    protected function log($msg, $level = 'info', $extras = [])
     {
         if ($this->logger) {
-            $this->logger->log($level, $msg);
+            $this->logger->log($level, $msg, $extras);
         }
     }
 }
