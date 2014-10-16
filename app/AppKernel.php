@@ -44,4 +44,20 @@ class AppKernel extends Kernel
     {
         $loader->load(__DIR__.'/config/config_'.$this->getEnvironment().'.yml');
     }
+
+    public function getAppName()
+    {
+        $composerConf = file_get_contents($this->getRootDir() . "/../composer.json");
+        $composerJson = json_decode($composerConf, true);
+        return $composerJson["name"];
+    }
+
+    public function getCacheDir()
+    {
+        if (in_array($this->environment, ['dev', 'test'])) {
+            return '/dev/shm/' . $this->getAppName() . "/cache/" . $this->environment;
+        } else {
+            return parent::getCacheDir();
+        }
+    }
 }
