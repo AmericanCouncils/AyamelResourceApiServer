@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "dfec3f239657ab6708d8a40bf73bbae8",
+    "hash": "e5e3121e3dc6be818cd6fba48d480009",
     "packages": [
         {
             "name": "ac/media-info-bundle",
@@ -239,17 +239,17 @@
         },
         {
             "name": "ac/web-services-bundle",
-            "version": "0.3.6",
+            "version": "0.3.12",
             "target-dir": "AC/WebServicesBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/AmericanCouncils/WebServicesBundle.git",
-                "reference": "44aee4dd70aa51fa5840ad068a2268c4ce6b6dbd"
+                "reference": "eccdb78a8e13dcf1431cafc9e6e70acc2808c6b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AmericanCouncils/WebServicesBundle/zipball/44aee4dd70aa51fa5840ad068a2268c4ce6b6dbd",
-                "reference": "44aee4dd70aa51fa5840ad068a2268c4ce6b6dbd",
+                "url": "https://api.github.com/repos/AmericanCouncils/WebServicesBundle/zipball/eccdb78a8e13dcf1431cafc9e6e70acc2808c6b3",
+                "reference": "eccdb78a8e13dcf1431cafc9e6e70acc2808c6b3",
                 "shasum": ""
             },
             "require": {
@@ -267,6 +267,7 @@
             },
             "require-dev": {
                 "sensio/framework-extra-bundle": "~2.2",
+                "symfony/monolog-bundle": "~2.2",
                 "symfony/symfony": "~2.2"
             },
             "type": "symfony-bundle",
@@ -290,7 +291,7 @@
                 "rest",
                 "web services"
             ],
-            "time": "2014-05-08 16:29:37"
+            "time": "2014-08-04 20:32:44"
         },
         {
             "name": "doctrine/annotations",
