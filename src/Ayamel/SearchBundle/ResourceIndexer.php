@@ -33,6 +33,7 @@ class ResourceIndexer
     private $serializer;
     private $indexableMimeTypes;
     private $indexableResourceTypes;
+    private $converter;
     private $logger = null;
     private $languageFieldMap;
 
@@ -46,7 +47,7 @@ class ResourceIndexer
         SerializerInterface $serializer,
         array $indexableMimeTypes = array('text/plain'),
         array $indexableResourceTypes = array('audio','video','image'),
-        array $textEncodingCheckOrder,
+        SearchTextConverter $converter,
         LoggerInterface $logger = null,
         $languageFieldMap = []
     ) {
@@ -55,7 +56,7 @@ class ResourceIndexer
         $this->serializer = $serializer;
         $this->indexableMimeTypes = $indexableMimeTypes;
         $this->indexableResourceTypes = $indexableResourceTypes;
-        $this->textEncodingCheckOrder = $textEncodingCheckOrder;
+        $this->converter = $converter;
         $this->logger = $logger;
         $this->languageFieldMap = $languageFieldMap;
     }
@@ -297,22 +298,16 @@ class ResourceIndexer
                 return false;
             }
             
-            $fromEnc = false;
-            foreach ($this->textEncodingCheckOrder as $enc) {
-                if (mb_check_encoding($rawStringContent, $enc)) {
-                    $fromEnc = $enc;
-                    break;
-                }
-            }
-
-            if (!$fromEnc) {
+            
+            $converted = $this->converter->convertTextEncoding($rawStringContent);
+            if (!$converted) {
                 $this->log("Did not index content or file, failed to guess encoding.", 'warning', ['uri' => $uri]);
                 
                 return false;
             }
             
             //return encoding to UTF - but don't encode one UTF type to another UTF type
-            return (false === strpos($fromEnc, 'UTF')) ? mb_convert_encoding($rawStringContent, 'UTF-8', $fromEnc) : $rawStringContent;
+            return $converted;
         }
         
         return false;
