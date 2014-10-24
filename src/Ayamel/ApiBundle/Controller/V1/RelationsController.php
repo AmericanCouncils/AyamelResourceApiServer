@@ -281,8 +281,9 @@ class RelationsController extends ApiController
         $manager->flush();
 
         $this->container->get('event_dispatcher')->dispatch(ApiEvents::RELATION_DELETED, new RelationEvent($relation, $subject, $object));
-
-        return $this->createServiceResponse(null, 200);
+        
+        //empty response, returning empty array so response data can be properly added by WSB
+        return $this->createServiceResponse([], 200);
     }
 
     protected function requireSubjectOwnershipAndObjectVisibility($sub, $obj, $client)
