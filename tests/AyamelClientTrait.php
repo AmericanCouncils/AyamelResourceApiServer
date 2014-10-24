@@ -2,6 +2,9 @@
 
 use Guzzle\Http\Client;
 
+/**
+ * Helpers for testing the API.
+ */
 trait AyamelClientTrait
 {
     private $ayamelClient = null;

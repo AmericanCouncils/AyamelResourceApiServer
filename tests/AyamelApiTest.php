@@ -128,12 +128,13 @@ class AyamelApiTest extends PHPUnit_Framework_TestCase
         //ensure resources have relation
         $res = $this->getJson("/api/v1/resources/$subId", ['relations' => 'true']);
         $this->assertSame(1, count($res['resource']['relations']));
+        $this->assertSame($relId, $res['resource']['relations'][0]['id']);
         $res = $this->getJson("/api/v1/resources/$objId", ['relations' => 'true']);
         $this->assertSame(1, count($res['resource']['relations']));
+        $this->assertSame($relId, $res['resource']['relations'][0]['id']);
         
         //delete relation
         $res = $this->deleteJson("/api/v1/relations/$relId");
-        var_dump($relId); ob_flush();
         $this->assertSame(200, $res['response']['code']);
         
         //ensure resources do not have relation
@@ -141,7 +142,5 @@ class AyamelApiTest extends PHPUnit_Framework_TestCase
         $this->assertSame(0, count($res['resource']['relations']));
         $res = $this->getJson("/api/v1/resources/$objId", ['relations' => 'true']);
         $this->assertSame(0, count($res['resource']['relations']));
-        
-        $this->markTestIncomplete();
     }
 }
