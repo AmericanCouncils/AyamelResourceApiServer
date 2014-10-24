@@ -13,8 +13,9 @@ parameters:
     ayamel.search.indexable_mime_types: ['text/plain']
     
     #text encoding for sending to ES must be UTF-8, so detect encodings if possible in this order
-    #WARNING: order matters, use the most specific ones first
-    ayamel.search.indexable_encoding_check_order: ['UTF-32', 'UTF-16', 'ASCII', 'UTF-8', 'Windows-1251', 'Windows-1252']
+    #WARNING: order matters, generally list the most specific ones first - and update the tests
+    #any time a new format is added
+    ayamel.search.text_converter_detect_order: ['UTF-32', 'UTF-16', 'UTF-8', 'Windows-1251', 'Windows-1252']
 
     ayamel.search.rabbitmq_producer:
         connection: default
@@ -36,7 +37,11 @@ services:
     ayamel.search_index.consumer:
         class: Ayamel\SearchBundle\RabbitMQ\SearchIndexConsumer
         arguments: [@service_container]
-
+    
+    ayamel.search.text_converter:
+      class: Ayamel\SearchBundle\SearchTextConverter
+      arguments: [%ayamel.search.text_converter_detect_order%]
+    
     ayamel.search.resource_indexer:
         class: Ayamel\SearchBundle\ResourceIndexer
         arguments:
@@ -45,7 +50,7 @@ services:
             - @serializer
             - %ayamel.search.indexable_mime_types%
             - %ayamel.search.indexable_resource_types%
-            - %ayamel.search.indexable_encoding_check_order%
+            - @ayamel.search.text_converter
             - @logger
             - %ayamel.search.language_field_map%
         tags:

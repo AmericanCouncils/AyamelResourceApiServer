@@ -515,10 +515,11 @@ class RelationsIntegrationTest extends ApiTestCase
         );
 
         //delete the relation
-        $response = $this->getResponse('DELETE', '/api/v1/relations/'.$relationId.'?_key=45678isafgd56789asfgdhf4567', [], [], array(
+        $response = $this->getJson('DELETE', '/api/v1/relations/'.$relationId.'?_key=45678isafgd56789asfgdhf4567', [], [], array(
             'CONTENT_TYPE' => 'application/json'
         ));
-        $this->assertSame(200, $response->getStatusCode());
+        // $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame(200, $response['response']['code']);
 
         //check resources again, neither should have relations
         $subject = $this->getJson('GET', '/api/v1/resources/'.$subjectId.'?_key=45678isafgd56789asfgdhf4567', [], [], array(

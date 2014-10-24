@@ -209,7 +209,7 @@ class SearchV1 extends ApiController
 
         //add all the filters to the query
         $queryFilter = (new BoolAndFilter())->setFilters($queryFilters);
-        $query->setFilter($queryFilter);
+        $query->setPostFilter($queryFilter);
 
         $queryFacets = [];
         if ($q->has('facet:type')) {
