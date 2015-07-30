@@ -25,6 +25,7 @@
         "ext-curl": "*",
         "ext-fileinfo": "*",
         "ext-pcntl": "*",
+        "ext-mongo": "*",
         "symfony/symfony": "~2.5",
         "doctrine/mongodb-odm-bundle": "3.0.*@dev",
         "symfony/assetic-bundle": "2.3.*",
@@ -63,10 +64,7 @@
         ]
     },
     "config": {
-        "bin-dir": "bin",
-      "github-oauth":{
-         "github.com":"4ea51a5e6d7241957ee2be481376bc06e1641447"
-      }
+        "bin-dir": "bin"
     },
     "minimum-stability": "dev",
     "extra": {

@@ -22,7 +22,7 @@ before_script:
 #    - sudo apt-get install -qq ffmpegthumbnailer
 
     - composer self-update
-    - composer install --dev
+    - composer install
     - app/console cache:clear --env=test
 
 #memory limit seems to run out on some machines, setting it high to try and avoid
