@@ -46,3 +46,11 @@ parameters:
 
     ## media info ##
     mediainfo_path: /usr/bin/mediainfo
+
+    ## Youtube/Google API stuff ##
+    # You must create and configure a project via the google developer
+    # console to get these parameters, specifically you need access to the
+    # Youtube V3 API
+    google_app_name: 'Name of this app according to Google'
+    google_api_key: 'your-app-server-api-key'
+    

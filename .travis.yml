@@ -15,7 +15,7 @@ before_script:
     - phpenv config-add travis.php.ini
     - cp app/config/parameters.default.yml app/config/parameters.yml
     - sudo apt-get update -qq
-    - sudo apt-get install -qq mediainfo 
+    - sudo apt-get install -qq mediainfo
 
 # skipping transcoding related tests on travis because it takes too long to rebuild ffmpeg all the time
 #    - util/install_ffmpeg.sh
@@ -27,4 +27,4 @@ before_script:
 
 #memory limit seems to run out on some machines, setting it high to try and avoid
 #unpredictable failures
-script: bin/phpunit --exclude-group=transcoding -d memory_limit=512M
+script: bin/phpunit --exclude-group=transcoding,youtube -d memory_limit=512M

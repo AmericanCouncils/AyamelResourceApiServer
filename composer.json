@@ -40,7 +40,8 @@
         "friendsofsymfony/elastica-bundle": "~3.0",
         "ornicar/apc-bundle": "1.0.*",
         "ac/model-traits-bundle": "0.1.*",
-        "socloz/monitoring-bundle": "dev-master#b189ca122eae812856821adba30e6deee7f0f96a"
+        "socloz/monitoring-bundle": "dev-master#b189ca122eae812856821adba30e6deee7f0f96a",
+        "google/apiclient": "^1.1@dev"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*",
