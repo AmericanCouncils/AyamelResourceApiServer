@@ -52,8 +52,8 @@ class AyamelFixture extends CachedMongoFixture
 
         $this->describe("AyamelResourceBundle:Client", [
             'id' => function ($f) {return $f->fake()->randomElement(["test-client", "another-test-client"]);},
-            'name' => function ($f) {return $f->fake()->randomElement(["Test Client 1","Test Client 2"]);},
-            'uri' => function ($f) {return "http://www.anothertestclient.com";},
+            'name' => function ($f) {return  $f->fake()->name();},
+            'uri' => function ($f) {return  $f->fake()->url();},
         ]);
         $clients = $this->build(5, 'AyamelResourceBundle:Client');
 

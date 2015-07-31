@@ -8,6 +8,7 @@ class FilterResourcesTest extends FixturedTestCase
     public function testShowResources()
     {
         $res = $this->callJsonApi('GET', '/api/v1/resources?_key=key-for-test-client-2');
+        // throw new \RuntimeException(json_encode($res));
         $this->assertSame(36, $res['total']);
         $this->assertSame(20, count($res['resources']));
         $this->assertSame(20, $res['limit']);

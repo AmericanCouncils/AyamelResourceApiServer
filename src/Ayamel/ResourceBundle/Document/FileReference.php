@@ -10,6 +10,7 @@ use AC\ModelTraits\AutoGetterSetterTrait;
  * File reference object
  *
  * @MongoDB\EmbeddedDocument
+ * @MongoDB\HasLifecycleCallbacks
  * @JMS\ExclusionPolicy("none")
  *
  */
