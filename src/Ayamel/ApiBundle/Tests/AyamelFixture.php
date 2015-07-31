@@ -157,6 +157,8 @@ class AyamelFixture extends CachedMongoFixture
                     ], $f->fake()->randomNumber(1,2))
                 );
             },
+            'proficiencyLevelILR' => function($f) { return $f->fake()->randomNumber(1,11); },
+            'proficiencyLevelACTFL' => function($f) { return $f->fake()->randomNumber(1,12); },
             'type' => function ($f) {return $f->fake()->randomElement(['video', 'audio', 'image', 'document', 'collection']);},
             'sequence' => function ($f) {return $f->fake()->boolean();}, //really this should be conditional on type
             'visibility' => function ($f) {return $f->fake()->randomElement([[], ['test_client2'], ['test_client2','test_client']]); },

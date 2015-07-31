@@ -64,6 +64,18 @@ Ayamel\ResourceBundle\Document\Resource:
                     type: string
                 - Choice:
                     choices: ['comedy', 'drama', 'horror', 'history', 'romance', 'action', 'animation', 'children', 'classics', 'thriller', 'musical', 'science-fiction', 'fantasy', 'other']
+        proficiencyLevelILR:
+            - Type:
+                type: integer
+            - Range:
+                min: 1
+                max: 11
+        proficiencyLevelACTFL:
+            - Type:
+                type: integer
+            - Range:
+                min: 1
+                max: 12
         subjectDomains:
             - All:
                 - Type:
