@@ -1,5 +1,19 @@
+parameters:
+    ayamel.youtube.api_key: %google_api_key%
+    ayamel.youtube.app_name: %google_app_name%
+
 services:
+    ayamel.youtube.google_client:
+        class: Google_Client
+        calls:
+            - ['setDeveloperKey', [%ayamel.youtube.api_key%]]
+
+    ayamel.youtube.google_youtube:
+        class: Google_Service_YouTube
+        arguments: [@ayamel.youtube.google_client]
+
     ayamel.youtube.resource_provider:
         class: Ayamel\YouTubeBundle\YouTubeResourceProvider
+        arguments: [@ayamel.youtube.google_youtube]
         tags:
             - { name: ayamel.resource.provider_delegate }

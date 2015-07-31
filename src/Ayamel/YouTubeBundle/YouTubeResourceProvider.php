@@ -19,6 +19,13 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  */
 class YouTubeResourceProvider implements ProviderInterface
 {
+    private $client;
+
+    public function __construct($client)
+    {
+        $this->client = $client;
+    }
+
     public function getKey()
     {
         return 'youtube';
@@ -34,32 +41,15 @@ class YouTubeResourceProvider implements ProviderInterface
         $exp = explode('://', $uri);
         $videoId = $exp[1];
 
-        //call youtube api
-        $youtubeApiUrl = sprintf("https://gdata.youtube.com/feeds/api/videos/%s?v=2&alt=json", $videoId);
-        $call = curl_init();
-        curl_setopt($call, CURLOPT_HEADER, 0);
-        curl_setopt_array($call, array(
-            CURLOPT_URL => $youtubeApiUrl,
-            CURLOPT_RETURNTRANSFER => true, // return web page
-            CURLOPT_HEADER => false, // don't return headers
-            CURLOPT_FOLLOWLOCATION => true, // follow redirects
-            CURLOPT_ENCODING => "", // handle compressed
-            CURLOPT_USERAGENT => "test", // who am i
-            CURLOPT_AUTOREFERER => true, // set referer on redirect
-            CURLOPT_CONNECTTIMEOUT => 120, // timeout on connect
-            CURLOPT_TIMEOUT => 120, // timeout on response
-            CURLOPT_MAXREDIRS => 5
-        ));
-        $data = curl_exec($call);
-        $code = curl_getinfo($call, CURLINFO_HTTP_CODE);
-        curl_close($call);
+        // make api call
+        $result = $this->callApi($videoId);
 
-        //check for error
-        if (200 !== $code) {
-            throw new HttpException($code, "Failed to create YouTube resource.");
+        // check if there was a result at all
+        if (count($result['items']) == 0) {
+            throw new HttpException(404, "No video found by that id.");
         }
 
-        $data = json_decode($data, true);
+        $data = $result['items'][0];
 
         //create resource
         $res = new Resource();
@@ -68,98 +58,102 @@ class YouTubeResourceProvider implements ProviderInterface
         $res->content = new ContentCollection();
 
         //set title
-        if (isset($data['entry']['title']['$t'])) {
-            $res->setTitle($data['entry']['title']['$t']);
-        } else if (isset($data['entry']['media$group']['media$title']['$t'])) {
-            $res->setTitle($data['entry']['media$group']['media$title']['$t']);
+        if (isset($data['snippet']['title'])) {
+            $res->setTitle($data['snippet']['title']);
         } else {
             $res->setTitle('Untitled YouTube Video');
         }
 
-
-        if (isset($data['entry']['media$group']['media$description']['$t'])) {
-            $res->setDescription($data['entry']['media$group']['media$description']['$t']);
+        if (isset($data['snippet']['description'])) {
+            $res->setDescription($data['snippet']['description']);
         }
-        
-        // TODO: Use topics field for each category label that validates
-        if (isset($data['entry']['category'])) {
-            $subjectDomains = [];
-            foreach ($data['entry']['category'] as $cat) {
-                if (isset($cat['label'])) {
-                    $subjectDomains[] = $cat['label'];
-                }
-            }
 
-            $res->setSubjectDomains($subjectDomains);
+        // use tags as keywords, also check each tag for possible use in topics
+        if (isset($data['snippet']['tags'])) {
+            $res->setKeywords(implode(',', $data['snippet']['tags']));
+
+            $topics = [];
+            // foreach ($data['snippet']['tags'] as $tag) {
+            //     // TODO: check available topics
+            // }
+            $res->setTopics($topics);
         }
 
         //populate license field properly
-        if (isset($data['entry']['media$group']['media$license']['$t'])) {
-            switch ($data['entry']['media$group']['media$license']['$t']) {
+        if (isset($data['status']['license'])) {
+            switch ($data['status']['license']) {
                 case 'cc': $res->setLicense('CC BY'); break;
                 case 'youtube': $res->setLicense('youtube'); break;
                 default: break;
             }
         }
 
-        //create content
-        if (isset($data['entry']['media$group']['media$player']['url'])) {
-            $res->content->setCanonicalUri($data['entry']['media$group']['media$player']['url']);
-        }
-        if (isset($data['entry']['media$group']['media$content'])) {
-            foreach ($data['entry']['media$group']['media$content'] as $item) {
-                $ref = new FileReference();
-                if (isset($item['isDefault'])) {
-                    $ref->setRepresentation('original');
-                } else {
-                    $ref->setRepresentation('transcoding');
-                }
-                $ref->setMime($item['type']);
-                $ref->setMimeType($item['type']);
-                $ref->setStreamUri($item['url']);
-                $res->content->addFile($ref);
-            }
-
-            if (isset($data['entry']['media$group']['media$thumbnail'])) {
-                foreach ($data['entry']['media$group']['media$thumbnail'] as $item) {
-                    $ref = new FileReference();
-                    $ref->setMime('image/jpeg');
-                    $ref->setMimeType('image/jpeg');
-                    $ref->setDownloadUri($item['url']);
-                    $ref->setRepresentation('summary');
-
-                    $res->content->addFile($ref);
-                }
-            }
-        }
-
-        //create origin
-        $o = new Origin();
-        $o->setFormat('YouTube Video');
-        $o->setUri($res->content->getCanonicalUri());
-        if (isset($data['entry']['author'][0]['name']['$t'])) {
-            $o->setCreator($data['entry']['author'][0]['name']['$t']);
-        }
-        if (isset($data['entry']['published']['$t'])) {
-            $o->setDate($data['entry']['published']['$t']);
-        }
-        $res->origin = $o;
-
-        //create oembed
+        //create oembed - some fields here used elsewhere
         $oem = new OEmbed();
-        $data = json_decode(
-                    file_get_contents(
-                        sprintf('http://www.youtube.com/oembed?url=%s&format=json', urlencode(sprintf('http://www.youtube.com/watch?v=%s', $videoId)))
-                    ), true
-                );
-        if ($data) {
-            foreach ($data as $key => $val) {
+        $oemData = json_decode(
+            file_get_contents(
+                sprintf('http://www.youtube.com/oembed?url=%s&format=json', urlencode(sprintf('http://www.youtube.com/watch?v=%s', $videoId)))
+            ), true
+        );
+
+        if ($oemData) {
+            foreach ($oemData as $key => $val) {
                 $oem->$key = $val;
             }
 
             $res->content->setOembed($oem);
         }
 
+
+        //create content
+        $res->content->setCanonicalUri(sprintf('https://www.youtube.com/embed/%s', $videoId));
+
+        // add thumbnails
+        if (isset($data['snippet']['thumbnails'])) {
+            foreach ($data['snippet']['thumbnails'] as $key => $item) {
+                $ref = new FileReference();
+                $ref->setMime('image/jpeg');
+                $ref->setMimeType('image/jpeg');
+                $ref->setDownloadUri($item['url']);
+                $ref->setRepresentation('summary');
+                $ref->setAttribute('frameSize', [
+                    'height' => $item['height'],
+                    'width' => $item['width']
+                ]);
+                $res->content->addFile($ref);
+            }
+        }
+
+        //create origin
+        $o = new Origin();
+        $o->setFormat('YouTube Video');
+        $o->setUri(sprintf("https://www.youtube.com/watch?v=%s", $videoId));
+
+        if (isset($data['snippet']['channelTitle'])) {
+            $o->setCreator($data['snippet']['channelTitle']);
+        }
+        if (isset($data['snippet']['publishedAt'])) {
+            $o->setDate($data['snippet']['publishedAt']);
+        }
+        $res->origin = $o;
+
         return $res;
+    }
+
+    private function callApi($id)
+    {
+        try {
+            $result = $this->client->videos->listVideos('snippet,status', [
+              'id' => $id,
+              'maxResults' => 1,
+            ]);
+        } catch (\Google_Service_Exception $e) {
+            $code = $e->getCode() <= 200 ? $code : 500;
+            $errors = $e->getErrors();
+            $msg = count($errors) > 0 ? $errors[0]['message'] : "Request to YouTube failed.";
+            throw new HttpException($code, $msg);
+        }
+
+        return $result;
     }
 }

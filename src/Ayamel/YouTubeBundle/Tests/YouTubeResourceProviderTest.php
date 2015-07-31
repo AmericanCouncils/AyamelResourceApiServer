@@ -8,30 +8,33 @@ use Ayamel\ResourceBundle\Document\Origin;
 use Ayamel\ResourceBundle\Document\OEmbed;
 use Ayamel\ApiBundle\ApiTestCase;
 
+/**
+ * @group youtube
+ */
 class YouTubeResourceProviderTest extends ApiTestCase
 {
     public function testHandleScheme()
     {
-        $provider = new YouTubeResourceProvider();
+        $provider = $this->getContainer()->get('ayamel.youtube.resource_provider');
         $this->assertTrue($provider->handlesScheme('youtube'));
     }
 
     public function testDeriveYouTubeResource()
     {
-        $provider = new YouTubeResourceProvider();
+        $provider = $this->getContainer()->get('ayamel.youtube.resource_provider');
         $r = $provider->createResourceFromUri('youtube://txqiwrbYGrs');
         $this->assertTrue($r instanceof Resource);
         $this->assertSame('David After Dentist', $r->getTitle());
         $this->assertSame('video', $r->getType());
         $this->assertSame('youtube', $r->getLicense());
         $this->assertFalse(is_null($r->getDescription()));
-        $this->assertFalse(is_null($r->getSubjectDomains()));
+        $this->assertFalse(is_null($r->getKeywords()));
 
         //origin
         $this->assertTrue($r->origin instanceof Origin);
-        $this->assertSame('booba1234', $r->origin->getCreator());
         $this->assertFalse(is_null($r->origin->getDate()));
         $this->assertSame("YouTube Video", $r->origin->getFormat());
+        $this->assertSame('booba1234', $r->origin->getCreator());
 
         //oembed
         $this->assertTrue($r->content->getOembed() instanceof OEmbed);
@@ -42,7 +45,6 @@ class YouTubeResourceProviderTest extends ApiTestCase
     public function testScanYouTubeResource()
     {
         $response = $this->getJson('GET', '/api/v1/resources/scan?uri=youtube://txqiwrbYGrs&_key=45678isafgd56789asfgdhf4567');
-
         $this->assertSame(203, $response['response']['code']);
     }
 
@@ -55,7 +57,7 @@ class YouTubeResourceProviderTest extends ApiTestCase
             'type' => 'video'
         ]));
         $this->assertSame(201, $response['response']['code']);
-        
+
         $id = $response['resource']['id'];
         $uploadUrl = substr($response['contentUploadUrl'], strlen('http://localhost'));
 
@@ -64,7 +66,7 @@ class YouTubeResourceProviderTest extends ApiTestCase
         ], json_encode([
             'uri' => 'youtube://txqiwrbYGrs'
         ]));
-        
+
         $this->assertSame(200, $response['response']['code']);
     }
 

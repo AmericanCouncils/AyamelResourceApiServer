@@ -122,7 +122,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $this->assertSame($data['remoteFiles'], $response['resource']['content']['files']);
         $this->assertSame('normal', $response['resource']['status']);
     }
-    
+
     public function testUploadContentAsFile()
     {
         //get content upload url
@@ -138,7 +138,7 @@ class ContentUploadIntegrationTest extends ApiTestCase
         $this->assertFalse(isset($response['resource']['content']));
         $resourceId = $response['resource']['id'];
         $uploadUrl = substr($response['contentUploadUrl'], strlen('http://localhost'));
-        
+
         //create uploaded file
         $testFilePath = __DIR__."/files/resource_test_files/lorem.txt";
         $uploadedFile = new UploadedFile(

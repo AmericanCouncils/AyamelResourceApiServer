@@ -9,6 +9,7 @@ use AC\ModelTraits\AutoGetterSetterTrait;
 /**
  * Base Resource persistence class
  *
+ * @MongoDB\HasLifecycleCallbacks
  * @MongoDB\Document(
  *      collection="resources",
  *      repositoryClass="Ayamel\ResourceBundle\Repository\ResourceRepository"
@@ -93,7 +94,7 @@ class Resource
      *
      * *arts, entertainment, culture, economy, education, food, geography, history, news, politics
      * religion, sports, technology, weather, other*
-     * 
+     *
      * @JMS\Type("array<string>")
      * @MongoDB\Collection
      */
@@ -105,7 +106,7 @@ class Resource
      * *music, news, documentary, television, film, radio, skit, interview, role-play
      * presentation, home-conversation, public-interaction, grammer-lecture, cultural-lecture
      * how-to, other*
-     * 
+     *
      * @JMS\Type("array<string>")
      * @MongoDB\Collection
      */
@@ -116,7 +117,7 @@ class Resource
      * Currently accepted authenticities includes:
      *
      * *native, non-native, learner, other*
-     * 
+     *
      * @JMS\Type("array<string>")
      * @MongoDB\Collection
      */
@@ -124,7 +125,7 @@ class Resource
 
     /**
     *
-     * Functions describe the capacities in which the language is used in the Resource. Currently 
+     * Functions describe the capacities in which the language is used in the Resource. Currently
      * accepted functions include:
      *
      * *explanation, request, response, persuasion, introduction, reporting, discussion
@@ -149,7 +150,7 @@ class Resource
 
     /**
      * **Deprecated 2014-04-28**
-     * 
+     *
      * Use the `topics` field instead - this field will be removed in a future version.
      *
      * @MongoDB\Collection
@@ -160,7 +161,7 @@ class Resource
 
     /**
      * **Deprecated 2014-04-28**
-     * 
+     *
      * Use the `functions` field instead - this field will be removed in a future version.
      *
      * @MongoDB\Collection
@@ -264,27 +265,27 @@ class Resource
      * The available licenses are currently:
      *
      * * **CC BY**
-     * 
+     *
      *     This license lets others distribute, remix, tweak, and build upon your work, even commercially, as long as they credit you for the original creation. This is the most accommodating of licenses offered. Recommended for maximum dissemination and use of licensed materials. [Summary &rarr;](http://creativecommons.org/licenses/by/4.0/) [Full text &rarr;](http://creativecommons.org/licenses/by/4.0/legalcode)
-     *     
+     *
      * * **CC BY-ND**
-     * 
+     *
      *     This license allows for redistribution, commercial and non-commercial, as long as it is passed along unchanged and in whole, with credit to you. [Summary &rarr;](http://creativecommons.org/licenses/by-nd/4.0/) [Full text &rarr;](http://creativecommons.org/licenses/by-nd/4.0/legalcode)
-     *     
+     *
      * * **CC BY-NC**
-     * 
+     *
      *     This license lets others remix, tweak, and build upon your work non-commercially, and although their new works must also acknowledge you and be non-commercial, they don’t have to license their derivative works on the same terms. [Summary &rarr;](http://creativecommons.org/licenses/by-nc/4.0/) [Full text &rarr;](http://creativecommons.org/licenses/by-nc/4.0/legalcode)
-     *     
+     *
      * * **CC BY-SA**
-     * 
+     *
      *     This license lets others remix, tweak, and build upon your work even for commercial purposes, as long as they credit you and license their new creations under the identical terms. This license is often compared to “copyleft” free and open source software licenses. All new works based on yours will carry the same license, so any derivatives will also allow commercial use. This is the license used by Wikipedia, and is recommended for materials that would benefit from incorporating content from Wikipedia and similarly licensed projects. [Summary &rarr;](http://creativecommons.org/licenses/by-sa/4.0/) [Full text &rarr;](http://creativecommons.org/licenses/by-sa/4.0/legalcode)
-     *     
+     *
      * * **CC BY-NC-SA**
-     * 
+     *
      *     This license lets others remix, tweak, and build upon your work non-commercially, as long as they credit you and license their new creations under the identical terms. [Summary &rarr;](http://creativecommons.org/licenses/by-nc-sa/4.0/) [Full text &rarr;](http://creativecommons.org/licenses/by-nc-sa/4.0/legalcode)
-     *     
+     *
      * * **CC BY-NC-ND**
-     * 
+     *
      *     This license is the most restrictive of our six main licenses, only allowing others to download your works and share them with others as long as they credit you, but they can’t change them in any way or use them commercially. [Summary &rarr;](http://creativecommons.org/licenses/by-nc-nd/4.0/) [Full text &rarr;](http://creativecommons.org/licenses/by-nc-nd/4.0/legalcode)
      *
      * * **youtube**
