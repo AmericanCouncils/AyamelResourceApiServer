@@ -29,6 +29,8 @@ class GetResources extends ApiController
      *          {"name"="formats", "description"="Filter returned Resources by formats"},
      *          {"name"="functions", "description"="Filter returned Resources by functions"},
      *          {"name"="topics", "description"="Filter returned Resources by topics"},
+     *          {"name"="proficiencyLevelILR", "description"="Comma delimited list of proficiency level values."},
+     *          {"name"="proficiencyLevelACTFL", "description"="Comma delimited list of proficiency level values."},
      *          {"name"="clientUser", "description"="Limit returned Resources to those owned by a specific user an API client."},
      *          {"name"="languages", "description"="Limit returned Resources to those containing a specific language.  This can be specified in either the ISO 639-3 format or BCP47 format."},
      *          {"name"="public", "description"="Must be 'true' or 'false'.  Will filter resources based on whether or not they have visibility restrictions."},
@@ -68,6 +70,12 @@ class GetResources extends ApiController
         }
         if ($topics = $q->get('topics', false)) {
             $filters['topics'] = explode(',', strtolower($topics));
+        }
+        if ($levelILR = $q->get('proficiencyLevelILR', false)) {
+            $filters['proficiencyLevelILR'] = explode(',', $levelILR);
+        }
+        if ($levelACTFL = $q->get('proficiencyLevelACTFL', false)) {
+            $filters['proficiencyLevelACTFL'] = explode(',', $levelACTFL);
         }
         if ($license = $q->get('license', false)) {
             $filters['license'] = explode(',', strtoupper($license));

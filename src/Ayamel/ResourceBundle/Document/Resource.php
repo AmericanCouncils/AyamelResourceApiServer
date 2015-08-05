@@ -180,6 +180,20 @@ class Resource
     protected $registers;
 
     /**
+     *
+     * @MongoDB\Int
+     * @JMS\Type("integer")
+     */
+    protected $proficiencyLevelILR;
+
+    /**
+     *
+     * @MongoDB\Int
+     * @JMS\Type("integer")
+     */
+    protected $proficiencyLevelACTFL;
+
+    /**
      * The generic type of resource.  Generic types are useful for sorting
      * search results into generally similar types of resources.
      *
